@@ -34,6 +34,7 @@ export default function T6AEnhancedStudyTool() {
   const [darkMode, setDarkMode] = useState(true);
   const [activeTab, setActiveTab] = useState("study");
   const [studyMode, setStudyMode] = useState("study"); // 'study', 'quiz', 'custom', 'limitations'
+  const [selectedCategory, setSelectedCategory] = useState("all"); // Category filter for study mode
 
   // Question State
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -58,6 +59,14 @@ export default function T6AEnhancedStudyTool() {
     overall: { correct: 0, incorrect: 0, streak: 0, bestStreak: 0 },
   });
 
+  // Spaced Repetition System (SRS) - SM-2 Algorithm
+  const [srsData, setSrsData] = useState({});
+  // Structure: { questionId: { easeFactor, interval, repetitions, nextReview, lastReview } }
+
+  // Session History
+  const [sessionHistory, setSessionHistory] = useState([]);
+  // Structure: [{ date, mode, questionsAttempted, correct, incorrect, duration }]
+
   // Adaptive Learning
   const [weakTopics, setWeakTopics] = useState([]);
   const [flaggedQuestions, setFlaggedQuestions] = useState([]);
@@ -66,9 +75,13 @@ export default function T6AEnhancedStudyTool() {
   useEffect(() => {
     const savedPerformance = localStorage.getItem("t6a-performance");
     const savedFlags = localStorage.getItem("t6a-flagged");
+    const savedSRS = localStorage.getItem("t6a-srs");
+    const savedHistory = localStorage.getItem("t6a-session-history");
 
     if (savedPerformance) setPerformanceStats(JSON.parse(savedPerformance));
     if (savedFlags) setFlaggedQuestions(JSON.parse(savedFlags));
+    if (savedSRS) setSrsData(JSON.parse(savedSRS));
+    if (savedHistory) setSessionHistory(JSON.parse(savedHistory));
 
     // Initialize questions
     loadQuestions("all");
@@ -94,6 +107,16 @@ export default function T6AEnhancedStudyTool() {
   useEffect(() => {
     localStorage.setItem("t6a-flagged", JSON.stringify(flaggedQuestions));
   }, [flaggedQuestions]);
+
+  // Save SRS data
+  useEffect(() => {
+    localStorage.setItem("t6a-srs", JSON.stringify(srsData));
+  }, [srsData]);
+
+  // Save session history
+  useEffect(() => {
+    localStorage.setItem("t6a-session-history", JSON.stringify(sessionHistory));
+  }, [sessionHistory]);
 
   // Calculate weak topics based on performance
   useEffect(() => {
@@ -123,11 +146,19 @@ export default function T6AEnhancedStudyTool() {
         const all = getAllQuestions();
         questions = all.filter((q) => flaggedQuestions.includes(q.id));
         break;
+      case "review":
+        // SRS: Get questions due for review
+        questions = getDueForReview();
+        break;
       case "custom":
         questions = getCustomQuestions();
         break;
       default:
         questions = getAllQuestions();
+        // Filter by category if one is selected in study mode
+        if (selectedCategory !== "all" && mode === "all") {
+          questions = questions.filter((q) => q.category === selectedCategory);
+        }
     }
 
     // Proper Fisher-Yates shuffle for better randomization (science-based)
@@ -163,6 +194,18 @@ export default function T6AEnhancedStudyTool() {
     const all = getAllQuestions();
     if (selectedTopics.length === 0) return all;
     return all.filter((q) => selectedTopics.includes(q.category));
+  };
+
+  const getDueForReview = () => {
+    const now = new Date().getTime();
+    const all = getAllQuestions();
+
+    // Get questions that are due for review based on SRS
+    return all.filter((q) => {
+      const srsInfo = srsData[q.id];
+      if (!srsInfo) return true; // New questions are always due
+      return srsInfo.nextReview <= now; // Check if review time has passed
+    });
   };
 
   const currentQuestion = currentQuestions[currentQuestionIndex];
@@ -263,6 +306,63 @@ export default function T6AEnhancedStudyTool() {
 
       return newStats;
     });
+
+    // Update SRS data using SM-2 algorithm
+    updateSRS(question, isCorrect);
+  };
+
+  // SM-2 Spaced Repetition Algorithm
+  const updateSRS = (question, isCorrect) => {
+    setSrsData((prev) => {
+      const now = new Date().getTime();
+      const questionId = question.id;
+      const existing = prev[questionId] || {
+        easeFactor: 2.5,
+        interval: 0,
+        repetitions: 0,
+        nextReview: now,
+        lastReview: now,
+      };
+
+      let newEaseFactor, newInterval, newRepetitions;
+
+      if (isCorrect) {
+        // Correct answer
+        if (existing.repetitions === 0) {
+          newInterval = 1; // Review in 1 day
+          newRepetitions = 1;
+        } else if (existing.repetitions === 1) {
+          newInterval = 6; // Review in 6 days
+          newRepetitions = 2;
+        } else {
+          newInterval = Math.round(existing.interval * existing.easeFactor);
+          newRepetitions = existing.repetitions + 1;
+        }
+        // Ease factor increases slightly with correct answers
+        newEaseFactor = existing.easeFactor + 0.1;
+        if (newEaseFactor > 2.5) newEaseFactor = 2.5;
+      } else {
+        // Incorrect answer - reset
+        newRepetitions = 0;
+        newInterval = 1;
+        // Ease factor decreases with incorrect answers
+        newEaseFactor = existing.easeFactor - 0.2;
+        if (newEaseFactor < 1.3) newEaseFactor = 1.3;
+      }
+
+      const nextReview = now + newInterval * 24 * 60 * 60 * 1000; // Convert days to milliseconds
+
+      return {
+        ...prev,
+        [questionId]: {
+          easeFactor: newEaseFactor,
+          interval: newInterval,
+          repetitions: newRepetitions,
+          nextReview: nextReview,
+          lastReview: now,
+        },
+      };
+    });
   };
 
   const handleNext = () => {
@@ -313,6 +413,7 @@ export default function T6AEnhancedStudyTool() {
       disabled: showExplanation && studyMode === "study",
       darkMode: darkMode,
       isLimitationsMode: studyMode === "limitations",
+      showCorrectness: studyMode !== "study", // Hide correct/incorrect in study mode
     };
 
     switch (currentQuestion.questionType) {
@@ -441,6 +542,7 @@ export default function T6AEnhancedStudyTool() {
               setStudyMode("study");
               setActiveTab("main");
               setShowQuizSetup(false);
+              setSelectedCategory("all");
               loadQuestions("all");
             }}
             className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
@@ -512,6 +614,25 @@ export default function T6AEnhancedStudyTool() {
             </button>
           )}
 
+          <button
+            onClick={() => {
+              setStudyMode("review");
+              setActiveTab("main");
+              setShowQuizSetup(false);
+              loadQuestions("review");
+            }}
+            className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
+              studyMode === "review"
+                ? "bg-teal-600 text-white"
+                : darkMode
+                  ? "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                  : "bg-white text-slate-700 hover:bg-slate-100"
+            }`}
+          >
+            <RotateCcw className="w-4 h-4" />
+            Due for Review ({getDueForReview().length})
+          </button>
+
           {flaggedQuestions.length > 0 && (
             <button
               onClick={() => {
@@ -559,6 +680,54 @@ export default function T6AEnhancedStudyTool() {
             Progress
           </button>
         </div>
+
+        {/* Category Filter for Study Mode */}
+        {activeTab === "study" && studyMode === "study" && (
+          <div className="mb-6">
+            <div className="flex items-center gap-3 mb-3">
+              <span
+                className={`text-sm font-medium ${darkMode ? "text-slate-300" : "text-slate-700"}`}
+              >
+                Study by Category:
+              </span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() => {
+                  setSelectedCategory("all");
+                  loadQuestions("all");
+                }}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+                  selectedCategory === "all"
+                    ? "bg-blue-600 text-white"
+                    : darkMode
+                      ? "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                      : "bg-white text-slate-700 hover:bg-slate-100"
+                }`}
+              >
+                All Categories
+              </button>
+              {categories.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => {
+                    setSelectedCategory(cat);
+                    loadQuestions("all");
+                  }}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+                    selectedCategory === cat
+                      ? "bg-blue-600 text-white"
+                      : darkMode
+                        ? "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                        : "bg-white text-slate-700 hover:bg-slate-100"
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Question Count Selector */}
         {activeTab === "study" && (

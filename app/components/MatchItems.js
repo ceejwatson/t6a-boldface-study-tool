@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { CheckCircle2, XCircle, ArrowRight } from "lucide-react";
+import { CheckCircle2, XCircle, ArrowRight, BookOpen } from "lucide-react";
 
 export default function MatchItems({
   question,
@@ -11,6 +11,7 @@ export default function MatchItems({
   disabled,
   darkMode = true,
   isLimitationsMode = false,
+  showCorrectness = true,
 }) {
   const [matches, setMatches] = useState(() => {
     if (userAnswer && Object.keys(userAnswer).length > 0) {
@@ -76,7 +77,7 @@ export default function MatchItems({
     const isMatched = isItemMatched(item, "left");
     const isSelected = selectedLeft === item;
 
-    if (!showExplanation || isLimitationsMode) {
+    if (!showExplanation || isLimitationsMode || !showCorrectness) {
       if (isSelected) return "bg-blue-600 border-blue-600 text-white";
       if (isMatched)
         return darkMode
@@ -87,7 +88,7 @@ export default function MatchItems({
         : "bg-white border-slate-300 text-slate-900 hover:border-blue-500";
     }
 
-    // Show results (not in limitations mode)
+    // Show results (only in quiz mode)
     if (isMatched && isCorrectMatch(item, matches[item])) {
       return "bg-green-900/30 border-green-600 text-white";
     }
@@ -103,7 +104,7 @@ export default function MatchItems({
     const isMatched = isItemMatched(item, "right");
     const isSelected = selectedRight === item;
 
-    if (!showExplanation || isLimitationsMode) {
+    if (!showExplanation || isLimitationsMode || !showCorrectness) {
       if (isSelected) return "bg-blue-600 border-blue-600 text-white";
       if (isMatched)
         return darkMode
@@ -114,7 +115,7 @@ export default function MatchItems({
         : "bg-white border-slate-300 text-slate-900 hover:border-blue-500";
     }
 
-    // Show results (not in limitations mode)
+    // Show results (only in quiz mode)
     const leftItem = Object.keys(matches).find(
       (left) => matches[left] === item,
     );
@@ -177,6 +178,7 @@ export default function MatchItems({
                   )}
                   {showExplanation &&
                     !isLimitationsMode &&
+                    showCorrectness &&
                     matches[item] &&
                     (isCorrectMatch(item, matches[item]) ? (
                       <CheckCircle2 className="w-5 h-5 text-green-400" />
@@ -213,7 +215,7 @@ export default function MatchItems({
         </div>
       </div>
 
-      {showExplanation && !isLimitationsMode && (
+      {showExplanation && !isLimitationsMode && showCorrectness && (
         <div
           className={`mt-6 p-4 rounded-lg ${
             allCorrect
@@ -273,11 +275,19 @@ export default function MatchItems({
           )}
         </div>
       )}
-      {showExplanation && isLimitationsMode && (
+      {showExplanation && (isLimitationsMode || !showCorrectness) && (
         <div
-          className={`mt-6 p-4 rounded-lg ${darkMode ? "bg-slate-700" : "bg-slate-200"} border-2 ${darkMode ? "border-slate-600" : "border-slate-300"}`}
+          className={`mt-6 p-4 rounded-lg ${darkMode ? "bg-blue-900/30 border-2 border-blue-600" : "bg-blue-50 border-2 border-blue-400"}`}
         >
-          <p className={`${darkMode ? "text-white" : "text-slate-900"}`}>
+          <div className="flex items-center gap-2 mb-2">
+            <BookOpen className="w-6 h-6 text-blue-400" />
+            <span
+              className={`font-semibold ${darkMode ? "text-blue-400" : "text-blue-700"}`}
+            >
+              Explanation
+            </span>
+          </div>
+          <p className={`mt-2 ${darkMode ? "text-white" : "text-slate-900"}`}>
             {question.explanation}
           </p>
         </div>

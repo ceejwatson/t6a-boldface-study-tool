@@ -13,7 +13,7 @@ export const questionDatabase = {
       options: ["90%", "95%", "100%", "105%"],
       correctAnswer: 2,
       explanation:
-        "Maximum takeoff torque is 100%. Transient limits of 101-107% are allowed for only 5 seconds.",
+        "Maximum takeoff torque is 100%. This limit protects the engine and propeller from excessive stress during the high-power phase of flight. While transient torque spikes of 101-107% are allowed for only 5 seconds (such as during rapid power changes), sustained operation at 100% is the maximum for takeoff to ensure engine longevity and safety.",
       limitation: true,
     },
     {
@@ -37,7 +37,7 @@ export const questionDatabase = {
       options: ["120 KIAS", "150 KIAS", "180 KIAS", "200 KIAS"],
       correctAnswer: 1,
       explanation:
-        "Maximum speed with landing gear and/or flaps extended is 150 KIAS.",
+        "Maximum speed with landing gear and/or flaps extended is 150 KIAS (VLE/VFE). This limitation exists because the gear and flaps create significant aerodynamic drag and structural loading at higher speeds. Exceeding this speed could cause structural damage to the gear doors, flap actuators, or the extended surfaces themselves. Always ensure airspeed is below 150 KIAS before extending gear or flaps.",
       limitation: true,
     },
     {
@@ -49,7 +49,7 @@ export const questionDatabase = {
       options: ["-2.0 to +5.0", "-3.5 to +7.0", "-4.0 to +8.0", "0 to +6.0"],
       correctAnswer: 1,
       explanation:
-        "Clean configuration symmetric G limits are -3.5 to +7.0 Gs.",
+        "Clean configuration symmetric G limits are -3.5 to +7.0 Gs. These limits protect the airframe from structural damage during maneuvering. The positive G limit (+7.0) is higher because the aircraft structure is designed to withstand greater upward forces (pulling back on the stick). The negative G limit (-3.5) is lower because pushing forward creates unusual structural loads. Remember: with stores or flaps extended, these limits are reduced to protect the additional equipment.",
       limitation: true,
     },
     {
@@ -61,7 +61,7 @@ export const questionDatabase = {
       options: ["100 pounds", "150 pounds", "200 pounds", "250 pounds"],
       correctAnswer: 2,
       explanation:
-        "Normal recovery fuel is 200 pounds. Minimum fuel is 150 pounds (200 solo), emergency fuel is 100 pounds.",
+        "Normal recovery fuel is 200 pounds. This provides adequate fuel for the traffic pattern, approach, and a go-around if needed. The fuel hierarchy is: Normal Recovery = 200 lbs, Minimum Fuel = 150 lbs dual (200 lbs solo), Emergency Fuel = 100 lbs. Declaring minimum fuel alerts ATC to prioritize your landing, while emergency fuel requires immediate landing at the nearest suitable field. Always plan to land with at least normal recovery fuel for safety margins.",
       limitation: true,
     },
     {
@@ -90,7 +90,7 @@ export const questionDatabase = {
       ],
       correctAnswer: 1,
       explanation:
-        "OBOGS SUPPLY LEVER - OFF (BOTH), BOS PUSH MAN - PRESS ON, GREEN RING - PULL (AS REQUIRED), DESCENT BELOW 10,000 FEET MSL - INITIATE",
+        "BOLDFACE: OBOGS SUPPLY LEVER - OFF (BOTH), BOS PUSH MAN - PRESS ON, GREEN RING - PULL (AS REQUIRED), DESCENT BELOW 10,000 FEET MSL - INITIATE. This is critical because hypoxia (oxygen deprivation) impairs judgment and can lead to unconsciousness within seconds at altitude. The BOS (Backup Oxygen System) provides emergency oxygen while you descend to a safe altitude where supplemental oxygen is not required. Never delay this procedure if you experience symptoms like dizziness, euphoria, tingling, or visual disturbances.",
       limitation: false,
     },
     {
@@ -124,7 +124,7 @@ export const questionDatabase = {
       options: ["15 knots", "20 knots", "25 knots", "30 knots"],
       correctAnswer: 2,
       explanation:
-        "Maximum crosswind on dry runway is 25 knots. Wet: 10 knots, Icy: 5 knots.",
+        "Maximum crosswind on dry runway is 25 knots. As runway conditions degrade, the crosswind limit decreases significantly: Wet runway = 10 knots, Icy runway = 5 knots. This is because reduced friction makes it harder to maintain directional control during takeoff and landing. The weathervaning tendency (nose wanting to turn into the wind) becomes increasingly difficult to counteract with rudder as the runway becomes slicker. Always check runway conditions and current winds before flight.",
       limitation: true,
     },
     {
@@ -141,7 +141,7 @@ export const questionDatabase = {
       ],
       correctAnswer: 0,
       explanation:
-        "The T-6A has a single engine-driven hydraulic pump. There is no backup hydraulic pump.",
+        "The T-6A has a single engine-driven hydraulic pump with NO backup hydraulic pump. This is a critical system limitation to understand. The hydraulic system powers essential flight controls including the landing gear, flaps, brakes, and nosewheel steering. If the hydraulic system fails, you'll need to use emergency gear extension (gravity drop) and will have no brakes or nosewheel steering. This single-point failure design emphasizes the importance of monitoring hydraulic pressure during flight.",
       limitation: false,
     },
     {
@@ -289,7 +289,8 @@ export const questionDatabase = {
         "DESCENT BELOW 10,000 FEET MSL - INITIATE",
         "EMER LDG GR HANDLE - PULL (AS REQUIRED)",
       ],
-      explanation: "Critical boldface procedure for confirmed in-flight fire.",
+      explanation:
+        "Critical BOLDFACE procedure for confirmed in-flight fire. The sequence is crucial: First, shut down the engine (PCL - OFF) to eliminate the power source. Second, pull the firewall shutoff handle to cut off fuel flow. Third, turn off OBOGS to prevent contamination from smoke/fumes. Fourth, initiate descent below 10,000 feet MSL where you can breathe without supplemental oxygen. Finally, pull the emergency landing gear handle as required for landing. This procedure must be memorized and executed flawlessly - an in-flight fire is a life-threatening emergency.",
       limitation: false,
     },
     {
@@ -306,7 +307,7 @@ export const questionDatabase = {
         "ALTITUDE - CHECK",
       ],
       explanation:
-        "Boldface for OBOGS failure, overtemp, physiological symptoms, or OXY CRIT annunciator.",
+        "BOLDFACE for OBOGS failure, overtemp, physiological symptoms, or OXY CRIT annunciator. This procedure addresses one of the most dangerous in-flight emergencies - loss of oxygen. The sequence: First, turn off the malfunctioning OBOGS system (both levers). Second, activate the Backup Oxygen System (BOS) by pressing the manual button to get immediate emergency oxygen. Third, pull the green ring if additional oxygen flow is needed. Fourth, immediately begin descending to below 10,000 feet MSL where oxygen is not required. Finally, check your altitude to ensure you're below 10,000 feet. Time is critical - you may have only seconds of useful consciousness at high altitude.",
       limitation: false,
     },
     {
@@ -341,7 +342,7 @@ export const questionDatabase = {
         "PCL - OFF",
       ],
       explanation:
-        "Boldface procedure for recovering from inadvertent departure from controlled flight.",
+        "BOLDFACE procedure for recovering from inadvertent departure from controlled flight (spins, unusual attitudes). The sequence is designed to stop the spin: First, reduce power to idle (PCL - IDLE) to minimize gyroscopic effects and reduce airspeed. Second, neutralize all controls (CONTROLS - NEUTRAL) to stop any pro-spin inputs. Third, wait for airspeed to reach at least 110 knots, indicating the spin has stopped and you're in a controlled dive. Only then, if the spin hasn't stopped, proceed to the final step: PCL - OFF to eliminate all engine effects. Once recovered, smoothly pull out of the dive without exceeding G limits.",
       limitation: false,
     },
   ],

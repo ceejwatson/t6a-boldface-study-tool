@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCircle2, XCircle } from "lucide-react";
+import { CheckCircle2, XCircle, BookOpen } from "lucide-react";
 
 export default function TrueFalse({
   question,
@@ -10,6 +10,7 @@ export default function TrueFalse({
   disabled,
   darkMode = true,
   isLimitationsMode = false,
+  showCorrectness = true,
 }) {
   const handleSelect = (value) => {
     if (disabled) return;
@@ -17,7 +18,7 @@ export default function TrueFalse({
   };
 
   const getButtonStyle = (value) => {
-    if (!showExplanation || isLimitationsMode) {
+    if (!showExplanation || isLimitationsMode || !showCorrectness) {
       return userAnswer === value
         ? "bg-blue-600 text-white border-blue-600 scale-105"
         : darkMode
@@ -25,7 +26,7 @@ export default function TrueFalse({
           : "bg-white text-slate-900 border-slate-300 hover:border-blue-500 hover:scale-105";
     }
 
-    // Show results (not in limitations mode)
+    // Show results (only in quiz mode)
     if (value === question.correctAnswer) {
       return "bg-green-600 text-white border-green-600";
     }
@@ -38,7 +39,7 @@ export default function TrueFalse({
   };
 
   const getIcon = (value) => {
-    if (!showExplanation || isLimitationsMode) return null;
+    if (!showExplanation || isLimitationsMode || !showCorrectness) return null;
 
     if (value === question.correctAnswer) {
       return <CheckCircle2 className="w-8 h-8" />;
@@ -81,7 +82,7 @@ export default function TrueFalse({
         </button>
       </div>
 
-      {showExplanation && !isLimitationsMode && (
+      {showExplanation && !isLimitationsMode && showCorrectness && (
         <div
           className={`mt-6 p-4 rounded-lg ${
             userAnswer === question.correctAnswer
@@ -110,11 +111,19 @@ export default function TrueFalse({
           </p>
         </div>
       )}
-      {showExplanation && isLimitationsMode && (
+      {showExplanation && (isLimitationsMode || !showCorrectness) && (
         <div
-          className={`mt-6 p-4 rounded-lg ${darkMode ? "bg-slate-700" : "bg-slate-200"} border-2 ${darkMode ? "border-slate-600" : "border-slate-300"}`}
+          className={`mt-6 p-4 rounded-lg ${darkMode ? "bg-blue-900/30 border-2 border-blue-600" : "bg-blue-50 border-2 border-blue-400"}`}
         >
-          <p className={`${darkMode ? "text-white" : "text-slate-900"}`}>
+          <div className="flex items-center gap-2 mb-2">
+            <BookOpen className="w-6 h-6 text-blue-400" />
+            <span
+              className={`font-semibold ${darkMode ? "text-blue-400" : "text-blue-700"}`}
+            >
+              Explanation
+            </span>
+          </div>
+          <p className={`mt-2 ${darkMode ? "text-white" : "text-slate-900"}`}>
             {question.explanation}
           </p>
         </div>

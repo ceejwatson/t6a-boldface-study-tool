@@ -7,6 +7,7 @@ import {
   GripVertical,
   ArrowUp,
   ArrowDown,
+  BookOpen,
 } from "lucide-react";
 
 export default function ReorderSequence({
@@ -17,6 +18,7 @@ export default function ReorderSequence({
   disabled,
   darkMode = true,
   isLimitationsMode = false,
+  showCorrectness = true,
 }) {
   const [items, setItems] = useState(() => {
     if (userAnswer && userAnswer.length > 0) {
@@ -47,13 +49,13 @@ export default function ReorderSequence({
   };
 
   const getItemStyle = (index) => {
-    if (!showExplanation || isLimitationsMode) {
+    if (!showExplanation || isLimitationsMode || !showCorrectness) {
       return darkMode
         ? "bg-slate-800 border-slate-600 hover:border-blue-500"
         : "bg-white border-slate-300 hover:border-blue-500";
     }
 
-    // Check if this step is in the correct position (not in limitations mode)
+    // Check if this step is in the correct position (only in quiz mode)
     const isCorrectPosition =
       userAnswer && userAnswer[index] === question.correctOrder[index];
 
@@ -64,7 +66,7 @@ export default function ReorderSequence({
   };
 
   const getStepNumber = (item) => {
-    if (!showExplanation || isLimitationsMode) return null;
+    if (!showExplanation || isLimitationsMode || !showCorrectness) return null;
     const correctIndex = question.correctOrder.indexOf(item);
     return correctIndex + 1;
   };
@@ -141,7 +143,7 @@ export default function ReorderSequence({
         ))}
       </div>
 
-      {showExplanation && !isLimitationsMode && (
+      {showExplanation && !isLimitationsMode && showCorrectness && (
         <div
           className={`mt-6 p-4 rounded-lg ${
             isCorrect()
@@ -190,11 +192,19 @@ export default function ReorderSequence({
           )}
         </div>
       )}
-      {showExplanation && isLimitationsMode && (
+      {showExplanation && (isLimitationsMode || !showCorrectness) && (
         <div
-          className={`mt-6 p-4 rounded-lg ${darkMode ? "bg-slate-700" : "bg-slate-200"} border-2 ${darkMode ? "border-slate-600" : "border-slate-300"}`}
+          className={`mt-6 p-4 rounded-lg ${darkMode ? "bg-blue-900/30 border-2 border-blue-600" : "bg-blue-50 border-2 border-blue-400"}`}
         >
-          <p className={`${darkMode ? "text-white" : "text-slate-900"}`}>
+          <div className="flex items-center gap-2 mb-2">
+            <BookOpen className="w-6 h-6 text-blue-400" />
+            <span
+              className={`font-semibold ${darkMode ? "text-blue-400" : "text-blue-700"}`}
+            >
+              Explanation
+            </span>
+          </div>
+          <p className={`mt-2 ${darkMode ? "text-white" : "text-slate-900"}`}>
             {question.explanation}
           </p>
         </div>
