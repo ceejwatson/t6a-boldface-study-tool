@@ -1,24 +1,37 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import {
-  BookOpen, Brain, Target, TrendingUp, Settings, Sun, Moon,
-  CheckCircle2, XCircle, RotateCcw, ChevronRight, Award, Flame,
-  AlertCircle, Zap, Filter
-} from 'lucide-react';
+  BookOpen,
+  Brain,
+  Target,
+  TrendingUp,
+  Settings,
+  Sun,
+  Moon,
+  CheckCircle2,
+  XCircle,
+  RotateCcw,
+  ChevronRight,
+  Award,
+  Flame,
+  AlertCircle,
+  Zap,
+  Filter,
+} from "lucide-react";
 
-import MultipleChoice from './components/MultipleChoice';
-import TrueFalse from './components/TrueFalse';
-import ReorderSequence from './components/ReorderSequence';
-import MatchItems from './components/MatchItems';
+import MultipleChoice from "./components/MultipleChoice";
+import TrueFalse from "./components/TrueFalse";
+import ReorderSequence from "./components/ReorderSequence";
+import MatchItems from "./components/MatchItems";
 
-import { questionDatabase, getLimitationQuestions } from './questionData';
+import { questionDatabase, getLimitationQuestions } from "./questionData";
 
 export default function T6AEnhancedStudyTool() {
   // UI State
   const [darkMode, setDarkMode] = useState(true);
-  const [activeTab, setActiveTab] = useState('study');
-  const [studyMode, setStudyMode] = useState('study'); // 'study', 'quiz', 'custom', 'limitations'
+  const [activeTab, setActiveTab] = useState("study");
+  const [studyMode, setStudyMode] = useState("study"); // 'study', 'quiz', 'custom', 'limitations'
 
   // Question State
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -26,13 +39,19 @@ export default function T6AEnhancedStudyTool() {
   const [userAnswers, setUserAnswers] = useState({});
   const [showExplanation, setShowExplanation] = useState(false);
   const [selectedTopics, setSelectedTopics] = useState([]);
-  const [selectedQuestionTypes, setSelectedQuestionTypes] = useState(['multipleChoice', 'trueFalse', 'reorderSequence', 'matchItems']);
+  const [selectedQuestionTypes, setSelectedQuestionTypes] = useState([
+    "multipleChoice",
+    "trueFalse",
+    "reorderSequence",
+    "matchItems",
+  ]);
+  const [questionCount, setQuestionCount] = useState(25); // 10, 25, or 50
 
   // Performance Tracking
   const [performanceStats, setPerformanceStats] = useState({
     byCategory: {},
     byQuestionType: {},
-    overall: { correct: 0, incorrect: 0, streak: 0, bestStreak: 0 }
+    overall: { correct: 0, incorrect: 0, streak: 0, bestStreak: 0 },
   });
 
   // Adaptive Learning
@@ -41,32 +60,32 @@ export default function T6AEnhancedStudyTool() {
 
   // Load saved data
   useEffect(() => {
-    const savedPerformance = localStorage.getItem('t6a-performance');
-    const savedFlags = localStorage.getItem('t6a-flagged');
+    const savedPerformance = localStorage.getItem("t6a-performance");
+    const savedFlags = localStorage.getItem("t6a-flagged");
 
     if (savedPerformance) setPerformanceStats(JSON.parse(savedPerformance));
     if (savedFlags) setFlaggedQuestions(JSON.parse(savedFlags));
 
     // Initialize questions
-    loadQuestions('all');
+    loadQuestions("all");
   }, []);
 
   // Save performance
   useEffect(() => {
-    localStorage.setItem('t6a-performance', JSON.stringify(performanceStats));
+    localStorage.setItem("t6a-performance", JSON.stringify(performanceStats));
   }, [performanceStats]);
 
   // Save flagged questions
   useEffect(() => {
-    localStorage.setItem('t6a-flagged', JSON.stringify(flaggedQuestions));
+    localStorage.setItem("t6a-flagged", JSON.stringify(flaggedQuestions));
   }, [flaggedQuestions]);
 
   // Calculate weak topics based on performance
   useEffect(() => {
     const topics = Object.keys(performanceStats.byCategory);
-    const weak = topics.filter(topic => {
+    const weak = topics.filter((topic) => {
       const stats = performanceStats.byCategory[topic];
-      if (!stats || (stats.correct + stats.incorrect) < 3) return false;
+      if (!stats || stats.correct + stats.incorrect < 3) return false;
       const accuracy = stats.correct / (stats.correct + stats.incorrect);
       return accuracy < 0.7; // Less than 70% accuracy
     });
@@ -76,20 +95,20 @@ export default function T6AEnhancedStudyTool() {
   const loadQuestions = (mode) => {
     let questions = [];
 
-    switch(mode) {
-      case 'limitations':
+    switch (mode) {
+      case "limitations":
         questions = getLimitationQuestions();
         break;
-      case 'weak':
+      case "weak":
         // Get questions from weak topics
         const allQuestions = getAllQuestions();
-        questions = allQuestions.filter(q => weakTopics.includes(q.category));
+        questions = allQuestions.filter((q) => weakTopics.includes(q.category));
         break;
-      case 'flagged':
+      case "flagged":
         const all = getAllQuestions();
-        questions = all.filter(q => flaggedQuestions.includes(q.id));
+        questions = all.filter((q) => flaggedQuestions.includes(q.id));
         break;
-      case 'custom':
+      case "custom":
         questions = getCustomQuestions();
         break;
       default:
@@ -98,6 +117,10 @@ export default function T6AEnhancedStudyTool() {
 
     // Shuffle questions
     questions = questions.sort(() => Math.random() - 0.5);
+
+    // Limit to selected question count
+    questions = questions.slice(0, questionCount);
+
     setCurrentQuestions(questions);
     setCurrentQuestionIndex(0);
     setUserAnswers({});
@@ -106,9 +129,9 @@ export default function T6AEnhancedStudyTool() {
 
   const getAllQuestions = () => {
     const all = [];
-    selectedQuestionTypes.forEach(type => {
+    selectedQuestionTypes.forEach((type) => {
       const questions = questionDatabase[type] || [];
-      questions.forEach(q => {
+      questions.forEach((q) => {
         all.push({ ...q, questionType: type });
       });
     });
@@ -118,18 +141,25 @@ export default function T6AEnhancedStudyTool() {
   const getCustomQuestions = () => {
     const all = getAllQuestions();
     if (selectedTopics.length === 0) return all;
-    return all.filter(q => selectedTopics.includes(q.category));
+    return all.filter((q) => selectedTopics.includes(q.category));
   };
 
   const currentQuestion = currentQuestions[currentQuestionIndex];
 
   const handleAnswer = (answer) => {
-    if (studyMode === 'study') {
-      setShowExplanation(true);
-    }
-
     const newAnswers = { ...userAnswers, [currentQuestion.id]: answer };
     setUserAnswers(newAnswers);
+
+    // Don't auto-show explanation or update stats for reorder sequence
+    // User needs to manually submit those
+    if (currentQuestion.questionType === "reorderSequence") {
+      // Just save the answer, don't update stats yet
+      return;
+    }
+
+    if (studyMode === "study") {
+      setShowExplanation(true);
+    }
 
     // Update performance stats
     const isCorrect = checkAnswer(currentQuestion, answer);
@@ -137,29 +167,32 @@ export default function T6AEnhancedStudyTool() {
   };
 
   const checkAnswer = (question, answer) => {
-    switch(question.questionType) {
-      case 'multipleChoice':
+    switch (question.questionType) {
+      case "multipleChoice":
         return answer === question.correctAnswer;
-      case 'trueFalse':
+      case "trueFalse":
         return answer === question.correctAnswer;
-      case 'reorderSequence':
+      case "reorderSequence":
         return JSON.stringify(answer) === JSON.stringify(question.correctOrder);
-      case 'matchItems':
-        return question.pairs.every(pair => answer[pair.left] === pair.right);
+      case "matchItems":
+        return question.pairs.every((pair) => answer[pair.left] === pair.right);
       default:
         return false;
     }
   };
 
   const updatePerformance = (question, isCorrect) => {
-    setPerformanceStats(prev => {
+    setPerformanceStats((prev) => {
       const newStats = { ...prev };
 
       // Update overall
       if (isCorrect) {
         newStats.overall.correct++;
         newStats.overall.streak++;
-        newStats.overall.bestStreak = Math.max(newStats.overall.streak, newStats.overall.bestStreak);
+        newStats.overall.bestStreak = Math.max(
+          newStats.overall.streak,
+          newStats.overall.bestStreak,
+        );
       } else {
         newStats.overall.incorrect++;
         newStats.overall.streak = 0;
@@ -177,7 +210,10 @@ export default function T6AEnhancedStudyTool() {
 
       // Update by question type
       if (!newStats.byQuestionType[question.questionType]) {
-        newStats.byQuestionType[question.questionType] = { correct: 0, incorrect: 0 };
+        newStats.byQuestionType[question.questionType] = {
+          correct: 0,
+          incorrect: 0,
+        };
       }
       if (isCorrect) {
         newStats.byQuestionType[question.questionType].correct++;
@@ -191,15 +227,15 @@ export default function T6AEnhancedStudyTool() {
 
   const handleNext = () => {
     if (currentQuestionIndex < currentQuestions.length - 1) {
-      setCurrentQuestionIndex(prev => prev + 1);
-      setShowExplanation(studyMode === 'study');
+      setCurrentQuestionIndex((prev) => prev + 1);
+      setShowExplanation(studyMode === "study");
     }
   };
 
   const handlePrevious = () => {
     if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(prev => prev - 1);
-      setShowExplanation(studyMode === 'study');
+      setCurrentQuestionIndex((prev) => prev - 1);
+      setShowExplanation(studyMode === "study");
     }
   };
 
@@ -207,9 +243,11 @@ export default function T6AEnhancedStudyTool() {
     if (!currentQuestion) return;
 
     if (flaggedQuestions.includes(currentQuestion.id)) {
-      setFlaggedQuestions(prev => prev.filter(id => id !== currentQuestion.id));
+      setFlaggedQuestions((prev) =>
+        prev.filter((id) => id !== currentQuestion.id),
+      );
     } else {
-      setFlaggedQuestions(prev => [...prev, currentQuestion.id]);
+      setFlaggedQuestions((prev) => [...prev, currentQuestion.id]);
     }
   };
 
@@ -218,7 +256,9 @@ export default function T6AEnhancedStudyTool() {
       return (
         <div className="text-center py-12">
           <AlertCircle className="w-16 h-16 text-slate-400 mx-auto mb-4" />
-          <p className="text-slate-400">No questions available. Adjust your filters.</p>
+          <p className="text-slate-400">
+            No questions available. Adjust your filters.
+          </p>
         </div>
       );
     }
@@ -228,35 +268,39 @@ export default function T6AEnhancedStudyTool() {
       onAnswer: handleAnswer,
       showExplanation: showExplanation,
       userAnswer: userAnswers[currentQuestion.id],
-      disabled: showExplanation && studyMode === 'study'
+      disabled: showExplanation && studyMode === "study",
     };
 
-    switch(currentQuestion.questionType) {
-      case 'multipleChoice':
+    switch (currentQuestion.questionType) {
+      case "multipleChoice":
         return <MultipleChoice {...props} />;
-      case 'trueFalse':
+      case "trueFalse":
         return <TrueFalse {...props} />;
-      case 'reorderSequence':
+      case "reorderSequence":
         return <ReorderSequence {...props} />;
-      case 'matchItems':
+      case "matchItems":
         return <MatchItems {...props} />;
       default:
         return <div>Unknown question type</div>;
     }
   };
 
-  const categories = [...new Set(getAllQuestions().map(q => q.category))];
+  const categories = [...new Set(getAllQuestions().map((q) => q.category))];
   const questionTypeLabels = {
-    multipleChoice: 'Multiple Choice',
-    trueFalse: 'True/False',
-    reorderSequence: 'Sequence Order',
-    matchItems: 'Match Items'
+    multipleChoice: "Multiple Choice",
+    trueFalse: "True/False",
+    reorderSequence: "Sequence Order",
+    matchItems: "Match Items",
   };
 
   return (
-    <div className={`min-h-screen ${darkMode ? 'bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900' : 'bg-gradient-to-br from-slate-100 via-blue-100 to-slate-100'}`}>
+    <div
+      className={`min-h-screen ${darkMode ? "bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900" : "bg-gradient-to-br from-slate-100 via-blue-100 to-slate-100"}`}
+    >
       {/* Header */}
-      <header className={`${darkMode ? 'bg-slate-900/95 border-blue-700/50' : 'bg-white/95 border-blue-300/50'} backdrop-blur border-b sticky top-0 z-20 shadow-xl`}>
+      <header
+        className={`${darkMode ? "bg-slate-900/95 border-blue-700/50" : "bg-white/95 border-blue-300/50"} backdrop-blur border-b sticky top-0 z-20 shadow-xl`}
+      >
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div className="flex items-center gap-3">
@@ -264,10 +308,14 @@ export default function T6AEnhancedStudyTool() {
                 <BookOpen className="w-8 h-8 text-white" />
               </div>
               <div>
-                <h1 className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-slate-900'}`}>
+                <h1
+                  className={`text-2xl font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
+                >
                   T-6A Texan II
                 </h1>
-                <p className={`text-sm ${darkMode ? 'text-blue-300' : 'text-blue-600'}`}>
+                <p
+                  className={`text-sm ${darkMode ? "text-blue-300" : "text-blue-600"}`}
+                >
                   Enhanced Study Tool
                 </p>
               </div>
@@ -277,11 +325,15 @@ export default function T6AEnhancedStudyTool() {
               {/* Stats */}
               <div className="flex gap-3 text-sm">
                 <div className="bg-green-600/20 border border-green-500/50 rounded-lg px-3 py-2">
-                  <div className="text-green-400 font-semibold">{performanceStats.overall.correct}</div>
+                  <div className="text-green-400 font-semibold">
+                    {performanceStats.overall.correct}
+                  </div>
                   <div className="text-green-300 text-xs">Correct</div>
                 </div>
                 <div className="bg-yellow-600/20 border border-yellow-500/50 rounded-lg px-3 py-2">
-                  <div className="text-yellow-400 font-semibold">{performanceStats.overall.streak}</div>
+                  <div className="text-yellow-400 font-semibold">
+                    {performanceStats.overall.streak}
+                  </div>
                   <div className="text-yellow-300 text-xs">Streak</div>
                 </div>
               </div>
@@ -289,9 +341,13 @@ export default function T6AEnhancedStudyTool() {
               {/* Dark Mode Toggle */}
               <button
                 onClick={() => setDarkMode(!darkMode)}
-                className={`p-2 rounded-lg ${darkMode ? 'bg-slate-800 text-yellow-400' : 'bg-slate-200 text-slate-700'}`}
+                className={`p-2 rounded-lg ${darkMode ? "bg-slate-800 text-yellow-400" : "bg-slate-200 text-slate-700"}`}
               >
-                {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+                {darkMode ? (
+                  <Sun className="w-5 h-5" />
+                ) : (
+                  <Moon className="w-5 h-5" />
+                )}
               </button>
             </div>
           </div>
@@ -302,11 +358,16 @@ export default function T6AEnhancedStudyTool() {
         {/* Mode Selection */}
         <div className="mb-6 flex gap-3 flex-wrap">
           <button
-            onClick={() => { setStudyMode('study'); loadQuestions('all'); }}
+            onClick={() => {
+              setStudyMode("study");
+              loadQuestions("all");
+            }}
             className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
-              studyMode === 'study'
-                ? 'bg-blue-600 text-white'
-                : darkMode ? 'bg-slate-800 text-slate-300 hover:bg-slate-700' : 'bg-white text-slate-700 hover:bg-slate-100'
+              studyMode === "study"
+                ? "bg-blue-600 text-white"
+                : darkMode
+                  ? "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                  : "bg-white text-slate-700 hover:bg-slate-100"
             }`}
           >
             <BookOpen className="w-4 h-4" />
@@ -314,11 +375,17 @@ export default function T6AEnhancedStudyTool() {
           </button>
 
           <button
-            onClick={() => { setStudyMode('quiz'); setShowExplanation(false); loadQuestions('all'); }}
+            onClick={() => {
+              setStudyMode("quiz");
+              setShowExplanation(false);
+              loadQuestions("all");
+            }}
             className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
-              studyMode === 'quiz'
-                ? 'bg-purple-600 text-white'
-                : darkMode ? 'bg-slate-800 text-slate-300 hover:bg-slate-700' : 'bg-white text-slate-700 hover:bg-slate-100'
+              studyMode === "quiz"
+                ? "bg-purple-600 text-white"
+                : darkMode
+                  ? "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                  : "bg-white text-slate-700 hover:bg-slate-100"
             }`}
           >
             <Brain className="w-4 h-4" />
@@ -326,11 +393,16 @@ export default function T6AEnhancedStudyTool() {
           </button>
 
           <button
-            onClick={() => { setStudyMode('limitations'); loadQuestions('limitations'); }}
+            onClick={() => {
+              setStudyMode("limitations");
+              loadQuestions("limitations");
+            }}
             className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
-              studyMode === 'limitations'
-                ? 'bg-red-600 text-white'
-                : darkMode ? 'bg-slate-800 text-slate-300 hover:bg-slate-700' : 'bg-white text-slate-700 hover:bg-slate-100'
+              studyMode === "limitations"
+                ? "bg-red-600 text-white"
+                : darkMode
+                  ? "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                  : "bg-white text-slate-700 hover:bg-slate-100"
             }`}
           >
             <Flame className="w-4 h-4" />
@@ -339,11 +411,16 @@ export default function T6AEnhancedStudyTool() {
 
           {weakTopics.length > 0 && (
             <button
-              onClick={() => { setStudyMode('weak'); loadQuestions('weak'); }}
+              onClick={() => {
+                setStudyMode("weak");
+                loadQuestions("weak");
+              }}
               className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
-                studyMode === 'weak'
-                  ? 'bg-orange-600 text-white'
-                  : darkMode ? 'bg-slate-800 text-slate-300 hover:bg-slate-700' : 'bg-white text-slate-700 hover:bg-slate-100'
+                studyMode === "weak"
+                  ? "bg-orange-600 text-white"
+                  : darkMode
+                    ? "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                    : "bg-white text-slate-700 hover:bg-slate-100"
               }`}
             >
               <Zap className="w-4 h-4" />
@@ -353,11 +430,16 @@ export default function T6AEnhancedStudyTool() {
 
           {flaggedQuestions.length > 0 && (
             <button
-              onClick={() => { setStudyMode('flagged'); loadQuestions('flagged'); }}
+              onClick={() => {
+                setStudyMode("flagged");
+                loadQuestions("flagged");
+              }}
               className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
-                studyMode === 'flagged'
-                  ? 'bg-yellow-600 text-white'
-                  : darkMode ? 'bg-slate-800 text-slate-300 hover:bg-slate-700' : 'bg-white text-slate-700 hover:bg-slate-100'
+                studyMode === "flagged"
+                  ? "bg-yellow-600 text-white"
+                  : darkMode
+                    ? "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                    : "bg-white text-slate-700 hover:bg-slate-100"
               }`}
             >
               <Target className="w-4 h-4" />
@@ -366,11 +448,13 @@ export default function T6AEnhancedStudyTool() {
           )}
 
           <button
-            onClick={() => setActiveTab('custom')}
+            onClick={() => setActiveTab("custom")}
             className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
-              activeTab === 'custom'
-                ? 'bg-green-600 text-white'
-                : darkMode ? 'bg-slate-800 text-slate-300 hover:bg-slate-700' : 'bg-white text-slate-700 hover:bg-slate-100'
+              activeTab === "custom"
+                ? "bg-green-600 text-white"
+                : darkMode
+                  ? "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                  : "bg-white text-slate-700 hover:bg-slate-100"
             }`}
           >
             <Filter className="w-4 h-4" />
@@ -378,11 +462,13 @@ export default function T6AEnhancedStudyTool() {
           </button>
 
           <button
-            onClick={() => setActiveTab('progress')}
+            onClick={() => setActiveTab("progress")}
             className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
-              activeTab === 'progress'
-                ? 'bg-indigo-600 text-white'
-                : darkMode ? 'bg-slate-800 text-slate-300 hover:bg-slate-700' : 'bg-white text-slate-700 hover:bg-slate-100'
+              activeTab === "progress"
+                ? "bg-indigo-600 text-white"
+                : darkMode
+                  ? "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                  : "bg-white text-slate-700 hover:bg-slate-100"
             }`}
           >
             <TrendingUp className="w-4 h-4" />
@@ -390,33 +476,81 @@ export default function T6AEnhancedStudyTool() {
           </button>
         </div>
 
+        {/* Question Count Selector */}
+        {activeTab === "study" && (
+          <div className="mb-6 flex items-center gap-3">
+            <span
+              className={`text-sm font-medium ${darkMode ? "text-slate-300" : "text-slate-700"}`}
+            >
+              Questions per session:
+            </span>
+            {[10, 25, 50].map((count) => (
+              <button
+                key={count}
+                onClick={() => setQuestionCount(count)}
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition ${
+                  questionCount === count
+                    ? "bg-blue-600 text-white"
+                    : darkMode
+                      ? "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                      : "bg-white text-slate-700 hover:bg-slate-100"
+                }`}
+              >
+                {count}
+              </button>
+            ))}
+          </div>
+        )}
+
         {/* Main Content */}
-        {activeTab === 'custom' ? (
-          <div className={`max-w-4xl mx-auto ${darkMode ? 'bg-slate-800' : 'bg-white'} rounded-xl p-6`}>
-            <h2 className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-slate-900'} mb-6`}>
-              Custom Study Session
-            </h2>
+        {activeTab === "custom" ? (
+          <div
+            className={`max-w-4xl mx-auto ${darkMode ? "bg-slate-800" : "bg-white"} rounded-xl p-6`}
+          >
+            <div className="flex items-center justify-between mb-6">
+              <h2
+                className={`text-2xl font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
+              >
+                Custom Study Session
+              </h2>
+              <button
+                onClick={() => setActiveTab("study")}
+                className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
+                  darkMode
+                    ? "bg-slate-700 hover:bg-slate-600 text-white"
+                    : "bg-slate-200 hover:bg-slate-300 text-slate-900"
+                }`}
+              >
+                ← Back to Study
+              </button>
+            </div>
 
             {/* Topic Selection */}
             <div className="mb-6">
-              <h3 className={`text-lg font-semibold ${darkMode ? 'text-white' : 'text-slate-900'} mb-3`}>
+              <h3
+                className={`text-lg font-semibold ${darkMode ? "text-white" : "text-slate-900"} mb-3`}
+              >
                 Select Topics:
               </h3>
               <div className="flex flex-wrap gap-2">
-                {categories.map(cat => (
+                {categories.map((cat) => (
                   <button
                     key={cat}
                     onClick={() => {
                       if (selectedTopics.includes(cat)) {
-                        setSelectedTopics(prev => prev.filter(t => t !== cat));
+                        setSelectedTopics((prev) =>
+                          prev.filter((t) => t !== cat),
+                        );
                       } else {
-                        setSelectedTopics(prev => [...prev, cat]);
+                        setSelectedTopics((prev) => [...prev, cat]);
                       }
                     }}
                     className={`px-3 py-2 rounded-lg text-sm font-medium transition ${
                       selectedTopics.includes(cat)
-                        ? 'bg-blue-600 text-white'
-                        : darkMode ? 'bg-slate-700 text-slate-300 hover:bg-slate-600' : 'bg-slate-200 text-slate-700 hover:bg-slate-300'
+                        ? "bg-blue-600 text-white"
+                        : darkMode
+                          ? "bg-slate-700 text-slate-300 hover:bg-slate-600"
+                          : "bg-slate-200 text-slate-700 hover:bg-slate-300"
                     }`}
                   >
                     {cat}
@@ -427,24 +561,30 @@ export default function T6AEnhancedStudyTool() {
 
             {/* Question Type Selection */}
             <div className="mb-6">
-              <h3 className={`text-lg font-semibold ${darkMode ? 'text-white' : 'text-slate-900'} mb-3`}>
+              <h3
+                className={`text-lg font-semibold ${darkMode ? "text-white" : "text-slate-900"} mb-3`}
+              >
                 Question Types:
               </h3>
               <div className="flex flex-wrap gap-2">
-                {Object.keys(questionTypeLabels).map(type => (
+                {Object.keys(questionTypeLabels).map((type) => (
                   <button
                     key={type}
                     onClick={() => {
                       if (selectedQuestionTypes.includes(type)) {
-                        setSelectedQuestionTypes(prev => prev.filter(t => t !== type));
+                        setSelectedQuestionTypes((prev) =>
+                          prev.filter((t) => t !== type),
+                        );
                       } else {
-                        setSelectedQuestionTypes(prev => [...prev, type]);
+                        setSelectedQuestionTypes((prev) => [...prev, type]);
                       }
                     }}
                     className={`px-3 py-2 rounded-lg text-sm font-medium transition ${
                       selectedQuestionTypes.includes(type)
-                        ? 'bg-purple-600 text-white'
-                        : darkMode ? 'bg-slate-700 text-slate-300 hover:bg-slate-600' : 'bg-slate-200 text-slate-700 hover:bg-slate-300'
+                        ? "bg-purple-600 text-white"
+                        : darkMode
+                          ? "bg-slate-700 text-slate-300 hover:bg-slate-600"
+                          : "bg-slate-200 text-slate-700 hover:bg-slate-300"
                     }`}
                   >
                     {questionTypeLabels[type]}
@@ -455,67 +595,132 @@ export default function T6AEnhancedStudyTool() {
 
             <button
               onClick={() => {
-                setStudyMode('custom');
-                setActiveTab('study');
-                loadQuestions('custom');
+                setStudyMode("custom");
+                setActiveTab("study");
+                loadQuestions("custom");
               }}
               className="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition"
             >
               Start Custom Session ({getCustomQuestions().length} questions)
             </button>
           </div>
-        ) : activeTab === 'progress' ? (
+        ) : activeTab === "progress" ? (
           <div className={`max-w-6xl mx-auto space-y-6`}>
+            {/* Back Button */}
+            <div className="flex justify-end">
+              <button
+                onClick={() => setActiveTab("study")}
+                className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
+                  darkMode
+                    ? "bg-slate-700 hover:bg-slate-600 text-white"
+                    : "bg-slate-200 hover:bg-slate-300 text-slate-900"
+                }`}
+              >
+                ← Back to Study
+              </button>
+            </div>
+
             {/* Overall Stats */}
-            <div className={`${darkMode ? 'bg-slate-800 border-blue-500' : 'bg-white border-blue-300'} rounded-xl p-6 border-2`}>
-              <h2 className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-slate-900'} mb-4 flex items-center gap-2`}>
+            <div
+              className={`${darkMode ? "bg-slate-800 border-blue-500" : "bg-white border-blue-300"} rounded-xl p-6 border-2`}
+            >
+              <h2
+                className={`text-2xl font-bold ${darkMode ? "text-white" : "text-slate-900"} mb-4 flex items-center gap-2`}
+              >
                 <Award className="w-6 h-6 text-yellow-400" />
                 Overall Performance
               </h2>
               <div className="grid md:grid-cols-4 gap-4">
                 <div>
-                  <div className="text-3xl font-bold text-blue-400">{performanceStats.overall.correct + performanceStats.overall.incorrect}</div>
-                  <div className={`text-sm ${darkMode ? 'text-slate-400' : 'text-slate-600'}`}>Total Attempts</div>
+                  <div className="text-3xl font-bold text-blue-400">
+                    {performanceStats.overall.correct +
+                      performanceStats.overall.incorrect}
+                  </div>
+                  <div
+                    className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                  >
+                    Total Attempts
+                  </div>
                 </div>
                 <div>
-                  <div className="text-3xl font-bold text-green-400">{performanceStats.overall.correct}</div>
-                  <div className={`text-sm ${darkMode ? 'text-slate-400' : 'text-slate-600'}`}>Correct</div>
+                  <div className="text-3xl font-bold text-green-400">
+                    {performanceStats.overall.correct}
+                  </div>
+                  <div
+                    className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                  >
+                    Correct
+                  </div>
                 </div>
                 <div>
-                  <div className="text-3xl font-bold text-yellow-400">{performanceStats.overall.bestStreak}</div>
-                  <div className={`text-sm ${darkMode ? 'text-slate-400' : 'text-slate-600'}`}>Best Streak</div>
+                  <div className="text-3xl font-bold text-yellow-400">
+                    {performanceStats.overall.bestStreak}
+                  </div>
+                  <div
+                    className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                  >
+                    Best Streak
+                  </div>
                 </div>
                 <div>
                   <div className="text-3xl font-bold text-blue-400">
-                    {performanceStats.overall.correct + performanceStats.overall.incorrect > 0
-                      ? Math.round((performanceStats.overall.correct / (performanceStats.overall.correct + performanceStats.overall.incorrect)) * 100)
-                      : 0}%
+                    {performanceStats.overall.correct +
+                      performanceStats.overall.incorrect >
+                    0
+                      ? Math.round(
+                          (performanceStats.overall.correct /
+                            (performanceStats.overall.correct +
+                              performanceStats.overall.incorrect)) *
+                            100,
+                        )
+                      : 0}
+                    %
                   </div>
-                  <div className={`text-sm ${darkMode ? 'text-slate-400' : 'text-slate-600'}`}>Accuracy</div>
+                  <div
+                    className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                  >
+                    Accuracy
+                  </div>
                 </div>
               </div>
             </div>
 
             {/* By Category */}
-            <div className={`${darkMode ? 'bg-slate-800 border-purple-500' : 'bg-white border-purple-300'} rounded-xl p-6 border-2`}>
-              <h2 className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-slate-900'} mb-4`}>
+            <div
+              className={`${darkMode ? "bg-slate-800 border-purple-500" : "bg-white border-purple-300"} rounded-xl p-6 border-2`}
+            >
+              <h2
+                className={`text-2xl font-bold ${darkMode ? "text-white" : "text-slate-900"} mb-4`}
+              >
                 Performance by Topic
               </h2>
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {Object.keys(performanceStats.byCategory).map(category => {
+                {Object.keys(performanceStats.byCategory).map((category) => {
                   const stats = performanceStats.byCategory[category];
                   const total = stats.correct + stats.incorrect;
-                  const accuracy = total > 0 ? Math.round((stats.correct / total) * 100) : 0;
+                  const accuracy =
+                    total > 0 ? Math.round((stats.correct / total) * 100) : 0;
                   const isWeak = weakTopics.includes(category);
 
                   return (
-                    <div key={category} className={`${darkMode ? 'bg-slate-700' : 'bg-slate-100'} rounded-lg p-4 ${isWeak ? 'border-2 border-orange-500' : ''}`}>
+                    <div
+                      key={category}
+                      className={`${darkMode ? "bg-slate-700" : "bg-slate-100"} rounded-lg p-4 ${isWeak ? "border-2 border-orange-500" : ""}`}
+                    >
                       <div className="flex items-center justify-between mb-2">
-                        <div className={`font-semibold ${darkMode ? 'text-white' : 'text-slate-900'}`}>{category}</div>
+                        <div
+                          className={`font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
+                        >
+                          {category}
+                        </div>
                         {isWeak && <Zap className="w-4 h-4 text-orange-500" />}
                       </div>
-                      <div className="text-2xl font-bold text-blue-400">{accuracy}%</div>
-                      <div className={`text-sm ${darkMode ? 'text-slate-400' : 'text-slate-600'}`}>
+                      <div className="text-2xl font-bold text-blue-400">
+                        {accuracy}%
+                      </div>
+                      <div
+                        className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                      >
                         {stats.correct}/{total} correct
                       </div>
                     </div>
@@ -531,12 +736,17 @@ export default function T6AEnhancedStudyTool() {
                   <AlertCircle className="w-5 h-5" />
                   Topics Needing Review
                 </h3>
-                <p className={`${darkMode ? 'text-slate-300' : 'text-slate-700'} mb-3`}>
+                <p
+                  className={`${darkMode ? "text-slate-300" : "text-slate-700"} mb-3`}
+                >
                   Focus on these topics to improve your performance:
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  {weakTopics.map(topic => (
-                    <span key={topic} className="bg-orange-600 text-white px-3 py-1 rounded-full text-sm">
+                  {weakTopics.map((topic) => (
+                    <span
+                      key={topic}
+                      className="bg-orange-600 text-white px-3 py-1 rounded-full text-sm"
+                    >
                       {topic}
                     </span>
                   ))}
@@ -546,16 +756,23 @@ export default function T6AEnhancedStudyTool() {
 
             <button
               onClick={() => {
-                if (window.confirm('Are you sure you want to reset all progress?')) {
+                if (
+                  window.confirm("Are you sure you want to reset all progress?")
+                ) {
                   setPerformanceStats({
                     byCategory: {},
                     byQuestionType: {},
-                    overall: { correct: 0, incorrect: 0, streak: 0, bestStreak: 0 }
+                    overall: {
+                      correct: 0,
+                      incorrect: 0,
+                      streak: 0,
+                      bestStreak: 0,
+                    },
                   });
                   setFlaggedQuestions([]);
                 }
               }}
-              className={`${darkMode ? 'bg-slate-700 hover:bg-slate-600' : 'bg-slate-300 hover:bg-slate-400'} px-6 py-3 rounded-lg font-medium transition flex items-center gap-2 mx-auto`}
+              className={`${darkMode ? "bg-slate-700 hover:bg-slate-600" : "bg-slate-300 hover:bg-slate-400"} px-6 py-3 rounded-lg font-medium transition flex items-center gap-2 mx-auto`}
             >
               <RotateCcw className="w-5 h-5" />
               Reset All Progress
@@ -565,27 +782,39 @@ export default function T6AEnhancedStudyTool() {
           <div className="max-w-4xl mx-auto">
             {/* Question Counter */}
             <div className="text-center mb-4">
-              <span className={`text-lg font-semibold ${darkMode ? 'text-white' : 'text-slate-900'}`}>
+              <span
+                className={`text-lg font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
+              >
                 Question {currentQuestionIndex + 1} of {currentQuestions.length}
               </span>
             </div>
 
             {/* Question Card */}
-            <div className={`${darkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-300'} rounded-xl shadow-2xl p-8 border-2`}>
+            <div
+              className={`${darkMode ? "bg-slate-800 border-slate-700" : "bg-white border-slate-300"} rounded-xl shadow-2xl p-8 border-2`}
+            >
               {currentQuestion && (
                 <div className="mb-6 flex items-center justify-between flex-wrap gap-2">
                   <div className="flex items-center gap-2">
-                    <span className={`px-3 py-1 rounded-full text-xs font-bold ${
-                      currentQuestion.difficulty === 'critical' ? 'bg-red-600 text-white' :
-                      currentQuestion.difficulty === 'high' ? 'bg-orange-600 text-white' :
-                      'bg-yellow-600 text-white'
-                    }`}>
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-bold ${
+                        currentQuestion.difficulty === "critical"
+                          ? "bg-red-600 text-white"
+                          : currentQuestion.difficulty === "high"
+                            ? "bg-orange-600 text-white"
+                            : "bg-yellow-600 text-white"
+                      }`}
+                    >
                       {currentQuestion.difficulty?.toUpperCase()}
                     </span>
-                    <span className={`${darkMode ? 'bg-blue-900/30 text-blue-300' : 'bg-blue-100 text-blue-700'} px-3 py-1 rounded-full text-xs font-medium`}>
+                    <span
+                      className={`${darkMode ? "bg-blue-900/30 text-blue-300" : "bg-blue-100 text-blue-700"} px-3 py-1 rounded-full text-xs font-medium`}
+                    >
                       {currentQuestion.category}
                     </span>
-                    <span className={`${darkMode ? 'bg-purple-900/30 text-purple-300' : 'bg-purple-100 text-purple-700'} px-3 py-1 rounded-full text-xs font-medium`}>
+                    <span
+                      className={`${darkMode ? "bg-purple-900/30 text-purple-300" : "bg-purple-100 text-purple-700"} px-3 py-1 rounded-full text-xs font-medium`}
+                    >
                       {questionTypeLabels[currentQuestion.questionType]}
                     </span>
                   </div>
@@ -593,11 +822,15 @@ export default function T6AEnhancedStudyTool() {
                     onClick={toggleFlag}
                     className={`px-3 py-1 rounded-lg text-sm font-medium transition ${
                       flaggedQuestions.includes(currentQuestion.id)
-                        ? 'bg-yellow-600 text-white'
-                        : darkMode ? 'bg-slate-700 text-slate-300 hover:bg-slate-600' : 'bg-slate-200 text-slate-700 hover:bg-slate-300'
+                        ? "bg-yellow-600 text-white"
+                        : darkMode
+                          ? "bg-slate-700 text-slate-300 hover:bg-slate-600"
+                          : "bg-slate-200 text-slate-700 hover:bg-slate-300"
                     }`}
                   >
-                    {flaggedQuestions.includes(currentQuestion.id) ? '⭐ Flagged' : '☆ Flag for Review'}
+                    {flaggedQuestions.includes(currentQuestion.id)
+                      ? "⭐ Flagged"
+                      : "☆ Flag for Review"}
                   </button>
                 </div>
               )}
@@ -612,30 +845,71 @@ export default function T6AEnhancedStudyTool() {
                 disabled={currentQuestionIndex === 0}
                 className={`px-6 py-3 rounded-lg font-medium transition flex items-center gap-2 ${
                   currentQuestionIndex === 0
-                    ? darkMode ? 'bg-slate-800 text-slate-600 cursor-not-allowed' : 'bg-slate-200 text-slate-400 cursor-not-allowed'
-                    : darkMode ? 'bg-slate-700 hover:bg-slate-600 text-white' : 'bg-white hover:bg-slate-100 text-slate-900'
+                    ? darkMode
+                      ? "bg-slate-800 text-slate-600 cursor-not-allowed"
+                      : "bg-slate-200 text-slate-400 cursor-not-allowed"
+                    : darkMode
+                      ? "bg-slate-700 hover:bg-slate-600 text-white"
+                      : "bg-white hover:bg-slate-100 text-slate-900"
                 }`}
               >
                 <ChevronRight className="w-5 h-5 rotate-180" />
                 Previous
               </button>
 
-              {studyMode === 'quiz' && userAnswers[currentQuestion?.id] && !showExplanation && (
-                <button
-                  onClick={() => setShowExplanation(true)}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition"
-                >
-                  Show Answer
-                </button>
-              )}
+              {/* Submit button for sequence questions in study mode */}
+              {studyMode === "study" &&
+                currentQuestion?.questionType === "reorderSequence" &&
+                userAnswers[currentQuestion?.id] &&
+                !showExplanation && (
+                  <button
+                    onClick={() => {
+                      setShowExplanation(true);
+                      const isCorrect = checkAnswer(
+                        currentQuestion,
+                        userAnswers[currentQuestion.id],
+                      );
+                      updatePerformance(currentQuestion, isCorrect);
+                    }}
+                    className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition"
+                  >
+                    Submit Order
+                  </button>
+                )}
+
+              {/* Show Answer button for quiz mode */}
+              {studyMode === "quiz" &&
+                userAnswers[currentQuestion?.id] &&
+                !showExplanation && (
+                  <button
+                    onClick={() => {
+                      setShowExplanation(true);
+                      // Update performance for sequence questions when showing answer
+                      if (currentQuestion?.questionType === "reorderSequence") {
+                        const isCorrect = checkAnswer(
+                          currentQuestion,
+                          userAnswers[currentQuestion.id],
+                        );
+                        updatePerformance(currentQuestion, isCorrect);
+                      }
+                    }}
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition"
+                  >
+                    Show Answer
+                  </button>
+                )}
 
               <button
                 onClick={handleNext}
                 disabled={currentQuestionIndex === currentQuestions.length - 1}
                 className={`px-6 py-3 rounded-lg font-medium transition flex items-center gap-2 ${
                   currentQuestionIndex === currentQuestions.length - 1
-                    ? darkMode ? 'bg-slate-800 text-slate-600 cursor-not-allowed' : 'bg-slate-200 text-slate-400 cursor-not-allowed'
-                    : darkMode ? 'bg-slate-700 hover:bg-slate-600 text-white' : 'bg-white hover:bg-slate-100 text-slate-900'
+                    ? darkMode
+                      ? "bg-slate-800 text-slate-600 cursor-not-allowed"
+                      : "bg-slate-200 text-slate-400 cursor-not-allowed"
+                    : darkMode
+                      ? "bg-slate-700 hover:bg-slate-600 text-white"
+                      : "bg-white hover:bg-slate-100 text-slate-900"
                 }`}
               >
                 Next
