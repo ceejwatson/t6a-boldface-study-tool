@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { CheckCircle2, XCircle, ArrowRight, BookOpen } from "lucide-react";
 
 export default function MatchItems({
@@ -27,6 +27,12 @@ export default function MatchItems({
 
   const [selectedLeft, setSelectedLeft] = useState(null);
   const [selectedRight, setSelectedRight] = useState(null);
+
+  // Refs for drawing lines
+  const containerRef = useRef(null);
+  const leftRefs = useRef({});
+  const rightRefs = useRef({});
+  const [lines, setLines] = useState([]);
 
   const handleLeftClick = (item) => {
     if (disabled) return;
@@ -135,6 +141,51 @@ export default function MatchItems({
     (item) => matches[item] && isCorrectMatch(item, matches[item]),
   );
 
+  // Calculate lines between matched items
+  useEffect(() => {
+    const calculateLines = () => {
+      if (!containerRef.current) return;
+
+      const containerRect = containerRef.current.getBoundingClientRect();
+      const newLines = [];
+
+      Object.keys(matches).forEach((leftItem) => {
+        const rightItem = matches[leftItem];
+        const leftEl = leftRefs.current[leftItem];
+        const rightEl = rightRefs.current[rightItem];
+
+        if (leftEl && rightEl) {
+          const leftRect = leftEl.getBoundingClientRect();
+          const rightRect = rightEl.getBoundingClientRect();
+
+          // Calculate positions relative to container
+          const x1 = leftRect.right - containerRect.left;
+          const y1 = leftRect.top + leftRect.height / 2 - containerRect.top;
+          const x2 = rightRect.left - containerRect.left;
+          const y2 = rightRect.top + rightRect.height / 2 - containerRect.top;
+
+          // Determine line color based on correctness
+          let color = darkMode ? "#60a5fa" : "#3b82f6"; // blue default
+          if (showExplanation && showCorrectness && !isLimitationsMode) {
+            color = isCorrectMatch(leftItem, rightItem)
+              ? "#4ade80" // green
+              : "#f87171"; // red
+          }
+
+          newLines.push({ x1, y1, x2, y2, color });
+        }
+      });
+
+      setLines(newLines);
+    };
+
+    calculateLines();
+
+    // Recalculate on window resize
+    window.addEventListener("resize", calculateLines);
+    return () => window.removeEventListener("resize", calculateLines);
+  }, [matches, showExplanation, showCorrectness, isLimitationsMode, darkMode]);
+
   return (
     <div className="space-y-4">
       <h3
@@ -151,12 +202,31 @@ export default function MatchItems({
           : "Click items from each column to match them"}
       </p>
 
-      <div className="grid md:grid-cols-2 gap-8">
+      <div ref={containerRef} className="relative grid md:grid-cols-2 gap-8">
+        {/* SVG overlay for lines */}
+        <svg
+          className="absolute top-0 left-0 w-full h-full pointer-events-none"
+          style={{ zIndex: 0 }}
+        >
+          {lines.map((line, idx) => (
+            <line
+              key={idx}
+              x1={line.x1}
+              y1={line.y1}
+              x2={line.x2}
+              y2={line.y2}
+              stroke={line.color}
+              strokeWidth="2"
+              strokeDasharray="5,5"
+            />
+          ))}
+        </svg>
         {/* Left Column */}
-        <div className="space-y-3">
+        <div className="space-y-3 relative" style={{ zIndex: 1 }}>
           {leftItems.map((item) => (
             <div key={item} className="space-y-2">
               <button
+                ref={(el) => (leftRefs.current[item] = el)}
                 onClick={() => handleLeftClick(item)}
                 disabled={disabled}
                 className={`w-full p-4 rounded-lg border-2 transition-all text-left ${getLeftItemStyle(item)} ${
@@ -199,10 +269,11 @@ export default function MatchItems({
         </div>
 
         {/* Right Column */}
-        <div className="space-y-3">
+        <div className="space-y-3 relative" style={{ zIndex: 1 }}>
           {rightItems.map((item) => (
             <button
               key={item}
+              ref={(el) => (rightRefs.current[item] = el)}
               onClick={() => handleRightClick(item)}
               disabled={disabled}
               className={`w-full p-4 rounded-lg border-2 transition-all text-left ${getRightItemStyle(item)} ${
