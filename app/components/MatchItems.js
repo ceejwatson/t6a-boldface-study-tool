@@ -1,14 +1,15 @@
 "use client";
 
-import { useState } from 'react';
-import { CheckCircle2, XCircle, ArrowRight } from 'lucide-react';
+import { useState } from "react";
+import { CheckCircle2, XCircle, ArrowRight } from "lucide-react";
 
 export default function MatchItems({
   question,
   onAnswer,
   showExplanation,
   userAnswer,
-  disabled
+  disabled,
+  darkMode = true,
 }) {
   const [matches, setMatches] = useState(() => {
     if (userAnswer && Object.keys(userAnswer).length > 0) {
@@ -17,9 +18,9 @@ export default function MatchItems({
     return {};
   });
 
-  const [leftItems] = useState(() => question.pairs.map(p => p.left));
+  const [leftItems] = useState(() => question.pairs.map((p) => p.left));
   const [rightItems] = useState(() =>
-    [...question.pairs.map(p => p.right)].sort(() => Math.random() - 0.5)
+    [...question.pairs.map((p) => p.right)].sort(() => Math.random() - 0.5),
   );
 
   const [selectedLeft, setSelectedLeft] = useState(null);
@@ -58,12 +59,12 @@ export default function MatchItems({
   };
 
   const isCorrectMatch = (left, right) => {
-    const correctPair = question.pairs.find(p => p.left === left);
+    const correctPair = question.pairs.find((p) => p.left === left);
     return correctPair && correctPair.right === right;
   };
 
   const isItemMatched = (item, side) => {
-    if (side === 'left') {
+    if (side === "left") {
       return matches[item] !== undefined;
     } else {
       return Object.values(matches).includes(item);
@@ -71,59 +72,81 @@ export default function MatchItems({
   };
 
   const getLeftItemStyle = (item) => {
-    const isMatched = isItemMatched(item, 'left');
+    const isMatched = isItemMatched(item, "left");
     const isSelected = selectedLeft === item;
 
     if (!showExplanation) {
-      if (isSelected) return 'bg-blue-600 border-blue-600 text-white';
-      if (isMatched) return 'bg-slate-700 border-slate-500 text-white';
-      return 'bg-slate-800 border-slate-600 text-white hover:border-blue-500';
+      if (isSelected) return "bg-blue-600 border-blue-600 text-white";
+      if (isMatched)
+        return darkMode
+          ? "bg-slate-700 border-slate-500 text-white"
+          : "bg-slate-100 border-slate-400 text-slate-900";
+      return darkMode
+        ? "bg-slate-800 border-slate-600 text-white hover:border-blue-500"
+        : "bg-white border-slate-300 text-slate-900 hover:border-blue-500";
     }
 
     // Show results
     if (isMatched && isCorrectMatch(item, matches[item])) {
-      return 'bg-green-900/30 border-green-600 text-white';
+      return "bg-green-900/30 border-green-600 text-white";
     }
     if (isMatched) {
-      return 'bg-red-900/30 border-red-600 text-white';
+      return "bg-red-900/30 border-red-600 text-white";
     }
-    return 'bg-slate-700 border-slate-600 text-slate-400';
+    return darkMode
+      ? "bg-slate-700 border-slate-600 text-slate-400"
+      : "bg-slate-100 border-slate-300 text-slate-500";
   };
 
   const getRightItemStyle = (item) => {
-    const isMatched = isItemMatched(item, 'right');
+    const isMatched = isItemMatched(item, "right");
     const isSelected = selectedRight === item;
 
     if (!showExplanation) {
-      if (isSelected) return 'bg-blue-600 border-blue-600 text-white';
-      if (isMatched) return 'bg-slate-700 border-slate-500 text-white';
-      return 'bg-slate-800 border-slate-600 text-white hover:border-blue-500';
+      if (isSelected) return "bg-blue-600 border-blue-600 text-white";
+      if (isMatched)
+        return darkMode
+          ? "bg-slate-700 border-slate-500 text-white"
+          : "bg-slate-100 border-slate-400 text-slate-900";
+      return darkMode
+        ? "bg-slate-800 border-slate-600 text-white hover:border-blue-500"
+        : "bg-white border-slate-300 text-slate-900 hover:border-blue-500";
     }
 
     // Show results
-    const leftItem = Object.keys(matches).find(left => matches[left] === item);
+    const leftItem = Object.keys(matches).find(
+      (left) => matches[left] === item,
+    );
     if (leftItem && isCorrectMatch(leftItem, item)) {
-      return 'bg-green-900/30 border-green-600 text-white';
+      return "bg-green-900/30 border-green-600 text-white";
     }
     if (isMatched) {
-      return 'bg-red-900/30 border-red-600 text-white';
+      return "bg-red-900/30 border-red-600 text-white";
     }
-    return 'bg-slate-700 border-slate-600 text-slate-400';
+    return darkMode
+      ? "bg-slate-700 border-slate-600 text-slate-400"
+      : "bg-slate-100 border-slate-300 text-slate-500";
   };
 
-  const allMatched = leftItems.every(item => matches[item] !== undefined);
-  const allCorrect = leftItems.every(item =>
-    matches[item] && isCorrectMatch(item, matches[item])
+  const allMatched = leftItems.every((item) => matches[item] !== undefined);
+  const allCorrect = leftItems.every(
+    (item) => matches[item] && isCorrectMatch(item, matches[item]),
   );
 
   return (
     <div className="space-y-4">
-      <h3 className="text-xl font-semibold text-white mb-4">
+      <h3
+        className={`text-xl font-semibold mb-4 ${darkMode ? "text-white" : "text-slate-900"}`}
+      >
         {question.question}
       </h3>
 
-      <p className="text-slate-400 text-sm mb-6">
-        {disabled ? 'View your matches below' : 'Click items from each column to match them'}
+      <p
+        className={`text-sm mb-6 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+      >
+        {disabled
+          ? "View your matches below"
+          : "Click items from each column to match them"}
       </p>
 
       <div className="grid md:grid-cols-2 gap-8">
@@ -135,7 +158,7 @@ export default function MatchItems({
                 onClick={() => handleLeftClick(item)}
                 disabled={disabled}
                 className={`w-full p-4 rounded-lg border-2 transition-all text-left ${getLeftItemStyle(item)} ${
-                  disabled ? 'cursor-default' : 'cursor-pointer'
+                  disabled ? "cursor-default" : "cursor-pointer"
                 }`}
               >
                 <div className="flex items-center justify-between">
@@ -151,13 +174,13 @@ export default function MatchItems({
                       ✕
                     </button>
                   )}
-                  {showExplanation && matches[item] && (
-                    isCorrectMatch(item, matches[item]) ? (
+                  {showExplanation &&
+                    matches[item] &&
+                    (isCorrectMatch(item, matches[item]) ? (
                       <CheckCircle2 className="w-5 h-5 text-green-400" />
                     ) : (
                       <XCircle className="w-5 h-5 text-red-400" />
-                    )
-                  )}
+                    ))}
                 </div>
               </button>
 
@@ -179,7 +202,7 @@ export default function MatchItems({
               onClick={() => handleRightClick(item)}
               disabled={disabled}
               className={`w-full p-4 rounded-lg border-2 transition-all text-left ${getRightItemStyle(item)} ${
-                disabled ? 'cursor-default' : 'cursor-pointer'
+                disabled ? "cursor-default" : "cursor-pointer"
               }`}
             >
               {item}
@@ -189,34 +212,58 @@ export default function MatchItems({
       </div>
 
       {showExplanation && (
-        <div className={`mt-6 p-4 rounded-lg ${
-          allCorrect
-            ? 'bg-green-900/30 border-2 border-green-600'
-            : 'bg-red-900/30 border-2 border-red-600'
-        }`}>
+        <div
+          className={`mt-6 p-4 rounded-lg ${
+            allCorrect
+              ? "bg-green-900/30 border-2 border-green-600"
+              : "bg-red-900/30 border-2 border-red-600"
+          }`}
+        >
           <div className="flex items-center gap-2 mb-2">
             {allCorrect ? (
               <CheckCircle2 className="w-6 h-6 text-green-400" />
             ) : (
               <XCircle className="w-6 h-6 text-red-400" />
             )}
-            <span className={`font-semibold ${
-              allCorrect ? 'text-green-400' : 'text-red-400'
-            }`}>
-              {allCorrect ? 'All Correct!' : `${leftItems.filter(item => matches[item] && isCorrectMatch(item, matches[item])).length}/${leftItems.length} Correct`}
+            <span
+              className={`font-semibold ${
+                allCorrect ? "text-green-400" : "text-red-400"
+              }`}
+            >
+              {allCorrect
+                ? "All Correct!"
+                : `${leftItems.filter((item) => matches[item] && isCorrectMatch(item, matches[item])).length}/${leftItems.length} Correct`}
             </span>
           </div>
-          <p className="text-white mt-2">{question.explanation}</p>
+          <p className={`mt-2 ${darkMode ? "text-white" : "text-slate-900"}`}>
+            {question.explanation}
+          </p>
 
           {!allCorrect && (
-            <div className="mt-4 p-3 bg-slate-800 rounded">
-              <p className="text-sm text-slate-300 mb-2">Correct matches:</p>
+            <div
+              className={`mt-4 p-3 rounded ${darkMode ? "bg-slate-800" : "bg-slate-100"}`}
+            >
+              <p
+                className={`text-sm mb-2 ${darkMode ? "text-slate-300" : "text-slate-700"}`}
+              >
+                Correct matches:
+              </p>
               <div className="space-y-1">
                 {question.pairs.map((pair, i) => (
                   <div key={i} className="flex items-center gap-2 text-sm">
-                    <span className="text-white">{pair.left}</span>
-                    <ArrowRight className="w-4 h-4 text-slate-400" />
-                    <span className="text-white">{pair.right}</span>
+                    <span
+                      className={darkMode ? "text-white" : "text-slate-900"}
+                    >
+                      {pair.left}
+                    </span>
+                    <ArrowRight
+                      className={`w-4 h-4 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                    />
+                    <span
+                      className={darkMode ? "text-white" : "text-slate-900"}
+                    >
+                      {pair.right}
+                    </span>
                   </div>
                 ))}
               </div>

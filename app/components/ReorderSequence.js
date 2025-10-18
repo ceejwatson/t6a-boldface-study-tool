@@ -1,14 +1,21 @@
 "use client";
 
-import { useState } from 'react';
-import { CheckCircle2, XCircle, GripVertical, ArrowUp, ArrowDown } from 'lucide-react';
+import { useState } from "react";
+import {
+  CheckCircle2,
+  XCircle,
+  GripVertical,
+  ArrowUp,
+  ArrowDown,
+} from "lucide-react";
 
 export default function ReorderSequence({
   question,
   onAnswer,
   showExplanation,
   userAnswer,
-  disabled
+  disabled,
+  darkMode = true,
 }) {
   const [items, setItems] = useState(() => {
     if (userAnswer && userAnswer.length > 0) {
@@ -21,11 +28,14 @@ export default function ReorderSequence({
   const moveItem = (index, direction) => {
     if (disabled) return;
 
-    const newIndex = direction === 'up' ? index - 1 : index + 1;
+    const newIndex = direction === "up" ? index - 1 : index + 1;
     if (newIndex < 0 || newIndex >= items.length) return;
 
     const newItems = [...items];
-    [newItems[index], newItems[newIndex]] = [newItems[newIndex], newItems[index]];
+    [newItems[index], newItems[newIndex]] = [
+      newItems[newIndex],
+      newItems[index],
+    ];
     setItems(newItems);
     onAnswer(newItems);
   };
@@ -37,16 +47,19 @@ export default function ReorderSequence({
 
   const getItemStyle = (index) => {
     if (!showExplanation) {
-      return 'bg-slate-800 border-slate-600 hover:border-blue-500';
+      return darkMode
+        ? "bg-slate-800 border-slate-600 hover:border-blue-500"
+        : "bg-white border-slate-300 hover:border-blue-500";
     }
 
     // Check if this step is in the correct position
-    const isCorrectPosition = userAnswer && userAnswer[index] === question.correctOrder[index];
+    const isCorrectPosition =
+      userAnswer && userAnswer[index] === question.correctOrder[index];
 
     if (isCorrectPosition) {
-      return 'bg-green-900/30 border-green-600';
+      return "bg-green-900/30 border-green-600";
     }
-    return 'bg-red-900/30 border-red-600';
+    return "bg-red-900/30 border-red-600";
   };
 
   const getStepNumber = (item) => {
@@ -57,11 +70,15 @@ export default function ReorderSequence({
 
   return (
     <div className="space-y-4">
-      <h3 className="text-xl font-semibold text-white mb-4">
+      <h3
+        className={`text-xl font-semibold mb-4 ${darkMode ? "text-white" : "text-slate-900"}`}
+      >
         {question.question}
       </h3>
 
-      <p className="text-slate-400 text-sm mb-6">
+      <p
+        className={`text-sm mb-6 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+      >
         Use the arrows to arrange the steps in the correct order
       </p>
 
@@ -74,23 +91,23 @@ export default function ReorderSequence({
             <div className="flex items-center gap-3">
               <div className="flex flex-col gap-1">
                 <button
-                  onClick={() => moveItem(index, 'up')}
+                  onClick={() => moveItem(index, "up")}
                   disabled={disabled || index === 0}
                   className={`p-1 rounded ${
                     disabled || index === 0
-                      ? 'text-slate-600 cursor-not-allowed'
-                      : 'text-slate-400 hover:text-white hover:bg-slate-700'
+                      ? "text-slate-600 cursor-not-allowed"
+                      : "text-slate-400 hover:text-white hover:bg-slate-700"
                   }`}
                 >
                   <ArrowUp className="w-4 h-4" />
                 </button>
                 <button
-                  onClick={() => moveItem(index, 'down')}
+                  onClick={() => moveItem(index, "down")}
                   disabled={disabled || index === items.length - 1}
                   className={`p-1 rounded ${
                     disabled || index === items.length - 1
-                      ? 'text-slate-600 cursor-not-allowed'
-                      : 'text-slate-400 hover:text-white hover:bg-slate-700'
+                      ? "text-slate-600 cursor-not-allowed"
+                      : "text-slate-400 hover:text-white hover:bg-slate-700"
                   }`}
                 >
                   <ArrowDown className="w-4 h-4" />
@@ -99,10 +116,16 @@ export default function ReorderSequence({
 
               <div className="flex-1">
                 <div className="flex items-center gap-3">
-                  <span className="text-2xl font-bold text-slate-400">
+                  <span
+                    className={`text-2xl font-bold ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                  >
                     {index + 1}
                   </span>
-                  <span className="text-white flex-1">{item}</span>
+                  <span
+                    className={`flex-1 ${darkMode ? "text-white" : "text-slate-900"}`}
+                  >
+                    {item}
+                  </span>
                   {showExplanation && (
                     <span className="text-sm text-slate-400">
                       (Correct: #{getStepNumber(item)})
@@ -118,31 +141,48 @@ export default function ReorderSequence({
       </div>
 
       {showExplanation && (
-        <div className={`mt-6 p-4 rounded-lg ${
-          isCorrect()
-            ? 'bg-green-900/30 border-2 border-green-600'
-            : 'bg-red-900/30 border-2 border-red-600'
-        }`}>
+        <div
+          className={`mt-6 p-4 rounded-lg ${
+            isCorrect()
+              ? "bg-green-900/30 border-2 border-green-600"
+              : "bg-red-900/30 border-2 border-red-600"
+          }`}
+        >
           <div className="flex items-center gap-2 mb-2">
             {isCorrect() ? (
               <CheckCircle2 className="w-6 h-6 text-green-400" />
             ) : (
               <XCircle className="w-6 h-6 text-red-400" />
             )}
-            <span className={`font-semibold ${
-              isCorrect() ? 'text-green-400' : 'text-red-400'
-            }`}>
-              {isCorrect() ? 'Perfect Order!' : 'Incorrect Order'}
+            <span
+              className={`font-semibold ${
+                isCorrect() ? "text-green-400" : "text-red-400"
+              }`}
+            >
+              {isCorrect() ? "Perfect Order!" : "Incorrect Order"}
             </span>
           </div>
-          <p className="text-white mt-2">{question.explanation}</p>
+          <p className={`mt-2 ${darkMode ? "text-white" : "text-slate-900"}`}>
+            {question.explanation}
+          </p>
 
           {!isCorrect() && (
-            <div className="mt-4 p-3 bg-slate-800 rounded">
-              <p className="text-sm text-slate-300 mb-2">Correct order:</p>
+            <div
+              className={`mt-4 p-3 rounded ${darkMode ? "bg-slate-800" : "bg-slate-100"}`}
+            >
+              <p
+                className={`text-sm mb-2 ${darkMode ? "text-slate-300" : "text-slate-700"}`}
+              >
+                Correct order:
+              </p>
               <ol className="list-decimal list-inside space-y-1">
                 {question.correctOrder.map((step, i) => (
-                  <li key={i} className="text-white text-sm">{step}</li>
+                  <li
+                    key={i}
+                    className={`text-sm ${darkMode ? "text-white" : "text-slate-900"}`}
+                  >
+                    {step}
+                  </li>
                 ))}
               </ol>
             </div>

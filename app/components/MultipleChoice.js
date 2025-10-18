@@ -1,13 +1,14 @@
 "use client";
 
-import { CheckCircle2, XCircle } from 'lucide-react';
+import { CheckCircle2, XCircle } from "lucide-react";
 
 export default function MultipleChoice({
   question,
   onAnswer,
   showExplanation,
   userAnswer,
-  disabled
+  disabled,
+  darkMode = true,
 }) {
   const handleSelect = (index) => {
     if (disabled) return;
@@ -17,18 +18,22 @@ export default function MultipleChoice({
   const getOptionStyle = (index) => {
     if (!showExplanation) {
       return userAnswer === index
-        ? 'bg-blue-600 text-white border-blue-600'
-        : 'bg-slate-800 text-white border-slate-600 hover:border-blue-500';
+        ? "bg-blue-600 text-white border-blue-600"
+        : darkMode
+          ? "bg-slate-800 text-white border-slate-600 hover:border-blue-500"
+          : "bg-white text-slate-900 border-slate-300 hover:border-blue-500";
     }
 
     // Show results
     if (index === question.correctAnswer) {
-      return 'bg-green-600 text-white border-green-600';
+      return "bg-green-600 text-white border-green-600";
     }
     if (userAnswer === index && userAnswer !== question.correctAnswer) {
-      return 'bg-red-600 text-white border-red-600';
+      return "bg-red-600 text-white border-red-600";
     }
-    return 'bg-slate-700 text-slate-400 border-slate-600';
+    return darkMode
+      ? "bg-slate-700 text-slate-400 border-slate-600"
+      : "bg-slate-100 text-slate-500 border-slate-300";
   };
 
   const getOptionIcon = (index) => {
@@ -45,7 +50,9 @@ export default function MultipleChoice({
 
   return (
     <div className="space-y-4">
-      <h3 className="text-xl font-semibold text-white mb-6">
+      <h3
+        className={`text-xl font-semibold mb-6 ${darkMode ? "text-white" : "text-slate-900"}`}
+      >
         {question.question}
       </h3>
 
@@ -56,7 +63,7 @@ export default function MultipleChoice({
             onClick={() => handleSelect(index)}
             disabled={disabled}
             className={`w-full p-4 rounded-lg border-2 transition-all text-left flex items-center justify-between ${getOptionStyle(index)} ${
-              disabled ? 'cursor-not-allowed' : 'cursor-pointer'
+              disabled ? "cursor-not-allowed" : "cursor-pointer"
             }`}
           >
             <span className="flex-1">{option}</span>
@@ -66,24 +73,32 @@ export default function MultipleChoice({
       </div>
 
       {showExplanation && (
-        <div className={`mt-6 p-4 rounded-lg ${
-          userAnswer === question.correctAnswer
-            ? 'bg-green-900/30 border-2 border-green-600'
-            : 'bg-red-900/30 border-2 border-red-600'
-        }`}>
+        <div
+          className={`mt-6 p-4 rounded-lg ${
+            userAnswer === question.correctAnswer
+              ? "bg-green-900/30 border-2 border-green-600"
+              : "bg-red-900/30 border-2 border-red-600"
+          }`}
+        >
           <div className="flex items-center gap-2 mb-2">
             {userAnswer === question.correctAnswer ? (
               <CheckCircle2 className="w-6 h-6 text-green-400" />
             ) : (
               <XCircle className="w-6 h-6 text-red-400" />
             )}
-            <span className={`font-semibold ${
-              userAnswer === question.correctAnswer ? 'text-green-400' : 'text-red-400'
-            }`}>
-              {userAnswer === question.correctAnswer ? 'Correct!' : 'Incorrect'}
+            <span
+              className={`font-semibold ${
+                userAnswer === question.correctAnswer
+                  ? "text-green-400"
+                  : "text-red-400"
+              }`}
+            >
+              {userAnswer === question.correctAnswer ? "Correct!" : "Incorrect"}
             </span>
           </div>
-          <p className="text-white mt-2">{question.explanation}</p>
+          <p className={`mt-2 ${darkMode ? "text-white" : "text-slate-900"}`}>
+            {question.explanation}
+          </p>
         </div>
       )}
     </div>

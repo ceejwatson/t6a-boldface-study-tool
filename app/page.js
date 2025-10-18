@@ -169,23 +169,35 @@ export default function T6AEnhancedStudyTool() {
     const newAnswers = { ...userAnswers, [currentQuestion.id]: answer };
     setUserAnswers(newAnswers);
 
-    // Don't auto-show explanation or update stats for reorder sequence
-    // User needs to manually submit those
-    if (currentQuestion.questionType === "reorderSequence") {
-      // Just save the answer, don't update stats yet
-      return;
-    }
+    // For multiple choice and true/false, auto-submit immediately
+    const autoSubmitTypes = ["multipleChoice", "trueFalse"];
 
-    // Study Mode: Show answer immediately (science-based: immediate feedback)
-    if (studyMode === "study") {
-      setShowExplanation(true);
+    if (autoSubmitTypes.includes(currentQuestion.questionType)) {
+      // Auto-submit for simple question types
+      if (studyMode === "study") {
+        setShowExplanation(true);
+      }
       const isCorrect = checkAnswer(currentQuestion, answer);
       updatePerformance(currentQuestion, isCorrect);
       return;
     }
 
-    // Quiz Mode: Don't show explanation or update stats yet
-    // User will submit when ready
+    // For complex types (reorder, match), just save answer
+    // User will submit manually
+    if (studyMode === "study") {
+      // Still show explanation in study mode for match items
+      if (currentQuestion.questionType === "matchItems") {
+        // Check if all items are matched
+        const allMatched = currentQuestion.pairs.every(
+          (pair) => answer[pair.left] !== undefined,
+        );
+        if (allMatched) {
+          setShowExplanation(true);
+          const isCorrect = checkAnswer(currentQuestion, answer);
+          updatePerformance(currentQuestion, isCorrect);
+        }
+      }
+    }
   };
 
   const checkAnswer = (question, answer) => {
@@ -293,6 +305,7 @@ export default function T6AEnhancedStudyTool() {
       showExplanation: showExplanation,
       userAnswer: userAnswers[currentQuestion.id],
       disabled: showExplanation && studyMode === "study",
+      darkMode: darkMode,
     };
 
     switch (currentQuestion.questionType) {
@@ -1020,46 +1033,6 @@ export default function T6AEnhancedStudyTool() {
               )}
 
               {renderQuestion()}
-
-              {/* Confidence Rating - Science-based metacognition */}
-              {showExplanation && !confidenceRating[currentQuestion?.id] && (
-                <div
-                  className={`mt-6 p-4 rounded-lg ${darkMode ? "bg-slate-700 border-slate-600" : "bg-slate-100 border-slate-300"} border-2`}
-                >
-                  <p
-                    className={`text-sm font-medium mb-3 ${darkMode ? "text-white" : "text-slate-900"}`}
-                  >
-                    How confident were you in your answer?
-                  </p>
-                  <div className="flex gap-2">
-                    {["Not Sure", "Somewhat Sure", "Very Sure"].map(
-                      (level, idx) => (
-                        <button
-                          key={level}
-                          onClick={() => {
-                            setConfidenceRating((prev) => ({
-                              ...prev,
-                              [currentQuestion.id]: idx + 1,
-                            }));
-                          }}
-                          className={`flex-1 px-3 py-2 rounded-lg text-sm font-medium transition ${
-                            darkMode
-                              ? "bg-slate-600 hover:bg-slate-500 text-white"
-                              : "bg-white hover:bg-slate-200 text-slate-900"
-                          }`}
-                        >
-                          {level}
-                        </button>
-                      ),
-                    )}
-                  </div>
-                  <p
-                    className={`text-xs mt-2 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
-                  >
-                    Self-assessment improves learning and retention
-                  </p>
-                </div>
-              )}
             </div>
 
             {/* Navigation */}
@@ -1101,30 +1074,22 @@ export default function T6AEnhancedStudyTool() {
                   </button>
                 )}
 
-              {/* Show Answer / Submit button for quiz mode - works for all question types */}
-              {studyMode === "quiz" && !showExplanation && (
-                <button
-                  onClick={() => {
-                    setShowExplanation(true);
-                    // Update performance stats when showing answer
-                    if (userAnswers[currentQuestion?.id] !== undefined) {
-                      const isCorrect = checkAnswer(
-                        currentQuestion,
-                        userAnswers[currentQuestion.id],
-                      );
-                      updatePerformance(currentQuestion, isCorrect);
-                    } else {
-                      // If no answer given, mark as incorrect
+              {/* Show Answer for complex types in quiz mode if not answered */}
+              {studyMode === "quiz" &&
+                !showExplanation &&
+                (currentQuestion?.questionType === "reorderSequence" ||
+                  currentQuestion?.questionType === "matchItems") &&
+                !userAnswers[currentQuestion?.id] && (
+                  <button
+                    onClick={() => {
+                      setShowExplanation(true);
                       updatePerformance(currentQuestion, false);
-                    }
-                  }}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition"
-                >
-                  {userAnswers[currentQuestion?.id] !== undefined
-                    ? "Submit Answer"
-                    : "Show Answer"}
-                </button>
-              )}
+                    }}
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition"
+                  >
+                    Show Answer
+                  </button>
+                )}
 
               <button
                 onClick={handleNext}
