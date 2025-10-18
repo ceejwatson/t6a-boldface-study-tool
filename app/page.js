@@ -18,6 +18,8 @@ import {
   AlertCircle,
   Zap,
   Filter,
+  FileText,
+  ExternalLink,
 } from "lucide-react";
 
 import MultipleChoice from "./components/MultipleChoice";
@@ -374,6 +376,25 @@ export default function T6AEnhancedStudyTool() {
                   <div className="text-yellow-300 text-xs">Streak</div>
                 </div>
               </div>
+
+              {/* PDF Reference Button */}
+              <a
+                href="https://www.sheppard.af.mil/Portals/65/T-6A%20Boldface%20Ops%20Limits%2C%201%20Jun%202023%20%28Filled%29.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
+                  darkMode
+                    ? "bg-blue-600 hover:bg-blue-700 text-white"
+                    : "bg-blue-500 hover:bg-blue-600 text-white"
+                }`}
+                title="Official T-6A BOLDFACE Emergency Procedures and Operating Limitations PDF"
+              >
+                <FileText className="w-5 h-5" />
+                <span className="hidden sm:inline font-medium">
+                  T-6A BOLDFACE Reference
+                </span>
+                <ExternalLink className="w-4 h-4" />
+              </a>
 
               {/* Dark Mode Toggle */}
               <button
