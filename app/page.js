@@ -1496,6 +1496,31 @@ export default function T6AEnhancedStudyTool() {
               {renderQuestion()}
             </div>
 
+            {/* Exit Quiz Button (Quiz Mode Only) */}
+            {studyMode === "quiz" && (
+              <div className="flex justify-center mt-6">
+                <button
+                  onClick={() => {
+                    if (
+                      window.confirm(
+                        "Are you sure you want to exit this quiz? Your progress will be saved.",
+                      )
+                    ) {
+                      setActiveTab("results");
+                    }
+                  }}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2 ${
+                    darkMode
+                      ? "bg-slate-700 hover:bg-slate-600 text-slate-300"
+                      : "bg-slate-200 hover:bg-slate-300 text-slate-700"
+                  }`}
+                >
+                  <XCircle className="w-4 h-4" />
+                  Exit Quiz & Review Answers
+                </button>
+              </div>
+            )}
+
             {/* Navigation */}
             <div className="flex justify-between items-center mt-8">
               <button
