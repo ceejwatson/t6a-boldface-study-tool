@@ -175,10 +175,8 @@ export default function T6AEnhancedStudyTool() {
     const autoSubmitTypes = ["multipleChoice", "trueFalse"];
 
     if (autoSubmitTypes.includes(currentQuestion.questionType)) {
-      // Auto-submit for simple question types
-      if (studyMode === "study") {
-        setShowExplanation(true);
-      }
+      // Auto-submit for simple question types in both study and quiz mode
+      setShowExplanation(true);
       const isCorrect = checkAnswer(currentQuestion, answer);
       updatePerformance(currentQuestion, isCorrect);
       return;
@@ -435,6 +433,8 @@ export default function T6AEnhancedStudyTool() {
           <button
             onClick={() => {
               setStudyMode("study");
+              setActiveTab("main");
+              setShowQuizSetup(false);
               loadQuestions("all");
             }}
             className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
@@ -471,6 +471,8 @@ export default function T6AEnhancedStudyTool() {
           <button
             onClick={() => {
               setStudyMode("limitations");
+              setActiveTab("main");
+              setShowQuizSetup(false);
               loadQuestions("limitations");
             }}
             className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
@@ -734,7 +736,9 @@ export default function T6AEnhancedStudyTool() {
               }`}
             >
               Start Quiz (
-              {selectedTopics.length > 0 ? getCustomQuestions().length : 0}{" "}
+              {selectedTopics.length > 0
+                ? Math.min(questionCount, getCustomQuestions().length)
+                : 0}{" "}
               questions)
             </button>
           </div>
