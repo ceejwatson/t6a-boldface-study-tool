@@ -177,8 +177,11 @@ export default function T6AEnhancedStudyTool() {
     if (autoSubmitTypes.includes(currentQuestion.questionType)) {
       // Auto-submit for simple question types in both study and quiz mode
       setShowExplanation(true);
-      const isCorrect = checkAnswer(currentQuestion, answer);
-      updatePerformance(currentQuestion, isCorrect);
+      // Don't track performance in limitations mode
+      if (studyMode !== "limitations") {
+        const isCorrect = checkAnswer(currentQuestion, answer);
+        updatePerformance(currentQuestion, isCorrect);
+      }
       return;
     }
 
@@ -193,8 +196,11 @@ export default function T6AEnhancedStudyTool() {
         );
         if (allMatched) {
           setShowExplanation(true);
-          const isCorrect = checkAnswer(currentQuestion, answer);
-          updatePerformance(currentQuestion, isCorrect);
+          // Don't track performance in limitations mode
+          if (studyMode !== "limitations") {
+            const isCorrect = checkAnswer(currentQuestion, answer);
+            updatePerformance(currentQuestion, isCorrect);
+          }
         }
       }
     }
@@ -1017,6 +1023,207 @@ export default function T6AEnhancedStudyTool() {
               Reset All Progress
             </button>
           </div>
+        ) : activeTab === "results" ? (
+          <div className="max-w-4xl mx-auto">
+            {/* Quiz Results */}
+            <div
+              className={`${darkMode ? "bg-slate-800" : "bg-white"} rounded-xl p-6 mb-6`}
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h2
+                  className={`text-2xl font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
+                >
+                  Quiz Results
+                </h2>
+                <button
+                  onClick={() => {
+                    setActiveTab("study");
+                    setCurrentQuestionIndex(0);
+                    setShowExplanation(false);
+                  }}
+                  className={`px-4 py-2 rounded-lg font-medium transition ${
+                    darkMode
+                      ? "bg-slate-700 hover:bg-slate-600 text-white"
+                      : "bg-slate-200 hover:bg-slate-300 text-slate-900"
+                  }`}
+                >
+                  ← Back to Quiz
+                </button>
+              </div>
+
+              {/* Score Summary */}
+              <div className="grid grid-cols-3 gap-4 mb-6">
+                <div
+                  className={`p-4 rounded-lg ${darkMode ? "bg-green-900/30 border-2 border-green-600" : "bg-green-100 border-2 border-green-400"}`}
+                >
+                  <div
+                    className={`text-3xl font-bold ${darkMode ? "text-green-400" : "text-green-700"}`}
+                  >
+                    {
+                      Object.keys(userAnswers).filter((id) => {
+                        const question = currentQuestions.find(
+                          (q) => q.id === id,
+                        );
+                        return (
+                          question && checkAnswer(question, userAnswers[id])
+                        );
+                      }).length
+                    }
+                  </div>
+                  <div
+                    className={`text-sm ${darkMode ? "text-green-300" : "text-green-600"}`}
+                  >
+                    Correct
+                  </div>
+                </div>
+                <div
+                  className={`p-4 rounded-lg ${darkMode ? "bg-red-900/30 border-2 border-red-600" : "bg-red-100 border-2 border-red-400"}`}
+                >
+                  <div
+                    className={`text-3xl font-bold ${darkMode ? "text-red-400" : "text-red-700"}`}
+                  >
+                    {
+                      Object.keys(userAnswers).filter((id) => {
+                        const question = currentQuestions.find(
+                          (q) => q.id === id,
+                        );
+                        return (
+                          question && !checkAnswer(question, userAnswers[id])
+                        );
+                      }).length
+                    }
+                  </div>
+                  <div
+                    className={`text-sm ${darkMode ? "text-red-300" : "text-red-600"}`}
+                  >
+                    Incorrect
+                  </div>
+                </div>
+                <div
+                  className={`p-4 rounded-lg ${darkMode ? "bg-yellow-900/30 border-2 border-yellow-600" : "bg-yellow-100 border-2 border-yellow-400"}`}
+                >
+                  <div
+                    className={`text-3xl font-bold ${darkMode ? "text-yellow-400" : "text-yellow-700"}`}
+                  >
+                    {currentQuestions.length - Object.keys(userAnswers).length}
+                  </div>
+                  <div
+                    className={`text-sm ${darkMode ? "text-yellow-300" : "text-yellow-600"}`}
+                  >
+                    Unanswered
+                  </div>
+                </div>
+              </div>
+
+              {/* Question Review */}
+              <h3
+                className={`text-lg font-semibold mb-4 ${darkMode ? "text-white" : "text-slate-900"}`}
+              >
+                Review Your Answers:
+              </h3>
+              <div className="space-y-3">
+                {currentQuestions.map((question, index) => {
+                  const answered = userAnswers[question.id] !== undefined;
+                  const isCorrect =
+                    answered && checkAnswer(question, userAnswers[question.id]);
+
+                  return (
+                    <div
+                      key={question.id}
+                      className={`p-4 rounded-lg border-2 ${
+                        !answered
+                          ? darkMode
+                            ? "bg-slate-700 border-slate-600"
+                            : "bg-slate-100 border-slate-300"
+                          : isCorrect
+                            ? darkMode
+                              ? "bg-green-900/20 border-green-600"
+                              : "bg-green-50 border-green-400"
+                            : darkMode
+                              ? "bg-red-900/20 border-red-600"
+                              : "bg-red-50 border-red-400"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3 flex-1">
+                          <span
+                            className={`font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
+                          >
+                            #{index + 1}
+                          </span>
+                          <span
+                            className={`flex-1 ${darkMode ? "text-slate-200" : "text-slate-800"}`}
+                          >
+                            {question.question.split("\n")[0]}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {!answered ? (
+                            <span
+                              className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                            >
+                              Not answered
+                            </span>
+                          ) : isCorrect ? (
+                            <CheckCircle2
+                              className={`w-5 h-5 ${darkMode ? "text-green-400" : "text-green-600"}`}
+                            />
+                          ) : (
+                            <XCircle
+                              className={`w-5 h-5 ${darkMode ? "text-red-400" : "text-red-600"}`}
+                            />
+                          )}
+                          <button
+                            onClick={() => {
+                              setCurrentQuestionIndex(index);
+                              setActiveTab("study");
+                              setShowExplanation(true);
+                            }}
+                            className={`px-3 py-1 rounded text-sm ${
+                              darkMode
+                                ? "bg-blue-600 hover:bg-blue-700 text-white"
+                                : "bg-blue-500 hover:bg-blue-600 text-white"
+                            }`}
+                          >
+                            Review
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex gap-3 mt-6">
+                <button
+                  onClick={() => {
+                    setActiveTab("main");
+                    setStudyMode("study");
+                    setUserAnswers({});
+                    setCurrentQuestionIndex(0);
+                    setShowExplanation(false);
+                  }}
+                  className={`flex-1 px-6 py-3 rounded-lg font-medium transition ${
+                    darkMode
+                      ? "bg-slate-700 hover:bg-slate-600 text-white"
+                      : "bg-slate-300 hover:bg-slate-400 text-slate-900"
+                  }`}
+                >
+                  Return to Main Menu
+                </button>
+                <button
+                  onClick={() => {
+                    setShowQuizSetup(true);
+                    setActiveTab("quizsetup");
+                  }}
+                  className="flex-1 px-6 py-3 rounded-lg font-medium transition bg-purple-600 hover:bg-purple-700 text-white"
+                >
+                  Take Another Quiz
+                </button>
+              </div>
+            </div>
+          </div>
         ) : (
           <div className="max-w-4xl mx-auto">
             {/* Question Counter */}
@@ -1104,11 +1311,13 @@ export default function T6AEnhancedStudyTool() {
                   <button
                     onClick={() => {
                       setShowExplanation(true);
-                      const isCorrect = checkAnswer(
-                        currentQuestion,
-                        userAnswers[currentQuestion.id],
-                      );
-                      updatePerformance(currentQuestion, isCorrect);
+                      if (studyMode !== "limitations") {
+                        const isCorrect = checkAnswer(
+                          currentQuestion,
+                          userAnswers[currentQuestion.id],
+                        );
+                        updatePerformance(currentQuestion, isCorrect);
+                      }
                     }}
                     className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition"
                   >
@@ -1133,22 +1342,35 @@ export default function T6AEnhancedStudyTool() {
                   </button>
                 )}
 
-              <button
-                onClick={handleNext}
-                disabled={currentQuestionIndex === currentQuestions.length - 1}
-                className={`px-6 py-3 rounded-lg font-medium transition flex items-center gap-2 ${
-                  currentQuestionIndex === currentQuestions.length - 1
-                    ? darkMode
-                      ? "bg-slate-800 text-slate-600 cursor-not-allowed"
-                      : "bg-slate-200 text-slate-400 cursor-not-allowed"
-                    : darkMode
-                      ? "bg-slate-700 hover:bg-slate-600 text-white"
-                      : "bg-white hover:bg-slate-100 text-slate-900"
-                }`}
-              >
-                Next
-                <ChevronRight className="w-5 h-5" />
-              </button>
+              {currentQuestionIndex === currentQuestions.length - 1 &&
+              studyMode === "quiz" ? (
+                <button
+                  onClick={() => setActiveTab("results")}
+                  className="px-6 py-3 rounded-lg font-medium transition flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white"
+                >
+                  Finish Quiz & Review
+                  <CheckCircle2 className="w-5 h-5" />
+                </button>
+              ) : (
+                <button
+                  onClick={handleNext}
+                  disabled={
+                    currentQuestionIndex === currentQuestions.length - 1
+                  }
+                  className={`px-6 py-3 rounded-lg font-medium transition flex items-center gap-2 ${
+                    currentQuestionIndex === currentQuestions.length - 1
+                      ? darkMode
+                        ? "bg-slate-800 text-slate-600 cursor-not-allowed"
+                        : "bg-slate-200 text-slate-400 cursor-not-allowed"
+                      : darkMode
+                        ? "bg-slate-700 hover:bg-slate-600 text-white"
+                        : "bg-white hover:bg-slate-100 text-slate-900"
+                  }`}
+                >
+                  Next
+                  <ChevronRight className="w-5 h-5" />
+                </button>
+              )}
             </div>
           </div>
         )}
