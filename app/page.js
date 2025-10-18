@@ -47,6 +47,7 @@ export default function T6AEnhancedStudyTool() {
   ]);
   const [questionCount, setQuestionCount] = useState(25); // 10, 25, or 50
   const [confidenceRating, setConfidenceRating] = useState({}); // Science-based: confidence self-assessment
+  const [showQuizSetup, setShowQuizSetup] = useState(false); // Show topic selection before quiz
 
   // Performance Tracking
   const [performanceStats, setPerformanceStats] = useState({
@@ -69,6 +70,17 @@ export default function T6AEnhancedStudyTool() {
 
     // Initialize questions
     loadQuestions("all");
+
+    // Set all topics selected by default for Quiz setup
+    const allCategories = [];
+    Object.keys(questionDatabase).forEach((type) => {
+      questionDatabase[type].forEach((q) => {
+        if (q.category && !allCategories.includes(q.category)) {
+          allCategories.push(q.category);
+        }
+      });
+    });
+    setSelectedTopics(allCategories);
   }, []);
 
   // Save performance
@@ -164,13 +176,16 @@ export default function T6AEnhancedStudyTool() {
       return;
     }
 
+    // Study Mode: Show answer immediately (science-based: immediate feedback)
     if (studyMode === "study") {
       setShowExplanation(true);
+      const isCorrect = checkAnswer(currentQuestion, answer);
+      updatePerformance(currentQuestion, isCorrect);
+      return;
     }
 
-    // Update performance stats
-    const isCorrect = checkAnswer(currentQuestion, answer);
-    updatePerformance(currentQuestion, isCorrect);
+    // Quiz Mode: Don't show explanation or update stats yet
+    // User will submit when ready
   };
 
   const checkAnswer = (question, answer) => {
@@ -387,7 +402,8 @@ export default function T6AEnhancedStudyTool() {
             onClick={() => {
               setStudyMode("quiz");
               setShowExplanation(false);
-              loadQuestions("all");
+              setShowQuizSetup(true); // Show topic selector first
+              setActiveTab("quizsetup");
             }}
             className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
               studyMode === "quiz"
@@ -512,7 +528,166 @@ export default function T6AEnhancedStudyTool() {
         )}
 
         {/* Main Content */}
-        {activeTab === "custom" ? (
+        {activeTab === "quizsetup" ? (
+          <div
+            className={`max-w-4xl mx-auto ${darkMode ? "bg-slate-800" : "bg-white"} rounded-xl p-6`}
+          >
+            <div className="flex items-center justify-between mb-6">
+              <h2
+                className={`text-2xl font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
+              >
+                Setup Your Quiz
+              </h2>
+              <button
+                onClick={() => {
+                  setActiveTab("study");
+                  setStudyMode("study");
+                }}
+                className={`px-4 py-2 rounded-lg font-medium transition ${
+                  darkMode
+                    ? "bg-slate-700 hover:bg-slate-600 text-white"
+                    : "bg-slate-200 hover:bg-slate-300 text-slate-900"
+                }`}
+              >
+                ← Cancel
+              </button>
+            </div>
+
+            <p
+              className={`mb-6 ${darkMode ? "text-slate-300" : "text-slate-700"}`}
+            >
+              All topics are selected by default. Deselect topics you&apos;ve
+              mastered to focus your quiz.
+            </p>
+
+            {/* Topic Selection */}
+            <div className="mb-6">
+              <div className="flex items-center justify-between mb-3">
+                <h3
+                  className={`text-lg font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
+                >
+                  Select Topics:
+                </h3>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setSelectedTopics(categories)}
+                    className={`px-3 py-1 rounded text-sm ${darkMode ? "bg-slate-700 hover:bg-slate-600 text-white" : "bg-slate-200 hover:bg-slate-300 text-slate-900"}`}
+                  >
+                    Select All
+                  </button>
+                  <button
+                    onClick={() => setSelectedTopics([])}
+                    className={`px-3 py-1 rounded text-sm ${darkMode ? "bg-slate-700 hover:bg-slate-600 text-white" : "bg-slate-200 hover:bg-slate-300 text-slate-900"}`}
+                  >
+                    Deselect All
+                  </button>
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {categories.map((cat) => (
+                  <button
+                    key={cat}
+                    onClick={() => {
+                      if (selectedTopics.includes(cat)) {
+                        setSelectedTopics((prev) =>
+                          prev.filter((t) => t !== cat),
+                        );
+                      } else {
+                        setSelectedTopics((prev) => [...prev, cat]);
+                      }
+                    }}
+                    className={`px-3 py-2 rounded-lg text-sm font-medium transition ${
+                      selectedTopics.includes(cat)
+                        ? "bg-purple-600 text-white"
+                        : darkMode
+                          ? "bg-slate-700 text-slate-300 hover:bg-slate-600"
+                          : "bg-slate-200 text-slate-700 hover:bg-slate-300"
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Question Types */}
+            <div className="mb-6">
+              <h3
+                className={`text-lg font-semibold ${darkMode ? "text-white" : "text-slate-900"} mb-3`}
+              >
+                Question Types:
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {Object.keys(questionTypeLabels).map((type) => (
+                  <button
+                    key={type}
+                    onClick={() => {
+                      if (selectedQuestionTypes.includes(type)) {
+                        setSelectedQuestionTypes((prev) =>
+                          prev.filter((t) => t !== type),
+                        );
+                      } else {
+                        setSelectedQuestionTypes((prev) => [...prev, type]);
+                      }
+                    }}
+                    className={`px-3 py-2 rounded-lg text-sm font-medium transition ${
+                      selectedQuestionTypes.includes(type)
+                        ? "bg-purple-600 text-white"
+                        : darkMode
+                          ? "bg-slate-700 text-slate-300 hover:bg-slate-600"
+                          : "bg-slate-200 text-slate-700 hover:bg-slate-300"
+                    }`}
+                  >
+                    {questionTypeLabels[type]}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Question Count */}
+            <div className="mb-6">
+              <h3
+                className={`text-lg font-semibold ${darkMode ? "text-white" : "text-slate-900"} mb-3`}
+              >
+                Number of Questions:
+              </h3>
+              <div className="flex gap-3">
+                {[10, 25, 50].map((count) => (
+                  <button
+                    key={count}
+                    onClick={() => setQuestionCount(count)}
+                    className={`px-4 py-2 rounded-lg font-medium transition ${
+                      questionCount === count
+                        ? "bg-purple-600 text-white"
+                        : darkMode
+                          ? "bg-slate-700 text-slate-300 hover:bg-slate-600"
+                          : "bg-slate-200 text-slate-700 hover:bg-slate-300"
+                    }`}
+                  >
+                    {count}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <button
+              onClick={() => {
+                setActiveTab("study");
+                loadQuestions(selectedTopics.length > 0 ? "custom" : "all");
+              }}
+              disabled={selectedTopics.length === 0}
+              className={`w-full px-6 py-3 rounded-lg font-medium transition ${
+                selectedTopics.length === 0
+                  ? "bg-slate-600 text-slate-400 cursor-not-allowed"
+                  : "bg-purple-600 hover:bg-purple-700 text-white"
+              }`}
+            >
+              Start Quiz (
+              {selectedTopics.length > 0 ? getCustomQuestions().length : 0}{" "}
+              questions)
+            </button>
+          </div>
+        ) : activeTab === "custom" ? (
           <div
             className={`max-w-4xl mx-auto ${darkMode ? "bg-slate-800" : "bg-white"} rounded-xl p-6`}
           >
