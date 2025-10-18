@@ -361,7 +361,8 @@ export const questionDatabase = {
         { left: "Oil Pressure Max", right: "200 PSI" },
         { left: "Oil Temp Max", right: "105°C" },
       ],
-      explanation: "Key engine operating limits that must be memorized.",
+      explanation:
+        "These are critical engine operating limits: Takeoff Torque = 100% (protects engine and propeller from excessive stress), ITT Takeoff = 820°C (Interstage Turbine Temperature - higher temps damage turbine blades), Oil Pressure Max = 200 PSI (excessive pressure indicates system blockage or relief valve failure), Oil Temp Max = 105°C (higher temps reduce lubrication effectiveness and indicate cooling issues). Exceeding these limits can cause immediate engine damage or failure. Always monitor these parameters during high-power operations like takeoff and climb.",
       limitation: true,
     },
     {
@@ -376,7 +377,8 @@ export const questionDatabase = {
         { left: "Full Rudder Deflection", right: "150 KIAS" },
         { left: "Zoom/Glide Speed", right: "125 KIAS" },
       ],
-      explanation: "Critical airspeed limitations for various configurations.",
+      explanation:
+        "Understanding configuration-specific airspeed limits is critical for safe operations: Gear/Flaps Extended = 150 KIAS (VLE/VFE - structural limits for extended surfaces), Clean Configuration = 316 KIAS (VNE - Never Exceed speed, airframe structural limit), Full Rudder Deflection = 150 KIAS (prevents rudder over-stress and potential structural failure), Zoom/Glide Speed = 125 KIAS (optimal speed for emergency pattern if engine fails - balances energy conservation with controllability). Each limit exists to prevent structural damage under specific aerodynamic loads.",
       limitation: true,
     },
     {
@@ -392,7 +394,7 @@ export const questionDatabase = {
         { left: "Touch-and-Go", right: "20 knots" },
       ],
       explanation:
-        "Crosswind limitations vary based on runway conditions and operation type.",
+        "Crosswind limits decrease dramatically as runway friction decreases: Dry Runway = 25 knots (full traction allows maximum rudder effectiveness for directional control), Wet Runway = 10 knots (reduced friction means less ability to counteract weathervaning), Icy Runway = 5 knots (minimal friction makes directional control extremely difficult), Touch-and-Go = 20 knots (dynamic operation with varying loads requires extra margin). The weathervaning tendency (aircraft wanting to turn into the wind) becomes harder to control as friction decreases. Always check ATIS/METAR for runway conditions and current winds before flight.",
       limitation: true,
     },
     {
@@ -408,7 +410,7 @@ export const questionDatabase = {
         { left: "PCL", right: "Power Control" },
       ],
       explanation:
-        "Understanding primary system functions is essential for operations.",
+        "Understanding each system's role is fundamental to aircraft operations: PMU (Power Management Unit) = Automatically controls engine parameters like torque, ITT, and Np to prevent exceedances and optimize performance. OBOGS (On-Board Oxygen Generating System) = Extracts oxygen from bleed air using molecular sieves, eliminating need for oxygen bottles at altitude. ECS (Environmental Control System) = Provides cabin pressurization and temperature control using engine bleed air for crew comfort and safety. PCL (Power Control Lever) = Primary throttle control that commands power from the engine, working in conjunction with the PMU. Knowing these systems helps you understand aircraft limitations and troubleshoot malfunctions.",
       limitation: false,
     },
     {
@@ -424,7 +426,7 @@ export const questionDatabase = {
         { left: "Asymmetric Gear/Flaps", right: "0 to +2.0" },
       ],
       explanation:
-        "G limits vary significantly based on configuration and loading.",
+        "G-limits protect the airframe from structural failure and vary dramatically by configuration: Symmetric Clean = -3.5 to +7.0 Gs (maximum structural capability with balanced loading), Symmetric Gear/Flaps = 0 to +2.5 Gs (extended gear and flaps are much more fragile - no negative Gs allowed), Asymmetric Clean = -1.0 to +4.7 Gs (stores on one wing create unbalanced loads reducing limits), Asymmetric Gear/Flaps = 0 to +2.0 Gs (most restrictive due to both extended surfaces and unbalanced loading). Never exceed these limits - doing so risks catastrophic structural failure. The aircraft is strongest in clean, symmetric configuration pulling positive Gs.",
       limitation: true,
     },
   ],
