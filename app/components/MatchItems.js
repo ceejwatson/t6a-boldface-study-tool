@@ -10,6 +10,7 @@ export default function MatchItems({
   userAnswer,
   disabled,
   darkMode = true,
+  isLimitationsMode = false,
 }) {
   const [matches, setMatches] = useState(() => {
     if (userAnswer && Object.keys(userAnswer).length > 0) {
@@ -75,7 +76,7 @@ export default function MatchItems({
     const isMatched = isItemMatched(item, "left");
     const isSelected = selectedLeft === item;
 
-    if (!showExplanation) {
+    if (!showExplanation || isLimitationsMode) {
       if (isSelected) return "bg-blue-600 border-blue-600 text-white";
       if (isMatched)
         return darkMode
@@ -86,7 +87,7 @@ export default function MatchItems({
         : "bg-white border-slate-300 text-slate-900 hover:border-blue-500";
     }
 
-    // Show results
+    // Show results (not in limitations mode)
     if (isMatched && isCorrectMatch(item, matches[item])) {
       return "bg-green-900/30 border-green-600 text-white";
     }
@@ -102,7 +103,7 @@ export default function MatchItems({
     const isMatched = isItemMatched(item, "right");
     const isSelected = selectedRight === item;
 
-    if (!showExplanation) {
+    if (!showExplanation || isLimitationsMode) {
       if (isSelected) return "bg-blue-600 border-blue-600 text-white";
       if (isMatched)
         return darkMode
@@ -113,7 +114,7 @@ export default function MatchItems({
         : "bg-white border-slate-300 text-slate-900 hover:border-blue-500";
     }
 
-    // Show results
+    // Show results (not in limitations mode)
     const leftItem = Object.keys(matches).find(
       (left) => matches[left] === item,
     );
@@ -175,6 +176,7 @@ export default function MatchItems({
                     </button>
                   )}
                   {showExplanation &&
+                    !isLimitationsMode &&
                     matches[item] &&
                     (isCorrectMatch(item, matches[item]) ? (
                       <CheckCircle2 className="w-5 h-5 text-green-400" />
@@ -211,7 +213,7 @@ export default function MatchItems({
         </div>
       </div>
 
-      {showExplanation && (
+      {showExplanation && !isLimitationsMode && (
         <div
           className={`mt-6 p-4 rounded-lg ${
             allCorrect
@@ -269,6 +271,15 @@ export default function MatchItems({
               </div>
             </div>
           )}
+        </div>
+      )}
+      {showExplanation && isLimitationsMode && (
+        <div
+          className={`mt-6 p-4 rounded-lg ${darkMode ? "bg-slate-700" : "bg-slate-200"} border-2 ${darkMode ? "border-slate-600" : "border-slate-300"}`}
+        >
+          <p className={`${darkMode ? "text-white" : "text-slate-900"}`}>
+            {question.explanation}
+          </p>
         </div>
       )}
     </div>

@@ -9,6 +9,7 @@ export default function MultipleChoice({
   userAnswer,
   disabled,
   darkMode = true,
+  isLimitationsMode = false,
 }) {
   const handleSelect = (index) => {
     if (disabled) return;
@@ -16,7 +17,7 @@ export default function MultipleChoice({
   };
 
   const getOptionStyle = (index) => {
-    if (!showExplanation) {
+    if (!showExplanation || isLimitationsMode) {
       return userAnswer === index
         ? "bg-blue-600 text-white border-blue-600"
         : darkMode
@@ -24,7 +25,7 @@ export default function MultipleChoice({
           : "bg-white text-slate-900 border-slate-300 hover:border-blue-500";
     }
 
-    // Show results
+    // Show results (not in limitations mode)
     if (index === question.correctAnswer) {
       return "bg-green-600 text-white border-green-600";
     }
@@ -37,7 +38,7 @@ export default function MultipleChoice({
   };
 
   const getOptionIcon = (index) => {
-    if (!showExplanation) return null;
+    if (!showExplanation || isLimitationsMode) return null;
 
     if (index === question.correctAnswer) {
       return <CheckCircle2 className="w-5 h-5" />;
@@ -72,7 +73,7 @@ export default function MultipleChoice({
         ))}
       </div>
 
-      {showExplanation && (
+      {showExplanation && !isLimitationsMode && (
         <div
           className={`mt-6 p-4 rounded-lg ${
             userAnswer === question.correctAnswer
@@ -97,6 +98,15 @@ export default function MultipleChoice({
             </span>
           </div>
           <p className={`mt-2 ${darkMode ? "text-white" : "text-slate-900"}`}>
+            {question.explanation}
+          </p>
+        </div>
+      )}
+      {showExplanation && isLimitationsMode && (
+        <div
+          className={`mt-6 p-4 rounded-lg ${darkMode ? "bg-slate-700" : "bg-slate-200"} border-2 ${darkMode ? "border-slate-600" : "border-slate-300"}`}
+        >
+          <p className={`${darkMode ? "text-white" : "text-slate-900"}`}>
             {question.explanation}
           </p>
         </div>

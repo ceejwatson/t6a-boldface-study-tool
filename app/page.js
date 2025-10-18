@@ -308,6 +308,7 @@ export default function T6AEnhancedStudyTool() {
       userAnswer: userAnswers[currentQuestion.id],
       disabled: showExplanation && studyMode === "study",
       darkMode: darkMode,
+      isLimitationsMode: studyMode === "limitations",
     };
 
     switch (currentQuestion.questionType) {
@@ -363,17 +364,33 @@ export default function T6AEnhancedStudyTool() {
             <div className="flex items-center gap-4">
               {/* Stats */}
               <div className="flex gap-3 text-sm">
-                <div className="bg-green-600/20 border border-green-500/50 rounded-lg px-3 py-2">
-                  <div className="text-green-400 font-semibold">
+                <div
+                  className={`rounded-lg px-3 py-2 border ${darkMode ? "bg-green-600/20 border-green-500/50" : "bg-green-100 border-green-400"}`}
+                >
+                  <div
+                    className={`font-semibold ${darkMode ? "text-green-400" : "text-green-700"}`}
+                  >
                     {performanceStats.overall.correct}
                   </div>
-                  <div className="text-green-300 text-xs">Correct</div>
+                  <div
+                    className={`text-xs ${darkMode ? "text-green-300" : "text-green-600"}`}
+                  >
+                    Correct
+                  </div>
                 </div>
-                <div className="bg-yellow-600/20 border border-yellow-500/50 rounded-lg px-3 py-2">
-                  <div className="text-yellow-400 font-semibold">
+                <div
+                  className={`rounded-lg px-3 py-2 border ${darkMode ? "bg-yellow-600/20 border-yellow-500/50" : "bg-yellow-100 border-yellow-400"}`}
+                >
+                  <div
+                    className={`font-semibold ${darkMode ? "text-yellow-400" : "text-yellow-700"}`}
+                  >
                     {performanceStats.overall.streak}
                   </div>
-                  <div className="text-yellow-300 text-xs">Streak</div>
+                  <div
+                    className={`text-xs ${darkMode ? "text-yellow-300" : "text-yellow-600"}`}
+                  >
+                    Streak
+                  </div>
                 </div>
               </div>
 

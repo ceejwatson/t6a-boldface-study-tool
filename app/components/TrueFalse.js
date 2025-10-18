@@ -9,6 +9,7 @@ export default function TrueFalse({
   userAnswer,
   disabled,
   darkMode = true,
+  isLimitationsMode = false,
 }) {
   const handleSelect = (value) => {
     if (disabled) return;
@@ -16,7 +17,7 @@ export default function TrueFalse({
   };
 
   const getButtonStyle = (value) => {
-    if (!showExplanation) {
+    if (!showExplanation || isLimitationsMode) {
       return userAnswer === value
         ? "bg-blue-600 text-white border-blue-600 scale-105"
         : darkMode
@@ -24,7 +25,7 @@ export default function TrueFalse({
           : "bg-white text-slate-900 border-slate-300 hover:border-blue-500 hover:scale-105";
     }
 
-    // Show results
+    // Show results (not in limitations mode)
     if (value === question.correctAnswer) {
       return "bg-green-600 text-white border-green-600";
     }
@@ -37,7 +38,7 @@ export default function TrueFalse({
   };
 
   const getIcon = (value) => {
-    if (!showExplanation) return null;
+    if (!showExplanation || isLimitationsMode) return null;
 
     if (value === question.correctAnswer) {
       return <CheckCircle2 className="w-8 h-8" />;
@@ -80,7 +81,7 @@ export default function TrueFalse({
         </button>
       </div>
 
-      {showExplanation && (
+      {showExplanation && !isLimitationsMode && (
         <div
           className={`mt-6 p-4 rounded-lg ${
             userAnswer === question.correctAnswer
@@ -105,6 +106,15 @@ export default function TrueFalse({
             </span>
           </div>
           <p className={`mt-2 ${darkMode ? "text-white" : "text-slate-900"}`}>
+            {question.explanation}
+          </p>
+        </div>
+      )}
+      {showExplanation && isLimitationsMode && (
+        <div
+          className={`mt-6 p-4 rounded-lg ${darkMode ? "bg-slate-700" : "bg-slate-200"} border-2 ${darkMode ? "border-slate-600" : "border-slate-300"}`}
+        >
+          <p className={`${darkMode ? "text-white" : "text-slate-900"}`}>
             {question.explanation}
           </p>
         </div>

@@ -16,6 +16,7 @@ export default function ReorderSequence({
   userAnswer,
   disabled,
   darkMode = true,
+  isLimitationsMode = false,
 }) {
   const [items, setItems] = useState(() => {
     if (userAnswer && userAnswer.length > 0) {
@@ -46,13 +47,13 @@ export default function ReorderSequence({
   };
 
   const getItemStyle = (index) => {
-    if (!showExplanation) {
+    if (!showExplanation || isLimitationsMode) {
       return darkMode
         ? "bg-slate-800 border-slate-600 hover:border-blue-500"
         : "bg-white border-slate-300 hover:border-blue-500";
     }
 
-    // Check if this step is in the correct position
+    // Check if this step is in the correct position (not in limitations mode)
     const isCorrectPosition =
       userAnswer && userAnswer[index] === question.correctOrder[index];
 
@@ -63,7 +64,7 @@ export default function ReorderSequence({
   };
 
   const getStepNumber = (item) => {
-    if (!showExplanation) return null;
+    if (!showExplanation || isLimitationsMode) return null;
     const correctIndex = question.correctOrder.indexOf(item);
     return correctIndex + 1;
   };
@@ -140,7 +141,7 @@ export default function ReorderSequence({
         ))}
       </div>
 
-      {showExplanation && (
+      {showExplanation && !isLimitationsMode && (
         <div
           className={`mt-6 p-4 rounded-lg ${
             isCorrect()
@@ -187,6 +188,15 @@ export default function ReorderSequence({
               </ol>
             </div>
           )}
+        </div>
+      )}
+      {showExplanation && isLimitationsMode && (
+        <div
+          className={`mt-6 p-4 rounded-lg ${darkMode ? "bg-slate-700" : "bg-slate-200"} border-2 ${darkMode ? "border-slate-600" : "border-slate-300"}`}
+        >
+          <p className={`${darkMode ? "text-white" : "text-slate-900"}`}>
+            {question.explanation}
+          </p>
         </div>
       )}
     </div>
