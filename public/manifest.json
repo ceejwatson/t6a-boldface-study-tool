@@ -1,0 +1,32 @@
+{
+  "name": "T-6A Texan II BoldFace Study Tool",
+  "short_name": "T-6A Study",
+  "description": "Master T-6A Texan II emergency procedures and boldface items",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#1e40af",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["education", "utilities"],
+  "shortcuts": [
+    {
+      "name": "Start Flashcards",
+      "url": "/",
+      "description": "Begin studying with flashcards"
+    }
+  ]
+}
