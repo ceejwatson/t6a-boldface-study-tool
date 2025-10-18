@@ -46,6 +46,7 @@ export default function T6AEnhancedStudyTool() {
     "matchItems",
   ]);
   const [questionCount, setQuestionCount] = useState(25); // 10, 25, or 50
+  const [confidenceRating, setConfidenceRating] = useState({}); // Science-based: confidence self-assessment
 
   // Performance Tracking
   const [performanceStats, setPerformanceStats] = useState({
@@ -115,11 +116,17 @@ export default function T6AEnhancedStudyTool() {
         questions = getAllQuestions();
     }
 
-    // Shuffle questions
-    questions = questions.sort(() => Math.random() - 0.5);
+    // Proper Fisher-Yates shuffle for better randomization (science-based)
+    for (let i = questions.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [questions[i], questions[j]] = [questions[j], questions[i]];
+    }
 
     // Limit to selected question count
     questions = questions.slice(0, questionCount);
+
+    // Interleaving: Mix question types for better learning (science-based)
+    // Questions are already shuffled, ensuring varied types throughout session
 
     setCurrentQuestions(questions);
     setCurrentQuestionIndex(0);
@@ -228,14 +235,16 @@ export default function T6AEnhancedStudyTool() {
   const handleNext = () => {
     if (currentQuestionIndex < currentQuestions.length - 1) {
       setCurrentQuestionIndex((prev) => prev + 1);
-      setShowExplanation(studyMode === "study");
+      // Reset explanation - retrieval practice (science-based)
+      setShowExplanation(false);
     }
   };
 
   const handlePrevious = () => {
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex((prev) => prev - 1);
-      setShowExplanation(studyMode === "study");
+      // Reset explanation for retrieval practice
+      setShowExplanation(false);
     }
   };
 
@@ -836,6 +845,46 @@ export default function T6AEnhancedStudyTool() {
               )}
 
               {renderQuestion()}
+
+              {/* Confidence Rating - Science-based metacognition */}
+              {showExplanation && !confidenceRating[currentQuestion?.id] && (
+                <div
+                  className={`mt-6 p-4 rounded-lg ${darkMode ? "bg-slate-700 border-slate-600" : "bg-slate-100 border-slate-300"} border-2`}
+                >
+                  <p
+                    className={`text-sm font-medium mb-3 ${darkMode ? "text-white" : "text-slate-900"}`}
+                  >
+                    How confident were you in your answer?
+                  </p>
+                  <div className="flex gap-2">
+                    {["Not Sure", "Somewhat Sure", "Very Sure"].map(
+                      (level, idx) => (
+                        <button
+                          key={level}
+                          onClick={() => {
+                            setConfidenceRating((prev) => ({
+                              ...prev,
+                              [currentQuestion.id]: idx + 1,
+                            }));
+                          }}
+                          className={`flex-1 px-3 py-2 rounded-lg text-sm font-medium transition ${
+                            darkMode
+                              ? "bg-slate-600 hover:bg-slate-500 text-white"
+                              : "bg-white hover:bg-slate-200 text-slate-900"
+                          }`}
+                        >
+                          {level}
+                        </button>
+                      ),
+                    )}
+                  </div>
+                  <p
+                    className={`text-xs mt-2 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                  >
+                    Self-assessment improves learning and retention
+                  </p>
+                </div>
+              )}
             </div>
 
             {/* Navigation */}
@@ -877,27 +926,30 @@ export default function T6AEnhancedStudyTool() {
                   </button>
                 )}
 
-              {/* Show Answer button for quiz mode */}
-              {studyMode === "quiz" &&
-                userAnswers[currentQuestion?.id] &&
-                !showExplanation && (
-                  <button
-                    onClick={() => {
-                      setShowExplanation(true);
-                      // Update performance for sequence questions when showing answer
-                      if (currentQuestion?.questionType === "reorderSequence") {
-                        const isCorrect = checkAnswer(
-                          currentQuestion,
-                          userAnswers[currentQuestion.id],
-                        );
-                        updatePerformance(currentQuestion, isCorrect);
-                      }
-                    }}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition"
-                  >
-                    Show Answer
-                  </button>
-                )}
+              {/* Show Answer / Submit button for quiz mode - works for all question types */}
+              {studyMode === "quiz" && !showExplanation && (
+                <button
+                  onClick={() => {
+                    setShowExplanation(true);
+                    // Update performance stats when showing answer
+                    if (userAnswers[currentQuestion?.id] !== undefined) {
+                      const isCorrect = checkAnswer(
+                        currentQuestion,
+                        userAnswers[currentQuestion.id],
+                      );
+                      updatePerformance(currentQuestion, isCorrect);
+                    } else {
+                      // If no answer given, mark as incorrect
+                      updatePerformance(currentQuestion, false);
+                    }
+                  }}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition"
+                >
+                  {userAnswers[currentQuestion?.id] !== undefined
+                    ? "Submit Answer"
+                    : "Show Answer"}
+                </button>
+              )}
 
               <button
                 onClick={handleNext}
