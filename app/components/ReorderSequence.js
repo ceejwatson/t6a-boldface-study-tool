@@ -17,7 +17,6 @@ export default function ReorderSequence({
   userAnswer,
   disabled,
   darkMode = true,
-  isLimitationsMode = false,
   showCorrectness = true,
 }) {
   const [items, setItems] = useState(() => {
@@ -49,7 +48,7 @@ export default function ReorderSequence({
   };
 
   const getItemStyle = (index) => {
-    if (!showExplanation || isLimitationsMode || !showCorrectness) {
+    if (!showExplanation || !showCorrectness) {
       return darkMode
         ? "bg-slate-800 border-slate-600 hover:border-blue-500"
         : "bg-white border-slate-300 hover:border-blue-500";
@@ -143,7 +142,7 @@ export default function ReorderSequence({
         ))}
       </div>
 
-      {showExplanation && !isLimitationsMode && showCorrectness && (
+      {showExplanation && showCorrectness && (
         <div
           className={`mt-6 p-4 rounded-lg ${
             isCorrect()
@@ -192,7 +191,7 @@ export default function ReorderSequence({
           )}
         </div>
       )}
-      {showExplanation && (isLimitationsMode || !showCorrectness) && (
+      {showExplanation && !showCorrectness && (
         <div
           className={`mt-6 p-4 rounded-lg ${darkMode ? "bg-blue-900/30 border-2 border-blue-600" : "bg-blue-50 border-2 border-blue-400"}`}
         >

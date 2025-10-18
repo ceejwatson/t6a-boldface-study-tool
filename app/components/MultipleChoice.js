@@ -9,7 +9,6 @@ export default function MultipleChoice({
   userAnswer,
   disabled,
   darkMode = true,
-  isLimitationsMode = false,
   showCorrectness = true,
 }) {
   const handleSelect = (index) => {
@@ -18,7 +17,7 @@ export default function MultipleChoice({
   };
 
   const getOptionStyle = (index) => {
-    if (!showExplanation || isLimitationsMode || !showCorrectness) {
+    if (!showExplanation || !showCorrectness) {
       return userAnswer === index
         ? "bg-blue-600 text-white border-blue-600"
         : darkMode
@@ -39,7 +38,7 @@ export default function MultipleChoice({
   };
 
   const getOptionIcon = (index) => {
-    if (!showExplanation || isLimitationsMode || !showCorrectness) return null;
+    if (!showExplanation || !showCorrectness) return null;
 
     if (index === question.correctAnswer) {
       return <CheckCircle2 className="w-5 h-5" />;
@@ -74,7 +73,7 @@ export default function MultipleChoice({
         ))}
       </div>
 
-      {showExplanation && !isLimitationsMode && showCorrectness && (
+      {showExplanation && showCorrectness && (
         <div
           className={`mt-6 p-4 rounded-lg ${
             userAnswer === question.correctAnswer
@@ -103,7 +102,7 @@ export default function MultipleChoice({
           </p>
         </div>
       )}
-      {showExplanation && (isLimitationsMode || !showCorrectness) && (
+      {showExplanation && !showCorrectness && (
         <div
           className={`mt-6 p-4 rounded-lg ${darkMode ? "bg-blue-900/30 border-2 border-blue-600" : "bg-blue-50 border-2 border-blue-400"}`}
         >

@@ -49,6 +49,7 @@ export default function T6AEnhancedStudyTool() {
     "matchItems",
   ]);
   const [questionCount, setQuestionCount] = useState(25); // 10, 25, or 50
+  const [limitationsOnly, setLimitationsOnly] = useState(false); // Filter for limitation questions
   const [confidenceRating, setConfidenceRating] = useState({}); // Science-based: confidence self-assessment
   const [showQuizSetup, setShowQuizSetup] = useState(false); // Show topic selection before quiz
 
@@ -191,9 +192,19 @@ export default function T6AEnhancedStudyTool() {
   };
 
   const getCustomQuestions = () => {
-    const all = getAllQuestions();
-    if (selectedTopics.length === 0) return all;
-    return all.filter((q) => selectedTopics.includes(q.category));
+    let questions = getAllQuestions();
+
+    // Filter by selected topics
+    if (selectedTopics.length > 0) {
+      questions = questions.filter((q) => selectedTopics.includes(q.category));
+    }
+
+    // Filter by limitations if enabled
+    if (limitationsOnly) {
+      questions = questions.filter((q) => q.limitation === true);
+    }
+
+    return questions;
   };
 
   const getDueForReview = () => {
@@ -412,7 +423,6 @@ export default function T6AEnhancedStudyTool() {
       userAnswer: userAnswers[currentQuestion.id],
       disabled: showExplanation && studyMode === "study",
       darkMode: darkMode,
-      isLimitationsMode: studyMode === "limitations",
       showCorrectness: studyMode !== "study", // Hide correct/incorrect in study mode
     };
 
@@ -574,25 +584,6 @@ export default function T6AEnhancedStudyTool() {
           >
             <Brain className="w-4 h-4" />
             Quiz Mode
-          </button>
-
-          <button
-            onClick={() => {
-              setStudyMode("limitations");
-              setActiveTab("main");
-              setShowQuizSetup(false);
-              loadQuestions("limitations");
-            }}
-            className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
-              studyMode === "limitations"
-                ? "bg-red-600 text-white"
-                : darkMode
-                  ? "bg-slate-800 text-slate-300 hover:bg-slate-700"
-                  : "bg-white text-slate-700 hover:bg-slate-100"
-            }`}
-          >
-            <Flame className="w-4 h-4" />
-            Limitations Only
           </button>
 
           {weakTopics.length > 0 && (
@@ -898,6 +889,32 @@ export default function T6AEnhancedStudyTool() {
               </div>
             </div>
 
+            {/* Limitations Only Filter */}
+            <div className="mb-6">
+              <button
+                onClick={() => setLimitationsOnly(!limitationsOnly)}
+                className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
+                  limitationsOnly
+                    ? "bg-red-600 text-white"
+                    : darkMode
+                      ? "bg-slate-700 text-slate-300 hover:bg-slate-600"
+                      : "bg-slate-200 text-slate-700 hover:bg-slate-300"
+                }`}
+              >
+                <Flame className="w-5 h-5" />
+                {limitationsOnly
+                  ? "Limitations Only ✓"
+                  : "Include All Questions"}
+              </button>
+              <p
+                className={`text-sm mt-2 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+              >
+                {limitationsOnly
+                  ? "Only showing critical operating limitations and BOLDFACE procedures"
+                  : "Click to filter for operating limitations only"}
+              </p>
+            </div>
+
             <button
               onClick={() => {
                 setActiveTab("study");
@@ -1005,6 +1022,32 @@ export default function T6AEnhancedStudyTool() {
                   </button>
                 ))}
               </div>
+            </div>
+
+            {/* Limitations Only Filter */}
+            <div className="mb-6">
+              <button
+                onClick={() => setLimitationsOnly(!limitationsOnly)}
+                className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
+                  limitationsOnly
+                    ? "bg-red-600 text-white"
+                    : darkMode
+                      ? "bg-slate-700 text-slate-300 hover:bg-slate-600"
+                      : "bg-slate-200 text-slate-700 hover:bg-slate-300"
+                }`}
+              >
+                <Flame className="w-5 h-5" />
+                {limitationsOnly
+                  ? "Limitations Only ✓"
+                  : "Include All Questions"}
+              </button>
+              <p
+                className={`text-sm mt-2 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+              >
+                {limitationsOnly
+                  ? "Only showing critical operating limitations and BOLDFACE procedures"
+                  : "Click to filter for operating limitations only"}
+              </p>
             </div>
 
             <button

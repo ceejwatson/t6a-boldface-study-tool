@@ -9,7 +9,6 @@ export default function TrueFalse({
   userAnswer,
   disabled,
   darkMode = true,
-  isLimitationsMode = false,
   showCorrectness = true,
 }) {
   const handleSelect = (value) => {
@@ -18,7 +17,7 @@ export default function TrueFalse({
   };
 
   const getButtonStyle = (value) => {
-    if (!showExplanation || isLimitationsMode || !showCorrectness) {
+    if (!showExplanation || !showCorrectness) {
       return userAnswer === value
         ? "bg-blue-600 text-white border-blue-600 scale-105"
         : darkMode
@@ -82,7 +81,7 @@ export default function TrueFalse({
         </button>
       </div>
 
-      {showExplanation && !isLimitationsMode && showCorrectness && (
+      {showExplanation && showCorrectness && (
         <div
           className={`mt-6 p-4 rounded-lg ${
             userAnswer === question.correctAnswer
@@ -111,7 +110,7 @@ export default function TrueFalse({
           </p>
         </div>
       )}
-      {showExplanation && (isLimitationsMode || !showCorrectness) && (
+      {showExplanation && !showCorrectness && (
         <div
           className={`mt-6 p-4 rounded-lg ${darkMode ? "bg-blue-900/30 border-2 border-blue-600" : "bg-blue-50 border-2 border-blue-400"}`}
         >

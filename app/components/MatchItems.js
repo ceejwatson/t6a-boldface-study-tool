@@ -10,7 +10,6 @@ export default function MatchItems({
   userAnswer,
   disabled,
   darkMode = true,
-  isLimitationsMode = false,
   showCorrectness = true,
 }) {
   const [matches, setMatches] = useState(() => {
@@ -83,7 +82,7 @@ export default function MatchItems({
     const isMatched = isItemMatched(item, "left");
     const isSelected = selectedLeft === item;
 
-    if (!showExplanation || isLimitationsMode || !showCorrectness) {
+    if (!showExplanation || !showCorrectness) {
       if (isSelected) return "bg-blue-600 border-blue-600 text-white";
       if (isMatched)
         return darkMode
@@ -110,7 +109,7 @@ export default function MatchItems({
     const isMatched = isItemMatched(item, "right");
     const isSelected = selectedRight === item;
 
-    if (!showExplanation || isLimitationsMode || !showCorrectness) {
+    if (!showExplanation || !showCorrectness) {
       if (isSelected) return "bg-blue-600 border-blue-600 text-white";
       if (isMatched)
         return darkMode
@@ -166,7 +165,7 @@ export default function MatchItems({
 
           // Determine line color based on correctness
           let color = darkMode ? "#60a5fa" : "#3b82f6"; // blue default
-          if (showExplanation && showCorrectness && !isLimitationsMode) {
+          if (showExplanation && showCorrectness) {
             color = isCorrectMatch(leftItem, rightItem)
               ? "#4ade80" // green
               : "#f87171"; // red
@@ -184,7 +183,7 @@ export default function MatchItems({
     // Recalculate on window resize
     window.addEventListener("resize", calculateLines);
     return () => window.removeEventListener("resize", calculateLines);
-  }, [matches, showExplanation, showCorrectness, isLimitationsMode, darkMode]);
+  }, [matches, showExplanation, showCorrectness, darkMode]);
 
   return (
     <div className="space-y-4">
@@ -247,7 +246,6 @@ export default function MatchItems({
                     </button>
                   )}
                   {showExplanation &&
-                    !isLimitationsMode &&
                     showCorrectness &&
                     matches[item] &&
                     (isCorrectMatch(item, matches[item]) ? (
@@ -286,7 +284,7 @@ export default function MatchItems({
         </div>
       </div>
 
-      {showExplanation && !isLimitationsMode && showCorrectness && (
+      {showExplanation && showCorrectness && (
         <div
           className={`mt-6 p-4 rounded-lg ${
             allCorrect
@@ -346,7 +344,7 @@ export default function MatchItems({
           )}
         </div>
       )}
-      {showExplanation && (isLimitationsMode || !showCorrectness) && (
+      {showExplanation && !showCorrectness && (
         <div
           className={`mt-6 p-4 rounded-lg ${darkMode ? "bg-blue-900/30 border-2 border-blue-600" : "bg-blue-50 border-2 border-blue-400"}`}
         >
