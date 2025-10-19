@@ -824,6 +824,11 @@ export default function T6AEnhancedStudyTool() {
             <div className="space-y-4 mb-16">
               <button
                 onClick={() => {
+                  // Auto-select all topics for study mode
+                  const allCategories = [
+                    ...new Set(getAllQuestions().map((q) => q.category)),
+                  ];
+                  setSelectedTopics(allCategories);
                   setStudyMode("study");
                   setShowStudySetup(true);
                   setShowQuizSetup(false);
@@ -855,6 +860,11 @@ export default function T6AEnhancedStudyTool() {
 
               <button
                 onClick={() => {
+                  // Auto-select all topics for quiz mode
+                  const allCategories = [
+                    ...new Set(getAllQuestions().map((q) => q.category)),
+                  ];
+                  setSelectedTopics(allCategories);
                   setStudyMode("quiz"); // Set to quiz mode immediately
                   setShowQuizSetup(true);
                   setActiveTab("quizsetup");
