@@ -52,6 +52,7 @@ export default function T6AEnhancedStudyTool() {
   const [limitationsOnly, setLimitationsOnly] = useState(false); // Filter for limitation questions
   const [confidenceRating, setConfidenceRating] = useState({}); // Science-based: confidence self-assessment
   const [showQuizSetup, setShowQuizSetup] = useState(false); // Show topic selection before quiz
+  const [showStudySetup, setShowStudySetup] = useState(true); // Show topic selection before study mode
 
   // Performance Tracking
   const [performanceStats, setPerformanceStats] = useState({
@@ -84,8 +85,7 @@ export default function T6AEnhancedStudyTool() {
     if (savedSRS) setSrsData(JSON.parse(savedSRS));
     if (savedHistory) setSessionHistory(JSON.parse(savedHistory));
 
-    // Initialize questions
-    loadQuestions("all");
+    // Don't auto-load questions - wait for user to configure study setup
 
     // Set all topics selected by default for Quiz setup
     const allCategories = [];
@@ -562,10 +562,10 @@ export default function T6AEnhancedStudyTool() {
           <button
             onClick={() => {
               setStudyMode("study");
-              setActiveTab("main");
+              setShowStudySetup(true);
               setShowQuizSetup(false);
+              setActiveTab("studysetup");
               setSelectedCategory("all");
-              loadQuestions("all");
             }}
             className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
               studyMode === "study"
@@ -602,6 +602,8 @@ export default function T6AEnhancedStudyTool() {
             <button
               onClick={() => {
                 setStudyMode("weak");
+                setActiveTab("study");
+                setShowStudySetup(false);
                 loadQuestions("weak");
               }}
               className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
@@ -620,7 +622,8 @@ export default function T6AEnhancedStudyTool() {
           <button
             onClick={() => {
               setStudyMode("review");
-              setActiveTab("main");
+              setActiveTab("study");
+              setShowStudySetup(false);
               setShowQuizSetup(false);
               loadQuestions("review");
             }}
@@ -640,6 +643,8 @@ export default function T6AEnhancedStudyTool() {
             <button
               onClick={() => {
                 setStudyMode("flagged");
+                setActiveTab("study");
+                setShowStudySetup(false);
                 loadQuestions("flagged");
               }}
               className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
@@ -656,20 +661,6 @@ export default function T6AEnhancedStudyTool() {
           )}
 
           <button
-            onClick={() => setActiveTab("custom")}
-            className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
-              activeTab === "custom"
-                ? "bg-green-600 text-white"
-                : darkMode
-                  ? "bg-slate-800 text-slate-300 hover:bg-slate-700"
-                  : "bg-white text-slate-700 hover:bg-slate-100"
-            }`}
-          >
-            <Filter className="w-4 h-4" />
-            Custom
-          </button>
-
-          <button
             onClick={() => setActiveTab("progress")}
             className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
               activeTab === "progress"
@@ -683,80 +674,6 @@ export default function T6AEnhancedStudyTool() {
             Progress
           </button>
         </div>
-
-        {/* Category Filter for Study Mode */}
-        {activeTab === "study" && studyMode === "study" && (
-          <div className="mb-6">
-            <div className="flex items-center gap-3 mb-3">
-              <span
-                className={`text-sm font-medium ${darkMode ? "text-slate-300" : "text-slate-700"}`}
-              >
-                Study by Category:
-              </span>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <button
-                onClick={() => {
-                  setSelectedCategory("all");
-                  loadQuestions("all");
-                }}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
-                  selectedCategory === "all"
-                    ? "bg-blue-600 text-white"
-                    : darkMode
-                      ? "bg-slate-800 text-slate-300 hover:bg-slate-700"
-                      : "bg-white text-slate-700 hover:bg-slate-100"
-                }`}
-              >
-                All Categories
-              </button>
-              {categories.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => {
-                    setSelectedCategory(cat);
-                    loadQuestions("all");
-                  }}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
-                    selectedCategory === cat
-                      ? "bg-blue-600 text-white"
-                      : darkMode
-                        ? "bg-slate-800 text-slate-300 hover:bg-slate-700"
-                        : "bg-white text-slate-700 hover:bg-slate-100"
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Question Count Selector */}
-        {activeTab === "study" && (
-          <div className="mb-6 flex items-center gap-3">
-            <span
-              className={`text-sm font-medium ${darkMode ? "text-slate-300" : "text-slate-700"}`}
-            >
-              Questions per session:
-            </span>
-            {[10, 25, 50].map((count) => (
-              <button
-                key={count}
-                onClick={() => setQuestionCount(count)}
-                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition ${
-                  questionCount === count
-                    ? "bg-blue-600 text-white"
-                    : darkMode
-                      ? "bg-slate-800 text-slate-300 hover:bg-slate-700"
-                      : "bg-white text-slate-700 hover:bg-slate-100"
-                }`}
-              >
-                {count}
-              </button>
-            ))}
-          </div>
-        )}
 
         {/* Main Content */}
         {activeTab === "quizsetup" ? (
@@ -946,7 +863,7 @@ export default function T6AEnhancedStudyTool() {
               questions)
             </button>
           </div>
-        ) : activeTab === "custom" ? (
+        ) : activeTab === "studysetup" ? (
           <div
             className={`max-w-4xl mx-auto ${darkMode ? "bg-slate-800" : "bg-white"} rounded-xl p-6`}
           >
@@ -954,17 +871,20 @@ export default function T6AEnhancedStudyTool() {
               <h2
                 className={`text-2xl font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
               >
-                Custom Study Session
+                Setup Your Study Session
               </h2>
               <button
-                onClick={() => setActiveTab("study")}
-                className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
+                onClick={() => {
+                  setActiveTab("main");
+                  setStudyMode("quiz");
+                }}
+                className={`px-4 py-2 rounded-lg font-medium transition ${
                   darkMode
                     ? "bg-slate-700 hover:bg-slate-600 text-white"
                     : "bg-slate-200 hover:bg-slate-300 text-slate-900"
                 }`}
               >
-                ← Back to Study
+                ← Cancel
               </button>
             </div>
 
@@ -1064,13 +984,23 @@ export default function T6AEnhancedStudyTool() {
 
             <button
               onClick={() => {
-                setStudyMode("custom");
+                setStudyMode("study");
                 setActiveTab("study");
+                setShowStudySetup(false);
                 loadQuestions("custom");
               }}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition"
+              disabled={selectedTopics.length === 0}
+              className={`w-full px-6 py-3 rounded-lg font-medium transition ${
+                selectedTopics.length === 0
+                  ? "bg-slate-600 text-slate-400 cursor-not-allowed"
+                  : "bg-blue-600 hover:bg-blue-700 text-white"
+              }`}
             >
-              Start Custom Session ({getCustomQuestions().length} questions)
+              Start Study Session (
+              {selectedTopics.length > 0
+                ? Math.min(questionCount, getCustomQuestions().length)
+                : 0}{" "}
+              questions)
             </button>
           </div>
         ) : activeTab === "progress" ? (
