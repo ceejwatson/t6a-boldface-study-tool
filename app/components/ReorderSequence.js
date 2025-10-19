@@ -65,7 +65,7 @@ export default function ReorderSequence({
   };
 
   const getStepNumber = (item) => {
-    if (!showExplanation || isLimitationsMode || !showCorrectness) return null;
+    if (!showExplanation || !showCorrectness) return null;
     const correctIndex = question.correctOrder.indexOf(item);
     return correctIndex + 1;
   };
