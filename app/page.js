@@ -1501,7 +1501,7 @@ export default function T6AEnhancedStudyTool() {
                   </button>
                 )}
 
-              {/* Show Answer for complex types in quiz mode if not answered */}
+              {/* Submit Answer for complex types in quiz mode if not answered */}
               {studyMode === "quiz" &&
                 !showExplanation &&
                 (currentQuestion?.questionType === "reorderSequence" ||
@@ -1514,7 +1514,7 @@ export default function T6AEnhancedStudyTool() {
                     }}
                     className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition"
                   >
-                    Show Answer
+                    Submit Answer
                   </button>
                 )}
 
