@@ -208,6 +208,27 @@ export default function ReorderSequence({
           <p className={`mt-2 ${darkMode ? "text-white" : "text-slate-900"}`}>
             {question.explanation}
           </p>
+
+          {/* Show correct answer in study mode */}
+          <div
+            className={`mt-4 p-3 rounded ${darkMode ? "bg-slate-800" : "bg-slate-100"}`}
+          >
+            <p
+              className={`text-sm mb-2 ${darkMode ? "text-slate-300" : "text-slate-700"}`}
+            >
+              Correct order:
+            </p>
+            <ol className="list-decimal list-inside space-y-1">
+              {question.correctOrder.map((step, i) => (
+                <li
+                  key={i}
+                  className={`text-sm ${darkMode ? "text-white" : "text-slate-900"}`}
+                >
+                  {step}
+                </li>
+              ))}
+            </ol>
+          </div>
         </div>
       )}
     </div>
