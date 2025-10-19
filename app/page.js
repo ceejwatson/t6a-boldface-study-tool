@@ -1668,139 +1668,121 @@ export default function T6AEnhancedStudyTool() {
                 </div>
               </div>
 
-              {/* Question Review */}
-              <div className="flex items-center justify-between mb-4">
+              {/* Question Review - Incorrect Answers Only */}
+              <div className="mb-4">
                 <h3
                   className={`text-lg font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
                 >
-                  Review Your Answers:
+                  Incorrect Answers to Review:
                 </h3>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => {
-                      // Review only incorrect answers
-                      const incorrectQuestions = currentQuestions.filter(
-                        (q, i) => {
-                          const answered = userAnswers[q.id] !== undefined;
-                          const isCorrect =
-                            answered && checkAnswer(q, userAnswers[q.id]);
-                          return answered && !isCorrect;
-                        },
-                      );
-                      if (incorrectQuestions.length === 0) {
-                        alert("No incorrect answers to review!");
-                        return;
-                      }
-                      setReviewIncorrectOnly(true);
-                      setCurrentQuestionIndex(
-                        currentQuestions.indexOf(incorrectQuestions[0]),
-                      );
-                      setActiveTab("study");
-                      setShowExplanation(true);
-                    }}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
-                      darkMode
-                        ? "bg-red-600 hover:bg-red-700 text-white"
-                        : "bg-red-500 hover:bg-red-600 text-white"
-                    }`}
-                  >
-                    Review Incorrect Only
-                  </button>
-                  <button
-                    onClick={() => {
-                      setReviewIncorrectOnly(false);
-                      setCurrentQuestionIndex(0);
-                      setActiveTab("study");
-                      setShowExplanation(true);
-                    }}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
-                      darkMode
-                        ? "bg-blue-600 hover:bg-blue-700 text-white"
-                        : "bg-blue-500 hover:bg-blue-600 text-white"
-                    }`}
-                  >
-                    Review All
-                  </button>
-                </div>
               </div>
               <div className="space-y-3">
-                {currentQuestions.map((question, index) => {
-                  const answered = userAnswers[question.id] !== undefined;
-                  const isCorrect =
-                    answered && checkAnswer(question, userAnswers[question.id]);
+                {currentQuestions
+                  .map((question, index) => ({ question, index }))
+                  .filter(({ question }) => {
+                    const answered = userAnswers[question.id] !== undefined;
+                    const isCorrect =
+                      answered &&
+                      checkAnswer(question, userAnswers[question.id]);
+                    return answered && !isCorrect; // Only show incorrect answers
+                  })
+                  .map(({ question, index }) => {
+                    const answered = userAnswers[question.id] !== undefined;
+                    const isCorrect =
+                      answered &&
+                      checkAnswer(question, userAnswers[question.id]);
 
-                  return (
-                    <div
-                      key={question.id}
-                      className={`p-4 rounded-lg border-2 ${
-                        !answered
-                          ? darkMode
-                            ? "bg-slate-700 border-slate-600"
-                            : "bg-slate-100 border-slate-300"
-                          : isCorrect
+                    return (
+                      <div
+                        key={question.id}
+                        className={`p-4 rounded-lg border-2 ${
+                          !answered
                             ? darkMode
-                              ? "bg-green-900/20 border-green-600"
-                              : "bg-green-50 border-green-400"
-                            : darkMode
-                              ? "bg-red-900/20 border-red-600"
-                              : "bg-red-50 border-red-400"
-                      }`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3 flex-1">
-                          <span
-                            className={`font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
-                          >
-                            #{index + 1}
-                          </span>
-                          <span
-                            className={`flex-1 ${darkMode ? "text-slate-200" : "text-slate-800"}`}
-                          >
-                            {question.question.split("\n")[0]}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          {!answered ? (
+                              ? "bg-slate-700 border-slate-600"
+                              : "bg-slate-100 border-slate-300"
+                            : isCorrect
+                              ? darkMode
+                                ? "bg-green-900/20 border-green-600"
+                                : "bg-green-50 border-green-400"
+                              : darkMode
+                                ? "bg-red-900/20 border-red-600"
+                                : "bg-red-50 border-red-400"
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3 flex-1">
                             <span
-                              className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                              className={`font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
                             >
-                              Not answered
+                              #{index + 1}
                             </span>
-                          ) : isCorrect ? (
-                            <CheckCircle2
-                              className={`w-5 h-5 ${darkMode ? "text-green-400" : "text-green-600"}`}
-                            />
-                          ) : (
-                            <XCircle
-                              className={`w-5 h-5 ${darkMode ? "text-red-400" : "text-red-600"}`}
-                            />
-                          )}
-                          <button
-                            onClick={() => {
-                              setCurrentQuestionIndex(index);
-                              setActiveTab("study");
-                              setShowExplanation(true);
-                              // Mark all answers as shown so user can't re-answer
-                              const allAnswers = { ...userAnswers };
-                              if (!allAnswers[question.id]) {
-                                // For unanswered questions, set a placeholder
-                                allAnswers[question.id] = null;
-                              }
-                              setUserAnswers(allAnswers);
-                            }}
-                            className={`px-3 py-1 rounded text-sm ${
-                              darkMode
-                                ? "bg-blue-600 hover:bg-blue-700 text-white"
-                                : "bg-blue-500 hover:bg-blue-600 text-white"
-                            }`}
-                          >
-                            View
-                          </button>
+                            <span
+                              className={`flex-1 ${darkMode ? "text-slate-200" : "text-slate-800"}`}
+                            >
+                              {question.question.split("\n")[0]}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            {!answered ? (
+                              <span
+                                className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                              >
+                                Not answered
+                              </span>
+                            ) : isCorrect ? (
+                              <CheckCircle2
+                                className={`w-5 h-5 ${darkMode ? "text-green-400" : "text-green-600"}`}
+                              />
+                            ) : (
+                              <XCircle
+                                className={`w-5 h-5 ${darkMode ? "text-red-400" : "text-red-600"}`}
+                              />
+                            )}
+                            <button
+                              onClick={() => {
+                                setCurrentQuestionIndex(index);
+                                setActiveTab("study");
+                                setShowExplanation(true);
+                                // Mark all answers as shown so user can't re-answer
+                                const allAnswers = { ...userAnswers };
+                                if (!allAnswers[question.id]) {
+                                  // For unanswered questions, set a placeholder
+                                  allAnswers[question.id] = null;
+                                }
+                                setUserAnswers(allAnswers);
+                              }}
+                              className={`px-3 py-1 rounded text-sm ${
+                                darkMode
+                                  ? "bg-blue-600 hover:bg-blue-700 text-white"
+                                  : "bg-blue-500 hover:bg-blue-600 text-white"
+                              }`}
+                            >
+                              View
+                            </button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                {currentQuestions.filter((q) => {
+                  const answered = userAnswers[q.id] !== undefined;
+                  const isCorrect =
+                    answered && checkAnswer(q, userAnswers[q.id]);
+                  return answered && !isCorrect;
+                }).length === 0 && (
+                  <div
+                    className={`p-6 rounded-lg text-center ${darkMode ? "bg-green-900/30 border-2 border-green-600" : "bg-green-100 border-2 border-green-400"}`}
+                  >
+                    <CheckCircle2
+                      className={`w-12 h-12 mx-auto mb-3 ${darkMode ? "text-green-400" : "text-green-600"}`}
+                    />
+                    <p
+                      className={`text-lg font-semibold ${darkMode ? "text-green-400" : "text-green-700"}`}
+                    >
+                      Perfect Score! No incorrect answers to review.
+                    </p>
+                  </div>
+                )}
               </div>
 
               {/* Action Buttons */}
@@ -1874,13 +1856,6 @@ export default function T6AEnhancedStudyTool() {
                   Question {currentQuestionIndex + 1} of{" "}
                   {currentQuestions.length}
                 </span>
-                {studyMode === "quiz" && showExplanation && (
-                  <span
-                    className={`ml-3 text-sm px-3 py-1 rounded-full ${darkMode ? "bg-blue-900/30 text-blue-300" : "bg-blue-100 text-blue-700"}`}
-                  >
-                    Review Mode
-                  </span>
-                )}
               </div>
               {/* Progress Bar */}
               <div
