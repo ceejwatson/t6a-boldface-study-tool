@@ -372,9 +372,9 @@ export const questionDatabase = {
       difficulty: "high",
       question: "Match the configuration to its maximum airspeed:",
       pairs: [
-        { left: "Gear/Flaps Extended", right: "150 KIAS" },
+        { left: "Gear/Flaps Extended", right: "150 KIAS (VLE/VFE)" },
         { left: "Clean Configuration", right: "316 KIAS" },
-        { left: "Full Rudder Deflection", right: "150 KIAS" },
+        { left: "Full Rudder Deflection", right: "150 KIAS (Rudder)" },
         { left: "Zoom/Glide Speed", right: "125 KIAS" },
       ],
       explanation:
