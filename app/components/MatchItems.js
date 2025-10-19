@@ -308,9 +308,11 @@ export default function MatchItems({
                 : `${leftItems.filter((item) => matches[item] && isCorrectMatch(item, matches[item])).length}/${leftItems.length} Correct`}
             </span>
           </div>
-          <p className={`mt-2 ${darkMode ? "text-white" : "text-slate-900"}`}>
-            {question.explanation}
-          </p>
+          {!allCorrect && (
+            <p className={`mt-2 ${darkMode ? "text-white" : "text-slate-900"}`}>
+              {question.explanation}
+            </p>
+          )}
 
           {!allCorrect && (
             <div

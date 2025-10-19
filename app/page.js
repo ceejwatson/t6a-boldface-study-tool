@@ -240,22 +240,16 @@ export default function T6AEnhancedStudyTool() {
     }
 
     // For complex types (reorder, match), just save answer
-    // User will submit manually
-    if (studyMode === "study") {
-      // Still show explanation in study mode for match items
-      if (currentQuestion.questionType === "matchItems") {
-        // Check if all items are matched
-        const allMatched = currentQuestion.pairs.every(
-          (pair) => answer[pair.left] !== undefined,
-        );
-        if (allMatched) {
-          setShowExplanation(true);
-          // Don't track performance in limitations mode
-          if (studyMode !== "limitations") {
-            const isCorrect = checkAnswer(currentQuestion, answer);
-            updatePerformance(currentQuestion, isCorrect);
-          }
-        }
+    // User will submit manually for reorder, but auto-submit for match items
+    if (currentQuestion.questionType === "matchItems") {
+      // Check if all items are matched
+      const allMatched = currentQuestion.pairs.every(
+        (pair) => answer[pair.left] !== undefined,
+      );
+      if (allMatched) {
+        setShowExplanation(true);
+        const isCorrect = checkAnswer(currentQuestion, answer);
+        updatePerformance(currentQuestion, isCorrect);
       }
     }
   };

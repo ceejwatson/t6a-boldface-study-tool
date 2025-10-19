@@ -97,9 +97,11 @@ export default function MultipleChoice({
               {userAnswer === question.correctAnswer ? "Correct!" : "Incorrect"}
             </span>
           </div>
-          <p className={`mt-2 ${darkMode ? "text-white" : "text-slate-900"}`}>
-            {question.explanation}
-          </p>
+          {userAnswer !== question.correctAnswer && (
+            <p className={`mt-2 ${darkMode ? "text-white" : "text-slate-900"}`}>
+              {question.explanation}
+            </p>
+          )}
         </div>
       )}
       {showExplanation && !showCorrectness && (

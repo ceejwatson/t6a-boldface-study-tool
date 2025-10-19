@@ -38,7 +38,7 @@ export default function TrueFalse({
   };
 
   const getIcon = (value) => {
-    if (!showExplanation || isLimitationsMode || !showCorrectness) return null;
+    if (!showExplanation || !showCorrectness) return null;
 
     if (value === question.correctAnswer) {
       return <CheckCircle2 className="w-8 h-8" />;
@@ -105,9 +105,11 @@ export default function TrueFalse({
               {userAnswer === question.correctAnswer ? "Correct!" : "Incorrect"}
             </span>
           </div>
-          <p className={`mt-2 ${darkMode ? "text-white" : "text-slate-900"}`}>
-            {question.explanation}
-          </p>
+          {userAnswer !== question.correctAnswer && (
+            <p className={`mt-2 ${darkMode ? "text-white" : "text-slate-900"}`}>
+              {question.explanation}
+            </p>
+          )}
         </div>
       )}
       {showExplanation && !showCorrectness && (

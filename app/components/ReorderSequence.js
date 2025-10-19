@@ -164,9 +164,11 @@ export default function ReorderSequence({
               {isCorrect() ? "Perfect Order!" : "Incorrect Order"}
             </span>
           </div>
-          <p className={`mt-2 ${darkMode ? "text-white" : "text-slate-900"}`}>
-            {question.explanation}
-          </p>
+          {!isCorrect() && (
+            <p className={`mt-2 ${darkMode ? "text-white" : "text-slate-900"}`}>
+              {question.explanation}
+            </p>
+          )}
 
           {!isCorrect() && (
             <div
