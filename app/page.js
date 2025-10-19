@@ -1696,71 +1696,102 @@ export default function T6AEnhancedStudyTool() {
                       <div
                         key={question.id}
                         className={`p-4 rounded-lg border-2 ${
-                          !answered
-                            ? darkMode
-                              ? "bg-slate-700 border-slate-600"
-                              : "bg-slate-100 border-slate-300"
-                            : isCorrect
-                              ? darkMode
-                                ? "bg-green-900/20 border-green-600"
-                                : "bg-green-50 border-green-400"
-                              : darkMode
-                                ? "bg-red-900/20 border-red-600"
-                                : "bg-red-50 border-red-400"
+                          darkMode
+                            ? "bg-red-900/20 border-red-600"
+                            : "bg-red-50 border-red-400"
                         }`}
                       >
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3 flex-1">
-                            <span
-                              className={`font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
-                            >
-                              #{index + 1}
-                            </span>
-                            <span
-                              className={`flex-1 ${darkMode ? "text-slate-200" : "text-slate-800"}`}
-                            >
-                              {question.question.split("\n")[0]}
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            {!answered ? (
+                        <div className="mb-3">
+                          <div className="flex items-start justify-between gap-3 mb-2">
+                            <div className="flex items-start gap-3 flex-1">
                               <span
-                                className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                                className={`font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
                               >
-                                Not answered
+                                #{index + 1}
                               </span>
-                            ) : isCorrect ? (
-                              <CheckCircle2
-                                className={`w-5 h-5 ${darkMode ? "text-green-400" : "text-green-600"}`}
-                              />
-                            ) : (
-                              <XCircle
-                                className={`w-5 h-5 ${darkMode ? "text-red-400" : "text-red-600"}`}
-                              />
-                            )}
-                            <button
-                              onClick={() => {
-                                setCurrentQuestionIndex(index);
-                                setActiveTab("study");
-                                setShowExplanation(true);
-                                // Mark all answers as shown so user can't re-answer
-                                const allAnswers = { ...userAnswers };
-                                if (!allAnswers[question.id]) {
-                                  // For unanswered questions, set a placeholder
-                                  allAnswers[question.id] = null;
-                                }
-                                setUserAnswers(allAnswers);
-                              }}
-                              className={`px-3 py-1 rounded text-sm ${
-                                darkMode
-                                  ? "bg-blue-600 hover:bg-blue-700 text-white"
-                                  : "bg-blue-500 hover:bg-blue-600 text-white"
-                              }`}
-                            >
-                              View
-                            </button>
+                              <div className="flex-1">
+                                <p
+                                  className={`font-semibold mb-2 ${darkMode ? "text-white" : "text-slate-900"}`}
+                                >
+                                  {question.question}
+                                </p>
+                              </div>
+                            </div>
+                            <XCircle
+                              className={`w-5 h-5 flex-shrink-0 ${darkMode ? "text-red-400" : "text-red-600"}`}
+                            />
+                          </div>
+
+                          {/* Show answers */}
+                          <div
+                            className={`mt-3 p-3 rounded ${darkMode ? "bg-slate-800/50" : "bg-white/50"} space-y-2`}
+                          >
+                            {/* Your answer */}
+                            <div>
+                              <p
+                                className={`text-xs font-semibold ${darkMode ? "text-red-400" : "text-red-600"} mb-1`}
+                              >
+                                Your Answer:
+                              </p>
+                              <p
+                                className={`text-sm ${darkMode ? "text-slate-200" : "text-slate-800"}`}
+                              >
+                                {question.questionType === "multipleChoice"
+                                  ? question.options[userAnswers[question.id]]
+                                  : question.questionType === "trueFalse"
+                                    ? userAnswers[question.id]
+                                      ? "True"
+                                      : "False"
+                                    : question.questionType ===
+                                        "reorderSequence"
+                                      ? "Incorrect sequence"
+                                      : question.questionType === "matchItems"
+                                        ? "Incorrect matches"
+                                        : "N/A"}
+                              </p>
+                            </div>
+
+                            {/* Correct answer */}
+                            <div>
+                              <p
+                                className={`text-xs font-semibold ${darkMode ? "text-green-400" : "text-green-600"} mb-1`}
+                              >
+                                Correct Answer:
+                              </p>
+                              <p
+                                className={`text-sm ${darkMode ? "text-slate-200" : "text-slate-800"}`}
+                              >
+                                {question.questionType === "multipleChoice"
+                                  ? question.options[question.correctAnswer]
+                                  : question.questionType === "trueFalse"
+                                    ? question.correctAnswer
+                                      ? "True"
+                                      : "False"
+                                    : question.questionType ===
+                                        "reorderSequence"
+                                      ? "See details →"
+                                      : question.questionType === "matchItems"
+                                        ? "See details →"
+                                        : "N/A"}
+                              </p>
+                            </div>
                           </div>
                         </div>
+
+                        <button
+                          onClick={() => {
+                            setCurrentQuestionIndex(index);
+                            setActiveTab("study");
+                            setShowExplanation(true);
+                          }}
+                          className={`w-full px-3 py-2 rounded text-sm font-medium ${
+                            darkMode
+                              ? "bg-blue-600 hover:bg-blue-700 text-white"
+                              : "bg-blue-500 hover:bg-blue-600 text-white"
+                          }`}
+                        >
+                          View Full Details & Explanation
+                        </button>
                       </div>
                     );
                   })}
