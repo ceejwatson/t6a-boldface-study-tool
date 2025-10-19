@@ -32,7 +32,7 @@ import { questionDatabase, getLimitationQuestions } from "./questionData";
 export default function T6AEnhancedStudyTool() {
   // UI State
   const [darkMode, setDarkMode] = useState(true);
-  const [activeTab, setActiveTab] = useState("study");
+  const [activeTab, setActiveTab] = useState("home");
   const [studyMode, setStudyMode] = useState("study"); // 'study', 'quiz', 'custom', 'limitations'
   const [selectedCategory, setSelectedCategory] = useState("all"); // Category filter for study mode
 
@@ -389,6 +389,23 @@ export default function T6AEnhancedStudyTool() {
   };
 
   const handleNext = () => {
+    // Auto-submit match items or reorder sequence if not yet submitted
+    if (!showExplanation && currentQuestion) {
+      if (
+        currentQuestion.questionType === "matchItems" ||
+        currentQuestion.questionType === "reorderSequence"
+      ) {
+        const answer = userAnswers[currentQuestion.id];
+        if (answer) {
+          // Auto-submit the answer before moving to next
+          setShowExplanation(true);
+          const isCorrect = checkAnswer(currentQuestion, answer);
+          updatePerformance(currentQuestion, isCorrect);
+          return; // Don't move to next yet, let user see the result
+        }
+      }
+    }
+
     if (currentQuestionIndex < currentQuestions.length - 1) {
       setCurrentQuestionIndex((prev) => prev + 1);
       // Reset explanation - retrieval practice (science-based)
@@ -676,7 +693,295 @@ export default function T6AEnhancedStudyTool() {
         </div>
 
         {/* Main Content */}
-        {activeTab === "quizsetup" ? (
+        {activeTab === "home" ? (
+          <div className="max-w-6xl mx-auto">
+            {/* Hero Section */}
+            <div
+              className={`${darkMode ? "bg-gradient-to-br from-blue-900/40 to-slate-800/40 border-blue-700/30" : "bg-gradient-to-br from-blue-50 to-white border-blue-200"} rounded-2xl p-12 text-center border-2 mb-8`}
+            >
+              <div className="bg-blue-600 p-4 rounded-full w-20 h-20 mx-auto mb-6 flex items-center justify-center">
+                <BookOpen className="w-12 h-12 text-white" />
+              </div>
+              <h1
+                className={`text-4xl font-bold mb-4 ${darkMode ? "text-white" : "text-slate-900"}`}
+              >
+                Welcome to T-6A Texan II Study Tool
+              </h1>
+              <p
+                className={`text-xl mb-2 ${darkMode ? "text-slate-300" : "text-slate-600"}`}
+              >
+                Master BOLDFACE emergency procedures and operating limitations
+              </p>
+              <p
+                className={`text-lg ${darkMode ? "text-slate-400" : "text-slate-500"}`}
+              >
+                {getAllQuestions().length} questions • Spaced Repetition •
+                Performance Tracking
+              </p>
+            </div>
+
+            {/* Quick Stats */}
+            <div className="grid md:grid-cols-3 gap-6 mb-8">
+              <div
+                className={`${darkMode ? "bg-slate-800/60 border-slate-700" : "bg-white border-slate-200"} rounded-xl p-6 border-2`}
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="bg-green-600/20 p-3 rounded-lg">
+                    <CheckCircle2 className="w-6 h-6 text-green-400" />
+                  </div>
+                  <div>
+                    <div
+                      className={`text-3xl font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
+                    >
+                      {performanceStats.overall.correct}
+                    </div>
+                    <div
+                      className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                    >
+                      Questions Correct
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                className={`${darkMode ? "bg-slate-800/60 border-slate-700" : "bg-white border-slate-200"} rounded-xl p-6 border-2`}
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="bg-orange-600/20 p-3 rounded-lg">
+                    <Flame className="w-6 h-6 text-orange-400" />
+                  </div>
+                  <div>
+                    <div
+                      className={`text-3xl font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
+                    >
+                      {performanceStats.overall.streak}
+                    </div>
+                    <div
+                      className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                    >
+                      Current Streak
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                className={`${darkMode ? "bg-slate-800/60 border-slate-700" : "bg-white border-slate-200"} rounded-xl p-6 border-2`}
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="bg-purple-600/20 p-3 rounded-lg">
+                    <Award className="w-6 h-6 text-purple-400" />
+                  </div>
+                  <div>
+                    <div
+                      className={`text-3xl font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
+                    >
+                      {performanceStats.overall.bestStreak}
+                    </div>
+                    <div
+                      className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                    >
+                      Best Streak
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Action Cards */}
+            <div className="grid md:grid-cols-2 gap-6">
+              {/* Study Mode Card */}
+              <div
+                className={`${darkMode ? "bg-slate-800/60 border-blue-700/50" : "bg-white border-blue-300"} rounded-xl p-6 border-2`}
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="bg-blue-600 p-3 rounded-lg">
+                    <BookOpen className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <h3
+                      className={`text-xl font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
+                    >
+                      Study Mode
+                    </h3>
+                    <p
+                      className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                    >
+                      Learn at your own pace
+                    </p>
+                  </div>
+                </div>
+                <p
+                  className={`mb-4 ${darkMode ? "text-slate-300" : "text-slate-700"}`}
+                >
+                  Practice without pressure. Get detailed explanations and see
+                  correct answers after each question.
+                </p>
+                <button
+                  onClick={() => {
+                    setStudyMode("study");
+                    setShowStudySetup(true);
+                    setShowQuizSetup(false);
+                    setActiveTab("studysetup");
+                    setSelectedCategory("all");
+                  }}
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition flex items-center justify-center gap-2"
+                >
+                  <BookOpen className="w-5 h-5" />
+                  Start Studying
+                </button>
+              </div>
+
+              {/* Quiz Mode Card */}
+              <div
+                className={`${darkMode ? "bg-slate-800/60 border-purple-700/50" : "bg-white border-purple-300"} rounded-xl p-6 border-2`}
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="bg-purple-600 p-3 rounded-lg">
+                    <Target className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <h3
+                      className={`text-xl font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
+                    >
+                      Quiz Mode
+                    </h3>
+                    <p
+                      className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                    >
+                      Test your knowledge
+                    </p>
+                  </div>
+                </div>
+                <p
+                  className={`mb-4 ${darkMode ? "text-slate-300" : "text-slate-700"}`}
+                >
+                  Challenge yourself with timed assessments. Track your
+                  performance and identify weak areas.
+                </p>
+                <button
+                  onClick={() => {
+                    setShowQuizSetup(true);
+                    setActiveTab("quizsetup");
+                  }}
+                  className="w-full bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-medium transition flex items-center justify-center gap-2"
+                >
+                  <Target className="w-5 h-5" />
+                  Start Quiz
+                </button>
+              </div>
+            </div>
+
+            {/* Quick Access Section */}
+            {(getDueForReview().length > 0 ||
+              weakTopics.length > 0 ||
+              flaggedQuestions.length > 0) && (
+              <div className="mt-8">
+                <h3
+                  className={`text-xl font-bold mb-4 ${darkMode ? "text-white" : "text-slate-900"}`}
+                >
+                  Quick Access
+                </h3>
+                <div className="grid md:grid-cols-3 gap-4">
+                  {getDueForReview().length > 0 && (
+                    <button
+                      onClick={() => {
+                        setStudyMode("review");
+                        setActiveTab("study");
+                        setShowStudySetup(false);
+                        setShowQuizSetup(false);
+                        loadQuestions("review");
+                      }}
+                      className={`${darkMode ? "bg-slate-800 hover:bg-slate-700 border-teal-700/50" : "bg-white hover:bg-slate-50 border-teal-300"} p-4 rounded-lg border-2 transition text-left`}
+                    >
+                      <div className="flex items-center gap-2 mb-2">
+                        <RotateCcw className="w-5 h-5 text-teal-400" />
+                        <span
+                          className={`font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
+                        >
+                          Due for Review
+                        </span>
+                      </div>
+                      <div
+                        className={`text-2xl font-bold ${darkMode ? "text-teal-400" : "text-teal-600"}`}
+                      >
+                        {getDueForReview().length}
+                      </div>
+                      <div
+                        className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                      >
+                        questions ready
+                      </div>
+                    </button>
+                  )}
+
+                  {weakTopics.length > 0 && (
+                    <button
+                      onClick={() => {
+                        setStudyMode("weak");
+                        setActiveTab("study");
+                        setShowStudySetup(false);
+                        loadQuestions("weak");
+                      }}
+                      className={`${darkMode ? "bg-slate-800 hover:bg-slate-700 border-orange-700/50" : "bg-white hover:bg-slate-50 border-orange-300"} p-4 rounded-lg border-2 transition text-left`}
+                    >
+                      <div className="flex items-center gap-2 mb-2">
+                        <Zap className="w-5 h-5 text-orange-400" />
+                        <span
+                          className={`font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
+                        >
+                          Weak Topics
+                        </span>
+                      </div>
+                      <div
+                        className={`text-2xl font-bold ${darkMode ? "text-orange-400" : "text-orange-600"}`}
+                      >
+                        {weakTopics.length}
+                      </div>
+                      <div
+                        className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                      >
+                        need practice
+                      </div>
+                    </button>
+                  )}
+
+                  {flaggedQuestions.length > 0 && (
+                    <button
+                      onClick={() => {
+                        setStudyMode("flagged");
+                        setActiveTab("study");
+                        setShowStudySetup(false);
+                        loadQuestions("flagged");
+                      }}
+                      className={`${darkMode ? "bg-slate-800 hover:bg-slate-700 border-yellow-700/50" : "bg-white hover:bg-slate-50 border-yellow-300"} p-4 rounded-lg border-2 transition text-left`}
+                    >
+                      <div className="flex items-center gap-2 mb-2">
+                        <Target className="w-5 h-5 text-yellow-400" />
+                        <span
+                          className={`font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
+                        >
+                          Flagged Questions
+                        </span>
+                      </div>
+                      <div
+                        className={`text-2xl font-bold ${darkMode ? "text-yellow-400" : "text-yellow-600"}`}
+                      >
+                        {flaggedQuestions.length}
+                      </div>
+                      <div
+                        className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                      >
+                        for review
+                      </div>
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+        ) : activeTab === "quizsetup" ? (
           <div
             className={`max-w-4xl mx-auto ${darkMode ? "bg-slate-800" : "bg-white"} rounded-xl p-6`}
           >
@@ -1512,7 +1817,7 @@ export default function T6AEnhancedStudyTool() {
                       setShowExplanation(true);
                       updatePerformance(currentQuestion, false);
                     }}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition"
+                    className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition"
                   >
                     Submit Answer
                   </button>
