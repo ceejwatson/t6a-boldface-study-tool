@@ -509,20 +509,6 @@ export default function T6AEnhancedStudyTool() {
               {/* Stats */}
               <div className="flex gap-3 text-sm">
                 <div
-                  className={`rounded-lg px-3 py-2 border ${darkMode ? "bg-green-600/20 border-green-500/50" : "bg-green-100 border-green-400"}`}
-                >
-                  <div
-                    className={`font-semibold ${darkMode ? "text-green-400" : "text-green-700"}`}
-                  >
-                    {performanceStats.overall.correct}
-                  </div>
-                  <div
-                    className={`text-xs ${darkMode ? "text-green-300" : "text-green-600"}`}
-                  >
-                    Correct
-                  </div>
-                </div>
-                <div
                   className={`rounded-lg px-3 py-2 border ${darkMode ? "bg-yellow-600/20 border-yellow-500/50" : "bg-yellow-100 border-yellow-400"}`}
                 >
                   <div
@@ -730,18 +716,11 @@ export default function T6AEnhancedStudyTool() {
                         className={`w-7 h-7 ${darkMode ? "text-blue-400" : "text-blue-600"}`}
                       />
                     </div>
-                    <div className="text-left">
-                      <h3
-                        className={`text-2xl font-semibold ${darkMode ? "text-white" : "text-white"}`}
-                      >
-                        Study
-                      </h3>
-                      <p
-                        className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-300"}`}
-                      >
-                        Learn at your own pace
-                      </p>
-                    </div>
+                    <h3
+                      className={`text-2xl font-semibold ${darkMode ? "text-white" : "text-white"}`}
+                    >
+                      Study
+                    </h3>
                   </div>
                   <ChevronRight
                     className={`w-6 h-6 ${darkMode ? "text-slate-400" : "text-slate-300"}`}
@@ -765,18 +744,11 @@ export default function T6AEnhancedStudyTool() {
                         className={`w-7 h-7 ${darkMode ? "text-purple-400" : "text-purple-600"}`}
                       />
                     </div>
-                    <div className="text-left">
-                      <h3
-                        className={`text-2xl font-semibold ${darkMode ? "text-white" : "text-white"}`}
-                      >
-                        Quiz
-                      </h3>
-                      <p
-                        className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-300"}`}
-                      >
-                        Test your knowledge
-                      </p>
-                    </div>
+                    <h3
+                      className={`text-2xl font-semibold ${darkMode ? "text-white" : "text-white"}`}
+                    >
+                      Quiz
+                    </h3>
                   </div>
                   <ChevronRight
                     className={`w-6 h-6 ${darkMode ? "text-slate-400" : "text-slate-300"}`}
@@ -1651,27 +1623,16 @@ export default function T6AEnhancedStudyTool() {
               {currentQuestion && (
                 <div className="mb-6 flex items-center justify-between flex-wrap gap-2">
                   <div className="flex items-center gap-2">
-                    <span
-                      className={`px-3 py-1 rounded-full text-xs font-bold ${
-                        currentQuestion.difficulty === "critical"
-                          ? "bg-red-600 text-white"
-                          : currentQuestion.difficulty === "high"
-                            ? "bg-orange-600 text-white"
-                            : "bg-yellow-600 text-white"
-                      }`}
-                    >
-                      {currentQuestion.difficulty?.toUpperCase()}
-                    </span>
-                    <span
-                      className={`${darkMode ? "bg-blue-900/30 text-blue-300" : "bg-blue-100 text-blue-700"} px-3 py-1 rounded-full text-xs font-medium`}
-                    >
-                      {currentQuestion.category}
-                    </span>
-                    <span
-                      className={`${darkMode ? "bg-purple-900/30 text-purple-300" : "bg-purple-100 text-purple-700"} px-3 py-1 rounded-full text-xs font-medium`}
-                    >
-                      {questionTypeLabels[currentQuestion.questionType]}
-                    </span>
+                    {currentQuestion.difficulty === "critical" && (
+                      <span className="bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold">
+                        CRITICAL
+                      </span>
+                    )}
+                    {weakTopics.includes(currentQuestion.category) && (
+                      <span className="bg-orange-600 text-white px-3 py-1 rounded-full text-xs font-bold">
+                        WEAK AREA
+                      </span>
+                    )}
                   </div>
                   <button
                     onClick={toggleFlag}
