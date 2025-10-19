@@ -21,6 +21,7 @@ import {
   FileText,
   ExternalLink,
   Clock,
+  ArrowRight,
 } from "lucide-react";
 
 import MultipleChoice from "./components/MultipleChoice";
@@ -1695,73 +1696,184 @@ export default function T6AEnhancedStudyTool() {
                           <div
                             className={`mt-3 p-3 rounded ${darkMode ? "bg-slate-800/50" : "bg-white/50"} space-y-2`}
                           >
-                            {/* Your answer */}
-                            <div>
-                              <p
-                                className={`text-xs font-semibold ${darkMode ? "text-red-400" : "text-red-600"} mb-1`}
-                              >
-                                Your Answer:
-                              </p>
-                              <p
-                                className={`text-sm ${darkMode ? "text-slate-200" : "text-slate-800"}`}
-                              >
-                                {question.questionType === "multipleChoice"
-                                  ? question.options[userAnswers[question.id]]
-                                  : question.questionType === "trueFalse"
-                                    ? userAnswers[question.id]
-                                      ? "True"
-                                      : "False"
-                                    : question.questionType ===
-                                        "reorderSequence"
-                                      ? "Incorrect sequence"
-                                      : question.questionType === "matchItems"
-                                        ? "Incorrect matches"
-                                        : "N/A"}
-                              </p>
-                            </div>
+                            {/* Multiple Choice or True/False */}
+                            {(question.questionType === "multipleChoice" ||
+                              question.questionType === "trueFalse") && (
+                              <>
+                                <div>
+                                  <p
+                                    className={`text-xs font-semibold ${darkMode ? "text-red-400" : "text-red-600"} mb-1`}
+                                  >
+                                    Your Answer:
+                                  </p>
+                                  <p
+                                    className={`text-sm ${darkMode ? "text-slate-200" : "text-slate-800"}`}
+                                  >
+                                    {question.questionType === "multipleChoice"
+                                      ? question.options[
+                                          userAnswers[question.id]
+                                        ]
+                                      : userAnswers[question.id]
+                                        ? "True"
+                                        : "False"}
+                                  </p>
+                                </div>
+                                <div>
+                                  <p
+                                    className={`text-xs font-semibold ${darkMode ? "text-green-400" : "text-green-600"} mb-1`}
+                                  >
+                                    Correct Answer:
+                                  </p>
+                                  <p
+                                    className={`text-sm ${darkMode ? "text-slate-200" : "text-slate-800"}`}
+                                  >
+                                    {question.questionType === "multipleChoice"
+                                      ? question.options[question.correctAnswer]
+                                      : question.correctAnswer
+                                        ? "True"
+                                        : "False"}
+                                  </p>
+                                </div>
+                              </>
+                            )}
 
-                            {/* Correct answer */}
-                            <div>
+                            {/* Reorder Sequence */}
+                            {question.questionType === "reorderSequence" && (
+                              <>
+                                <div>
+                                  <p
+                                    className={`text-xs font-semibold ${darkMode ? "text-red-400" : "text-red-600"} mb-2`}
+                                  >
+                                    Your Sequence:
+                                  </p>
+                                  <ol className="list-decimal list-inside space-y-1">
+                                    {userAnswers[question.id]?.map(
+                                      (step, i) => (
+                                        <li
+                                          key={i}
+                                          className={`text-xs ${darkMode ? "text-slate-300" : "text-slate-700"}`}
+                                        >
+                                          {step}
+                                        </li>
+                                      ),
+                                    )}
+                                  </ol>
+                                </div>
+                                <div>
+                                  <p
+                                    className={`text-xs font-semibold ${darkMode ? "text-green-400" : "text-green-600"} mb-2`}
+                                  >
+                                    Correct Sequence:
+                                  </p>
+                                  <ol className="list-decimal list-inside space-y-1">
+                                    {question.correctOrder.map((step, i) => (
+                                      <li
+                                        key={i}
+                                        className={`text-xs ${darkMode ? "text-slate-300" : "text-slate-700"}`}
+                                      >
+                                        {step}
+                                      </li>
+                                    ))}
+                                  </ol>
+                                </div>
+                              </>
+                            )}
+
+                            {/* Match Items */}
+                            {question.questionType === "matchItems" && (
+                              <>
+                                <div>
+                                  <p
+                                    className={`text-xs font-semibold ${darkMode ? "text-red-400" : "text-red-600"} mb-2`}
+                                  >
+                                    Your Matches:
+                                  </p>
+                                  <div className="space-y-1">
+                                    {question.pairs.map((pair, i) => (
+                                      <div
+                                        key={i}
+                                        className="flex items-center gap-2 text-xs"
+                                      >
+                                        <span
+                                          className={
+                                            darkMode
+                                              ? "text-slate-300"
+                                              : "text-slate-700"
+                                          }
+                                        >
+                                          {pair.left}
+                                        </span>
+                                        <ArrowRight className="w-3 h-3" />
+                                        <span
+                                          className={
+                                            darkMode
+                                              ? "text-slate-300"
+                                              : "text-slate-700"
+                                          }
+                                        >
+                                          {userAnswers[question.id]?.[
+                                            pair.left
+                                          ] || "Not matched"}
+                                        </span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                                <div>
+                                  <p
+                                    className={`text-xs font-semibold ${darkMode ? "text-green-400" : "text-green-600"} mb-2`}
+                                  >
+                                    Correct Matches:
+                                  </p>
+                                  <div className="space-y-1">
+                                    {question.pairs.map((pair, i) => (
+                                      <div
+                                        key={i}
+                                        className="flex items-center gap-2 text-xs"
+                                      >
+                                        <span
+                                          className={
+                                            darkMode
+                                              ? "text-slate-300"
+                                              : "text-slate-700"
+                                          }
+                                        >
+                                          {pair.left}
+                                        </span>
+                                        <ArrowRight className="w-3 h-3" />
+                                        <span
+                                          className={
+                                            darkMode
+                                              ? "text-slate-300"
+                                              : "text-slate-700"
+                                          }
+                                        >
+                                          {pair.right}
+                                        </span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              </>
+                            )}
+
+                            {/* Explanation */}
+                            <div
+                              className={`pt-2 border-t ${darkMode ? "border-slate-700" : "border-slate-300"}`}
+                            >
                               <p
-                                className={`text-xs font-semibold ${darkMode ? "text-green-400" : "text-green-600"} mb-1`}
+                                className={`text-xs font-semibold ${darkMode ? "text-blue-400" : "text-blue-600"} mb-1`}
                               >
-                                Correct Answer:
+                                Explanation:
                               </p>
                               <p
-                                className={`text-sm ${darkMode ? "text-slate-200" : "text-slate-800"}`}
+                                className={`text-xs ${darkMode ? "text-slate-300" : "text-slate-700"}`}
                               >
-                                {question.questionType === "multipleChoice"
-                                  ? question.options[question.correctAnswer]
-                                  : question.questionType === "trueFalse"
-                                    ? question.correctAnswer
-                                      ? "True"
-                                      : "False"
-                                    : question.questionType ===
-                                        "reorderSequence"
-                                      ? "See details →"
-                                      : question.questionType === "matchItems"
-                                        ? "See details →"
-                                        : "N/A"}
+                                {question.explanation}
                               </p>
                             </div>
                           </div>
                         </div>
-
-                        <button
-                          onClick={() => {
-                            setCurrentQuestionIndex(index);
-                            setActiveTab("study");
-                            setShowExplanation(true);
-                            setViewingSingleQuestion(true);
-                          }}
-                          className={`w-full px-3 py-2 rounded text-sm font-medium ${
-                            darkMode
-                              ? "bg-blue-600 hover:bg-blue-700 text-white"
-                              : "bg-blue-500 hover:bg-blue-600 text-white"
-                          }`}
-                        >
-                          View Full Details & Explanation
-                        </button>
                       </div>
                     );
                   })}
