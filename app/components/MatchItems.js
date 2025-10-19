@@ -35,6 +35,18 @@ export default function MatchItems({
 
   const handleLeftClick = (item) => {
     if (disabled) return;
+
+    // If clicking the same item again, deselect it
+    if (selectedLeft === item) {
+      setSelectedLeft(null);
+      return;
+    }
+
+    // If item is already matched, don't allow reselection
+    if (matches[item] !== undefined) {
+      return;
+    }
+
     setSelectedLeft(item);
     if (selectedRight) {
       createMatch(item, selectedRight);
@@ -43,6 +55,18 @@ export default function MatchItems({
 
   const handleRightClick = (item) => {
     if (disabled) return;
+
+    // If clicking the same item again, deselect it
+    if (selectedRight === item) {
+      setSelectedRight(null);
+      return;
+    }
+
+    // If item is already matched, don't allow reselection
+    if (Object.values(matches).includes(item)) {
+      return;
+    }
+
     setSelectedRight(item);
     if (selectedLeft) {
       createMatch(selectedLeft, item);
@@ -227,9 +251,11 @@ export default function MatchItems({
               <button
                 ref={(el) => (leftRefs.current[item] = el)}
                 onClick={() => handleLeftClick(item)}
-                disabled={disabled}
+                disabled={disabled || isItemMatched(item, "left")}
                 className={`w-full p-4 rounded-lg border-2 transition-all text-left ${getLeftItemStyle(item)} ${
-                  disabled ? "cursor-default" : "cursor-pointer"
+                  disabled || isItemMatched(item, "left")
+                    ? "cursor-default"
+                    : "cursor-pointer"
                 }`}
               >
                 <div className="flex items-center justify-between">
@@ -273,9 +299,11 @@ export default function MatchItems({
               key={item}
               ref={(el) => (rightRefs.current[item] = el)}
               onClick={() => handleRightClick(item)}
-              disabled={disabled}
+              disabled={disabled || isItemMatched(item, "right")}
               className={`w-full p-4 rounded-lg border-2 transition-all text-left ${getRightItemStyle(item)} ${
-                disabled ? "cursor-default" : "cursor-pointer"
+                disabled || isItemMatched(item, "right")
+                  ? "cursor-default"
+                  : "cursor-pointer"
               }`}
             >
               {item}
