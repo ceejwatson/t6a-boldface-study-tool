@@ -1482,21 +1482,18 @@ export default function T6AEnhancedStudyTool() {
                 Previous
               </button>
 
-              {/* Submit button for sequence questions in study mode */}
-              {studyMode === "study" &&
-                currentQuestion?.questionType === "reorderSequence" &&
+              {/* Submit button for sequence questions - always visible when there's an answer */}
+              {currentQuestion?.questionType === "reorderSequence" &&
                 userAnswers[currentQuestion?.id] &&
                 !showExplanation && (
                   <button
                     onClick={() => {
                       setShowExplanation(true);
-                      if (studyMode !== "limitations") {
-                        const isCorrect = checkAnswer(
-                          currentQuestion,
-                          userAnswers[currentQuestion.id],
-                        );
-                        updatePerformance(currentQuestion, isCorrect);
-                      }
+                      const isCorrect = checkAnswer(
+                        currentQuestion,
+                        userAnswers[currentQuestion.id],
+                      );
+                      updatePerformance(currentQuestion, isCorrect);
                     }}
                     className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition"
                   >
