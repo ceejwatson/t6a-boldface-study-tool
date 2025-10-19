@@ -27,6 +27,17 @@ export default function MatchItems({
   const [selectedLeft, setSelectedLeft] = useState(null);
   const [selectedRight, setSelectedRight] = useState(null);
 
+  // Reset state when question changes or showExplanation changes
+  useEffect(() => {
+    if (userAnswer && Object.keys(userAnswer).length > 0) {
+      setMatches(userAnswer);
+    } else {
+      setMatches({});
+    }
+    setSelectedLeft(null);
+    setSelectedRight(null);
+  }, [question.id, showExplanation, userAnswer]);
+
   // Refs for drawing lines
   const containerRef = useRef(null);
   const leftRefs = useRef({});
@@ -34,7 +45,8 @@ export default function MatchItems({
   const [lines, setLines] = useState([]);
 
   const handleLeftClick = (item) => {
-    if (disabled) return;
+    // In quiz mode after submission, don't allow changes
+    if (disabled && showCorrectness) return;
 
     // If clicking the same item again, deselect it
     if (selectedLeft === item) {
@@ -54,7 +66,8 @@ export default function MatchItems({
   };
 
   const handleRightClick = (item) => {
-    if (disabled) return;
+    // In quiz mode after submission, don't allow changes
+    if (disabled && showCorrectness) return;
 
     // If clicking the same item again, deselect it
     if (selectedRight === item) {
@@ -82,7 +95,8 @@ export default function MatchItems({
   };
 
   const removeMatch = (left) => {
-    if (disabled) return;
+    // In quiz mode after submission, don't allow changes
+    if (disabled && showCorrectness) return;
     const newMatches = { ...matches };
     delete newMatches[left];
     setMatches(newMatches);
@@ -252,9 +266,11 @@ export default function MatchItems({
                 <button
                   ref={(el) => (leftRefs.current[item] = el)}
                   onClick={() => handleLeftClick(item)}
-                  disabled={disabled || isItemMatched(item, "left")}
+                  disabled={
+                    (disabled && showCorrectness) || isItemMatched(item, "left")
+                  }
                   className={`w-full p-4 rounded-lg border-2 transition-all text-left ${getLeftItemStyle(item)} ${
-                    disabled || isItemMatched(item, "left")
+                    (disabled && showCorrectness) || isItemMatched(item, "left")
                       ? "cursor-default"
                       : "cursor-pointer"
                   }`}
@@ -298,9 +314,11 @@ export default function MatchItems({
               key={`right-${idx}-${item}`}
               ref={(el) => (rightRefs.current[item] = el)}
               onClick={() => handleRightClick(item)}
-              disabled={disabled || isItemMatched(item, "right")}
+              disabled={
+                (disabled && showCorrectness) || isItemMatched(item, "right")
+              }
               className={`w-full p-4 rounded-lg border-2 transition-all text-left ${getRightItemStyle(item)} ${
-                disabled || isItemMatched(item, "right")
+                (disabled && showCorrectness) || isItemMatched(item, "right")
                   ? "cursor-default"
                   : "cursor-pointer"
               }`}
@@ -388,6 +406,32 @@ export default function MatchItems({
           <p className={`mt-2 ${darkMode ? "text-white" : "text-slate-900"}`}>
             {question.explanation}
           </p>
+
+          {/* Show correct answers in study mode */}
+          <div
+            className={`mt-4 p-3 rounded ${darkMode ? "bg-slate-800" : "bg-slate-100"}`}
+          >
+            <p
+              className={`text-sm mb-2 ${darkMode ? "text-slate-300" : "text-slate-700"}`}
+            >
+              Correct matches:
+            </p>
+            <div className="space-y-1">
+              {question.pairs.map((pair, i) => (
+                <div key={i} className="flex items-center gap-2 text-sm">
+                  <span className={darkMode ? "text-white" : "text-slate-900"}>
+                    {pair.left}
+                  </span>
+                  <ArrowRight
+                    className={`w-4 h-4 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                  />
+                  <span className={darkMode ? "text-white" : "text-slate-900"}>
+                    {pair.right}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       )}
     </div>
