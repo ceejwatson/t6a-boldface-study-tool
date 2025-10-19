@@ -236,10 +236,13 @@ export default function MatchItems({
       >
         {disabled
           ? "View your matches below"
-          : "Click items from each column to match them"}
+          : "Tap items from each column to match them"}
       </p>
 
-      <div ref={containerRef} className="relative grid md:grid-cols-2 gap-8">
+      <div
+        ref={containerRef}
+        className="relative grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8"
+      >
         {/* SVG overlay for lines */}
         <svg
           className="absolute top-0 left-0 w-full h-full pointer-events-none"
@@ -269,21 +272,21 @@ export default function MatchItems({
                   disabled={
                     (disabled && showCorrectness) || isItemMatched(item, "left")
                   }
-                  className={`w-full p-4 rounded-lg border-2 transition-all text-left ${getLeftItemStyle(item)} ${
+                  className={`w-full p-4 min-h-[64px] rounded-lg border-2 transition-all duration-200 text-left touch-manipulation ${getLeftItemStyle(item)} ${
                     (disabled && showCorrectness) || isItemMatched(item, "left")
                       ? "cursor-default"
-                      : "cursor-pointer"
+                      : "cursor-pointer active:scale-95"
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <span>{item}</span>
+                    <span className="text-sm sm:text-base">{item}</span>
                     {showExplanation &&
                       showCorrectness &&
                       matches[item] &&
                       (isCorrectMatch(item, matches[item]) ? (
-                        <CheckCircle2 className="w-5 h-5 text-green-400" />
+                        <CheckCircle2 className="w-5 h-5 text-green-400 flex-shrink-0" />
                       ) : (
-                        <XCircle className="w-5 h-5 text-red-400" />
+                        <XCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
                       ))}
                   </div>
                 </button>
@@ -317,13 +320,13 @@ export default function MatchItems({
               disabled={
                 (disabled && showCorrectness) || isItemMatched(item, "right")
               }
-              className={`w-full p-4 rounded-lg border-2 transition-all text-left ${getRightItemStyle(item)} ${
+              className={`w-full p-4 min-h-[64px] rounded-lg border-2 transition-all duration-200 text-left touch-manipulation ${getRightItemStyle(item)} ${
                 (disabled && showCorrectness) || isItemMatched(item, "right")
                   ? "cursor-default"
-                  : "cursor-pointer"
+                  : "cursor-pointer active:scale-95"
               }`}
             >
-              {item}
+              <span className="text-sm sm:text-base">{item}</span>
             </button>
           ))}
         </div>
@@ -354,17 +357,17 @@ export default function MatchItems({
             </span>
           </div>
           {!allCorrect && (
-            <p className={`mt-2 ${darkMode ? "text-white" : "text-slate-900"}`}>
+            <p className={`mt-2 ${darkMode ? "text-white" : "text-slate-800"}`}>
               {question.explanation}
             </p>
           )}
 
           {!allCorrect && (
             <div
-              className={`mt-4 p-3 rounded ${darkMode ? "bg-slate-800" : "bg-slate-100"}`}
+              className={`mt-4 p-3 rounded ${darkMode ? "bg-slate-800" : "bg-white"}`}
             >
               <p
-                className={`text-sm mb-2 ${darkMode ? "text-slate-300" : "text-slate-700"}`}
+                className={`text-sm mb-2 ${darkMode ? "text-slate-300" : "text-slate-600"}`}
               >
                 Correct matches:
               </p>
@@ -372,7 +375,7 @@ export default function MatchItems({
                 {question.pairs.map((pair, i) => (
                   <div key={i} className="flex items-center gap-2 text-sm">
                     <span
-                      className={darkMode ? "text-white" : "text-slate-900"}
+                      className={darkMode ? "text-white" : "text-slate-800"}
                     >
                       {pair.left}
                     </span>
@@ -380,7 +383,7 @@ export default function MatchItems({
                       className={`w-4 h-4 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
                     />
                     <span
-                      className={darkMode ? "text-white" : "text-slate-900"}
+                      className={darkMode ? "text-white" : "text-slate-800"}
                     >
                       {pair.right}
                     </span>
@@ -397,24 +400,24 @@ export default function MatchItems({
         >
           <div className="flex items-center gap-2 mb-2">
             <BookOpen
-              className={`w-6 h-6 ${darkMode ? "text-yellow-400" : "text-yellow-700"}`}
+              className={`w-6 h-6 ${darkMode ? "text-yellow-400" : "text-yellow-800"}`}
             />
             <span
-              className={`font-semibold ${darkMode ? "text-yellow-400" : "text-yellow-700"}`}
+              className={`font-semibold ${darkMode ? "text-yellow-400" : "text-yellow-800"}`}
             >
               Explanation
             </span>
           </div>
-          <p className={`mt-2 ${darkMode ? "text-white" : "text-slate-900"}`}>
+          <p className={`mt-2 ${darkMode ? "text-white" : "text-slate-800"}`}>
             {question.explanation}
           </p>
 
           {/* Show correct answers in study mode */}
           <div
-            className={`mt-4 p-3 rounded ${darkMode ? "bg-slate-800" : "bg-slate-100"}`}
+            className={`mt-4 p-3 rounded ${darkMode ? "bg-slate-800" : "bg-white"}`}
           >
             <p
-              className={`text-sm mb-2 ${darkMode ? "text-slate-300" : "text-slate-700"}`}
+              className={`text-sm mb-2 ${darkMode ? "text-slate-300" : "text-slate-600"}`}
             >
               Correct matches:
             </p>

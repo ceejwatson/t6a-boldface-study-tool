@@ -20,6 +20,7 @@ import {
   Filter,
   FileText,
   ExternalLink,
+  Clock,
 } from "lucide-react";
 
 import MultipleChoice from "./components/MultipleChoice";
@@ -53,6 +54,7 @@ export default function T6AEnhancedStudyTool() {
   const [confidenceRating, setConfidenceRating] = useState({}); // Science-based: confidence self-assessment
   const [showQuizSetup, setShowQuizSetup] = useState(false); // Show topic selection before quiz
   const [showStudySetup, setShowStudySetup] = useState(true); // Show topic selection before study mode
+  const [reviewIncorrectOnly, setReviewIncorrectOnly] = useState(false); // Track if reviewing incorrect answers only
 
   // Performance Tracking
   const [performanceStats, setPerformanceStats] = useState({
@@ -149,83 +151,6 @@ export default function T6AEnhancedStudyTool() {
     }
   }, [questionCount]);
 
-  // Keyboard shortcuts
-  useEffect(() => {
-    const handleKeyPress = (e) => {
-      // Only activate shortcuts when on study/quiz screen
-      if (activeTab !== "study" || !currentQuestion) return;
-
-      // Ignore if user is typing in an input field
-      if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA")
-        return;
-
-      // Arrow keys for navigation
-      if (e.key === "ArrowLeft" && currentQuestionIndex > 0) {
-        e.preventDefault();
-        handlePrevious();
-      } else if (
-        e.key === "ArrowRight" &&
-        currentQuestionIndex < currentQuestions.length - 1
-      ) {
-        e.preventDefault();
-        handleNext();
-      }
-
-      // Space bar to submit (only if answer is provided and not already showing explanation)
-      if (
-        e.key === " " &&
-        !showExplanation &&
-        userAnswers[currentQuestion.id]
-      ) {
-        e.preventDefault();
-        if (
-          currentQuestion.questionType === "reorderSequence" ||
-          currentQuestion.questionType === "matchItems"
-        ) {
-          setShowExplanation(true);
-          const isCorrect = checkAnswer(
-            currentQuestion,
-            userAnswers[currentQuestion.id],
-          );
-          updatePerformance(currentQuestion, isCorrect);
-        }
-      }
-
-      // Number keys 1-4 for multiple choice
-      if (
-        currentQuestion.questionType === "multipleChoice" &&
-        !showExplanation
-      ) {
-        const num = parseInt(e.key);
-        if (num >= 1 && num <= 4 && num <= currentQuestion.options.length) {
-          e.preventDefault();
-          handleAnswer(num - 1);
-        }
-      }
-
-      // T/F keys for true/false questions
-      if (currentQuestion.questionType === "trueFalse" && !showExplanation) {
-        if (e.key.toLowerCase() === "t") {
-          e.preventDefault();
-          handleAnswer(true);
-        } else if (e.key.toLowerCase() === "f") {
-          e.preventDefault();
-          handleAnswer(false);
-        }
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyPress);
-    return () => window.removeEventListener("keydown", handleKeyPress);
-  }, [
-    activeTab,
-    currentQuestion,
-    currentQuestionIndex,
-    currentQuestions.length,
-    showExplanation,
-    userAnswers,
-  ]);
-
   const loadQuestions = (mode) => {
     let questions = [];
 
@@ -315,6 +240,83 @@ export default function T6AEnhancedStudyTool() {
   };
 
   const currentQuestion = currentQuestions[currentQuestionIndex];
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      // Only activate shortcuts when on study/quiz screen
+      if (activeTab !== "study" || !currentQuestion) return;
+
+      // Ignore if user is typing in an input field
+      if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA")
+        return;
+
+      // Arrow keys for navigation
+      if (e.key === "ArrowLeft" && currentQuestionIndex > 0) {
+        e.preventDefault();
+        handlePrevious();
+      } else if (
+        e.key === "ArrowRight" &&
+        currentQuestionIndex < currentQuestions.length - 1
+      ) {
+        e.preventDefault();
+        handleNext();
+      }
+
+      // Space bar to submit (only if answer is provided and not already showing explanation)
+      if (
+        e.key === " " &&
+        !showExplanation &&
+        userAnswers[currentQuestion.id]
+      ) {
+        e.preventDefault();
+        if (
+          currentQuestion.questionType === "reorderSequence" ||
+          currentQuestion.questionType === "matchItems"
+        ) {
+          setShowExplanation(true);
+          const isCorrect = checkAnswer(
+            currentQuestion,
+            userAnswers[currentQuestion.id],
+          );
+          updatePerformance(currentQuestion, isCorrect);
+        }
+      }
+
+      // Number keys 1-4 for multiple choice
+      if (
+        currentQuestion.questionType === "multipleChoice" &&
+        !showExplanation
+      ) {
+        const num = parseInt(e.key);
+        if (num >= 1 && num <= 4 && num <= currentQuestion.options.length) {
+          e.preventDefault();
+          handleAnswer(num - 1);
+        }
+      }
+
+      // T/F keys for true/false questions
+      if (currentQuestion.questionType === "trueFalse" && !showExplanation) {
+        if (e.key.toLowerCase() === "t") {
+          e.preventDefault();
+          handleAnswer(true);
+        } else if (e.key.toLowerCase() === "f") {
+          e.preventDefault();
+          handleAnswer(false);
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyPress);
+    return () => window.removeEventListener("keydown", handleKeyPress);
+  }, [
+    activeTab,
+    currentQuestion,
+    currentQuestionIndex,
+    currentQuestions.length,
+    showExplanation,
+    userAnswers,
+  ]);
 
   const handleAnswer = (answer) => {
     const newAnswers = { ...userAnswers, [currentQuestion.id]: answer };
@@ -483,7 +485,22 @@ export default function T6AEnhancedStudyTool() {
       }
     }
 
-    if (currentQuestionIndex < currentQuestions.length - 1) {
+    if (reviewIncorrectOnly) {
+      // Find next incorrect answer
+      for (let i = currentQuestionIndex + 1; i < currentQuestions.length; i++) {
+        const q = currentQuestions[i];
+        const answered = userAnswers[q.id] !== undefined;
+        const isCorrect = answered && checkAnswer(q, userAnswers[q.id]);
+        if (answered && !isCorrect) {
+          setCurrentQuestionIndex(i);
+          setShowExplanation(true);
+          return;
+        }
+      }
+      // No more incorrect answers, exit review
+      setActiveTab("results");
+      setReviewIncorrectOnly(false);
+    } else if (currentQuestionIndex < currentQuestions.length - 1) {
       setCurrentQuestionIndex((prev) => prev + 1);
       // Reset explanation - retrieval practice (science-based)
       setShowExplanation(false);
@@ -491,7 +508,20 @@ export default function T6AEnhancedStudyTool() {
   };
 
   const handlePrevious = () => {
-    if (currentQuestionIndex > 0) {
+    if (reviewIncorrectOnly) {
+      // Find previous incorrect answer
+      for (let i = currentQuestionIndex - 1; i >= 0; i--) {
+        const q = currentQuestions[i];
+        const answered = userAnswers[q.id] !== undefined;
+        const isCorrect = answered && checkAnswer(q, userAnswers[q.id]);
+        if (answered && !isCorrect) {
+          setCurrentQuestionIndex(i);
+          setShowExplanation(true);
+          return;
+        }
+      }
+      // No previous incorrect answers
+    } else if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex((prev) => prev - 1);
       // Reset explanation for retrieval practice
       setShowExplanation(false);
@@ -527,9 +557,9 @@ export default function T6AEnhancedStudyTool() {
       onAnswer: handleAnswer,
       showExplanation: showExplanation,
       userAnswer: userAnswers[currentQuestion.id],
-      disabled: showExplanation && studyMode === "study",
+      disabled: showExplanation, // Disable after answer is shown in both modes
       darkMode: darkMode,
-      showCorrectness: studyMode !== "study", // Hide correct/incorrect in study mode
+      showCorrectness: studyMode === "quiz", // Only show green/red in quiz mode
     };
 
     switch (currentQuestion.questionType) {
@@ -637,123 +667,137 @@ export default function T6AEnhancedStudyTool() {
       </header>
 
       <main className="container mx-auto px-4 py-8">
-        {/* Mode Selection - Hide on home screen */}
+        {/* Simplified Navigation Bar - Only show when not on home screen */}
         {activeTab !== "home" && (
-          <div className="mb-6 flex gap-3 flex-wrap">
-            <button
-              onClick={() => {
-                setStudyMode("study");
-                setShowStudySetup(true);
-                setShowQuizSetup(false);
-                setActiveTab("studysetup");
-                setSelectedCategory("all");
-              }}
-              className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
-                studyMode === "study"
-                  ? "bg-blue-600 text-white"
-                  : darkMode
-                    ? "bg-slate-800 text-slate-300 hover:bg-slate-700"
-                    : "bg-white text-slate-700 hover:bg-slate-100"
-              }`}
+          <div className="mb-6">
+            <div
+              className={`flex items-center justify-between gap-3 p-3 rounded-xl ${darkMode ? "bg-slate-800/50" : "bg-white/50"} backdrop-blur-sm border ${darkMode ? "border-slate-700" : "border-slate-200"}`}
             >
-              <BookOpen className="w-4 h-4" />
-              Study Mode
-            </button>
+              {/* Left: Home + Current Mode */}
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setActiveTab("home")}
+                  className={`px-3 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 ${
+                    darkMode
+                      ? "bg-slate-700 hover:bg-slate-600 text-white"
+                      : "bg-slate-200 hover:bg-slate-300 text-slate-900"
+                  }`}
+                >
+                  <ChevronRight className="w-4 h-4 rotate-180" />
+                  <span className="hidden sm:inline">Home</span>
+                </button>
 
-            <button
-              onClick={() => {
-                setStudyMode("quiz");
-                setShowExplanation(false);
-                setShowQuizSetup(true); // Show topic selector first
-                setActiveTab("quizsetup");
-              }}
-              className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
-                studyMode === "quiz"
-                  ? "bg-purple-600 text-white"
-                  : darkMode
-                    ? "bg-slate-800 text-slate-300 hover:bg-slate-700"
-                    : "bg-white text-slate-700 hover:bg-slate-100"
-              }`}
-            >
-              <Brain className="w-4 h-4" />
-              Quiz Mode
-            </button>
+                {/* Current Mode Indicator */}
+                {(activeTab === "study" ||
+                  activeTab === "studysetup" ||
+                  activeTab === "quizsetup") && (
+                  <div className="flex items-center gap-2 px-3 py-2">
+                    {studyMode === "study" && (
+                      <>
+                        <BookOpen className="w-4 h-4 text-blue-400" />
+                        <span
+                          className={`font-medium ${darkMode ? "text-white" : "text-slate-900"}`}
+                        >
+                          Study Mode
+                        </span>
+                      </>
+                    )}
+                    {studyMode === "quiz" && (
+                      <>
+                        <Brain className="w-4 h-4 text-orange-400" />
+                        <span
+                          className={`font-medium ${darkMode ? "text-white" : "text-slate-900"}`}
+                        >
+                          Quiz Mode
+                        </span>
+                      </>
+                    )}
+                    {studyMode === "weak" && (
+                      <>
+                        <Zap className="w-4 h-4 text-orange-400" />
+                        <span
+                          className={`font-medium ${darkMode ? "text-white" : "text-slate-900"}`}
+                        >
+                          Weak Topics
+                        </span>
+                      </>
+                    )}
+                    {studyMode === "review" && (
+                      <>
+                        <RotateCcw className="w-4 h-4 text-teal-400" />
+                        <span
+                          className={`font-medium ${darkMode ? "text-white" : "text-slate-900"}`}
+                        >
+                          Review
+                        </span>
+                      </>
+                    )}
+                    {studyMode === "flagged" && (
+                      <>
+                        <Target className="w-4 h-4 text-yellow-400" />
+                        <span
+                          className={`font-medium ${darkMode ? "text-white" : "text-slate-900"}`}
+                        >
+                          Flagged
+                        </span>
+                      </>
+                    )}
+                  </div>
+                )}
 
-            {weakTopics.length > 0 && (
-              <button
-                onClick={() => {
-                  setStudyMode("weak");
-                  setActiveTab("study");
-                  setShowStudySetup(false);
-                  loadQuestions("weak");
-                }}
-                className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
-                  studyMode === "weak"
-                    ? "bg-orange-600 text-white"
-                    : darkMode
-                      ? "bg-slate-800 text-slate-300 hover:bg-slate-700"
-                      : "bg-white text-slate-700 hover:bg-slate-100"
-                }`}
-              >
-                <Zap className="w-4 h-4" />
-                Weak Topics ({weakTopics.length})
-              </button>
-            )}
+                {activeTab === "progress" && (
+                  <div className="flex items-center gap-2 px-3 py-2">
+                    <TrendingUp className="w-4 h-4 text-indigo-400" />
+                    <span
+                      className={`font-medium ${darkMode ? "text-white" : "text-slate-900"}`}
+                    >
+                      Progress
+                    </span>
+                  </div>
+                )}
+              </div>
 
-            <button
-              onClick={() => {
-                setStudyMode("review");
-                setActiveTab("study");
-                setShowStudySetup(false);
-                setShowQuizSetup(false);
-                loadQuestions("review");
-              }}
-              className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
-                studyMode === "review"
-                  ? "bg-teal-600 text-white"
-                  : darkMode
-                    ? "bg-slate-800 text-slate-300 hover:bg-slate-700"
-                    : "bg-white text-slate-700 hover:bg-slate-100"
-              }`}
-            >
-              <RotateCcw className="w-4 h-4" />
-              Due for Review ({getDueForReview().length})
-            </button>
+              {/* Right: Quick Actions */}
+              <div className="flex items-center gap-2">
+                {/* Exit Quiz Button - Only in quiz mode */}
+                {studyMode === "quiz" && activeTab === "study" && (
+                  <button
+                    onClick={() => {
+                      if (
+                        window.confirm(
+                          "Are you sure you want to exit this quiz? Your progress will be saved.",
+                        )
+                      ) {
+                        setActiveTab("results");
+                      }
+                    }}
+                    className={`px-3 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 ${
+                      darkMode
+                        ? "bg-slate-700 text-slate-300 hover:bg-slate-600"
+                        : "bg-slate-200 text-slate-700 hover:bg-slate-300"
+                    }`}
+                  >
+                    <XCircle className="w-4 h-4" />
+                    <span className="hidden sm:inline">Exit Quiz</span>
+                  </button>
+                )}
 
-            {flaggedQuestions.length > 0 && (
-              <button
-                onClick={() => {
-                  setStudyMode("flagged");
-                  setActiveTab("study");
-                  setShowStudySetup(false);
-                  loadQuestions("flagged");
-                }}
-                className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
-                  studyMode === "flagged"
-                    ? "bg-yellow-600 text-white"
-                    : darkMode
-                      ? "bg-slate-800 text-slate-300 hover:bg-slate-700"
-                      : "bg-white text-slate-700 hover:bg-slate-100"
-                }`}
-              >
-                <Target className="w-4 h-4" />
-                Flagged ({flaggedQuestions.length})
-              </button>
-            )}
-
-            <button
-              onClick={() => setActiveTab("progress")}
-              className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
-                activeTab === "progress"
-                  ? "bg-indigo-600 text-white"
-                  : darkMode
-                    ? "bg-slate-800 text-slate-300 hover:bg-slate-700"
-                    : "bg-white text-slate-700 hover:bg-slate-100"
-              }`}
-            >
-              <TrendingUp className="w-4 h-4" />
-              Progress
-            </button>
+                {/* Progress Button */}
+                <button
+                  onClick={() => setActiveTab("progress")}
+                  className={`px-3 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 ${
+                    activeTab === "progress"
+                      ? "bg-indigo-600 text-white"
+                      : darkMode
+                        ? "bg-slate-700 text-slate-300 hover:bg-slate-600"
+                        : "bg-slate-200 text-slate-700 hover:bg-slate-300"
+                  }`}
+                >
+                  <TrendingUp className="w-4 h-4" />
+                  <span className="hidden sm:inline">Stats</span>
+                </button>
+              </div>
+            </div>
           </div>
         )}
 
@@ -809,6 +853,7 @@ export default function T6AEnhancedStudyTool() {
 
               <button
                 onClick={() => {
+                  setStudyMode("quiz"); // Set to quiz mode immediately
                   setShowQuizSetup(true);
                   setActiveTab("quizsetup");
                 }}
@@ -817,10 +862,10 @@ export default function T6AEnhancedStudyTool() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     <div
-                      className={`${darkMode ? "bg-purple-500/20" : "bg-purple-100"} p-3 rounded-xl`}
+                      className={`${darkMode ? "bg-orange-500/20" : "bg-orange-100"} p-3 rounded-xl`}
                     >
                       <Target
-                        className={`w-7 h-7 ${darkMode ? "text-purple-400" : "text-purple-600"}`}
+                        className={`w-7 h-7 ${darkMode ? "text-orange-400" : "text-orange-600"}`}
                       />
                     </div>
                     <h3
@@ -986,25 +1031,12 @@ export default function T6AEnhancedStudyTool() {
           <div
             className={`max-w-4xl mx-auto ${darkMode ? "bg-slate-800" : "bg-white"} rounded-xl p-6`}
           >
-            <div className="flex items-center justify-between mb-6">
+            <div className="mb-6">
               <h2
                 className={`text-2xl font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
               >
                 Setup Your Quiz
               </h2>
-              <button
-                onClick={() => {
-                  setActiveTab("study");
-                  setStudyMode("study");
-                }}
-                className={`px-4 py-2 rounded-lg font-medium transition ${
-                  darkMode
-                    ? "bg-slate-700 hover:bg-slate-600 text-white"
-                    : "bg-slate-200 hover:bg-slate-300 text-slate-900"
-                }`}
-              >
-                ← Cancel
-              </button>
             </div>
 
             <p
@@ -1052,7 +1084,7 @@ export default function T6AEnhancedStudyTool() {
                     }}
                     className={`px-3 py-2 rounded-lg text-sm font-medium transition ${
                       selectedTopics.includes(cat)
-                        ? "bg-purple-600 text-white"
+                        ? "bg-orange-600 text-white"
                         : darkMode
                           ? "bg-slate-700 text-slate-300 hover:bg-slate-600"
                           : "bg-slate-200 text-slate-700 hover:bg-slate-300"
@@ -1086,7 +1118,7 @@ export default function T6AEnhancedStudyTool() {
                     }}
                     className={`px-3 py-2 rounded-lg text-sm font-medium transition ${
                       selectedQuestionTypes.includes(type)
-                        ? "bg-purple-600 text-white"
+                        ? "bg-orange-600 text-white"
                         : darkMode
                           ? "bg-slate-700 text-slate-300 hover:bg-slate-600"
                           : "bg-slate-200 text-slate-700 hover:bg-slate-300"
@@ -1112,7 +1144,7 @@ export default function T6AEnhancedStudyTool() {
                     onClick={() => setQuestionCount(count)}
                     className={`px-4 py-2 rounded-lg font-medium transition ${
                       questionCount === count
-                        ? "bg-purple-600 text-white"
+                        ? "bg-orange-600 text-white"
                         : darkMode
                           ? "bg-slate-700 text-slate-300 hover:bg-slate-600"
                           : "bg-slate-200 text-slate-700 hover:bg-slate-300"
@@ -1126,14 +1158,16 @@ export default function T6AEnhancedStudyTool() {
 
             <button
               onClick={() => {
+                setStudyMode("quiz"); // Keep quiz mode active
                 setActiveTab("study");
+                setShowQuizSetup(false);
                 loadQuestions(selectedTopics.length > 0 ? "custom" : "all");
               }}
               disabled={selectedTopics.length === 0}
               className={`w-full px-6 py-3 rounded-lg font-medium transition ${
                 selectedTopics.length === 0
                   ? "bg-slate-600 text-slate-400 cursor-not-allowed"
-                  : "bg-purple-600 hover:bg-purple-700 text-white"
+                  : "bg-orange-600 hover:bg-orange-700 text-white"
               }`}
             >
               Start Quiz (
@@ -1147,25 +1181,12 @@ export default function T6AEnhancedStudyTool() {
           <div
             className={`max-w-4xl mx-auto ${darkMode ? "bg-slate-800" : "bg-white"} rounded-xl p-6`}
           >
-            <div className="flex items-center justify-between mb-6">
+            <div className="mb-6">
               <h2
                 className={`text-2xl font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
               >
                 Setup Your Study Session
               </h2>
-              <button
-                onClick={() => {
-                  setActiveTab("main");
-                  setStudyMode("quiz");
-                }}
-                className={`px-4 py-2 rounded-lg font-medium transition ${
-                  darkMode
-                    ? "bg-slate-700 hover:bg-slate-600 text-white"
-                    : "bg-slate-200 hover:bg-slate-300 text-slate-900"
-                }`}
-              >
-                ← Cancel
-              </button>
             </div>
 
             {/* Topic Selection */}
@@ -1224,7 +1245,7 @@ export default function T6AEnhancedStudyTool() {
                     }}
                     className={`px-3 py-2 rounded-lg text-sm font-medium transition ${
                       selectedQuestionTypes.includes(type)
-                        ? "bg-purple-600 text-white"
+                        ? "bg-orange-600 text-white"
                         : darkMode
                           ? "bg-slate-700 text-slate-300 hover:bg-slate-600"
                           : "bg-slate-200 text-slate-700 hover:bg-slate-300"
@@ -1340,7 +1361,7 @@ export default function T6AEnhancedStudyTool() {
 
             {/* By Category */}
             <div
-              className={`${darkMode ? "bg-slate-800 border-purple-500" : "bg-white border-purple-300"} rounded-xl p-6 border-2`}
+              className={`${darkMode ? "bg-slate-800 border-orange-500" : "bg-white border-orange-300"} rounded-xl p-6 border-2`}
             >
               <h2
                 className={`text-2xl font-bold ${darkMode ? "text-white" : "text-slate-900"} mb-4`}
@@ -1430,6 +1451,118 @@ export default function T6AEnhancedStudyTool() {
               <RotateCcw className="w-5 h-5" />
               Reset All Progress
             </button>
+          </div>
+        ) : activeTab === "studycomplete" ? (
+          <div className="max-w-4xl mx-auto">
+            {/* Study Session Complete */}
+            <div
+              className={`${darkMode ? "bg-slate-800" : "bg-white"} rounded-xl p-6 mb-6`}
+            >
+              <div className="text-center mb-8">
+                <div className="inline-block p-4 rounded-full bg-green-500/20 mb-4">
+                  <CheckCircle2 className="w-16 h-16 text-green-500" />
+                </div>
+                <h2
+                  className={`text-3xl font-bold ${darkMode ? "text-white" : "text-slate-900"} mb-2`}
+                >
+                  Study Session Complete! 🎉
+                </h2>
+                <p
+                  className={`text-lg ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                >
+                  You&apos;ve reviewed all {currentQuestions?.length || 0}{" "}
+                  questions
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                <div
+                  className={`${darkMode ? "bg-slate-700/50" : "bg-slate-50"} rounded-lg p-4 text-center`}
+                >
+                  <BookOpen
+                    className={`w-8 h-8 mx-auto mb-2 ${darkMode ? "text-blue-400" : "text-blue-600"}`}
+                  />
+                  <p
+                    className={`text-2xl font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
+                  >
+                    {currentQuestions?.length || 0}
+                  </p>
+                  <p
+                    className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                  >
+                    Questions Studied
+                  </p>
+                </div>
+
+                <div
+                  className={`${darkMode ? "bg-slate-700/50" : "bg-slate-50"} rounded-lg p-4 text-center`}
+                >
+                  <Target
+                    className={`w-8 h-8 mx-auto mb-2 ${darkMode ? "text-green-400" : "text-green-600"}`}
+                  />
+                  <p
+                    className={`text-2xl font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
+                  >
+                    {currentQuestions?.length > 0
+                      ? new Set(currentQuestions.map((q) => q.category)).size
+                      : 0}
+                  </p>
+                  <p
+                    className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                  >
+                    Topics Covered
+                  </p>
+                </div>
+
+                <div
+                  className={`${darkMode ? "bg-slate-700/50" : "bg-slate-50"} rounded-lg p-4 text-center`}
+                >
+                  <Clock
+                    className={`w-8 h-8 mx-auto mb-2 ${darkMode ? "text-purple-400" : "text-purple-600"}`}
+                  />
+                  <p
+                    className={`text-2xl font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
+                  >
+                    Study
+                  </p>
+                  <p
+                    className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                  >
+                    Mode
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex gap-3 flex-wrap">
+                <button
+                  onClick={() => {
+                    setActiveTab("home");
+                    setStudyMode("study");
+                    setUserAnswers({});
+                    setCurrentQuestionIndex(0);
+                    setShowExplanation(false);
+                  }}
+                  className={`flex-1 px-6 py-3 rounded-lg font-medium transition ${
+                    darkMode
+                      ? "bg-slate-700 hover:bg-slate-600 text-white"
+                      : "bg-slate-300 hover:bg-slate-400 text-slate-900"
+                  }`}
+                >
+                  Return to Main Menu
+                </button>
+                <button
+                  onClick={() => {
+                    setCurrentQuestionIndex(0);
+                    setShowExplanation(false);
+                    setUserAnswers({});
+                    setActiveTab("study");
+                  }}
+                  className="flex-1 px-6 py-3 rounded-lg font-medium transition bg-green-600 hover:bg-green-700 text-white"
+                >
+                  Study Again
+                </button>
+              </div>
+            </div>
           </div>
         ) : activeTab === "results" ? (
           <div className="max-w-4xl mx-auto">
@@ -1524,11 +1657,60 @@ export default function T6AEnhancedStudyTool() {
               </div>
 
               {/* Question Review */}
-              <h3
-                className={`text-lg font-semibold mb-4 ${darkMode ? "text-white" : "text-slate-900"}`}
-              >
-                Review Your Answers:
-              </h3>
+              <div className="flex items-center justify-between mb-4">
+                <h3
+                  className={`text-lg font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
+                >
+                  Review Your Answers:
+                </h3>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => {
+                      // Review only incorrect answers
+                      const incorrectQuestions = currentQuestions.filter(
+                        (q, i) => {
+                          const answered = userAnswers[q.id] !== undefined;
+                          const isCorrect =
+                            answered && checkAnswer(q, userAnswers[q.id]);
+                          return answered && !isCorrect;
+                        },
+                      );
+                      if (incorrectQuestions.length === 0) {
+                        alert("No incorrect answers to review!");
+                        return;
+                      }
+                      setReviewIncorrectOnly(true);
+                      setCurrentQuestionIndex(
+                        currentQuestions.indexOf(incorrectQuestions[0]),
+                      );
+                      setActiveTab("study");
+                      setShowExplanation(true);
+                    }}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+                      darkMode
+                        ? "bg-red-600 hover:bg-red-700 text-white"
+                        : "bg-red-500 hover:bg-red-600 text-white"
+                    }`}
+                  >
+                    Review Incorrect Only
+                  </button>
+                  <button
+                    onClick={() => {
+                      setReviewIncorrectOnly(false);
+                      setCurrentQuestionIndex(0);
+                      setActiveTab("study");
+                      setShowExplanation(true);
+                    }}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+                      darkMode
+                        ? "bg-blue-600 hover:bg-blue-700 text-white"
+                        : "bg-blue-500 hover:bg-blue-600 text-white"
+                    }`}
+                  >
+                    Review All
+                  </button>
+                </div>
+              </div>
               <div className="space-y-3">
                 {currentQuestions.map((question, index) => {
                   const answered = userAnswers[question.id] !== undefined;
@@ -1586,6 +1768,13 @@ export default function T6AEnhancedStudyTool() {
                               setCurrentQuestionIndex(index);
                               setActiveTab("study");
                               setShowExplanation(true);
+                              // Mark all answers as shown so user can't re-answer
+                              const allAnswers = { ...userAnswers };
+                              if (!allAnswers[question.id]) {
+                                // For unanswered questions, set a placeholder
+                                allAnswers[question.id] = null;
+                              }
+                              setUserAnswers(allAnswers);
                             }}
                             className={`px-3 py-1 rounded text-sm ${
                               darkMode
@@ -1593,7 +1782,7 @@ export default function T6AEnhancedStudyTool() {
                                 : "bg-blue-500 hover:bg-blue-600 text-white"
                             }`}
                           >
-                            Review
+                            View
                           </button>
                         </div>
                       </div>
@@ -1606,7 +1795,7 @@ export default function T6AEnhancedStudyTool() {
               <div className="flex gap-3 mt-6">
                 <button
                   onClick={() => {
-                    setActiveTab("main");
+                    setActiveTab("home");
                     setStudyMode("study");
                     setUserAnswers({});
                     setCurrentQuestionIndex(0);
@@ -1625,11 +1814,41 @@ export default function T6AEnhancedStudyTool() {
                     setShowQuizSetup(true);
                     setActiveTab("quizsetup");
                   }}
-                  className="flex-1 px-6 py-3 rounded-lg font-medium transition bg-purple-600 hover:bg-purple-700 text-white"
+                  className="flex-1 px-6 py-3 rounded-lg font-medium transition bg-orange-600 hover:bg-orange-700 text-white"
                 >
                   Take Another Quiz
                 </button>
               </div>
+            </div>
+          </div>
+        ) : currentQuestions.length === 0 ? (
+          <div className="max-w-4xl mx-auto">
+            <div
+              className={`${darkMode ? "bg-slate-800" : "bg-white"} rounded-xl p-8 text-center`}
+            >
+              <AlertCircle
+                className={`w-16 h-16 mx-auto mb-4 ${darkMode ? "text-yellow-400" : "text-yellow-600"}`}
+              />
+              <h2
+                className={`text-2xl font-bold mb-2 ${darkMode ? "text-white" : "text-slate-900"}`}
+              >
+                No Questions Available
+              </h2>
+              <p
+                className={`mb-6 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+              >
+                Please select topics and question types to begin studying.
+              </p>
+              <button
+                onClick={() => setActiveTab("home")}
+                className={`px-6 py-3 rounded-lg font-medium transition ${
+                  darkMode
+                    ? "bg-slate-700 hover:bg-slate-600 text-white"
+                    : "bg-slate-300 hover:bg-slate-400 text-slate-900"
+                }`}
+              >
+                ← Back to Home
+              </button>
             </div>
           </div>
         ) : (
@@ -1643,13 +1862,20 @@ export default function T6AEnhancedStudyTool() {
                   Question {currentQuestionIndex + 1} of{" "}
                   {currentQuestions.length}
                 </span>
+                {studyMode === "quiz" && showExplanation && (
+                  <span
+                    className={`ml-3 text-sm px-3 py-1 rounded-full ${darkMode ? "bg-blue-900/30 text-blue-300" : "bg-blue-100 text-blue-700"}`}
+                  >
+                    Review Mode
+                  </span>
+                )}
               </div>
               {/* Progress Bar */}
               <div
                 className={`w-full h-2 rounded-full overflow-hidden ${darkMode ? "bg-slate-700" : "bg-slate-200"}`}
               >
                 <div
-                  className="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-300 ease-out"
+                  className="h-full bg-gradient-to-r from-blue-500 to-blue-600 transition-all duration-500 ease-out shadow-sm"
                   style={{
                     width: `${((currentQuestionIndex + 1) / currentQuestions.length) * 100}%`,
                   }}
@@ -1695,28 +1921,49 @@ export default function T6AEnhancedStudyTool() {
               {renderQuestion()}
             </div>
 
-            {/* Exit Quiz Button (Quiz Mode Only) */}
-            {studyMode === "quiz" && (
-              <div className="flex justify-center mt-6">
-                <button
-                  onClick={() => {
-                    if (
-                      window.confirm(
-                        "Are you sure you want to exit this quiz? Your progress will be saved.",
-                      )
-                    ) {
-                      setActiveTab("results");
-                    }
-                  }}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2 ${
-                    darkMode
-                      ? "bg-slate-700 hover:bg-slate-600 text-slate-300"
-                      : "bg-slate-200 hover:bg-slate-300 text-slate-700"
-                  }`}
+            {/* Keyboard Hints - Subtle, only on desktop */}
+            {currentQuestion && (
+              <div className="hidden md:flex justify-center mt-4 mb-2">
+                <div
+                  className={`flex items-center gap-3 px-4 py-2 rounded-lg text-xs ${darkMode ? "bg-slate-700/50 text-slate-400" : "bg-slate-100 text-slate-600"} transition-opacity duration-300`}
                 >
-                  <XCircle className="w-4 h-4" />
-                  Exit Quiz & Review Answers
-                </button>
+                  <span className="flex items-center gap-1">
+                    <kbd
+                      className={`px-2 py-1 rounded ${darkMode ? "bg-slate-600" : "bg-white"} font-mono`}
+                    >
+                      ←
+                    </kbd>
+                    Previous
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <kbd
+                      className={`px-2 py-1 rounded ${darkMode ? "bg-slate-600" : "bg-white"} font-mono`}
+                    >
+                      →
+                    </kbd>
+                    Next
+                  </span>
+                  {currentQuestion.questionType === "multipleChoice" && (
+                    <span className="flex items-center gap-1">
+                      <kbd
+                        className={`px-2 py-1 rounded ${darkMode ? "bg-slate-600" : "bg-white"} font-mono`}
+                      >
+                        1-4
+                      </kbd>
+                      Select
+                    </span>
+                  )}
+                  {currentQuestion.questionType === "trueFalse" && (
+                    <span className="flex items-center gap-1">
+                      <kbd
+                        className={`px-2 py-1 rounded ${darkMode ? "bg-slate-600" : "bg-white"} font-mono`}
+                      >
+                        T/F
+                      </kbd>
+                      Answer
+                    </span>
+                  )}
+                </div>
               </div>
             )}
 
@@ -1725,51 +1972,54 @@ export default function T6AEnhancedStudyTool() {
               <button
                 onClick={handlePrevious}
                 disabled={currentQuestionIndex === 0}
-                className={`px-6 py-4 md:py-3 rounded-lg font-medium transition flex items-center gap-2 min-h-[48px] ${
+                className={`px-6 py-4 md:py-3 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 min-h-[48px] touch-manipulation ${
                   currentQuestionIndex === 0
                     ? darkMode
                       ? "bg-slate-800 text-slate-600 cursor-not-allowed"
                       : "bg-slate-200 text-slate-400 cursor-not-allowed"
                     : darkMode
-                      ? "bg-slate-700 hover:bg-slate-600 text-white active:bg-slate-500"
-                      : "bg-white hover:bg-slate-100 text-slate-900 active:bg-slate-200"
+                      ? "bg-slate-700 hover:bg-slate-600 text-white active:scale-95"
+                      : "bg-white hover:bg-slate-100 text-slate-900 active:scale-95"
                 }`}
               >
                 <ChevronRight className="w-5 h-5 rotate-180" />
                 <span className="hidden sm:inline">Previous</span>
               </button>
 
-              {/* Submit button for sequence questions - always visible when there's an answer */}
+              {/* Submit button for reorder sequence - ALWAYS visible */}
               {currentQuestion?.questionType === "reorderSequence" &&
-                userAnswers[currentQuestion?.id] &&
                 !showExplanation && (
                   <button
                     onClick={() => {
                       setShowExplanation(true);
-                      const isCorrect = checkAnswer(
-                        currentQuestion,
-                        userAnswers[currentQuestion.id],
-                      );
-                      updatePerformance(currentQuestion, isCorrect);
+                      const answer = userAnswers[currentQuestion.id];
+                      if (answer) {
+                        const isCorrect = checkAnswer(currentQuestion, answer);
+                        updatePerformance(currentQuestion, isCorrect);
+                      } else {
+                        // If no answer saved yet, mark as incorrect in quiz mode
+                        if (studyMode === "quiz") {
+                          updatePerformance(currentQuestion, false);
+                        }
+                      }
                     }}
-                    className="bg-green-600 hover:bg-green-700 active:bg-green-800 text-white px-6 py-4 md:py-3 rounded-lg font-medium transition min-h-[48px]"
+                    className="bg-green-600 hover:bg-green-700 active:scale-95 text-white px-6 py-4 md:py-3 rounded-lg font-medium transition-all duration-200 min-h-[48px] touch-manipulation"
                   >
                     Submit Order
                   </button>
                 )}
 
-              {/* Submit Answer for complex types in quiz mode if not answered */}
+              {/* Submit Answer for match items in quiz mode if not answered */}
               {studyMode === "quiz" &&
                 !showExplanation &&
-                (currentQuestion?.questionType === "reorderSequence" ||
-                  currentQuestion?.questionType === "matchItems") &&
+                currentQuestion?.questionType === "matchItems" &&
                 !userAnswers[currentQuestion?.id] && (
                   <button
                     onClick={() => {
                       setShowExplanation(true);
                       updatePerformance(currentQuestion, false);
                     }}
-                    className="bg-green-600 hover:bg-green-700 active:bg-green-800 text-white px-6 py-4 md:py-3 rounded-lg font-medium transition min-h-[48px]"
+                    className="bg-green-600 hover:bg-green-700 active:scale-95 text-white px-6 py-4 md:py-3 rounded-lg font-medium transition-all duration-200 min-h-[48px] touch-manipulation"
                   >
                     Submit Answer
                   </button>
@@ -1779,26 +2029,28 @@ export default function T6AEnhancedStudyTool() {
               studyMode === "quiz" ? (
                 <button
                   onClick={() => setActiveTab("results")}
-                  className="px-6 py-4 md:py-3 rounded-lg font-medium transition flex items-center gap-2 bg-purple-600 hover:bg-purple-700 active:bg-purple-800 text-white min-h-[48px]"
+                  className="px-6 py-4 md:py-3 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 bg-orange-600 hover:bg-orange-700 active:scale-95 text-white min-h-[48px] touch-manipulation"
                 >
                   <span className="hidden sm:inline">Finish Quiz & Review</span>
+                  <span className="sm:hidden">Finish</span>
+                  <CheckCircle2 className="w-5 h-5" />
+                </button>
+              ) : currentQuestionIndex === currentQuestions.length - 1 ? (
+                <button
+                  onClick={() => setActiveTab("studycomplete")}
+                  className="px-6 py-4 md:py-3 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 bg-green-600 hover:bg-green-700 active:scale-95 text-white min-h-[48px] touch-manipulation"
+                >
+                  <span className="hidden sm:inline">Finish Study Session</span>
                   <span className="sm:hidden">Finish</span>
                   <CheckCircle2 className="w-5 h-5" />
                 </button>
               ) : (
                 <button
                   onClick={handleNext}
-                  disabled={
-                    currentQuestionIndex === currentQuestions.length - 1
-                  }
-                  className={`px-6 py-4 md:py-3 rounded-lg font-medium transition flex items-center gap-2 min-h-[48px] ${
-                    currentQuestionIndex === currentQuestions.length - 1
-                      ? darkMode
-                        ? "bg-slate-800 text-slate-600 cursor-not-allowed"
-                        : "bg-slate-200 text-slate-400 cursor-not-allowed"
-                      : darkMode
-                        ? "bg-slate-700 hover:bg-slate-600 text-white active:bg-slate-500"
-                        : "bg-white hover:bg-slate-100 text-slate-900 active:bg-slate-200"
+                  className={`px-6 py-4 md:py-3 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 min-h-[48px] touch-manipulation ${
+                    darkMode
+                      ? "bg-slate-700 hover:bg-slate-600 text-white active:scale-95"
+                      : "bg-white hover:bg-slate-100 text-slate-900 active:scale-95"
                   }`}
                 >
                   <span className="hidden sm:inline">Next</span>

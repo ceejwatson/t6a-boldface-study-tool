@@ -19,15 +19,15 @@ export default function MultipleChoice({
   const getOptionStyle = (index) => {
     if (!showExplanation || !showCorrectness) {
       return userAnswer === index
-        ? "bg-blue-600 text-white border-blue-600"
+        ? "bg-blue-600 text-white border-blue-600 scale-[1.02]"
         : darkMode
-          ? "bg-slate-800 text-white border-slate-600 hover:border-blue-500"
-          : "bg-white text-slate-900 border-slate-300 hover:border-blue-500";
+          ? "bg-slate-800 text-white border-slate-600 hover:border-blue-500 hover:scale-[1.01]"
+          : "bg-white text-slate-900 border-slate-300 hover:border-blue-500 hover:scale-[1.01]";
     }
 
     // Show results (only in quiz mode)
     if (index === question.correctAnswer) {
-      return "bg-green-600 text-white border-green-600";
+      return "bg-green-600 text-white border-green-600 animate-pulse-once";
     }
     if (userAnswer === index && userAnswer !== question.correctAnswer) {
       return "bg-red-600 text-white border-red-600";
@@ -63,11 +63,11 @@ export default function MultipleChoice({
             key={index}
             onClick={() => handleSelect(index)}
             disabled={disabled}
-            className={`w-full p-4 rounded-lg border-2 transition-all text-left flex items-center justify-between ${getOptionStyle(index)} ${
-              disabled ? "cursor-not-allowed" : "cursor-pointer"
+            className={`w-full p-4 md:p-4 min-h-[56px] rounded-lg border-2 transition-all duration-200 text-left flex items-center justify-between touch-manipulation ${getOptionStyle(index)} ${
+              disabled ? "cursor-not-allowed" : "cursor-pointer active:scale-95"
             }`}
           >
-            <span className="flex-1">{option}</span>
+            <span className="flex-1 text-base md:text-base">{option}</span>
             {getOptionIcon(index)}
           </button>
         ))}
@@ -115,27 +115,27 @@ export default function MultipleChoice({
           <div className="flex items-center gap-2 mb-2">
             <BookOpen
               className={`w-6 h-6 ${
-                darkMode ? "text-yellow-400" : "text-yellow-700"
+                darkMode ? "text-yellow-400" : "text-yellow-800"
               }`}
             />
             <span
               className={`font-semibold ${
-                darkMode ? "text-yellow-400" : "text-yellow-700"
+                darkMode ? "text-yellow-400" : "text-yellow-800"
               }`}
             >
               Explanation
             </span>
           </div>
-          <p className={`mt-2 ${darkMode ? "text-white" : "text-slate-900"}`}>
+          <p className={`mt-2 ${darkMode ? "text-white" : "text-slate-800"}`}>
             {question.explanation}
           </p>
 
           {/* Show correct answer */}
           <div
-            className={`mt-4 p-3 rounded ${darkMode ? "bg-slate-800" : "bg-slate-100"}`}
+            className={`mt-4 p-3 rounded ${darkMode ? "bg-slate-800" : "bg-white"}`}
           >
             <p
-              className={`text-sm mb-1 ${darkMode ? "text-slate-300" : "text-slate-700"}`}
+              className={`text-sm mb-1 ${darkMode ? "text-slate-300" : "text-slate-600"}`}
             >
               Correct Answer:
             </p>

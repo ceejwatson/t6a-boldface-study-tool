@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   CheckCircle2,
   XCircle,
@@ -27,6 +27,16 @@ export default function ReorderSequence({
     return [...question.correctOrder].sort(() => Math.random() - 0.5);
   });
 
+  const [initialized, setInitialized] = useState(false);
+
+  // Save initial shuffled state to parent on mount
+  useEffect(() => {
+    if (!initialized && (!userAnswer || userAnswer.length === 0)) {
+      onAnswer(items);
+      setInitialized(true);
+    }
+  }, [initialized, items, onAnswer, userAnswer]);
+
   const moveItem = (index, direction) => {
     if (disabled) return;
 
@@ -50,8 +60,8 @@ export default function ReorderSequence({
   const getItemStyle = (index) => {
     if (!showExplanation || !showCorrectness) {
       return darkMode
-        ? "bg-slate-800 border-slate-600 hover:border-blue-500"
-        : "bg-white border-slate-300 hover:border-blue-500";
+        ? "bg-slate-800 border-slate-600 hover:border-blue-500 hover:shadow-md"
+        : "bg-white border-slate-300 hover:border-blue-500 hover:shadow-md";
     }
 
     // Check if this step is in the correct position (only in quiz mode)
@@ -59,9 +69,9 @@ export default function ReorderSequence({
       userAnswer && userAnswer[index] === question.correctOrder[index];
 
     if (isCorrectPosition) {
-      return "bg-green-900/30 border-green-600";
+      return "bg-green-900/30 border-green-600 shadow-lg";
     }
-    return "bg-red-900/30 border-red-600";
+    return "bg-red-900/30 border-red-600 shadow-lg";
   };
 
   const getStepNumber = (item) => {
@@ -88,55 +98,55 @@ export default function ReorderSequence({
         {items.map((item, index) => (
           <div
             key={index}
-            className={`p-4 rounded-lg border-2 transition-all ${getItemStyle(index)}`}
+            className={`p-4 rounded-lg border-2 transition-all duration-200 min-h-[72px] ${getItemStyle(index)}`}
           >
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3">
               <div className="flex flex-col gap-1">
                 <button
                   onClick={() => moveItem(index, "up")}
                   disabled={disabled || index === 0}
-                  className={`p-1 rounded ${
+                  className={`p-2 rounded touch-manipulation transition-all ${
                     disabled || index === 0
                       ? "text-slate-600 cursor-not-allowed"
-                      : "text-slate-400 hover:text-white hover:bg-slate-700"
+                      : "text-slate-400 hover:text-white hover:bg-slate-700 active:scale-95"
                   }`}
                 >
-                  <ArrowUp className="w-4 h-4" />
+                  <ArrowUp className="w-5 h-5" />
                 </button>
                 <button
                   onClick={() => moveItem(index, "down")}
                   disabled={disabled || index === items.length - 1}
-                  className={`p-1 rounded ${
+                  className={`p-2 rounded touch-manipulation transition-all ${
                     disabled || index === items.length - 1
                       ? "text-slate-600 cursor-not-allowed"
-                      : "text-slate-400 hover:text-white hover:bg-slate-700"
+                      : "text-slate-400 hover:text-white hover:bg-slate-700 active:scale-95"
                   }`}
                 >
-                  <ArrowDown className="w-4 h-4" />
+                  <ArrowDown className="w-5 h-5" />
                 </button>
               </div>
 
-              <div className="flex-1">
-                <div className="flex items-center gap-3">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 sm:gap-3">
                   <span
-                    className={`text-2xl font-bold ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                    className={`text-xl sm:text-2xl font-bold flex-shrink-0 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
                   >
                     {index + 1}
                   </span>
                   <span
-                    className={`flex-1 ${darkMode ? "text-white" : "text-slate-900"}`}
+                    className={`flex-1 text-sm sm:text-base ${darkMode ? "text-white" : "text-slate-900"}`}
                   >
                     {item}
                   </span>
                   {showExplanation && (
-                    <span className="text-sm text-slate-400">
+                    <span className="text-xs sm:text-sm text-slate-400 flex-shrink-0 hidden sm:inline">
                       (Correct: #{getStepNumber(item)})
                     </span>
                   )}
                 </div>
               </div>
 
-              <GripVertical className="w-5 h-5 text-slate-600" />
+              <GripVertical className="w-5 h-5 text-slate-600 flex-shrink-0 hidden sm:block" />
             </div>
           </div>
         ))}
@@ -165,17 +175,17 @@ export default function ReorderSequence({
             </span>
           </div>
           {!isCorrect() && (
-            <p className={`mt-2 ${darkMode ? "text-white" : "text-slate-900"}`}>
+            <p className={`mt-2 ${darkMode ? "text-white" : "text-slate-800"}`}>
               {question.explanation}
             </p>
           )}
 
           {!isCorrect() && (
             <div
-              className={`mt-4 p-3 rounded ${darkMode ? "bg-slate-800" : "bg-slate-100"}`}
+              className={`mt-4 p-3 rounded ${darkMode ? "bg-slate-800" : "bg-white"}`}
             >
               <p
-                className={`text-sm mb-2 ${darkMode ? "text-slate-300" : "text-slate-700"}`}
+                className={`text-sm mb-2 ${darkMode ? "text-slate-300" : "text-slate-600"}`}
               >
                 Correct order:
               </p>
@@ -199,24 +209,24 @@ export default function ReorderSequence({
         >
           <div className="flex items-center gap-2 mb-2">
             <BookOpen
-              className={`w-6 h-6 ${darkMode ? "text-yellow-400" : "text-yellow-700"}`}
+              className={`w-6 h-6 ${darkMode ? "text-yellow-400" : "text-yellow-800"}`}
             />
             <span
-              className={`font-semibold ${darkMode ? "text-yellow-400" : "text-yellow-700"}`}
+              className={`font-semibold ${darkMode ? "text-yellow-400" : "text-yellow-800"}`}
             >
               Explanation
             </span>
           </div>
-          <p className={`mt-2 ${darkMode ? "text-white" : "text-slate-900"}`}>
+          <p className={`mt-2 ${darkMode ? "text-white" : "text-slate-800"}`}>
             {question.explanation}
           </p>
 
           {/* Show correct answer in study mode */}
           <div
-            className={`mt-4 p-3 rounded ${darkMode ? "bg-slate-800" : "bg-slate-100"}`}
+            className={`mt-4 p-3 rounded ${darkMode ? "bg-slate-800" : "bg-white"}`}
           >
             <p
-              className={`text-sm mb-2 ${darkMode ? "text-slate-300" : "text-slate-700"}`}
+              className={`text-sm mb-2 ${darkMode ? "text-slate-300" : "text-slate-600"}`}
             >
               Correct order:
             </p>

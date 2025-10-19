@@ -19,7 +19,7 @@ export default function TrueFalse({
   const getButtonStyle = (value) => {
     if (!showExplanation || !showCorrectness) {
       return userAnswer === value
-        ? "bg-blue-600 text-white border-blue-600 scale-105"
+        ? "bg-blue-600 text-white border-blue-600 scale-105 shadow-lg"
         : darkMode
           ? "bg-slate-800 text-white border-slate-600 hover:border-blue-500 hover:scale-105"
           : "bg-white text-slate-900 border-slate-300 hover:border-blue-500 hover:scale-105";
@@ -27,10 +27,10 @@ export default function TrueFalse({
 
     // Show results (only in quiz mode)
     if (value === question.correctAnswer) {
-      return "bg-green-600 text-white border-green-600";
+      return "bg-green-600 text-white border-green-600 shadow-lg";
     }
     if (userAnswer === value && userAnswer !== question.correctAnswer) {
-      return "bg-red-600 text-white border-red-600";
+      return "bg-red-600 text-white border-red-600 shadow-lg";
     }
     return darkMode
       ? "bg-slate-700 text-slate-400 border-slate-600"
@@ -57,27 +57,27 @@ export default function TrueFalse({
         {question.question}
       </h3>
 
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
         <button
           onClick={() => handleSelect(true)}
           disabled={disabled}
-          className={`p-8 rounded-xl border-4 transition-all flex flex-col items-center justify-center gap-3 ${getButtonStyle(true)} ${
-            disabled ? "cursor-not-allowed" : "cursor-pointer"
+          className={`p-6 sm:p-8 min-h-[120px] rounded-xl border-4 transition-all duration-200 flex flex-col items-center justify-center gap-3 touch-manipulation ${getButtonStyle(true)} ${
+            disabled ? "cursor-not-allowed" : "cursor-pointer active:scale-95"
           }`}
         >
           {getIcon(true)}
-          <span className="text-3xl font-bold">TRUE</span>
+          <span className="text-2xl sm:text-3xl font-bold">TRUE</span>
         </button>
 
         <button
           onClick={() => handleSelect(false)}
           disabled={disabled}
-          className={`p-8 rounded-xl border-4 transition-all flex flex-col items-center justify-center gap-3 ${getButtonStyle(false)} ${
-            disabled ? "cursor-not-allowed" : "cursor-pointer"
+          className={`p-6 sm:p-8 min-h-[120px] rounded-xl border-4 transition-all duration-200 flex flex-col items-center justify-center gap-3 touch-manipulation ${getButtonStyle(false)} ${
+            disabled ? "cursor-not-allowed" : "cursor-pointer active:scale-95"
           }`}
         >
           {getIcon(false)}
-          <span className="text-3xl font-bold">FALSE</span>
+          <span className="text-2xl sm:text-3xl font-bold">FALSE</span>
         </button>
       </div>
 
@@ -123,27 +123,27 @@ export default function TrueFalse({
           <div className="flex items-center gap-2 mb-2">
             <BookOpen
               className={`w-6 h-6 ${
-                darkMode ? "text-yellow-400" : "text-yellow-700"
+                darkMode ? "text-yellow-400" : "text-yellow-800"
               }`}
             />
             <span
               className={`font-semibold ${
-                darkMode ? "text-yellow-400" : "text-yellow-700"
+                darkMode ? "text-yellow-400" : "text-yellow-800"
               }`}
             >
               Explanation
             </span>
           </div>
-          <p className={`mt-2 ${darkMode ? "text-white" : "text-slate-900"}`}>
+          <p className={`mt-2 ${darkMode ? "text-white" : "text-slate-800"}`}>
             {question.explanation}
           </p>
 
           {/* Show correct answer */}
           <div
-            className={`mt-4 p-3 rounded ${darkMode ? "bg-slate-800" : "bg-slate-100"}`}
+            className={`mt-4 p-3 rounded ${darkMode ? "bg-slate-800" : "bg-white"}`}
           >
             <p
-              className={`text-sm mb-1 ${darkMode ? "text-slate-300" : "text-slate-700"}`}
+              className={`text-sm mb-1 ${darkMode ? "text-slate-300" : "text-slate-600"}`}
             >
               Correct Answer:
             </p>
