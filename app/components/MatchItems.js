@@ -246,41 +246,40 @@ export default function MatchItems({
         </svg>
         {/* Left Column */}
         <div className="space-y-3 relative" style={{ zIndex: 1 }}>
-          {leftItems.map((item) => (
-            <div key={item} className="space-y-2">
-              <button
-                ref={(el) => (leftRefs.current[item] = el)}
-                onClick={() => handleLeftClick(item)}
-                disabled={disabled || isItemMatched(item, "left")}
-                className={`w-full p-4 rounded-lg border-2 transition-all text-left ${getLeftItemStyle(item)} ${
-                  disabled || isItemMatched(item, "left")
-                    ? "cursor-default"
-                    : "cursor-pointer"
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <span>{item}</span>
-                  {matches[item] && !showExplanation && (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        removeMatch(item);
-                      }}
-                      className="text-xs text-slate-400 hover:text-white"
-                    >
-                      ✕
-                    </button>
-                  )}
-                  {showExplanation &&
-                    showCorrectness &&
-                    matches[item] &&
-                    (isCorrectMatch(item, matches[item]) ? (
-                      <CheckCircle2 className="w-5 h-5 text-green-400" />
-                    ) : (
-                      <XCircle className="w-5 h-5 text-red-400" />
-                    ))}
-                </div>
-              </button>
+          {leftItems.map((item, idx) => (
+            <div key={`left-${idx}-${item}`} className="space-y-2">
+              <div className="relative">
+                <button
+                  ref={(el) => (leftRefs.current[item] = el)}
+                  onClick={() => handleLeftClick(item)}
+                  disabled={disabled || isItemMatched(item, "left")}
+                  className={`w-full p-4 rounded-lg border-2 transition-all text-left ${getLeftItemStyle(item)} ${
+                    disabled || isItemMatched(item, "left")
+                      ? "cursor-default"
+                      : "cursor-pointer"
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <span>{item}</span>
+                    {showExplanation &&
+                      showCorrectness &&
+                      matches[item] &&
+                      (isCorrectMatch(item, matches[item]) ? (
+                        <CheckCircle2 className="w-5 h-5 text-green-400" />
+                      ) : (
+                        <XCircle className="w-5 h-5 text-red-400" />
+                      ))}
+                  </div>
+                </button>
+                {matches[item] && !showExplanation && (
+                  <button
+                    onClick={() => removeMatch(item)}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-white px-2 py-1"
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
 
               {matches[item] && (
                 <div className="flex items-center gap-2 text-sm text-slate-400 ml-4">
@@ -294,9 +293,9 @@ export default function MatchItems({
 
         {/* Right Column */}
         <div className="space-y-3 relative" style={{ zIndex: 1 }}>
-          {rightItems.map((item) => (
+          {rightItems.map((item, idx) => (
             <button
-              key={item}
+              key={`right-${idx}-${item}`}
               ref={(el) => (rightRefs.current[item] = el)}
               onClick={() => handleRightClick(item)}
               disabled={disabled || isItemMatched(item, "right")}
