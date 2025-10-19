@@ -244,7 +244,7 @@ export default function MatchItems({
 
       <div
         ref={containerRef}
-        className="relative grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8"
+        className="relative grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4"
       >
         {/* SVG overlay for lines */}
         <svg
@@ -265,9 +265,9 @@ export default function MatchItems({
           ))}
         </svg>
         {/* Left Column */}
-        <div className="space-y-3 relative" style={{ zIndex: 1 }}>
+        <div className="space-y-2 relative" style={{ zIndex: 1 }}>
           {leftItems.map((item, idx) => (
-            <div key={`left-${idx}-${item}`} className="space-y-2">
+            <div key={`left-${idx}-${item}`} className="space-y-1">
               <div className="relative">
                 <button
                   ref={(el) => (leftRefs.current[item] = el)}
@@ -275,14 +275,14 @@ export default function MatchItems({
                   disabled={
                     (disabled && showCorrectness) || isItemMatched(item, "left")
                   }
-                  className={`w-full p-4 min-h-[64px] rounded-lg border-2 transition-all duration-200 text-left touch-manipulation ${getLeftItemStyle(item)} ${
+                  className={`w-full p-2 sm:p-3 min-h-[48px] rounded-lg border-2 transition-all duration-200 text-left touch-manipulation ${getLeftItemStyle(item)} ${
                     (disabled && showCorrectness) || isItemMatched(item, "left")
                       ? "cursor-default"
                       : "cursor-pointer active:scale-95"
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-sm sm:text-base">{item}</span>
+                    <span className="text-xs sm:text-sm">{item}</span>
                     {showExplanation &&
                       showCorrectness &&
                       matches[item] &&
@@ -304,8 +304,8 @@ export default function MatchItems({
               </div>
 
               {matches[item] && (
-                <div className="flex items-center gap-2 text-sm text-slate-400 ml-4">
-                  <ArrowRight className="w-4 h-4" />
+                <div className="flex items-center gap-1 text-xs text-slate-400 ml-2">
+                  <ArrowRight className="w-3 h-3" />
                   <span>{matches[item]}</span>
                 </div>
               )}
@@ -314,7 +314,7 @@ export default function MatchItems({
         </div>
 
         {/* Right Column */}
-        <div className="space-y-3 relative" style={{ zIndex: 1 }}>
+        <div className="space-y-2 relative" style={{ zIndex: 1 }}>
           {rightItems.map((item, idx) => (
             <button
               key={`right-${idx}-${item}`}
@@ -323,13 +323,13 @@ export default function MatchItems({
               disabled={
                 (disabled && showCorrectness) || isItemMatched(item, "right")
               }
-              className={`w-full p-4 min-h-[64px] rounded-lg border-2 transition-all duration-200 text-left touch-manipulation ${getRightItemStyle(item)} ${
+              className={`w-full p-2 sm:p-3 min-h-[48px] rounded-lg border-2 transition-all duration-200 text-left touch-manipulation ${getRightItemStyle(item)} ${
                 (disabled && showCorrectness) || isItemMatched(item, "right")
                   ? "cursor-default"
                   : "cursor-pointer active:scale-95"
               }`}
             >
-              <span className="text-sm sm:text-base">{item}</span>
+              <span className="text-xs sm:text-sm">{item}</span>
             </button>
           ))}
         </div>

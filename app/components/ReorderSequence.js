@@ -94,52 +94,52 @@ export default function ReorderSequence({
         Use the arrows to arrange the steps in the correct order
       </p>
 
-      <div className="space-y-3">
+      <div className="space-y-2">
         {items.map((item, index) => (
           <div
             key={index}
-            className={`p-4 rounded-lg border-2 transition-all duration-200 min-h-[72px] ${getItemStyle(index)}`}
+            className={`p-2 sm:p-3 rounded-lg border-2 transition-all duration-200 min-h-[56px] ${getItemStyle(index)}`}
           >
-            <div className="flex items-center gap-2 sm:gap-3">
-              <div className="flex flex-col gap-1">
+            <div className="flex items-center gap-1 sm:gap-2">
+              <div className="flex flex-col gap-0.5">
                 <button
                   onClick={() => moveItem(index, "up")}
                   disabled={disabled || index === 0}
-                  className={`p-2 rounded touch-manipulation transition-all ${
+                  className={`p-1 sm:p-1.5 rounded touch-manipulation transition-all ${
                     disabled || index === 0
                       ? "text-slate-600 cursor-not-allowed"
                       : "text-slate-400 hover:text-white hover:bg-slate-700 active:scale-95"
                   }`}
                 >
-                  <ArrowUp className="w-5 h-5" />
+                  <ArrowUp className="w-4 h-4 sm:w-5 sm:h-5" />
                 </button>
                 <button
                   onClick={() => moveItem(index, "down")}
                   disabled={disabled || index === items.length - 1}
-                  className={`p-2 rounded touch-manipulation transition-all ${
+                  className={`p-1 sm:p-1.5 rounded touch-manipulation transition-all ${
                     disabled || index === items.length - 1
                       ? "text-slate-600 cursor-not-allowed"
                       : "text-slate-400 hover:text-white hover:bg-slate-700 active:scale-95"
                   }`}
                 >
-                  <ArrowDown className="w-5 h-5" />
+                  <ArrowDown className="w-4 h-4 sm:w-5 sm:h-5" />
                 </button>
               </div>
 
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 sm:gap-3">
+                <div className="flex items-center gap-1 sm:gap-2">
                   <span
-                    className={`text-xl sm:text-2xl font-bold flex-shrink-0 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                    className={`text-lg sm:text-xl font-bold flex-shrink-0 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
                   >
                     {index + 1}
                   </span>
                   <span
-                    className={`flex-1 text-sm sm:text-base ${darkMode ? "text-white" : "text-slate-900"}`}
+                    className={`flex-1 text-xs sm:text-sm ${darkMode ? "text-white" : "text-slate-900"}`}
                   >
                     {item}
                   </span>
                   {showExplanation && (
-                    <span className="text-xs sm:text-sm text-slate-400 flex-shrink-0 hidden sm:inline">
+                    <span className="text-xs text-slate-400 flex-shrink-0 hidden sm:inline">
                       (Correct: #{getStepNumber(item)})
                     </span>
                   )}
