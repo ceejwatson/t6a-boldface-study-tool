@@ -244,7 +244,7 @@ export default function MatchItems({
 
       <div
         ref={containerRef}
-        className="relative grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4"
+        className="relative grid grid-cols-2 gap-2 md:gap-4"
       >
         {/* SVG overlay for lines */}
         <svg
