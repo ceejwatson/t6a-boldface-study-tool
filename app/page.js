@@ -560,123 +560,125 @@ export default function T6AEnhancedStudyTool() {
       </header>
 
       <main className="container mx-auto px-4 py-8">
-        {/* Mode Selection */}
-        <div className="mb-6 flex gap-3 flex-wrap">
-          <button
-            onClick={() => {
-              setStudyMode("study");
-              setShowStudySetup(true);
-              setShowQuizSetup(false);
-              setActiveTab("studysetup");
-              setSelectedCategory("all");
-            }}
-            className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
-              studyMode === "study"
-                ? "bg-blue-600 text-white"
-                : darkMode
-                  ? "bg-slate-800 text-slate-300 hover:bg-slate-700"
-                  : "bg-white text-slate-700 hover:bg-slate-100"
-            }`}
-          >
-            <BookOpen className="w-4 h-4" />
-            Study Mode
-          </button>
-
-          <button
-            onClick={() => {
-              setStudyMode("quiz");
-              setShowExplanation(false);
-              setShowQuizSetup(true); // Show topic selector first
-              setActiveTab("quizsetup");
-            }}
-            className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
-              studyMode === "quiz"
-                ? "bg-purple-600 text-white"
-                : darkMode
-                  ? "bg-slate-800 text-slate-300 hover:bg-slate-700"
-                  : "bg-white text-slate-700 hover:bg-slate-100"
-            }`}
-          >
-            <Brain className="w-4 h-4" />
-            Quiz Mode
-          </button>
-
-          {weakTopics.length > 0 && (
+        {/* Mode Selection - Hide on home screen */}
+        {activeTab !== "home" && (
+          <div className="mb-6 flex gap-3 flex-wrap">
             <button
               onClick={() => {
-                setStudyMode("weak");
-                setActiveTab("study");
-                setShowStudySetup(false);
-                loadQuestions("weak");
+                setStudyMode("study");
+                setShowStudySetup(true);
+                setShowQuizSetup(false);
+                setActiveTab("studysetup");
+                setSelectedCategory("all");
               }}
               className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
-                studyMode === "weak"
-                  ? "bg-orange-600 text-white"
+                studyMode === "study"
+                  ? "bg-blue-600 text-white"
                   : darkMode
                     ? "bg-slate-800 text-slate-300 hover:bg-slate-700"
                     : "bg-white text-slate-700 hover:bg-slate-100"
               }`}
             >
-              <Zap className="w-4 h-4" />
-              Weak Topics ({weakTopics.length})
+              <BookOpen className="w-4 h-4" />
+              Study Mode
             </button>
-          )}
 
-          <button
-            onClick={() => {
-              setStudyMode("review");
-              setActiveTab("study");
-              setShowStudySetup(false);
-              setShowQuizSetup(false);
-              loadQuestions("review");
-            }}
-            className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
-              studyMode === "review"
-                ? "bg-teal-600 text-white"
-                : darkMode
-                  ? "bg-slate-800 text-slate-300 hover:bg-slate-700"
-                  : "bg-white text-slate-700 hover:bg-slate-100"
-            }`}
-          >
-            <RotateCcw className="w-4 h-4" />
-            Due for Review ({getDueForReview().length})
-          </button>
-
-          {flaggedQuestions.length > 0 && (
             <button
               onClick={() => {
-                setStudyMode("flagged");
-                setActiveTab("study");
-                setShowStudySetup(false);
-                loadQuestions("flagged");
+                setStudyMode("quiz");
+                setShowExplanation(false);
+                setShowQuizSetup(true); // Show topic selector first
+                setActiveTab("quizsetup");
               }}
               className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
-                studyMode === "flagged"
-                  ? "bg-yellow-600 text-white"
+                studyMode === "quiz"
+                  ? "bg-purple-600 text-white"
                   : darkMode
                     ? "bg-slate-800 text-slate-300 hover:bg-slate-700"
                     : "bg-white text-slate-700 hover:bg-slate-100"
               }`}
             >
-              <Target className="w-4 h-4" />
-              Flagged ({flaggedQuestions.length})
+              <Brain className="w-4 h-4" />
+              Quiz Mode
             </button>
-          )}
 
-          <button
-            onClick={() => setActiveTab("progress")}
-            className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
-              activeTab === "progress"
-                ? "bg-indigo-600 text-white"
-                : darkMode
-                  ? "bg-slate-800 text-slate-300 hover:bg-slate-700"
-                  : "bg-white text-slate-700 hover:bg-slate-100"
-            }`}
-          >
-            <TrendingUp className="w-4 h-4" />
-            Progress
-          </button>
-        </div>
+            {weakTopics.length > 0 && (
+              <button
+                onClick={() => {
+                  setStudyMode("weak");
+                  setActiveTab("study");
+                  setShowStudySetup(false);
+                  loadQuestions("weak");
+                }}
+                className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
+                  studyMode === "weak"
+                    ? "bg-orange-600 text-white"
+                    : darkMode
+                      ? "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                      : "bg-white text-slate-700 hover:bg-slate-100"
+                }`}
+              >
+                <Zap className="w-4 h-4" />
+                Weak Topics ({weakTopics.length})
+              </button>
+            )}
+
+            <button
+              onClick={() => {
+                setStudyMode("review");
+                setActiveTab("study");
+                setShowStudySetup(false);
+                setShowQuizSetup(false);
+                loadQuestions("review");
+              }}
+              className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
+                studyMode === "review"
+                  ? "bg-teal-600 text-white"
+                  : darkMode
+                    ? "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                    : "bg-white text-slate-700 hover:bg-slate-100"
+              }`}
+            >
+              <RotateCcw className="w-4 h-4" />
+              Due for Review ({getDueForReview().length})
+            </button>
+
+            {flaggedQuestions.length > 0 && (
+              <button
+                onClick={() => {
+                  setStudyMode("flagged");
+                  setActiveTab("study");
+                  setShowStudySetup(false);
+                  loadQuestions("flagged");
+                }}
+                className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
+                  studyMode === "flagged"
+                    ? "bg-yellow-600 text-white"
+                    : darkMode
+                      ? "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                      : "bg-white text-slate-700 hover:bg-slate-100"
+                }`}
+              >
+                <Target className="w-4 h-4" />
+                Flagged ({flaggedQuestions.length})
+              </button>
+            )}
+
+            <button
+              onClick={() => setActiveTab("progress")}
+              className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
+                activeTab === "progress"
+                  ? "bg-indigo-600 text-white"
+                  : darkMode
+                    ? "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                    : "bg-white text-slate-700 hover:bg-slate-100"
+              }`}
+            >
+              <TrendingUp className="w-4 h-4" />
+              Progress
+            </button>
+          </div>
+        )}
 
         {/* Main Content */}
         {activeTab === "home" ? (
@@ -1045,32 +1047,6 @@ export default function T6AEnhancedStudyTool() {
               </div>
             </div>
 
-            {/* Limitations Only Filter */}
-            <div className="mb-6">
-              <button
-                onClick={() => setLimitationsOnly(!limitationsOnly)}
-                className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
-                  limitationsOnly
-                    ? "bg-red-600 text-white"
-                    : darkMode
-                      ? "bg-slate-700 text-slate-300 hover:bg-slate-600"
-                      : "bg-slate-200 text-slate-700 hover:bg-slate-300"
-                }`}
-              >
-                <Flame className="w-5 h-5" />
-                {limitationsOnly
-                  ? "Limitations Only ✓"
-                  : "Include All Questions"}
-              </button>
-              <p
-                className={`text-sm mt-2 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
-              >
-                {limitationsOnly
-                  ? "Only showing critical operating limitations and BOLDFACE procedures"
-                  : "Click to filter for operating limitations only"}
-              </p>
-            </div>
-
             <button
               onClick={() => {
                 setActiveTab("study");
@@ -1181,32 +1157,6 @@ export default function T6AEnhancedStudyTool() {
                   </button>
                 ))}
               </div>
-            </div>
-
-            {/* Limitations Only Filter */}
-            <div className="mb-6">
-              <button
-                onClick={() => setLimitationsOnly(!limitationsOnly)}
-                className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
-                  limitationsOnly
-                    ? "bg-red-600 text-white"
-                    : darkMode
-                      ? "bg-slate-700 text-slate-300 hover:bg-slate-600"
-                      : "bg-slate-200 text-slate-700 hover:bg-slate-300"
-                }`}
-              >
-                <Flame className="w-5 h-5" />
-                {limitationsOnly
-                  ? "Limitations Only ✓"
-                  : "Include All Questions"}
-              </button>
-              <p
-                className={`text-sm mt-2 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
-              >
-                {limitationsOnly
-                  ? "Only showing critical operating limitations and BOLDFACE procedures"
-                  : "Click to filter for operating limitations only"}
-              </p>
             </div>
 
             <button

@@ -393,12 +393,14 @@ export default function MatchItems({
       )}
       {showExplanation && !showCorrectness && (
         <div
-          className={`mt-6 p-4 rounded-lg ${darkMode ? "bg-blue-900/30 border-2 border-blue-600" : "bg-blue-50 border-2 border-blue-400"}`}
+          className={`mt-6 p-4 rounded-lg ${darkMode ? "bg-yellow-900/20 border-2 border-yellow-600/50" : "bg-yellow-50 border-2 border-yellow-300"}`}
         >
           <div className="flex items-center gap-2 mb-2">
-            <BookOpen className="w-6 h-6 text-blue-400" />
+            <BookOpen
+              className={`w-6 h-6 ${darkMode ? "text-yellow-400" : "text-yellow-700"}`}
+            />
             <span
-              className={`font-semibold ${darkMode ? "text-blue-400" : "text-blue-700"}`}
+              className={`font-semibold ${darkMode ? "text-yellow-400" : "text-yellow-700"}`}
             >
               Explanation
             </span>
