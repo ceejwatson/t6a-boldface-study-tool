@@ -149,6 +149,7 @@ export default function T6AEnhancedStudyTool() {
         loadQuestions("all");
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [questionCount]);
 
   const loadQuestions = (mode) => {
@@ -309,6 +310,7 @@ export default function T6AEnhancedStudyTool() {
 
     window.addEventListener("keydown", handleKeyPress);
     return () => window.removeEventListener("keydown", handleKeyPress);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     activeTab,
     currentQuestion,

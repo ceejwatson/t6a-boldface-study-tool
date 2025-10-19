@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { CheckCircle2, XCircle, ArrowRight, BookOpen } from "lucide-react";
 
 export default function MatchItems({
@@ -103,10 +103,13 @@ export default function MatchItems({
     onAnswer(newMatches);
   };
 
-  const isCorrectMatch = (left, right) => {
-    const correctPair = question.pairs.find((p) => p.left === left);
-    return correctPair && correctPair.right === right;
-  };
+  const isCorrectMatch = useCallback(
+    (left, right) => {
+      const correctPair = question.pairs.find((p) => p.left === left);
+      return correctPair && correctPair.right === right;
+    },
+    [question.pairs],
+  );
 
   const isItemMatched = (item, side) => {
     if (side === "left") {
@@ -221,7 +224,7 @@ export default function MatchItems({
     // Recalculate on window resize
     window.addEventListener("resize", calculateLines);
     return () => window.removeEventListener("resize", calculateLines);
-  }, [matches, showExplanation, showCorrectness, darkMode]);
+  }, [matches, showExplanation, showCorrectness, darkMode, isCorrectMatch]);
 
   return (
     <div className="space-y-4">
