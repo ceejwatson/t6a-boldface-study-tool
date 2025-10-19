@@ -617,24 +617,6 @@ export default function T6AEnhancedStudyTool() {
             </div>
 
             <div className="flex items-center gap-4">
-              {/* Stats */}
-              <div className="flex gap-3 text-sm">
-                <div
-                  className={`rounded-lg px-3 py-2 border ${darkMode ? "bg-yellow-600/20 border-yellow-500/50" : "bg-yellow-100 border-yellow-400"}`}
-                >
-                  <div
-                    className={`font-semibold ${darkMode ? "text-yellow-400" : "text-yellow-700"}`}
-                  >
-                    {performanceStats.overall.streak}
-                  </div>
-                  <div
-                    className={`text-xs ${darkMode ? "text-yellow-300" : "text-yellow-600"}`}
-                  >
-                    Streak
-                  </div>
-                </div>
-              </div>
-
               {/* PDF Reference Button */}
               <a
                 href="https://www.sheppard.af.mil/Portals/65/T-6A%20Boldface%20Ops%20Limits%2C%201%20Jun%202023%20%28Filled%29.pdf"
@@ -900,7 +882,7 @@ export default function T6AEnhancedStudyTool() {
               <div
                 className={`${darkMode ? "bg-white/5" : "bg-slate-100"} rounded-2xl p-6`}
               >
-                <div className="grid grid-cols-3 gap-4 text-center">
+                <div className="grid grid-cols-2 gap-4 text-center">
                   <div>
                     <div
                       className={`text-3xl font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
@@ -917,24 +899,22 @@ export default function T6AEnhancedStudyTool() {
                     <div
                       className={`text-3xl font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
                     >
-                      {performanceStats.overall.streak}
+                      {performanceStats.overall.correct +
+                        performanceStats.overall.incorrect >
+                      0
+                        ? Math.round(
+                            (performanceStats.overall.correct /
+                              (performanceStats.overall.correct +
+                                performanceStats.overall.incorrect)) *
+                              100,
+                          )
+                        : 0}
+                      %
                     </div>
                     <div
                       className={`text-xs mt-1 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
                     >
-                      Streak
-                    </div>
-                  </div>
-                  <div>
-                    <div
-                      className={`text-3xl font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
-                    >
-                      {performanceStats.overall.bestStreak}
-                    </div>
-                    <div
-                      className={`text-xs mt-1 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
-                    >
-                      Best
+                      Accuracy
                     </div>
                   </div>
                 </div>
@@ -1985,7 +1965,8 @@ export default function T6AEnhancedStudyTool() {
 
             {/* Question Card */}
             <div
-              className={`${darkMode ? "bg-slate-800 border-slate-700" : "bg-white border-slate-300"} rounded-xl shadow-2xl p-6 md:p-8 border-2 max-h-[calc(100vh-280px)] overflow-y-auto`}
+              key={currentQuestion?.id}
+              className={`${darkMode ? "bg-slate-800 border-slate-700" : "bg-white border-slate-300"} rounded-xl shadow-2xl p-6 md:p-8 border-2 max-h-[calc(100vh-280px)] overflow-y-auto question-enter`}
             >
               {currentQuestion && (
                 <div className="mb-4 flex items-center justify-between flex-wrap gap-2">
