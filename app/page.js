@@ -149,6 +149,83 @@ export default function T6AEnhancedStudyTool() {
     }
   }, [questionCount]);
 
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      // Only activate shortcuts when on study/quiz screen
+      if (activeTab !== "study" || !currentQuestion) return;
+
+      // Ignore if user is typing in an input field
+      if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA")
+        return;
+
+      // Arrow keys for navigation
+      if (e.key === "ArrowLeft" && currentQuestionIndex > 0) {
+        e.preventDefault();
+        handlePrevious();
+      } else if (
+        e.key === "ArrowRight" &&
+        currentQuestionIndex < currentQuestions.length - 1
+      ) {
+        e.preventDefault();
+        handleNext();
+      }
+
+      // Space bar to submit (only if answer is provided and not already showing explanation)
+      if (
+        e.key === " " &&
+        !showExplanation &&
+        userAnswers[currentQuestion.id]
+      ) {
+        e.preventDefault();
+        if (
+          currentQuestion.questionType === "reorderSequence" ||
+          currentQuestion.questionType === "matchItems"
+        ) {
+          setShowExplanation(true);
+          const isCorrect = checkAnswer(
+            currentQuestion,
+            userAnswers[currentQuestion.id],
+          );
+          updatePerformance(currentQuestion, isCorrect);
+        }
+      }
+
+      // Number keys 1-4 for multiple choice
+      if (
+        currentQuestion.questionType === "multipleChoice" &&
+        !showExplanation
+      ) {
+        const num = parseInt(e.key);
+        if (num >= 1 && num <= 4 && num <= currentQuestion.options.length) {
+          e.preventDefault();
+          handleAnswer(num - 1);
+        }
+      }
+
+      // T/F keys for true/false questions
+      if (currentQuestion.questionType === "trueFalse" && !showExplanation) {
+        if (e.key.toLowerCase() === "t") {
+          e.preventDefault();
+          handleAnswer(true);
+        } else if (e.key.toLowerCase() === "f") {
+          e.preventDefault();
+          handleAnswer(false);
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyPress);
+    return () => window.removeEventListener("keydown", handleKeyPress);
+  }, [
+    activeTab,
+    currentQuestion,
+    currentQuestionIndex,
+    currentQuestions.length,
+    showExplanation,
+    userAnswers,
+  ]);
+
   const loadQuestions = (mode) => {
     let questions = [];
 
@@ -1557,13 +1634,27 @@ export default function T6AEnhancedStudyTool() {
           </div>
         ) : (
           <div className="max-w-4xl mx-auto">
-            {/* Question Counter */}
-            <div className="text-center mb-4">
-              <span
-                className={`text-lg font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
+            {/* Question Counter with Progress Bar */}
+            <div className="mb-6">
+              <div className="text-center mb-2">
+                <span
+                  className={`text-lg font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
+                >
+                  Question {currentQuestionIndex + 1} of{" "}
+                  {currentQuestions.length}
+                </span>
+              </div>
+              {/* Progress Bar */}
+              <div
+                className={`w-full h-2 rounded-full overflow-hidden ${darkMode ? "bg-slate-700" : "bg-slate-200"}`}
               >
-                Question {currentQuestionIndex + 1} of {currentQuestions.length}
-              </span>
+                <div
+                  className="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-300 ease-out"
+                  style={{
+                    width: `${((currentQuestionIndex + 1) / currentQuestions.length) * 100}%`,
+                  }}
+                />
+              </div>
             </div>
 
             {/* Question Card */}
@@ -1629,23 +1720,23 @@ export default function T6AEnhancedStudyTool() {
               </div>
             )}
 
-            {/* Navigation */}
-            <div className="flex justify-between items-center mt-8">
+            {/* Navigation - Mobile Optimized */}
+            <div className="flex justify-between items-center mt-8 gap-3">
               <button
                 onClick={handlePrevious}
                 disabled={currentQuestionIndex === 0}
-                className={`px-6 py-3 rounded-lg font-medium transition flex items-center gap-2 ${
+                className={`px-6 py-4 md:py-3 rounded-lg font-medium transition flex items-center gap-2 min-h-[48px] ${
                   currentQuestionIndex === 0
                     ? darkMode
                       ? "bg-slate-800 text-slate-600 cursor-not-allowed"
                       : "bg-slate-200 text-slate-400 cursor-not-allowed"
                     : darkMode
-                      ? "bg-slate-700 hover:bg-slate-600 text-white"
-                      : "bg-white hover:bg-slate-100 text-slate-900"
+                      ? "bg-slate-700 hover:bg-slate-600 text-white active:bg-slate-500"
+                      : "bg-white hover:bg-slate-100 text-slate-900 active:bg-slate-200"
                 }`}
               >
                 <ChevronRight className="w-5 h-5 rotate-180" />
-                Previous
+                <span className="hidden sm:inline">Previous</span>
               </button>
 
               {/* Submit button for sequence questions - always visible when there's an answer */}
@@ -1661,7 +1752,7 @@ export default function T6AEnhancedStudyTool() {
                       );
                       updatePerformance(currentQuestion, isCorrect);
                     }}
-                    className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition"
+                    className="bg-green-600 hover:bg-green-700 active:bg-green-800 text-white px-6 py-4 md:py-3 rounded-lg font-medium transition min-h-[48px]"
                   >
                     Submit Order
                   </button>
@@ -1678,7 +1769,7 @@ export default function T6AEnhancedStudyTool() {
                       setShowExplanation(true);
                       updatePerformance(currentQuestion, false);
                     }}
-                    className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition"
+                    className="bg-green-600 hover:bg-green-700 active:bg-green-800 text-white px-6 py-4 md:py-3 rounded-lg font-medium transition min-h-[48px]"
                   >
                     Submit Answer
                   </button>
@@ -1688,9 +1779,10 @@ export default function T6AEnhancedStudyTool() {
               studyMode === "quiz" ? (
                 <button
                   onClick={() => setActiveTab("results")}
-                  className="px-6 py-3 rounded-lg font-medium transition flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white"
+                  className="px-6 py-4 md:py-3 rounded-lg font-medium transition flex items-center gap-2 bg-purple-600 hover:bg-purple-700 active:bg-purple-800 text-white min-h-[48px]"
                 >
-                  Finish Quiz & Review
+                  <span className="hidden sm:inline">Finish Quiz & Review</span>
+                  <span className="sm:hidden">Finish</span>
                   <CheckCircle2 className="w-5 h-5" />
                 </button>
               ) : (
@@ -1699,17 +1791,17 @@ export default function T6AEnhancedStudyTool() {
                   disabled={
                     currentQuestionIndex === currentQuestions.length - 1
                   }
-                  className={`px-6 py-3 rounded-lg font-medium transition flex items-center gap-2 ${
+                  className={`px-6 py-4 md:py-3 rounded-lg font-medium transition flex items-center gap-2 min-h-[48px] ${
                     currentQuestionIndex === currentQuestions.length - 1
                       ? darkMode
                         ? "bg-slate-800 text-slate-600 cursor-not-allowed"
                         : "bg-slate-200 text-slate-400 cursor-not-allowed"
                       : darkMode
-                        ? "bg-slate-700 hover:bg-slate-600 text-white"
-                        : "bg-white hover:bg-slate-100 text-slate-900"
+                        ? "bg-slate-700 hover:bg-slate-600 text-white active:bg-slate-500"
+                        : "bg-white hover:bg-slate-100 text-slate-900 active:bg-slate-200"
                   }`}
                 >
-                  Next
+                  <span className="hidden sm:inline">Next</span>
                   <ChevronRight className="w-5 h-5" />
                 </button>
               )}
