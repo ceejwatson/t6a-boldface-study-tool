@@ -114,12 +114,34 @@ export default function TrueFalse({
       )}
       {showExplanation && !showCorrectness && (
         <div
-          className={`mt-6 p-4 rounded-lg ${darkMode ? "bg-blue-900/30 border-2 border-blue-600" : "bg-blue-50 border-2 border-blue-400"}`}
+          className={`mt-6 p-4 rounded-lg ${
+            userAnswer === question.correctAnswer
+              ? darkMode
+                ? "bg-green-900/30 border-2 border-green-600"
+                : "bg-green-50 border-2 border-green-400"
+              : darkMode
+                ? "bg-blue-900/30 border-2 border-blue-600"
+                : "bg-blue-50 border-2 border-blue-400"
+          }`}
         >
           <div className="flex items-center gap-2 mb-2">
-            <BookOpen className="w-6 h-6 text-blue-400" />
+            <BookOpen
+              className={`w-6 h-6 ${
+                userAnswer === question.correctAnswer
+                  ? "text-green-400"
+                  : "text-blue-400"
+              }`}
+            />
             <span
-              className={`font-semibold ${darkMode ? "text-blue-400" : "text-blue-700"}`}
+              className={`font-semibold ${
+                userAnswer === question.correctAnswer
+                  ? darkMode
+                    ? "text-green-400"
+                    : "text-green-700"
+                  : darkMode
+                    ? "text-blue-400"
+                    : "text-blue-700"
+              }`}
             >
               Explanation
             </span>
@@ -127,6 +149,22 @@ export default function TrueFalse({
           <p className={`mt-2 ${darkMode ? "text-white" : "text-slate-900"}`}>
             {question.explanation}
           </p>
+
+          {/* Show correct answer */}
+          <div
+            className={`mt-4 p-3 rounded ${darkMode ? "bg-slate-800" : "bg-slate-100"}`}
+          >
+            <p
+              className={`text-sm mb-1 ${darkMode ? "text-slate-300" : "text-slate-700"}`}
+            >
+              Correct Answer:
+            </p>
+            <p
+              className={`font-medium ${darkMode ? "text-white" : "text-slate-900"}`}
+            >
+              {question.correctAnswer ? "True" : "False"}
+            </p>
+          </div>
         </div>
       )}
     </div>
