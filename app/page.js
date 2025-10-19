@@ -940,43 +940,10 @@ export default function T6AEnhancedStudyTool() {
               </div>
             )}
 
-            {/* Quick Access - Only if items exist, minimal style */}
-            {(getDueForReview().length > 0 ||
-              weakTopics.length > 0 ||
-              flaggedQuestions.length > 0) && (
+            {/* Quick Access - Only show if weak topics or flagged questions exist */}
+            {(weakTopics.length > 0 || flaggedQuestions.length > 0) && (
               <div className="mt-8">
                 <div className="space-y-2">
-                  {getDueForReview().length > 0 && (
-                    <button
-                      onClick={() => {
-                        setStudyMode("review");
-                        setActiveTab("study");
-                        setShowStudySetup(false);
-                        setShowQuizSetup(false);
-                        loadQuestions("review");
-                      }}
-                      className={`w-full ${darkMode ? "bg-white/5 hover:bg-white/10" : "bg-slate-100 hover:bg-slate-200"} rounded-xl p-4 transition text-left`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <RotateCcw
-                            className={`w-5 h-5 ${darkMode ? "text-teal-400" : "text-teal-600"}`}
-                          />
-                          <span
-                            className={`font-medium ${darkMode ? "text-white" : "text-slate-900"}`}
-                          >
-                            Due for Review
-                          </span>
-                        </div>
-                        <span
-                          className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
-                        >
-                          {getDueForReview().length}
-                        </span>
-                      </div>
-                    </button>
-                  )}
-
                   {weakTopics.length > 0 && (
                     <button
                       onClick={() => {
@@ -985,7 +952,7 @@ export default function T6AEnhancedStudyTool() {
                         setShowStudySetup(false);
                         loadQuestions("weak");
                       }}
-                      className={`w-full ${darkMode ? "bg-white/5 hover:bg-white/10" : "bg-slate-100 hover:bg-slate-200"} rounded-xl p-4 transition text-left`}
+                      className={`w-full ${darkMode ? "bg-orange-500/20 hover:bg-orange-500/30 border-2 border-orange-500/50" : "bg-orange-100 hover:bg-orange-200 border-2 border-orange-300"} rounded-xl p-4 transition text-left`}
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
@@ -995,13 +962,14 @@ export default function T6AEnhancedStudyTool() {
                           <span
                             className={`font-medium ${darkMode ? "text-white" : "text-slate-900"}`}
                           >
-                            Weak Topics
+                            Practice Weak Topics
                           </span>
                         </div>
                         <span
-                          className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                          className={`text-sm ${darkMode ? "text-orange-300" : "text-orange-700"}`}
                         >
-                          {weakTopics.length}
+                          {weakTopics.length} topic
+                          {weakTopics.length !== 1 ? "s" : ""} &lt; 70%
                         </span>
                       </div>
                     </button>
