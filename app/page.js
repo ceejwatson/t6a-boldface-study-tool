@@ -131,6 +131,24 @@ export default function T6AEnhancedStudyTool() {
     setWeakTopics(weak);
   }, [performanceStats]);
 
+  // Reload questions when question count changes in study mode
+  useEffect(() => {
+    if (activeTab === "study" && currentQuestions.length > 0) {
+      // Determine which mode to reload based on current state
+      if (studyMode === "weak") {
+        loadQuestions("weak");
+      } else if (studyMode === "flagged") {
+        loadQuestions("flagged");
+      } else if (studyMode === "review") {
+        loadQuestions("review");
+      } else if (studyMode === "custom") {
+        loadQuestions("custom");
+      } else if (studyMode === "study") {
+        loadQuestions("all");
+      }
+    }
+  }, [questionCount]);
+
   const loadQuestions = (mode) => {
     let questions = [];
 
