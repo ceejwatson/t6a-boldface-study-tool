@@ -28,6 +28,14 @@ import MultipleChoice from "./components/MultipleChoice";
 import TrueFalse from "./components/TrueFalse";
 import ReorderSequence from "./components/ReorderSequence";
 import MatchItems from "./components/MatchItems";
+import Flashcard from "./components/Flashcard";
+import {
+  calculateSM2,
+  mapPerformanceToQuality,
+  getQuestionsDueForReview,
+  sortQuestionsByPriority,
+  getSRSStats,
+} from "./utils/sm2";
 
 import { questionDatabase, getLimitationQuestions } from "./questionData";
 
@@ -240,15 +248,24 @@ export default function T6AEnhancedStudyTool() {
   };
 
   const getDueForReview = () => {
-    const now = new Date().getTime();
+    const now = Date.now();
     const all = getAllQuestions();
 
-    // Get questions that are due for review based on SRS
-    return all.filter((q) => {
+    // Get questions that are due for review based on SM-2 SRS
+    const dueQuestions = all.filter((q) => {
       const srsInfo = srsData[q.id];
       if (!srsInfo) return true; // New questions are always due
-      return srsInfo.nextReview <= now; // Check if review time has passed
+      return !srsInfo.nextReview || srsInfo.nextReview <= now; // Check if review time has passed
     });
+
+    // Sort by SM-2 priority (most urgent first)
+    const questionIds = dueQuestions.map((q) => q.id);
+    const sortedIds = sortQuestionsByPriority(questionIds, srsData);
+
+    // Return questions in priority order
+    return sortedIds
+      .map((id) => dueQuestions.find((q) => q.id === id))
+      .filter(Boolean);
   };
 
   const currentQuestion = currentQuestions[currentQuestionIndex];
@@ -386,6 +403,18 @@ export default function T6AEnhancedStudyTool() {
   };
 
   const updatePerformance = (question, isCorrect) => {
+    // Update SM-2 SRS data
+    setSrsData((prev) => {
+      const existingCard = prev[question.id];
+      const quality = mapPerformanceToQuality(isCorrect);
+      const updatedCard = calculateSM2(quality, existingCard);
+
+      return {
+        ...prev,
+        [question.id]: updatedCard,
+      };
+    });
+
     // Update questionMastery
     setQuestionMastery((prev) => {
       const existing = prev[question.id] || {
@@ -896,6 +925,48 @@ export default function T6AEnhancedStudyTool() {
                   />
                 </div>
               </button>
+
+              <button
+                onClick={() => {
+                  setStudyMode("flashcard");
+                  setActiveTab("flashcard");
+                  loadQuestions("review"); // Load questions due for review using SM-2
+                }}
+                className={`w-full ${darkMode ? "bg-white/10 hover:bg-white/15" : "bg-slate-900 hover:bg-slate-800"} backdrop-blur-xl rounded-2xl p-8 transition-all duration-200`}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div
+                      className={`${darkMode ? "bg-purple-500/20" : "bg-purple-100"} p-3 rounded-xl`}
+                    >
+                      <RotateCcw
+                        className={`w-7 h-7 ${darkMode ? "text-purple-400" : "text-purple-600"}`}
+                      />
+                    </div>
+                    <div className="text-left">
+                      <h3
+                        className={`text-2xl font-semibold ${darkMode ? "text-white" : "text-white"}`}
+                      >
+                        Flashcards
+                      </h3>
+                      <p
+                        className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-300"}`}
+                      >
+                        {(() => {
+                          const srsStats = getSRSStats(
+                            srsData,
+                            getAllQuestions().length,
+                          );
+                          return `${srsStats.dueNow} cards due now`;
+                        })()}
+                      </p>
+                    </div>
+                  </div>
+                  <ChevronRight
+                    className={`w-6 h-6 ${darkMode ? "text-slate-400" : "text-slate-300"}`}
+                  />
+                </div>
+              </button>
             </div>
 
             {/* Stats - Simple & Elegant */}
@@ -1324,6 +1395,94 @@ export default function T6AEnhancedStudyTool() {
                   }
                 </span>{" "}
                 of {getAllQuestions().length} questions mastered
+              </div>
+            </div>
+
+            {/* SM-2 Spaced Repetition Stats */}
+            <div
+              className={`${darkMode ? "bg-slate-800 border-slate-700" : "bg-white border-slate-300"} rounded-xl p-6 border-2`}
+            >
+              <h3
+                className={`text-xl font-bold mb-4 ${darkMode ? "text-white" : "text-slate-900"}`}
+              >
+                <Clock className="w-5 h-5 inline mr-2" />
+                Spaced Repetition Review
+              </h3>
+              {(() => {
+                const srsStats = getSRSStats(srsData, getAllQuestions().length);
+                return (
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div
+                      className={`${darkMode ? "bg-blue-900/20 border-blue-600" : "bg-blue-50 border-blue-400"} border-2 rounded-lg p-4 text-center`}
+                    >
+                      <div
+                        className={`text-3xl font-bold ${darkMode ? "text-blue-400" : "text-blue-600"}`}
+                      >
+                        {srsStats.dueNow}
+                      </div>
+                      <div
+                        className={`text-sm mt-1 ${darkMode ? "text-slate-300" : "text-slate-600"}`}
+                      >
+                        Due Now
+                      </div>
+                    </div>
+                    <div
+                      className={`${darkMode ? "bg-green-900/20 border-green-600" : "bg-green-50 border-green-400"} border-2 rounded-lg p-4 text-center`}
+                    >
+                      <div
+                        className={`text-3xl font-bold ${darkMode ? "text-green-400" : "text-green-600"}`}
+                      >
+                        {srsStats.new}
+                      </div>
+                      <div
+                        className={`text-sm mt-1 ${darkMode ? "text-slate-300" : "text-slate-600"}`}
+                      >
+                        New
+                      </div>
+                    </div>
+                    <div
+                      className={`${darkMode ? "bg-yellow-900/20 border-yellow-600" : "bg-yellow-50 border-yellow-400"} border-2 rounded-lg p-4 text-center`}
+                    >
+                      <div
+                        className={`text-3xl font-bold ${darkMode ? "text-yellow-400" : "text-yellow-600"}`}
+                      >
+                        {srsStats.learning}
+                      </div>
+                      <div
+                        className={`text-sm mt-1 ${darkMode ? "text-slate-300" : "text-slate-600"}`}
+                      >
+                        Learning
+                      </div>
+                    </div>
+                    <div
+                      className={`${darkMode ? "bg-purple-900/20 border-purple-600" : "bg-purple-50 border-purple-400"} border-2 rounded-lg p-4 text-center`}
+                    >
+                      <div
+                        className={`text-3xl font-bold ${darkMode ? "text-purple-400" : "text-purple-600"}`}
+                      >
+                        {srsStats.mature}
+                      </div>
+                      <div
+                        className={`text-sm mt-1 ${darkMode ? "text-slate-300" : "text-slate-600"}`}
+                      >
+                        Mature
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+              <div
+                className={`mt-4 text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+              >
+                <p>
+                  <strong>New:</strong> Never reviewed •{" "}
+                  <strong>Learning:</strong> &lt; 3 correct •{" "}
+                  <strong>Mature:</strong> ≥ 3 correct
+                </p>
+                <p className="mt-2">
+                  Study questions "Due Now" for optimal spaced repetition
+                  learning!
+                </p>
               </div>
             </div>
 
@@ -1956,6 +2115,84 @@ export default function T6AEnhancedStudyTool() {
                   Take Another Quiz
                 </button>
               </div>
+            </div>
+          </div>
+        ) : activeTab === "flashcard" ? (
+          <div className="max-w-4xl mx-auto">
+            {currentQuestions.length > 0 && currentQuestion ? (
+              <Flashcard
+                question={currentQuestion}
+                onNext={() => {
+                  if (currentQuestionIndex < currentQuestions.length - 1) {
+                    setCurrentQuestionIndex(currentQuestionIndex + 1);
+                  }
+                }}
+                onPrevious={() => {
+                  if (currentQuestionIndex > 0) {
+                    setCurrentQuestionIndex(currentQuestionIndex - 1);
+                  }
+                }}
+                onRate={(quality) => {
+                  // Update SM-2 SRS data based on quality rating
+                  setSrsData((prev) => {
+                    const existingCard = prev[currentQuestion.id];
+                    const updatedCard = calculateSM2(quality, existingCard);
+                    return {
+                      ...prev,
+                      [currentQuestion.id]: updatedCard,
+                    };
+                  });
+
+                  // Move to next card
+                  if (currentQuestionIndex < currentQuestions.length - 1) {
+                    setCurrentQuestionIndex(currentQuestionIndex + 1);
+                  } else {
+                    // Completed all flashcards
+                    setActiveTab("home");
+                  }
+                }}
+                currentIndex={currentQuestionIndex}
+                totalCards={currentQuestions.length}
+                darkMode={darkMode}
+              />
+            ) : (
+              <div
+                className={`${darkMode ? "bg-slate-800" : "bg-white"} rounded-xl p-8 text-center`}
+              >
+                <CheckCircle2
+                  className={`w-16 h-16 mx-auto mb-4 ${darkMode ? "text-green-400" : "text-green-600"}`}
+                />
+                <h2
+                  className={`text-2xl font-bold mb-2 ${darkMode ? "text-white" : "text-slate-900"}`}
+                >
+                  All Cards Reviewed!
+                </h2>
+                <p
+                  className={`mb-6 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                >
+                  You've reviewed all flashcards due for today. Great work!
+                </p>
+                <button
+                  onClick={() => setActiveTab("home")}
+                  className="px-6 py-3 rounded-lg font-medium transition bg-purple-600 hover:bg-purple-700 text-white"
+                >
+                  Return to Home
+                </button>
+              </div>
+            )}
+
+            {/* Navigation buttons */}
+            <div className="mt-6 text-center">
+              <button
+                onClick={() => setActiveTab("home")}
+                className={`px-6 py-3 rounded-lg font-medium transition ${
+                  darkMode
+                    ? "bg-slate-700 hover:bg-slate-600 text-white"
+                    : "bg-slate-300 hover:bg-slate-400 text-slate-900"
+                }`}
+              >
+                ← Exit Flashcards
+              </button>
             </div>
           </div>
         ) : currentQuestions.length === 0 ? (
