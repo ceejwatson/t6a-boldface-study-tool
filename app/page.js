@@ -234,9 +234,12 @@ export default function T6AEnhancedStudyTool() {
         questions = getLimitationQuestions();
         break;
       case "weak":
-        // Get questions from weak topics
+        // Get questions that you've gotten wrong 2+ times
         const allQuestions = getAllQuestions();
-        questions = allQuestions.filter((q) => weakTopics.includes(q.category));
+        questions = allQuestions.filter((q) => {
+          const mastery = questionMastery[q.id];
+          return mastery && mastery.incorrectCount >= 2;
+        });
         break;
       case "flagged":
         const all = getAllQuestions();
