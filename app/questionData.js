@@ -399,7 +399,7 @@ export const questionDatabase = {
       ],
       correctAnswer: 1,
       explanation:
-        "Transient oil temperature limit is 106-110°C for 10 minutes. Normal max is 10-105°C. Brief temperature excursions above 105°C are acceptable during climbs on hot days, but sustained high oil temperature indicates cooling system problems.",
+        "Transient oil temperature limit is 106-110°C for 10 minutes. Normal takeoff/max is 10-105°C (minimum 10°C, maximum 105°C). Brief temperature excursions above 105°C are acceptable during climbs on hot days, but sustained high oil temperature indicates cooling system problems.",
       limitation: true,
     },
     {
@@ -1308,10 +1308,10 @@ export const questionDatabase = {
       difficulty: "high",
       question: "Match the fuel state to its quantity:",
       pairs: [
-        { left: "Normal Recovery", right: "200 pounds" },
-        { left: "Minimum Fuel Dual", right: "150 pounds" },
-        { left: "Minimum Fuel Solo", right: "200 pounds" },
-        { left: "Emergency Fuel", right: "100 pounds" },
+        { left: "Normal Recovery", right: "200 lbs" },
+        { left: "Minimum Fuel Dual", right: "150 lbs" },
+        { left: "Minimum Fuel Solo", right: "200 lbs (Solo)" },
+        { left: "Emergency Fuel", right: "100 lbs" },
       ],
       explanation:
         "Fuel states and quantities: Normal Recovery = 200 lbs (normal pattern fuel), Minimum Fuel Dual = 150 lbs (ATC priority, 2 crew), Minimum Fuel Solo = 200 lbs (ATC priority, 1 crew - higher due to less efficient CG), Emergency Fuel = 100 lbs (immediate landing required). These represent decreasing safety margins. Plan to land with normal recovery fuel. Declare minimums appropriately to get ATC priority before reaching emergency fuel.",

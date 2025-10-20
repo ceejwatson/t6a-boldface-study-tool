@@ -357,9 +357,9 @@ export default function T6AEnhancedStudyTool() {
     // For complex types (reorder, match), just save answer
     // User will submit manually for reorder, but auto-submit for match items
     if (currentQuestion.questionType === "matchItems") {
-      // Check if all items are matched
+      // Check if all items are matched (using index-based matching)
       const allMatched = currentQuestion.pairs.every(
-        (pair) => answer[pair.left] !== undefined,
+        (pair, index) => answer[index] !== undefined,
       );
       if (allMatched) {
         setShowExplanation(true);
@@ -378,7 +378,8 @@ export default function T6AEnhancedStudyTool() {
       case "reorderSequence":
         return JSON.stringify(answer) === JSON.stringify(question.correctOrder);
       case "matchItems":
-        return question.pairs.every((pair) => answer[pair.left] === pair.right);
+        // Index-based matching: answer[leftIndex] should equal leftIndex for correct match
+        return question.pairs.every((pair, index) => answer[index] === index);
       default:
         return false;
     }
