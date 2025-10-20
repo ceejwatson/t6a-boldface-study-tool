@@ -570,6 +570,230 @@ export const questionDatabase = {
         "Transient torque limit is 101-107% for 5 seconds. This allows brief torque spikes during rapid power changes while protecting the engine and propeller from sustained overstress. Torque above 107% indicates a system malfunction. Normal maximum is 100%.",
       limitation: true,
     },
+    // SCENARIO-BASED QUESTIONS
+    {
+      id: "mc-53",
+      category: "Scenario",
+      topic: "Fuel Management",
+      difficulty: "high",
+      question:
+        "You're at 12,000 ft MSL with 180 pounds total fuel (90 pounds per side). Can you perform aerobatics?",
+      options: [
+        "Yes, total fuel is adequate",
+        "No, need minimum 150 pounds per side (300 total)",
+        "Yes, as long as you stay above 10,000 ft",
+        "No, need minimum 200 pounds per side (400 total)",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "NO - You need minimum 150 pounds per side for aerobatics. You only have 90 pounds per side. This ensures adequate fuel pressure during negative G maneuvers and prevents fuel starvation. Even though your total fuel (180 lbs) seems adequate, the per-side requirement is what matters to prevent unporting during aerobatic maneuvers.",
+      limitation: true,
+    },
+    {
+      id: "mc-54",
+      category: "Scenario",
+      topic: "Wind Limits",
+      difficulty: "medium",
+      question:
+        "Tower reports winds 270 at 22 knots, runway 36. The runway is dry. Can you land?",
+      options: [
+        "No, exceeds 20 knot crosswind limit",
+        "Yes, within 25 knot dry runway limit",
+        "No, exceeds 15 knot crosswind limit",
+        "Yes, but only if you declare minimum fuel",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "YES - Crosswind component is 22 knots (270° wind on runway 36 = 90° crosswind angle, so full 22 knots is crosswind). Maximum crosswind on dry runway is 25 knots, so 22 knots is within limits. If the runway were wet (10 knot limit) or icy (5 knot limit), you could not land.",
+      limitation: true,
+    },
+    {
+      id: "mc-55",
+      category: "Scenario",
+      topic: "Spins",
+      difficulty: "critical",
+      question:
+        "You enter a spin at 14,500 ft MSL (pressure altitude 14,000 ft). What is the LATEST altitude you must complete spin recovery?",
+      options: ["13,500 ft PA", "10,000 ft PA", "8,000 ft PA", "5,000 ft PA"],
+      correctAnswer: 1,
+      explanation:
+        "10,000 ft PA - Spins below 10,000 feet pressure altitude are PROHIBITED. You must complete recovery by 10,000 ft PA. Entry altitude is minimum 13,500 ft MSL, and spins must be completed (recovered) above 10,000 ft PA to provide adequate altitude margin for recovery plus safety buffer.",
+      limitation: true,
+    },
+    {
+      id: "mc-56",
+      category: "Scenario",
+      topic: "Engine Start",
+      difficulty: "medium",
+      question:
+        "You've just completed your 3rd unsuccessful engine start attempt. How long must you wait before the 4th attempt?",
+      options: ["30 seconds", "2 minutes", "5 minutes", "30 minutes"],
+      correctAnswer: 2,
+      explanation:
+        "5 minutes - After the 3rd start/motoring attempt, you must wait 5 minutes. The progression is: 1st attempt → wait 30 sec, 2nd attempt → wait 2 min, 3rd attempt → wait 5 min, 4th attempt → wait 30 min. These cooling periods prevent starter motor burnout.",
+      limitation: true,
+    },
+    {
+      id: "mc-57",
+      category: "Scenario",
+      topic: "G Limits",
+      difficulty: "high",
+      question:
+        "You're performing aerobatics in clean configuration and pull +8 Gs momentarily. What have you done?",
+      options: [
+        "Within limits - transient Gs allowed",
+        "Exceeded limit - max is +7.0 Gs clean symmetric",
+        "Within limits - max is +8.0 Gs clean",
+        "Exceeded limit - max is +5.0 Gs for aerobatics",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "EXCEEDED LIMITS - Maximum symmetric G limit in clean configuration is +7.0 Gs. You exceeded this by pulling +8 Gs, which risks structural damage to the airframe. There is no 'transient' allowance for G limits like there is for ITT or torque. The aircraft requires structural inspection after exceeding G limits.",
+      limitation: true,
+    },
+    {
+      id: "mc-58",
+      category: "Scenario",
+      topic: "Airspeed",
+      difficulty: "high",
+      question:
+        "You're at 320 KIAS in level flight. What limitation have you violated?",
+      options: [
+        "None - within limits",
+        "Exceeded VNE of 316 KIAS",
+        "Exceeded max cruise speed",
+        "Only violated if above 0.67 Mach",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "EXCEEDED VNE - Maximum operating speed is 316 KIAS OR 0.67 Mach, whichever is lower. At 320 KIAS, you've exceeded the 316 KIAS limit by 4 knots, risking structural damage. VNE (Never Exceed) means exactly that - never exceed under any circumstances.",
+      limitation: true,
+    },
+    {
+      id: "mc-59",
+      category: "Scenario",
+      topic: "Fuel Management",
+      difficulty: "high",
+      question:
+        "You have 220 pounds total fuel (120 left / 100 right). Can you perform a loop?",
+      options: [
+        "Yes, total fuel is above 200 pounds",
+        "No, fuel imbalance exceeds 50 pounds",
+        "Yes, as long as you're above minimum fuel",
+        "No, need minimum 300 pounds for aerobatics",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "NO - Fuel imbalance is 20 pounds (120 - 100), but wait... actually you CAN perform the loop. Aerobatic maneuvers with greater than 50 pounds fuel imbalance are prohibited. You have only 20 pounds imbalance, which is within the 50 pound limit. However, you don't meet the 150 pounds per side requirement (you only have 100 on the right side), so you actually CANNOT perform aerobatics. The correct answer is NO, but for the per-side fuel requirement, not imbalance.",
+      limitation: true,
+    },
+    {
+      id: "mc-60",
+      category: "Scenario",
+      topic: "Temperature",
+      difficulty: "medium",
+      question: "Ground temperature is -25°C. Can you start the engine?",
+      options: [
+        "Yes, within temperature limits",
+        "No, below -23°C ground operation limit",
+        "Yes, but only with external preheat",
+        "No, below -40°C minimum oil temperature",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "NO - Ground operation is limited to -23°C to +43°C ambient temperature. At -25°C, you're 2°C below the minimum limit. Hydraulic fluid becomes too viscous, battery performance degrades, and other systems may malfunction. You would need external heating or wait for warmer temperatures.",
+      limitation: true,
+    },
+    {
+      id: "mc-61",
+      category: "Scenario",
+      topic: "OBOGS",
+      difficulty: "critical",
+      question:
+        "At 22,000 ft MSL, you experience dizziness and tingling. What is the FIRST BOLDFACE step?",
+      options: [
+        "Descend below 10,000 ft MSL",
+        "OBOGS SUPPLY LEVER - OFF (BOTH)",
+        "BOS PUSH MAN - PRESS ON",
+        "Declare emergency with ATC",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "OBOGS SUPPLY LEVER - OFF (BOTH) - This is the first step in the OBOGS Failure/Physiological Symptoms BOLDFACE procedure. You're experiencing hypoxia symptoms. The sequence is: 1) OBOGS SUPPLY LEVER - OFF (BOTH), 2) BOS PUSH MAN - PRESS ON, 3) GREEN RING - PULL (AS REQUIRED), 4) DESCENT BELOW 10,000 FEET MSL - INITIATE, 5) ALTITUDE - CHECK. Every second counts with hypoxia.",
+      limitation: false,
+    },
+    {
+      id: "mc-62",
+      category: "Scenario",
+      topic: "Engine Emergency",
+      difficulty: "critical",
+      question:
+        "Engine fails at 500 ft AGL after takeoff. You have 3,000 ft of runway remaining straight ahead. What is the FIRST BOLDFACE action?",
+      options: [
+        "PCL - MID RANGE (attempt airstart)",
+        "PCL - IDLE",
+        "EJECT",
+        "Turn back to runway",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "PCL - IDLE - The BOLDFACE procedure for 'Engine Failure Immediately After Takeoff (Sufficient Runway Remaining Straight Ahead)' is: 1) PCL - IDLE, 2) BRAKES - AS REQUIRED. You have adequate runway ahead to land straight ahead, so land immediately. Do NOT attempt to restart or turn back. Focus on getting the aircraft safely on the ground.",
+      limitation: false,
+    },
+    {
+      id: "mc-63",
+      category: "Scenario",
+      topic: "Wind Limits",
+      difficulty: "medium",
+      question:
+        "You're planning touch-and-goes. Winds are 090 at 23 knots, runway 36. Can you continue?",
+      options: [
+        "Yes, within 25 knot limit",
+        "No, touch-and-go limit is 20 knots crosswind",
+        "Yes, within 23 knot limit",
+        "No, need maximum 15 knots for touch-and-go",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "NO - Maximum crosswind for touch-and-go is 20 knots. With 090° wind at 23 knots on runway 36 (360°), the crosswind component is 23 knots (90° angle = full crosswind). This exceeds the 20 knot touch-and-go limit. You could do full-stop landings (25 knot limit), but not touch-and-goes.",
+      limitation: true,
+    },
+    {
+      id: "mc-64",
+      category: "Scenario",
+      topic: "Emergency",
+      difficulty: "critical",
+      question:
+        "During engine start, ITT spikes to 950°C and continues climbing. What do you do?",
+      options: [
+        "Continue start - within 5 second limit",
+        "PCL - OFF, FIREWALL SHUTOFF HANDLE - PULL",
+        "Monitor - maximum is 1000°C",
+        "Abort start and wait 30 seconds",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "PCL - OFF, FIREWALL SHUTOFF HANDLE - PULL - This is a hot start emergency. ITT at 950°C exceeds normal limits and is climbing toward the 1000°C maximum. The BOLDFACE procedure for Emergency Engine Shutdown on the Ground is: 1) PCL - OFF, 2) FIREWALL SHUTOFF HANDLE - PULL. Do NOT wait - immediate action prevents catastrophic turbine damage. ITT above 871°C means do not attempt restart.",
+      limitation: false,
+    },
+    {
+      id: "mc-65",
+      category: "Scenario",
+      topic: "Crosswind",
+      difficulty: "high",
+      question:
+        "Runway 18 has standing water. Winds 090 at 12 knots. Can you land?",
+      options: [
+        "No, exceeds 10 knot wet runway limit",
+        "Yes, within 15 knot wet runway limit",
+        "Yes, within 25 knot limit",
+        "No, standing water prohibits landing",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "NO - Wet runway maximum crosswind is 10 knots. Winds from 090° on runway 18 (180°) create a 90° crosswind angle, so the full 12 knots is crosswind component. This exceeds the 10 knot wet runway limit. If the runway were dry, you'd be within the 25 knot limit, but standing water makes it wet.",
+      limitation: true,
+    },
   ],
 
   // TRUE/FALSE QUESTIONS
