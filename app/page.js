@@ -30,6 +30,7 @@ import ReorderSequence from "./components/ReorderSequence";
 import MatchItems from "./components/MatchItems";
 import Flashcard from "./components/Flashcard";
 import ActiveRecall from "./components/ActiveRecall";
+import LearningPath from "./components/LearningPath";
 import {
   calculateSM2,
   mapPerformanceToQuality,
@@ -37,6 +38,14 @@ import {
   sortQuestionsByPriority,
   getSRSStats,
 } from "./utils/sm2";
+import {
+  learningPath,
+  getQuestionsForSection,
+  getSectionProgress,
+  getChapterProgress,
+  shouldUnlockChapter,
+  getNextRecommendedSection,
+} from "./learningPath";
 
 import { questionDatabase, getLimitationQuestions } from "./questionData";
 
@@ -664,6 +673,25 @@ export default function T6AEnhancedStudyTool() {
     }
   };
 
+  const startLearningPathSection = (chapter, section) => {
+    // Get questions for this section
+    const sectionQuestions = getQuestionsForSection(section, getAllQuestions());
+
+    if (sectionQuestions.length === 0) {
+      alert("No questions available for this section yet.");
+      return;
+    }
+
+    // Set up study session with these questions
+    setCurrentQuestions(sectionQuestions);
+    setCurrentQuestionIndex(0);
+    setUserAnswers({});
+    setShowExplanation(false);
+    setStudyMode("study");
+    setStudySubMode("activeRecall"); // Use active recall for learning path
+    setActiveTab("study");
+  };
+
   const toggleFlag = () => {
     if (!currentQuestion) return;
 
@@ -1065,6 +1093,40 @@ export default function T6AEnhancedStudyTool() {
                           );
                           return `${srsStats.dueNow} cards due now`;
                         })()}
+                      </p>
+                    </div>
+                  </div>
+                  <ChevronRight
+                    className={`w-6 h-6 ${darkMode ? "text-slate-400" : "text-slate-300"}`}
+                  />
+                </div>
+              </button>
+
+              <button
+                onClick={() => {
+                  setActiveTab("learningpath");
+                }}
+                className={`w-full ${darkMode ? "bg-white/10 hover:bg-white/15" : "bg-slate-900 hover:bg-slate-800"} backdrop-blur-xl rounded-2xl p-8 transition-all duration-200`}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div
+                      className={`${darkMode ? "bg-green-500/20" : "bg-green-100"} p-3 rounded-xl`}
+                    >
+                      <BookOpen
+                        className={`w-7 h-7 ${darkMode ? "text-green-400" : "text-green-600"}`}
+                      />
+                    </div>
+                    <div className="text-left">
+                      <h3
+                        className={`text-2xl font-semibold ${darkMode ? "text-white" : "text-white"}`}
+                      >
+                        Learning Path
+                      </h3>
+                      <p
+                        className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-300"}`}
+                      >
+                        Structured curriculum with progressive unlocking
                       </p>
                     </div>
                   </div>
@@ -2409,6 +2471,17 @@ export default function T6AEnhancedStudyTool() {
               </button>
             </div>
           </div>
+        ) : activeTab === "learningpath" ? (
+          <LearningPath
+            learningPath={learningPath}
+            allQuestions={getAllQuestions()}
+            questionMastery={questionMastery}
+            onStartSection={startLearningPathSection}
+            getChapterProgress={getChapterProgress}
+            getSectionProgress={getSectionProgress}
+            shouldUnlockChapter={shouldUnlockChapter}
+            darkMode={darkMode}
+          />
         ) : currentQuestions.length === 0 ? (
           <div className="max-w-4xl mx-auto">
             <div
