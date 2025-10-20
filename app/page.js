@@ -314,8 +314,11 @@ export default function T6AEnhancedStudyTool() {
     const now = Date.now();
     const all = getAllQuestions();
 
-    // Get questions that are due for review based on SM-2 SRS
+    // Get questions that are due for review based on SM-2 SRS (exclude matchItems for flashcards)
     const dueQuestions = all.filter((q) => {
+      // Exclude matchItems from flashcards
+      if (q.questionType === "matchItems") return false;
+
       const srsInfo = srsData[q.id];
       if (!srsInfo) return true; // New questions are always due
       return !srsInfo.nextReview || srsInfo.nextReview <= now; // Check if review time has passed
@@ -2568,10 +2571,10 @@ export default function T6AEnhancedStudyTool() {
               </div>
               {/* Progress Bar */}
               <div
-                className={`w-full h-1.5 rounded-full overflow-hidden ${darkMode ? "bg-slate-700" : "bg-slate-200"}`}
+                className={`w-full h-2 rounded-full overflow-hidden ${darkMode ? "bg-slate-800" : "bg-slate-200"}`}
               >
                 <div
-                  className="h-full bg-gradient-to-r from-blue-500 to-blue-600 transition-all duration-500 ease-out"
+                  className={`h-full transition-all duration-500 ease-out ${darkMode ? "bg-gradient-to-r from-blue-400 to-cyan-400 shadow-[0_0_8px_rgba(96,165,250,0.5)]" : "bg-gradient-to-r from-blue-500 to-blue-600"}`}
                   style={{
                     width: `${((currentQuestionIndex + 1) / currentQuestions.length) * 100}%`,
                   }}
