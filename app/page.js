@@ -758,7 +758,7 @@ export default function T6AEnhancedStudyTool() {
       );
     }
 
-    // Regular question rendering for quiz mode and readThrough study mode
+    // Regular question rendering for quiz mode, readThrough study mode, and learningpath
     const props = {
       question: currentQuestion,
       onAnswer: handleAnswer,
@@ -766,7 +766,7 @@ export default function T6AEnhancedStudyTool() {
       userAnswer: userAnswers[currentQuestion.id],
       disabled: showExplanation, // Disable after answer is shown in both modes
       darkMode: darkMode,
-      showCorrectness: studyMode === "quiz", // Only show green/red in quiz mode
+      showCorrectness: studyMode === "quiz" || studyMode === "learningpath", // Show green/red in quiz and learning path modes
     };
 
     switch (currentQuestion.questionType) {
