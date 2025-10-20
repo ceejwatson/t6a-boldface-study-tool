@@ -982,7 +982,7 @@ export default function T6AEnhancedStudyTool() {
         {activeTab === "home" ? (
           <div className="max-w-4xl mx-auto px-4">
             {/* Hero Section - Clean & Minimal */}
-            <div className="text-center py-16 mb-12">
+            <div className="text-center py-8 mb-6">
               <h1
                 className={`text-5xl font-semibold mb-3 ${darkMode ? "text-white" : "text-slate-900"}`}
               >
@@ -996,7 +996,7 @@ export default function T6AEnhancedStudyTool() {
             </div>
 
             {/* Main Action Buttons - Centered & Large */}
-            <div className="space-y-4 mb-16">
+            <div className="space-y-4 mb-8">
               <button
                 onClick={() => {
                   // Auto-select all topics for study mode
