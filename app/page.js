@@ -332,6 +332,11 @@ export default function T6AEnhancedStudyTool() {
   ]);
 
   const handleAnswer = (answer) => {
+    // In quiz mode, prevent re-answering once explanation is shown
+    if (studyMode === "quiz" && showExplanation) {
+      return;
+    }
+
     const newAnswers = { ...userAnswers, [currentQuestion.id]: answer };
     setUserAnswers(newAnswers);
 

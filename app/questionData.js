@@ -1211,13 +1211,13 @@ export const questionDatabase = {
       difficulty: "high",
       question: "Match the configuration to its maximum airspeed:",
       pairs: [
-        { left: "Gear/Flaps Extended", right: "150 KIAS (VLE/VFE)" },
+        { left: "Gear/Flaps Extended", right: "150 KIAS" },
         { left: "Clean Configuration", right: "316 KIAS" },
-        { left: "Full Rudder Deflection", right: "150 KIAS (Rudder)" },
         { left: "Zoom/Glide Speed", right: "125 KIAS" },
+        { left: "Max Mach", right: "0.67 Mach" },
       ],
       explanation:
-        "Understanding configuration-specific airspeed limits is critical for safe operations: Gear/Flaps Extended = 150 KIAS (VLE/VFE - structural limits for extended surfaces), Clean Configuration = 316 KIAS (VNE - Never Exceed speed, airframe structural limit), Full Rudder Deflection = 150 KIAS (prevents rudder over-stress and potential structural failure), Zoom/Glide Speed = 125 KIAS (optimal speed for emergency pattern if engine fails - balances energy conservation with controllability). Each limit exists to prevent structural damage under specific aerodynamic loads.",
+        "Understanding configuration-specific airspeed limits is critical for safe operations: Gear/Flaps Extended = 150 KIAS (VLE/VFE - structural limits for extended surfaces), Clean Configuration = 316 KIAS (VNE - Never Exceed speed, airframe structural limit), Zoom/Glide Speed = 125 KIAS (optimal speed for emergency pattern if engine fails - balances energy conservation with controllability), Max Mach = 0.67 Mach (high altitude speed limit). Each limit exists to prevent structural damage under specific aerodynamic loads.",
       limitation: true,
     },
     {
