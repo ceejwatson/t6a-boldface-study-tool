@@ -1608,6 +1608,32 @@ export default function T6AEnhancedStudyTool() {
               </div>
             </div>
 
+            {/* Question Count Selection */}
+            <div className="mb-6">
+              <h3
+                className={`text-lg font-semibold ${darkMode ? "text-white" : "text-slate-900"} mb-3`}
+              >
+                Number of Questions:
+              </h3>
+              <div className="grid grid-cols-3 gap-3">
+                {[10, 25, 50].map((count) => (
+                  <button
+                    key={count}
+                    onClick={() => setQuestionCount(count)}
+                    className={`px-4 py-3 rounded-lg text-sm font-medium transition ${
+                      questionCount === count
+                        ? "bg-green-600 text-white border-2 border-green-500"
+                        : darkMode
+                          ? "bg-slate-700 text-slate-300 hover:bg-slate-600 border-2 border-slate-600"
+                          : "bg-slate-200 text-slate-700 hover:bg-slate-300 border-2 border-slate-300"
+                    }`}
+                  >
+                    {count}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <button
               onClick={() => {
                 setStudyMode("study");
