@@ -1480,8 +1480,8 @@ export default function T6AEnhancedStudyTool() {
                   <strong>Mature:</strong> ≥ 3 correct
                 </p>
                 <p className="mt-2">
-                  Study questions "Due Now" for optimal spaced repetition
-                  learning!
+                  Study questions &quot;Due Now&quot; for optimal spaced
+                  repetition learning!
                 </p>
               </div>
             </div>
@@ -2170,7 +2170,7 @@ export default function T6AEnhancedStudyTool() {
                 <p
                   className={`mb-6 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
                 >
-                  You've reviewed all flashcards due for today. Great work!
+                  You&apos;ve reviewed all flashcards due for today. Great work!
                 </p>
                 <button
                   onClick={() => setActiveTab("home")}
