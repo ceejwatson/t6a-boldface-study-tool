@@ -1,0 +1,75 @@
+Name Checked By Date
+Engine Failure During Flight
+Immediate Airstart (PMU NORM)Uncommanded Power Changes / Loss of Power / Uncommanded Propeller Feather
+  PCL - MID RANGE
+  PMU SWITCH - OFF
+Inadvertent Departure From Controlled Flight
+Fire In Flight, If Fire is Confirmed:
+<32>PHYSIOLOGICAL SYMPTOMS
+Eject
+  EJECTION HANDLE - PULL  PCL - AS REQUIRED
+  EMER LDG GR HANDLE - PULL (AS REQUIRED)  AIRSPEED - 110 KNOTS (MINIMUM)
+  CONTROLS - NEUTRAL  INTERCEPT ELP
+  STARTER SWITCH - AUTO/RESET
+  PCL - IDLE, ABOVE 13% N1
+  PROP SYS CIRCUIT BREAKER                                     (left front console) - PULL, IF Np STABLE BELOW 40%  ZOOM/GLIDE - 125 KNOTS (MINIMUM)
+  PCL - OFF  PCL - OFF
+  PCL - IDLE
+  PCL - OFF
+  OBOGS SUPPLY LEVER - OFF (BOTH)Abort
+  PCL - IDLE
+  BRAKES - AS REQUIREDEngine Failure Immediately After Takeoff (Sufficient Runway Remaining Straight Ahead)                                 T-6A BOLDFACE Emergency Procedures and Operating Limitations                       01 June 202 3
+Section 1.  BOLDFACE Emergency Procedures
+Emergency Engine Shutdown on the Ground
+  PCL - OFF
+  FIREWALL SHUTOFF HANDLE - PULL
+  BOS PUSH MAN - PRESS ON
+  GREEN RING - PULL (AS REQUIRED)
+  DESCENT BELOW 10,000 FEET MSL - INITIATE  ALTITUDE - CHECK
+  FIREWALL SHUTOFF HANDLE - PULL<30>OBOGS Failure / Overtemp / Physiological Symptoms/<32>OXY CRIT Annunciator
+Section 2.  Operating Limits 01 June 2023
+Engine Starting
+Maximum Torque Starter Limit: _____20 ____  Seconds
+Takeoff / Max   ____100____ % Wait ____30___ _ Sec, ____2__ __ Min, ____5__ __ Min, ____30__ __ Min
+Transient           ____101____ % to ____107 ____ %  (___5___  Seconds) after each start/motoring attempt
+Torque above  ____107____ % is indicative of a system malfunction. Maximum ITT ____871____  to ____1,000____  ⁰C for ____5____  Sec
+Maximum ITT (Do Not Attempt Restart)
+Idle                     ____750____ ⁰C Maximum Oil Pressure        ___200_____  PSI
+Takeoff / Max  ____820____ ⁰C Minimum Oil Temperature ____-40_____ ⁰C
+Transient          ____821____  to ____870____ ⁰C ( ____20____  Seconds) Minimum Battery Voltage   ____23.5____  V
+N₁ Pressurization
+Idle ____60____  to ____61____ %   Ground, ____67____ % (Min) Flight Normal Above 18,000 Ft MSL ____3.6____  ± ____0.2____ PSI
+Np Overpressurization Safety Valve Opens _____4.0_____ PSI
+Idle ____46____  to ____50____ % Fuel
+Takeoff / Max ____100____ %, (____100____ % ± ____2____ % PMU Off) Normal Recovery Fuel _____200______  Pounds
+Avoid stabilized ground operations from ____62___  to ____80___ % Np Minimum Fuel   ____150____  Pounds ( ____200_____ Pounds Solo)
+Oil Pressure Emergency Fuel ____100____  Pounds
+Takeoff / Max                    ____90____  to ____120____  PSI Minimum Fuel for Aerobatics ____150____ Pounds per side
+Aerobatics / Spins            ____40____  to ____130____  PSI Runway
+Aerobatics / Spins (Idle) ____15____  to _____40____  PSI ( ___5___  Sec) Minimum Landing Distance Available (LDA)  ____4,000_____ Feet, or
+Oil Temp heavy weight flaps ____up____ landing ground roll plus ____500____
+Takeoff / Max               _____10____  to ____105____  ⁰C Feet, whichever is greater
+Transient                       ____106____  to ____110____  ⁰C ( ___10___ Min) Minimum Runway Width ____75____  Feet
+Maximum Fuel Flow Winds
+All phases of flight      ____799____  PPH Maximum Crosswinds
+Prohibited Maneuvers Dry Runway                                                                 ____25____  Knots
+1.  ______Inverted_ _____  Stalls Wet Runway                                                                ____10____  Knots
+2.  ______Inverted ______  Spins Icy Runway                                                                   _____5____  Knots
+3.  Aggravated ____________spins past 2 turns________________ Touch-and-Go                                                              ____20____  Knots
+4.  Spins with the PCL ___________above idle__ _______________ Formation Takeoff / Landing                                   ____15____  Knots
+5.  Spins with  _____landing gear__ ____, _______flaps_ ______, Maximum Tailwind Component for Takeoff       ____10____  Knots
+or _______speed brake________  extended Maximum Wind with Canopy Open                      ____40____  Knots
+6.  Spins with the ______________PMU off__ ____________ Acceleration Limits
+7.  Spins below ______10,000______  feet pressure altitude Symmetric Clean                              ____-3.5____  to ____7.0____  Gs
+8.  Spins above ______22,000______  feet pressure altitude Symmetric Gear / Flaps                  _____0_____  to ____2.5____  Gs
+9.  Abrupt _________cross-controlled (snap)_____________  maneuvers Asymmetric Clean                            ____-1.0____  to ____4.7____  Gs
+10.  Aerobatic maneuvers, spins, or stalls with greater than Asymmetric Gear / Flaps                _____0_____  to ____2.0____  Gs
+______50______  pounds fuel imbalance Intentional Spin Entry
+11. _____Tail______  slides Minimum Altitude for Entry ____13,500____  Feet MSL
+Airspeed Limitations Minimum Cloud Clearance   _____7,000____  Feet above clouds
+Max Airspeed Gear and/or Flaps ____150____  KIAS Icing
+Max Operating Speed                     ____316____  KIAS or ____0.67____ Maximum Icing Band ____5,000____  Feet
+Mach Maximum Icing Type  ____light rime____
+Full rudder deflection above        ____150____  KIAS will exceed the Temperature
+limits of the rudder control system. Ground operation is limited to ambient temperatures of                          
+____-23 ____  to ____43 ____  ⁰C

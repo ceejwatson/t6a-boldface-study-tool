@@ -1,6 +1,7 @@
 "use client";
 
 import { CheckCircle2, XCircle, BookOpen } from "lucide-react";
+import { useMemo } from "react";
 
 export default function TrueFalse({
   question,
@@ -11,6 +12,11 @@ export default function TrueFalse({
   darkMode = true,
   showCorrectness = true,
 }) {
+  // Randomize True/False order - memoized so it doesn't change during component lifecycle
+  const buttonOrder = useMemo(() => {
+    return Math.random() < 0.5 ? [true, false] : [false, true];
+  }, [question.id]);
+
   const handleSelect = (value) => {
     if (disabled) return;
     onAnswer(value);
@@ -58,27 +64,21 @@ export default function TrueFalse({
       </h3>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-        <button
-          onClick={() => handleSelect(true)}
-          disabled={disabled}
-          className={`p-6 sm:p-8 min-h-[120px] rounded-xl border-4 transition-all duration-200 flex flex-col items-center justify-center gap-3 touch-manipulation ${getButtonStyle(true)} ${
-            disabled ? "cursor-not-allowed" : "cursor-pointer active:scale-95"
-          }`}
-        >
-          {getIcon(true)}
-          <span className="text-2xl sm:text-3xl font-bold">TRUE</span>
-        </button>
-
-        <button
-          onClick={() => handleSelect(false)}
-          disabled={disabled}
-          className={`p-6 sm:p-8 min-h-[120px] rounded-xl border-4 transition-all duration-200 flex flex-col items-center justify-center gap-3 touch-manipulation ${getButtonStyle(false)} ${
-            disabled ? "cursor-not-allowed" : "cursor-pointer active:scale-95"
-          }`}
-        >
-          {getIcon(false)}
-          <span className="text-2xl sm:text-3xl font-bold">FALSE</span>
-        </button>
+        {buttonOrder.map((value, index) => (
+          <button
+            key={index}
+            onClick={() => handleSelect(value)}
+            disabled={disabled}
+            className={`p-6 sm:p-8 min-h-[120px] rounded-xl border-4 transition-all duration-200 flex flex-col items-center justify-center gap-3 touch-manipulation ${getButtonStyle(value)} ${
+              disabled ? "cursor-not-allowed" : "cursor-pointer active:scale-95"
+            }`}
+          >
+            {getIcon(value)}
+            <span className="text-2xl sm:text-3xl font-bold">
+              {value ? "TRUE" : "FALSE"}
+            </span>
+          </button>
+        ))}
       </div>
 
       {showExplanation && showCorrectness && (

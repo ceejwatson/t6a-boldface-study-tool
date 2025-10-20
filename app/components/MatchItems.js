@@ -12,6 +12,7 @@ export default function MatchItems({
   darkMode = true,
   showCorrectness = true,
 }) {
+  // Use index-based matching to handle duplicate values
   const [matches, setMatches] = useState(() => {
     if (userAnswer && Object.keys(userAnswer).length > 0) {
       return userAnswer;
@@ -19,10 +20,23 @@ export default function MatchItems({
     return {};
   });
 
-  const [leftItems] = useState(() => question.pairs.map((p) => p.left));
-  const [rightItems] = useState(() =>
-    [...question.pairs.map((p) => p.right)].sort(() => Math.random() - 0.5),
+  // Create items with unique indices
+  const [leftItems] = useState(() =>
+    question.pairs.map((p, idx) => ({ text: p.left, index: idx })),
   );
+
+  const [rightItems] = useState(() => {
+    const items = question.pairs.map((p, idx) => ({
+      text: p.right,
+      index: idx,
+    }));
+    // Shuffle right items
+    for (let i = items.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [items[i], items[j]] = [items[j], items[i]];
+    }
+    return items;
+  });
 
   const [selectedLeft, setSelectedLeft] = useState(null);
   const [selectedRight, setSelectedRight] = useState(null);
@@ -44,84 +58,81 @@ export default function MatchItems({
   const rightRefs = useRef({});
   const [lines, setLines] = useState([]);
 
-  const handleLeftClick = (item) => {
+  const handleLeftClick = (leftIndex) => {
     // In quiz mode after submission, don't allow changes
     if (disabled && showCorrectness) return;
 
     // If clicking the same item again, deselect it
-    if (selectedLeft === item) {
+    if (selectedLeft === leftIndex) {
       setSelectedLeft(null);
       return;
     }
 
     // If item is already matched, don't allow reselection
-    if (matches[item] !== undefined) {
+    if (matches[leftIndex] !== undefined) {
       return;
     }
 
-    setSelectedLeft(item);
-    if (selectedRight) {
-      createMatch(item, selectedRight);
+    setSelectedLeft(leftIndex);
+    if (selectedRight !== null) {
+      createMatch(leftIndex, selectedRight);
     }
   };
 
-  const handleRightClick = (item) => {
+  const handleRightClick = (rightIndex) => {
     // In quiz mode after submission, don't allow changes
     if (disabled && showCorrectness) return;
 
     // If clicking the same item again, deselect it
-    if (selectedRight === item) {
+    if (selectedRight === rightIndex) {
       setSelectedRight(null);
       return;
     }
 
     // If item is already matched, don't allow reselection
-    if (Object.values(matches).includes(item)) {
+    if (Object.values(matches).includes(rightIndex)) {
       return;
     }
 
-    setSelectedRight(item);
-    if (selectedLeft) {
-      createMatch(selectedLeft, item);
+    setSelectedRight(rightIndex);
+    if (selectedLeft !== null) {
+      createMatch(selectedLeft, rightIndex);
     }
   };
 
-  const createMatch = (left, right) => {
-    const newMatches = { ...matches, [left]: right };
+  const createMatch = (leftIdx, rightIdx) => {
+    const newMatches = { ...matches, [leftIdx]: rightIdx };
     setMatches(newMatches);
     setSelectedLeft(null);
     setSelectedRight(null);
     onAnswer(newMatches);
   };
 
-  const removeMatch = (left) => {
+  const removeMatch = (leftIdx) => {
     // In quiz mode after submission, don't allow changes
     if (disabled && showCorrectness) return;
     const newMatches = { ...matches };
-    delete newMatches[left];
+    delete newMatches[leftIdx];
     setMatches(newMatches);
     onAnswer(newMatches);
   };
 
-  const isCorrectMatch = useCallback(
-    (left, right) => {
-      const correctPair = question.pairs.find((p) => p.left === left);
-      return correctPair && correctPair.right === right;
-    },
-    [question.pairs],
-  );
+  const isCorrectMatch = useCallback((leftIdx, rightIdx) => {
+    // Correct match when left index matches right index (same pair)
+    return leftIdx === rightIdx;
+  }, []);
 
-  const isItemMatched = (item, side) => {
+  const isItemMatched = (itemIndex, side) => {
     if (side === "left") {
-      return matches[item] !== undefined;
+      return matches[itemIndex] !== undefined;
     } else {
-      return Object.values(matches).includes(item);
+      return Object.values(matches).includes(itemIndex);
     }
   };
 
-  const getLeftItemStyle = (item) => {
-    const isMatched = isItemMatched(item, "left");
-    const isSelected = selectedLeft === item;
+  const getLeftItemStyle = (itemIndex) => {
+    const isMatched = isItemMatched(itemIndex, "left");
+    const isSelected = selectedLeft === itemIndex;
 
     if (!showExplanation || !showCorrectness) {
       if (isSelected) return "bg-blue-600 border-blue-600 text-white";
@@ -135,7 +146,7 @@ export default function MatchItems({
     }
 
     // Show results (only in quiz mode)
-    if (isMatched && isCorrectMatch(item, matches[item])) {
+    if (isMatched && isCorrectMatch(itemIndex, matches[itemIndex])) {
       return "bg-green-900/30 border-green-600 text-white";
     }
     if (isMatched) {
@@ -146,9 +157,9 @@ export default function MatchItems({
       : "bg-slate-100 border-slate-300 text-slate-500";
   };
 
-  const getRightItemStyle = (item) => {
-    const isMatched = isItemMatched(item, "right");
-    const isSelected = selectedRight === item;
+  const getRightItemStyle = (itemIndex) => {
+    const isMatched = isItemMatched(itemIndex, "right");
+    const isSelected = selectedRight === itemIndex;
 
     if (!showExplanation || !showCorrectness) {
       if (isSelected) return "bg-blue-600 border-blue-600 text-white";
@@ -162,10 +173,10 @@ export default function MatchItems({
     }
 
     // Show results (only in quiz mode)
-    const leftItem = Object.keys(matches).find(
-      (left) => matches[left] === item,
+    const leftIdx = Object.keys(matches).find(
+      (leftIdx) => matches[leftIdx] === itemIndex,
     );
-    if (leftItem && isCorrectMatch(leftItem, item)) {
+    if (leftIdx !== undefined && isCorrectMatch(parseInt(leftIdx), itemIndex)) {
       return "bg-green-900/30 border-green-600 text-white";
     }
     if (isMatched) {
@@ -176,9 +187,13 @@ export default function MatchItems({
       : "bg-slate-100 border-slate-300 text-slate-500";
   };
 
-  const allMatched = leftItems.every((item) => matches[item] !== undefined);
+  const allMatched = leftItems.every(
+    (item) => matches[item.index] !== undefined,
+  );
   const allCorrect = leftItems.every(
-    (item) => matches[item] && isCorrectMatch(item, matches[item]),
+    (item) =>
+      matches[item.index] !== undefined &&
+      isCorrectMatch(item.index, matches[item.index]),
   );
 
   // Calculate lines between matched items
@@ -189,10 +204,10 @@ export default function MatchItems({
       const containerRect = containerRef.current.getBoundingClientRect();
       const newLines = [];
 
-      Object.keys(matches).forEach((leftItem) => {
-        const rightItem = matches[leftItem];
-        const leftEl = leftRefs.current[leftItem];
-        const rightEl = rightRefs.current[rightItem];
+      Object.keys(matches).forEach((leftIdx) => {
+        const rightIdx = matches[leftIdx];
+        const leftEl = leftRefs.current[leftIdx];
+        const rightEl = rightRefs.current[rightIdx];
 
         if (leftEl && rightEl) {
           const leftRect = leftEl.getBoundingClientRect();
@@ -207,7 +222,7 @@ export default function MatchItems({
           // Determine line color based on correctness
           let color = darkMode ? "#60a5fa" : "#3b82f6"; // blue default
           if (showExplanation && showCorrectness) {
-            color = isCorrectMatch(leftItem, rightItem)
+            color = isCorrectMatch(parseInt(leftIdx), rightIdx)
               ? "#4ade80" // green
               : "#f87171"; // red
           }
@@ -266,36 +281,38 @@ export default function MatchItems({
         </svg>
         {/* Left Column */}
         <div className="space-y-2 relative" style={{ zIndex: 1 }}>
-          {leftItems.map((item, idx) => (
-            <div key={`left-${idx}-${item}`} className="space-y-1">
+          {leftItems.map((item) => (
+            <div key={`left-${item.index}`} className="space-y-1">
               <div className="relative">
                 <button
-                  ref={(el) => (leftRefs.current[item] = el)}
-                  onClick={() => handleLeftClick(item)}
+                  ref={(el) => (leftRefs.current[item.index] = el)}
+                  onClick={() => handleLeftClick(item.index)}
                   disabled={
-                    (disabled && showCorrectness) || isItemMatched(item, "left")
+                    (disabled && showCorrectness) ||
+                    isItemMatched(item.index, "left")
                   }
-                  className={`w-full p-2 sm:p-3 min-h-[48px] rounded-lg border-2 transition-all duration-200 text-left touch-manipulation ${getLeftItemStyle(item)} ${
-                    (disabled && showCorrectness) || isItemMatched(item, "left")
+                  className={`w-full p-2 sm:p-3 min-h-[48px] rounded-lg border-2 transition-all duration-200 text-left touch-manipulation ${getLeftItemStyle(item.index)} ${
+                    (disabled && showCorrectness) ||
+                    isItemMatched(item.index, "left")
                       ? "cursor-default"
                       : "cursor-pointer active:scale-95"
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-xs sm:text-sm">{item}</span>
+                    <span className="text-xs sm:text-sm">{item.text}</span>
                     {showExplanation &&
                       showCorrectness &&
-                      matches[item] &&
-                      (isCorrectMatch(item, matches[item]) ? (
+                      matches[item.index] !== undefined &&
+                      (isCorrectMatch(item.index, matches[item.index]) ? (
                         <CheckCircle2 className="w-5 h-5 text-green-400 flex-shrink-0" />
                       ) : (
                         <XCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
                       ))}
                   </div>
                 </button>
-                {matches[item] && !showExplanation && (
+                {matches[item.index] !== undefined && !showExplanation && (
                   <button
-                    onClick={() => removeMatch(item)}
+                    onClick={() => removeMatch(item.index)}
                     className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-white px-2 py-1"
                   >
                     ✕
@@ -303,10 +320,15 @@ export default function MatchItems({
                 )}
               </div>
 
-              {matches[item] && (
+              {matches[item.index] !== undefined && (
                 <div className="flex items-center gap-1 text-xs text-slate-400 ml-2">
                   <ArrowRight className="w-3 h-3" />
-                  <span>{matches[item]}</span>
+                  <span>
+                    {
+                      rightItems.find((r) => r.index === matches[item.index])
+                        ?.text
+                    }
+                  </span>
                 </div>
               )}
             </div>
@@ -315,21 +337,23 @@ export default function MatchItems({
 
         {/* Right Column */}
         <div className="space-y-2 relative" style={{ zIndex: 1 }}>
-          {rightItems.map((item, idx) => (
+          {rightItems.map((item) => (
             <button
-              key={`right-${idx}-${item}`}
-              ref={(el) => (rightRefs.current[item] = el)}
-              onClick={() => handleRightClick(item)}
+              key={`right-${item.index}`}
+              ref={(el) => (rightRefs.current[item.index] = el)}
+              onClick={() => handleRightClick(item.index)}
               disabled={
-                (disabled && showCorrectness) || isItemMatched(item, "right")
+                (disabled && showCorrectness) ||
+                isItemMatched(item.index, "right")
               }
-              className={`w-full p-2 sm:p-3 min-h-[48px] rounded-lg border-2 transition-all duration-200 text-left touch-manipulation ${getRightItemStyle(item)} ${
-                (disabled && showCorrectness) || isItemMatched(item, "right")
+              className={`w-full p-2 sm:p-3 min-h-[48px] rounded-lg border-2 transition-all duration-200 text-left touch-manipulation ${getRightItemStyle(item.index)} ${
+                (disabled && showCorrectness) ||
+                isItemMatched(item.index, "right")
                   ? "cursor-default"
                   : "cursor-pointer active:scale-95"
               }`}
             >
-              <span className="text-xs sm:text-sm">{item}</span>
+              <span className="text-xs sm:text-sm">{item.text}</span>
             </button>
           ))}
         </div>
@@ -356,7 +380,7 @@ export default function MatchItems({
             >
               {allCorrect
                 ? "All Correct!"
-                : `${leftItems.filter((item) => matches[item] && isCorrectMatch(item, matches[item])).length}/${leftItems.length} Correct`}
+                : `${leftItems.filter((item) => matches[item.index] !== undefined && isCorrectMatch(item.index, matches[item.index])).length}/${leftItems.length} Correct`}
             </span>
           </div>
           {!allCorrect && (

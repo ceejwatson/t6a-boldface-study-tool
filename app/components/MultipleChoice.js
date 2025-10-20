@@ -1,6 +1,7 @@
 "use client";
 
 import { CheckCircle2, XCircle, BookOpen } from "lucide-react";
+import { useState, useEffect, useMemo } from "react";
 
 export default function MultipleChoice({
   question,
@@ -11,14 +12,33 @@ export default function MultipleChoice({
   darkMode = true,
   showCorrectness = true,
 }) {
-  const handleSelect = (index) => {
+  // Randomize answer order - memoized so it doesn't change during component lifecycle
+  const shuffledOptions = useMemo(() => {
+    const optionsWithIndex = question.options.map((option, index) => ({
+      option,
+      originalIndex: index,
+    }));
+
+    // Fisher-Yates shuffle
+    for (let i = optionsWithIndex.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [optionsWithIndex[i], optionsWithIndex[j]] = [
+        optionsWithIndex[j],
+        optionsWithIndex[i],
+      ];
+    }
+
+    return optionsWithIndex;
+  }, [question.id, question.options]);
+
+  const handleSelect = (originalIndex) => {
     if (disabled) return;
-    onAnswer(index);
+    onAnswer(originalIndex);
   };
 
-  const getOptionStyle = (index) => {
+  const getOptionStyle = (originalIndex) => {
     if (!showExplanation || !showCorrectness) {
-      return userAnswer === index
+      return userAnswer === originalIndex
         ? "bg-blue-600 text-white border-blue-600 scale-[1.02]"
         : darkMode
           ? "bg-slate-800 text-white border-slate-600 hover:border-blue-500 hover:scale-[1.01]"
@@ -26,10 +46,10 @@ export default function MultipleChoice({
     }
 
     // Show results (only in quiz mode)
-    if (index === question.correctAnswer) {
+    if (originalIndex === question.correctAnswer) {
       return "bg-green-600 text-white border-green-600 animate-pulse-once";
     }
-    if (userAnswer === index && userAnswer !== question.correctAnswer) {
+    if (userAnswer === originalIndex && userAnswer !== question.correctAnswer) {
       return "bg-red-600 text-white border-red-600";
     }
     return darkMode
@@ -37,13 +57,13 @@ export default function MultipleChoice({
       : "bg-slate-100 text-slate-500 border-slate-300";
   };
 
-  const getOptionIcon = (index) => {
+  const getOptionIcon = (originalIndex) => {
     if (!showExplanation || !showCorrectness) return null;
 
-    if (index === question.correctAnswer) {
+    if (originalIndex === question.correctAnswer) {
       return <CheckCircle2 className="w-5 h-5" />;
     }
-    if (userAnswer === index && userAnswer !== question.correctAnswer) {
+    if (userAnswer === originalIndex && userAnswer !== question.correctAnswer) {
       return <XCircle className="w-5 h-5" />;
     }
     return null;
@@ -58,17 +78,17 @@ export default function MultipleChoice({
       </h3>
 
       <div className="space-y-3">
-        {question.options.map((option, index) => (
+        {shuffledOptions.map(({ option, originalIndex }, displayIndex) => (
           <button
-            key={index}
-            onClick={() => handleSelect(index)}
+            key={displayIndex}
+            onClick={() => handleSelect(originalIndex)}
             disabled={disabled}
-            className={`w-full p-4 md:p-4 min-h-[56px] rounded-lg border-2 transition-all duration-200 text-left flex items-center justify-between touch-manipulation ${getOptionStyle(index)} ${
+            className={`w-full p-4 md:p-4 min-h-[56px] rounded-lg border-2 transition-all duration-200 text-left flex items-center justify-between touch-manipulation ${getOptionStyle(originalIndex)} ${
               disabled ? "cursor-not-allowed" : "cursor-pointer active:scale-95"
             }`}
           >
             <span className="flex-1 text-base md:text-base">{option}</span>
-            {getOptionIcon(index)}
+            {getOptionIcon(originalIndex)}
           </button>
         ))}
       </div>
