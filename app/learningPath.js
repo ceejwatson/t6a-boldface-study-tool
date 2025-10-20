@@ -28,9 +28,8 @@ export const learningPath = {
           id: "obogs-emergencies",
           title: "OBOGS & Physiological",
           description: "Oxygen system failures and emergencies",
-          questionTypes: ["multipleChoice", "trueFalse"],
-          topics: ["OBOGS", "Systems"],
-          categories: ["Emergency", "Systems"],
+          questionTypes: ["multipleChoice", "trueFalse", "reorderSequence"],
+          categories: ["OBOGS"],
         },
       ],
     },
@@ -169,7 +168,10 @@ export const learningPath = {
 export function getQuestionsForSection(section, allQuestions) {
   return allQuestions.filter((q) => {
     // Filter by question type
-    if (section.questionTypes && !section.questionTypes.includes(q.questionType)) {
+    if (
+      section.questionTypes &&
+      !section.questionTypes.includes(q.questionType)
+    ) {
       return false;
     }
 
@@ -192,7 +194,8 @@ export function getQuestionsForSection(section, allQuestions) {
  */
 export function getSectionProgress(section, allQuestions, questionMastery) {
   const sectionQuestions = getQuestionsForSection(section, allQuestions);
-  if (sectionQuestions.length === 0) return { total: 0, mastered: 0, percentage: 0 };
+  if (sectionQuestions.length === 0)
+    return { total: 0, mastered: 0, percentage: 0 };
 
   const mastered = sectionQuestions.filter((q) => {
     const mastery = questionMastery[q.id];
@@ -222,33 +225,57 @@ export function getChapterProgress(chapter, allQuestions, questionMastery) {
   return {
     total: totalQuestions,
     mastered: totalMastered,
-    percentage: totalQuestions > 0 ? Math.round((totalMastered / totalQuestions) * 100) : 0,
+    percentage:
+      totalQuestions > 0
+        ? Math.round((totalMastered / totalQuestions) * 100)
+        : 0,
   };
 }
 
 /**
  * Check if a chapter should be unlocked based on previous chapter mastery
  */
-export function shouldUnlockChapter(chapterIndex, learningPath, allQuestions, questionMastery) {
+export function shouldUnlockChapter(
+  chapterIndex,
+  learningPath,
+  allQuestions,
+  questionMastery,
+) {
   if (chapterIndex === 0) return true; // First chapter always unlocked
 
   const previousChapter = learningPath.chapters[chapterIndex - 1];
-  const progress = getChapterProgress(previousChapter, allQuestions, questionMastery);
+  const progress = getChapterProgress(
+    previousChapter,
+    allQuestions,
+    questionMastery,
+  );
 
-  return progress.percentage >= (previousChapter.requiredMastery * 100);
+  return progress.percentage >= previousChapter.requiredMastery * 100;
 }
 
 /**
  * Get next recommended section to study
  */
-export function getNextRecommendedSection(learningPath, allQuestions, questionMastery) {
+export function getNextRecommendedSection(
+  learningPath,
+  allQuestions,
+  questionMastery,
+) {
   for (const chapter of learningPath.chapters) {
-    const chapterProgress = getChapterProgress(chapter, allQuestions, questionMastery);
+    const chapterProgress = getChapterProgress(
+      chapter,
+      allQuestions,
+      questionMastery,
+    );
 
     if (chapterProgress.percentage < 100) {
       // Find first incomplete section in this chapter
       for (const section of chapter.sections) {
-        const sectionProgress = getSectionProgress(section, allQuestions, questionMastery);
+        const sectionProgress = getSectionProgress(
+          section,
+          allQuestions,
+          questionMastery,
+        );
         if (sectionProgress.percentage < 100) {
           return {
             chapter: chapter,
