@@ -39,7 +39,7 @@ export const learningPath = {
       description: "Engine parameters, limitations, and procedures",
       emoji: "⚙️",
       difficulty: "high",
-      unlocked: false,
+      unlocked: true,
       requiredMastery: 0.75,
       sections: [
         {
@@ -65,7 +65,7 @@ export const learningPath = {
       description: "Speed limits and structural G-load restrictions",
       emoji: "✈️",
       difficulty: "high",
-      unlocked: false,
+      unlocked: true,
       requiredMastery: 0.7,
       sections: [
         {
@@ -90,7 +90,7 @@ export const learningPath = {
       description: "Wind, weather, and environmental restrictions",
       emoji: "🌤️",
       difficulty: "medium",
-      unlocked: false,
+      unlocked: true,
       requiredMastery: 0.7,
       sections: [
         {
@@ -122,7 +122,7 @@ export const learningPath = {
       description: "What you cannot do in the T-6A",
       emoji: "⛔",
       difficulty: "critical",
-      unlocked: false,
+      unlocked: true,
       requiredMastery: 0.75,
       sections: [
         {
@@ -147,7 +147,7 @@ export const learningPath = {
       description: "Complex decision-making and scenarios",
       emoji: "🎯",
       difficulty: "high",
-      unlocked: false,
+      unlocked: true,
       requiredMastery: 0.8,
       sections: [
         {
