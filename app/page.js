@@ -1224,7 +1224,7 @@ export default function T6AEnhancedStudyTool() {
                           <span
                             className={`font-medium ${darkMode ? "text-white" : "text-slate-900"}`}
                           >
-                            Practice Weak Topics
+                            Practice Weak Questions
                           </span>
                         </div>
                         <span
