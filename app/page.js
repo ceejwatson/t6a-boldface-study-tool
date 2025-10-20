@@ -463,6 +463,11 @@ export default function T6AEnhancedStudyTool() {
   };
 
   const updatePerformance = (question, isCorrect) => {
+    // Skip stat tracking for learning path practice mode
+    if (studyMode === "learningpath") {
+      return;
+    }
+
     // Update SM-2 SRS data
     setSrsData((prev) => {
       const existingCard = prev[question.id];
@@ -682,13 +687,12 @@ export default function T6AEnhancedStudyTool() {
       return;
     }
 
-    // Set up study session with these questions
+    // Set up quiz session with these questions (practice mode - doesn't count toward stats)
     setCurrentQuestions(sectionQuestions);
     setCurrentQuestionIndex(0);
     setUserAnswers({});
     setShowExplanation(false);
-    setStudyMode("study");
-    setStudySubMode("activeRecall"); // Use active recall for learning path
+    setStudyMode("learningpath"); // New mode for learning path practice
     setActiveTab("study");
   };
 
@@ -991,17 +995,11 @@ export default function T6AEnhancedStudyTool() {
             {/* Main Action Buttons - Centered & Large */}
             <div className="space-y-4 mb-16">
               <button
-                onClick={() => {
-                  // Auto-select all topics for study mode
-                  const allCategories = [
-                    ...new Set(getAllQuestions().map((q) => q.category)),
-                  ];
-                  setSelectedTopics(allCategories);
-                  setStudyMode("study");
-                  setShowStudySetup(true);
-                  setShowQuizSetup(false);
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  alert("Button clicked!");
                   setActiveTab("studysetup");
-                  setSelectedCategory("all");
                 }}
                 className={`w-full ${darkMode ? "bg-white/10 hover:bg-white/15" : "bg-slate-900 hover:bg-slate-800"} backdrop-blur-xl rounded-2xl p-8 transition-all duration-200`}
               >
@@ -1997,7 +1995,10 @@ export default function T6AEnhancedStudyTool() {
               <div className="flex gap-3 flex-wrap">
                 <button
                   onClick={() => {
-                    setActiveTab("home");
+                    // If in learning path mode, return to learning path; otherwise go home
+                    setActiveTab(
+                      studyMode === "learningpath" ? "learningpath" : "home",
+                    );
                     setStudyMode("study");
                     setUserAnswers({});
                     setCurrentQuestionIndex(0);
@@ -2009,7 +2010,9 @@ export default function T6AEnhancedStudyTool() {
                       : "bg-slate-300 hover:bg-slate-400 text-slate-900"
                   }`}
                 >
-                  Return to Main Menu
+                  {studyMode === "learningpath"
+                    ? "Back to Learning Path"
+                    : "Return to Main Menu"}
                 </button>
                 <button
                   onClick={() => {
