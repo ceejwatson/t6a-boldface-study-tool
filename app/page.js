@@ -571,8 +571,16 @@ export default function T6AEnhancedStudyTool() {
       setReviewIncorrectOnly(false);
     } else if (currentQuestionIndex < currentQuestions.length - 1) {
       setCurrentQuestionIndex((prev) => prev + 1);
-      // Reset explanation - retrieval practice (science-based)
-      setShowExplanation(false);
+      // In quiz mode, keep explanation visible for already answered questions
+      // In study mode, reset explanation for retrieval practice (science-based)
+      if (studyMode === "quiz") {
+        const nextQuestion = currentQuestions[currentQuestionIndex + 1];
+        const hasAnswer =
+          nextQuestion && userAnswers[nextQuestion.id] !== undefined;
+        setShowExplanation(hasAnswer); // Show explanation if question was already answered
+      } else {
+        setShowExplanation(false); // Reset in study mode
+      }
     }
   };
 
@@ -592,8 +600,16 @@ export default function T6AEnhancedStudyTool() {
       // No previous incorrect answers
     } else if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex((prev) => prev - 1);
-      // Reset explanation for retrieval practice
-      setShowExplanation(false);
+      // In quiz mode, keep explanation visible for already answered questions
+      // In study mode, reset explanation for retrieval practice
+      if (studyMode === "quiz") {
+        const prevQuestion = currentQuestions[currentQuestionIndex - 1];
+        const hasAnswer =
+          prevQuestion && userAnswers[prevQuestion.id] !== undefined;
+        setShowExplanation(hasAnswer); // Show explanation if question was already answered
+      } else {
+        setShowExplanation(false); // Reset in study mode
+      }
     }
   };
 
