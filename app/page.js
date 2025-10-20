@@ -29,6 +29,7 @@ import TrueFalse from "./components/TrueFalse";
 import ReorderSequence from "./components/ReorderSequence";
 import MatchItems from "./components/MatchItems";
 import Flashcard from "./components/Flashcard";
+import ActiveRecall from "./components/ActiveRecall";
 import {
   calculateSM2,
   mapPerformanceToQuality,
@@ -44,6 +45,7 @@ export default function T6AEnhancedStudyTool() {
   const [darkMode, setDarkMode] = useState(true);
   const [activeTab, setActiveTab] = useState("home");
   const [studyMode, setStudyMode] = useState("study"); // 'study', 'quiz', 'custom', 'limitations'
+  const [studySubMode, setStudySubMode] = useState("activeRecall"); // 'activeRecall', 'learnNew', 'review', 'readThrough'
   const [selectedCategory, setSelectedCategory] = useState("all"); // Category filter for study mode
 
   // Question State
@@ -171,6 +173,50 @@ export default function T6AEnhancedStudyTool() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [questionCount]);
 
+  const applyStudySubModeFilter = (questions) => {
+    const now = Date.now();
+
+    switch (studySubMode) {
+      case "learnNew":
+        // Only show questions never reviewed before
+        return questions.filter((q) => {
+          const srsInfo = srsData[q.id];
+          return !srsInfo || !srsInfo.lastReviewed;
+        });
+
+      case "review":
+        // Only show questions due for review based on SM-2
+        return questions.filter((q) => {
+          const srsInfo = srsData[q.id];
+          if (!srsInfo) return false; // Not new questions
+          return srsInfo.nextReview && srsInfo.nextReview <= now;
+        });
+
+      case "activeRecall":
+        // Mix of new questions and due reviews, prioritized by SM-2
+        const newQuestions = questions.filter(
+          (q) => !srsData[q.id] || !srsData[q.id].lastReviewed,
+        );
+        const dueQuestions = questions.filter((q) => {
+          const srsInfo = srsData[q.id];
+          return (
+            srsInfo &&
+            srsInfo.lastReviewed &&
+            (!srsInfo.nextReview || srsInfo.nextReview <= now)
+          );
+        });
+
+        // Prioritize due questions, then add new ones
+        const combined = [...dueQuestions, ...newQuestions];
+        return combined;
+
+      case "readThrough":
+      default:
+        // Show all questions (default behavior)
+        return questions;
+    }
+  };
+
   const loadQuestions = (mode) => {
     let questions = [];
 
@@ -199,6 +245,11 @@ export default function T6AEnhancedStudyTool() {
         // Filter by category if one is selected in study mode
         if (selectedCategory !== "all" && mode === "all") {
           questions = questions.filter((q) => q.category === selectedCategory);
+        }
+
+        // Apply study sub-mode filters for study mode
+        if (studyMode === "study") {
+          questions = applyStudySubModeFilter(questions);
         }
     }
 
@@ -637,6 +688,45 @@ export default function T6AEnhancedStudyTool() {
       );
     }
 
+    // Use Active Recall mode if in study mode with activeRecall, learnNew, or review sub-modes
+    if (
+      studyMode === "study" &&
+      (studySubMode === "activeRecall" ||
+        studySubMode === "learnNew" ||
+        studySubMode === "review")
+    ) {
+      return (
+        <ActiveRecall
+          question={currentQuestion}
+          onRate={(quality) => {
+            // Update SM-2 SRS data
+            setSrsData((prev) => {
+              const existingCard = prev[currentQuestion.id];
+              const updatedCard = calculateSM2(quality, existingCard);
+              return {
+                ...prev,
+                [currentQuestion.id]: updatedCard,
+              };
+            });
+
+            // Also update traditional mastery tracking
+            const isCorrect = quality >= 3; // Quality 3+ means correct recall
+            updatePerformance(currentQuestion, isCorrect);
+
+            // Move to next question
+            if (currentQuestionIndex < currentQuestions.length - 1) {
+              setCurrentQuestionIndex(currentQuestionIndex + 1);
+            } else {
+              // Completed study session
+              setActiveTab("studycomplete");
+            }
+          }}
+          darkMode={darkMode}
+        />
+      );
+    }
+
+    // Regular question rendering for quiz mode and readThrough study mode
     const props = {
       question: currentQuestion,
       onAnswer: handleAnswer,
@@ -1274,6 +1364,114 @@ export default function T6AEnhancedStudyTool() {
               >
                 Setup Your Study Session
               </h2>
+            </div>
+
+            {/* Study Sub-Mode Selection */}
+            <div className="mb-6">
+              <h3
+                className={`text-lg font-semibold ${darkMode ? "text-white" : "text-slate-900"} mb-3`}
+              >
+                Study Method:
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <button
+                  onClick={() => setStudySubMode("activeRecall")}
+                  className={`p-4 rounded-lg border-2 text-left transition ${
+                    studySubMode === "activeRecall"
+                      ? darkMode
+                        ? "bg-blue-900/30 border-blue-600"
+                        : "bg-blue-50 border-blue-500"
+                      : darkMode
+                        ? "bg-slate-700 border-slate-600 hover:border-slate-500"
+                        : "bg-white border-slate-300 hover:border-slate-400"
+                  }`}
+                >
+                  <div
+                    className={`font-semibold mb-1 ${darkMode ? "text-white" : "text-slate-900"}`}
+                  >
+                    🧠 Active Recall (Recommended)
+                  </div>
+                  <div
+                    className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                  >
+                    Hide answer, try to recall, then self-rate. Best for
+                    retention.
+                  </div>
+                </button>
+
+                <button
+                  onClick={() => setStudySubMode("learnNew")}
+                  className={`p-4 rounded-lg border-2 text-left transition ${
+                    studySubMode === "learnNew"
+                      ? darkMode
+                        ? "bg-green-900/30 border-green-600"
+                        : "bg-green-50 border-green-500"
+                      : darkMode
+                        ? "bg-slate-700 border-slate-600 hover:border-slate-500"
+                        : "bg-white border-slate-300 hover:border-slate-400"
+                  }`}
+                >
+                  <div
+                    className={`font-semibold mb-1 ${darkMode ? "text-white" : "text-slate-900"}`}
+                  >
+                    ✨ Learn New
+                  </div>
+                  <div
+                    className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                  >
+                    Only questions you&apos;ve never seen. Build initial
+                    knowledge.
+                  </div>
+                </button>
+
+                <button
+                  onClick={() => setStudySubMode("review")}
+                  className={`p-4 rounded-lg border-2 text-left transition ${
+                    studySubMode === "review"
+                      ? darkMode
+                        ? "bg-purple-900/30 border-purple-600"
+                        : "bg-purple-50 border-purple-500"
+                      : darkMode
+                        ? "bg-slate-700 border-slate-600 hover:border-slate-500"
+                        : "bg-white border-slate-300 hover:border-slate-400"
+                  }`}
+                >
+                  <div
+                    className={`font-semibold mb-1 ${darkMode ? "text-white" : "text-slate-900"}`}
+                  >
+                    🔄 Review Due
+                  </div>
+                  <div
+                    className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                  >
+                    Questions due for review based on spaced repetition.
+                  </div>
+                </button>
+
+                <button
+                  onClick={() => setStudySubMode("readThrough")}
+                  className={`p-4 rounded-lg border-2 text-left transition ${
+                    studySubMode === "readThrough"
+                      ? darkMode
+                        ? "bg-orange-900/30 border-orange-600"
+                        : "bg-orange-50 border-orange-500"
+                      : darkMode
+                        ? "bg-slate-700 border-slate-600 hover:border-slate-500"
+                        : "bg-white border-slate-300 hover:border-slate-400"
+                  }`}
+                >
+                  <div
+                    className={`font-semibold mb-1 ${darkMode ? "text-white" : "text-slate-900"}`}
+                  >
+                    📖 Read-Through
+                  </div>
+                  <div
+                    className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                  >
+                    See question and explanation immediately. Quick review.
+                  </div>
+                </button>
+              </div>
             </div>
 
             {/* Topic Selection */}
