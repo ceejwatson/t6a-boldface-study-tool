@@ -58,23 +58,23 @@ export default function TrueFalse({
   return (
     <div className="space-y-6">
       <h3
-        className={`text-xl font-semibold mb-8 ${darkMode ? "text-white" : "text-slate-900"}`}
+        className={`text-lg font-semibold mb-4 ${darkMode ? "text-white" : "text-slate-900"}`}
       >
         {question.question}
       </h3>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {buttonOrder.map((value, index) => (
           <button
             key={index}
             onClick={() => handleSelect(value)}
             disabled={disabled}
-            className={`p-6 sm:p-8 min-h-[120px] rounded-xl border-4 transition-all duration-200 flex flex-col items-center justify-center gap-3 touch-manipulation ${getButtonStyle(value)} ${
+            className={`p-4 min-h-[80px] rounded-xl border-3 transition-all duration-200 flex flex-col items-center justify-center gap-2 touch-manipulation ${getButtonStyle(value)} ${
               disabled ? "cursor-not-allowed" : "cursor-pointer active:scale-95"
             }`}
           >
             {getIcon(value)}
-            <span className="text-2xl sm:text-3xl font-bold">
+            <span className="text-xl font-bold">
               {value ? "TRUE" : "FALSE"}
             </span>
           </button>
@@ -83,20 +83,20 @@ export default function TrueFalse({
 
       {showExplanation && showCorrectness && (
         <div
-          className={`mt-6 p-4 rounded-lg ${
+          className={`mt-3 p-3 rounded-lg ${
             userAnswer === question.correctAnswer
               ? "bg-green-900/30 border-2 border-green-600"
               : "bg-red-900/30 border-2 border-red-600"
           }`}
         >
-          <div className="flex items-center gap-2 mb-2">
+          <div className="flex items-center gap-2 mb-1">
             {userAnswer === question.correctAnswer ? (
-              <CheckCircle2 className="w-6 h-6 text-green-400" />
+              <CheckCircle2 className="w-5 h-5 text-green-400" />
             ) : (
-              <XCircle className="w-6 h-6 text-red-400" />
+              <XCircle className="w-5 h-5 text-red-400" />
             )}
             <span
-              className={`font-semibold ${
+              className={`font-semibold text-sm ${
                 userAnswer === question.correctAnswer
                   ? "text-green-400"
                   : "text-red-400"
@@ -106,7 +106,9 @@ export default function TrueFalse({
             </span>
           </div>
           {userAnswer !== question.correctAnswer && (
-            <p className={`mt-2 ${darkMode ? "text-white" : "text-slate-900"}`}>
+            <p
+              className={`mt-2 text-sm ${darkMode ? "text-white" : "text-slate-900"}`}
+            >
               {question.explanation}
             </p>
           )}
@@ -114,41 +116,43 @@ export default function TrueFalse({
       )}
       {showExplanation && !showCorrectness && (
         <div
-          className={`mt-6 p-4 rounded-lg ${
+          className={`mt-3 p-3 rounded-lg ${
             darkMode
               ? "bg-yellow-900/20 border-2 border-yellow-600/50"
               : "bg-yellow-50 border-2 border-yellow-300"
           }`}
         >
-          <div className="flex items-center gap-2 mb-2">
+          <div className="flex items-center gap-2 mb-1">
             <BookOpen
-              className={`w-6 h-6 ${
+              className={`w-5 h-5 ${
                 darkMode ? "text-yellow-400" : "text-yellow-800"
               }`}
             />
             <span
-              className={`font-semibold ${
+              className={`font-semibold text-sm ${
                 darkMode ? "text-yellow-400" : "text-yellow-800"
               }`}
             >
               Explanation
             </span>
           </div>
-          <p className={`mt-2 ${darkMode ? "text-white" : "text-slate-800"}`}>
+          <p
+            className={`mt-2 text-sm ${darkMode ? "text-white" : "text-slate-800"}`}
+          >
             {question.explanation}
           </p>
 
           {/* Show correct answer */}
           <div
-            className={`mt-4 p-3 rounded ${darkMode ? "bg-slate-800" : "bg-white"}`}
+            className={`mt-2 p-2 rounded ${darkMode ? "bg-slate-800" : "bg-white"}`}
           >
             <p
-              className={`text-sm mb-1 ${darkMode ? "text-slate-300" : "text-slate-600"}`}
+              className={`text-xs mb-1 ${darkMode ? "text-slate-300" : "text-slate-600"}`}
             >
               Correct Answer:
             </p>
             <p
-              className={`font-medium ${darkMode ? "text-white" : "text-slate-900"}`}
+              className={`font-medium text-sm ${darkMode ? "text-white" : "text-slate-900"}`}
             >
               {question.correctAnswer ? "True" : "False"}
             </p>

@@ -995,11 +995,17 @@ export default function T6AEnhancedStudyTool() {
             {/* Main Action Buttons - Centered & Large */}
             <div className="space-y-4 mb-16">
               <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  alert("Button clicked!");
+                onClick={() => {
+                  // Auto-select all topics for study mode
+                  const allCategories = [
+                    ...new Set(getAllQuestions().map((q) => q.category)),
+                  ];
+                  setSelectedTopics(allCategories);
+                  setStudyMode("study");
+                  setShowStudySetup(true);
+                  setShowQuizSetup(false);
                   setActiveTab("studysetup");
+                  setSelectedCategory("all");
                 }}
                 className={`w-full ${darkMode ? "bg-white/10 hover:bg-white/15" : "bg-slate-900 hover:bg-slate-800"} backdrop-blur-xl rounded-2xl p-8 transition-all duration-200`}
               >

@@ -242,15 +242,15 @@ export default function MatchItems({
   }, [matches, showExplanation, showCorrectness, darkMode, isCorrectMatch]);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-2">
       <h3
-        className={`text-xl font-semibold mb-4 ${darkMode ? "text-white" : "text-slate-900"}`}
+        className={`text-lg font-semibold mb-2 ${darkMode ? "text-white" : "text-slate-900"}`}
       >
         {question.question}
       </h3>
 
       <p
-        className={`text-sm mb-6 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+        className={`text-xs mb-3 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
       >
         {disabled
           ? "View your matches below"
@@ -291,7 +291,7 @@ export default function MatchItems({
                     (disabled && showCorrectness) ||
                     isItemMatched(item.index, "left")
                   }
-                  className={`w-full p-2 sm:p-3 min-h-[48px] rounded-lg border-2 transition-all duration-200 text-left touch-manipulation ${getLeftItemStyle(item.index)} ${
+                  className={`w-full p-2 min-h-[40px] rounded-lg border-2 transition-all duration-200 text-left touch-manipulation ${getLeftItemStyle(item.index)} ${
                     (disabled && showCorrectness) ||
                     isItemMatched(item.index, "left")
                       ? "cursor-default"
@@ -299,7 +299,7 @@ export default function MatchItems({
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-xs sm:text-sm">{item.text}</span>
+                    <span className="text-xs">{item.text}</span>
                     {showExplanation &&
                       showCorrectness &&
                       matches[item.index] !== undefined &&
@@ -346,14 +346,14 @@ export default function MatchItems({
                 (disabled && showCorrectness) ||
                 isItemMatched(item.index, "right")
               }
-              className={`w-full p-2 sm:p-3 min-h-[48px] rounded-lg border-2 transition-all duration-200 text-left touch-manipulation ${getRightItemStyle(item.index)} ${
+              className={`w-full p-2 min-h-[40px] rounded-lg border-2 transition-all duration-200 text-left touch-manipulation ${getRightItemStyle(item.index)} ${
                 (disabled && showCorrectness) ||
                 isItemMatched(item.index, "right")
                   ? "cursor-default"
                   : "cursor-pointer active:scale-95"
               }`}
             >
-              <span className="text-xs sm:text-sm">{item.text}</span>
+              <span className="text-xs">{item.text}</span>
             </button>
           ))}
         </div>
@@ -361,20 +361,20 @@ export default function MatchItems({
 
       {showExplanation && showCorrectness && (
         <div
-          className={`mt-6 p-4 rounded-lg ${
+          className={`mt-3 p-3 rounded-lg ${
             allCorrect
               ? "bg-green-900/30 border-2 border-green-600"
               : "bg-red-900/30 border-2 border-red-600"
           }`}
         >
-          <div className="flex items-center gap-2 mb-2">
+          <div className="flex items-center gap-2 mb-1">
             {allCorrect ? (
-              <CheckCircle2 className="w-6 h-6 text-green-400" />
+              <CheckCircle2 className="w-5 h-5 text-green-400" />
             ) : (
-              <XCircle className="w-6 h-6 text-red-400" />
+              <XCircle className="w-5 h-5 text-red-400" />
             )}
             <span
-              className={`font-semibold ${
+              className={`font-semibold text-sm ${
                 allCorrect ? "text-green-400" : "text-red-400"
               }`}
             >
@@ -384,30 +384,32 @@ export default function MatchItems({
             </span>
           </div>
           {!allCorrect && (
-            <p className={`mt-2 ${darkMode ? "text-white" : "text-slate-800"}`}>
+            <p
+              className={`mt-2 text-sm ${darkMode ? "text-white" : "text-slate-800"}`}
+            >
               {question.explanation}
             </p>
           )}
 
           {!allCorrect && (
             <div
-              className={`mt-4 p-3 rounded ${darkMode ? "bg-slate-800" : "bg-white"}`}
+              className={`mt-2 p-2 rounded ${darkMode ? "bg-slate-800" : "bg-white"}`}
             >
               <p
-                className={`text-sm mb-2 ${darkMode ? "text-slate-300" : "text-slate-600"}`}
+                className={`text-xs mb-1 ${darkMode ? "text-slate-300" : "text-slate-600"}`}
               >
                 Correct matches:
               </p>
-              <div className="space-y-1">
+              <div className="space-y-0.5">
                 {question.pairs.map((pair, i) => (
-                  <div key={i} className="flex items-center gap-2 text-sm">
+                  <div key={i} className="flex items-center gap-2 text-xs">
                     <span
                       className={darkMode ? "text-white" : "text-slate-800"}
                     >
                       {pair.left}
                     </span>
                     <ArrowRight
-                      className={`w-4 h-4 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                      className={`w-3 h-3 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
                     />
                     <span
                       className={darkMode ? "text-white" : "text-slate-800"}
