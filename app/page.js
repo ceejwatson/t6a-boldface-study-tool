@@ -1233,8 +1233,12 @@ export default function T6AEnhancedStudyTool() {
                         <span
                           className={`text-sm ${darkMode ? "text-orange-300" : "text-orange-700"}`}
                         >
-                          {weakTopics.length} topic
-                          {weakTopics.length !== 1 ? "s" : ""} &lt; 70%
+                          {
+                            Object.values(questionMastery).filter(
+                              (q) => q.incorrectCount >= 2,
+                            ).length
+                          }{" "}
+                          questions
                         </span>
                       </div>
                     </button>
