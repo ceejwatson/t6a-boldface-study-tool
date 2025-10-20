@@ -796,7 +796,7 @@ export default function T6AEnhancedStudyTool() {
 
   return (
     <div
-      className={`min-h-screen ${darkMode ? "bg-slate-900" : "bg-slate-100"}`}
+      className={`min-h-screen ${darkMode ? "bg-slate-700" : "bg-slate-100"}`}
     >
       {/* Header */}
       <header
