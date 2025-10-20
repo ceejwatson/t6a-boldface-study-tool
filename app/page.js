@@ -796,7 +796,7 @@ export default function T6AEnhancedStudyTool() {
 
   return (
     <div
-      className={`min-h-screen ${darkMode ? "bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900" : "bg-gradient-to-br from-slate-100 via-blue-100 to-slate-100"}`}
+      className={`min-h-screen ${darkMode ? "bg-gradient-to-br from-slate-950 via-blue-950 to-slate-950" : "bg-gradient-to-br from-slate-100 via-blue-100 to-slate-100"}`}
     >
       {/* Header */}
       <header
@@ -2578,7 +2578,7 @@ export default function T6AEnhancedStudyTool() {
             {/* Question Card */}
             <div
               key={currentQuestion?.id}
-              className={`${darkMode ? "bg-slate-800 border-slate-700" : "bg-white border-slate-300"} rounded-xl shadow-2xl p-4 md:p-5 border-2 flex-1 overflow-y-auto question-enter`}
+              className={`${darkMode ? "bg-slate-800 border-slate-700" : "bg-white border-slate-300"} rounded-xl shadow-2xl p-4 md:p-5 border-2 flex-shrink-0 max-h-[calc(100vh-220px)] overflow-y-auto question-enter`}
             >
               {currentQuestion && (
                 <div className="mb-2 flex items-center justify-between flex-wrap gap-1">
