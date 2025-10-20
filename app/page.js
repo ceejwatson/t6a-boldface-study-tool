@@ -1455,7 +1455,7 @@ export default function T6AEnhancedStudyTool() {
                   <div
                     className={`font-semibold mb-1 ${darkMode ? "text-white" : "text-slate-900"}`}
                   >
-                    🧠 Active Recall (Recommended)
+                    🧠 Active Recall
                   </div>
                   <div
                     className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
