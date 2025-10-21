@@ -11,7 +11,6 @@ export const learningPath = {
       id: "boldface-fundamentals",
       title: "BOLDFACE Fundamentals",
       description: "Critical emergency procedures you must know cold",
-      emoji: "🚨",
       difficulty: "critical",
       unlocked: true, // First chapter is always unlocked
       requiredMastery: 0.8, // 80% mastery to unlock next chapter
@@ -37,7 +36,6 @@ export const learningPath = {
       id: "engine-operations",
       title: "Engine Operations & Limits",
       description: "Engine parameters, limitations, and procedures",
-      emoji: "⚙️",
       difficulty: "high",
       unlocked: true,
       requiredMastery: 0.75,
@@ -63,7 +61,6 @@ export const learningPath = {
       id: "airspeed-limitations",
       title: "Airspeed & G Limitations",
       description: "Speed limits and structural G-load restrictions",
-      emoji: "✈️",
       difficulty: "high",
       unlocked: true,
       requiredMastery: 0.7,
@@ -88,7 +85,6 @@ export const learningPath = {
       id: "environmental-limits",
       title: "Environmental Limitations",
       description: "Wind, weather, and environmental restrictions",
-      emoji: "🌤️",
       difficulty: "medium",
       unlocked: true,
       requiredMastery: 0.7,
@@ -120,7 +116,6 @@ export const learningPath = {
       id: "prohibited-maneuvers",
       title: "Prohibited Maneuvers & Spins",
       description: "What you cannot do in the T-6A",
-      emoji: "⛔",
       difficulty: "critical",
       unlocked: true,
       requiredMastery: 0.75,
@@ -145,7 +140,6 @@ export const learningPath = {
       id: "advanced-scenarios",
       title: "Advanced Scenarios",
       description: "Complex decision-making and scenarios",
-      emoji: "🎯",
       difficulty: "high",
       unlocked: true,
       requiredMastery: 0.8,
@@ -191,6 +185,7 @@ export function getQuestionsForSection(section, allQuestions) {
 
 /**
  * Calculate mastery progress for a section
+ * Now requires only 1 correct answer instead of 3 for mastery
  */
 export function getSectionProgress(section, allQuestions, questionMastery) {
   const sectionQuestions = getQuestionsForSection(section, allQuestions);
@@ -199,7 +194,7 @@ export function getSectionProgress(section, allQuestions, questionMastery) {
 
   const mastered = sectionQuestions.filter((q) => {
     const mastery = questionMastery[q.id];
-    return mastery && mastery.correctCount >= 3;
+    return mastery && mastery.correctCount >= 1; // Changed from 3 to 1
   }).length;
 
   return {
