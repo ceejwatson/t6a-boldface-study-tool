@@ -60,7 +60,7 @@ export default function TrueFalse({
       <h3
         className={`text-lg font-semibold mb-4 ${darkMode ? "text-white" : "text-slate-900"}`}
       >
-        {question.question}
+        True or False: {question.question}
       </h3>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
