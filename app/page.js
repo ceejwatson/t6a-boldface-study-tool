@@ -1022,10 +1022,10 @@ export default function T6AEnhancedStudyTool() {
                   setActiveTab("studysetup");
                   setSelectedCategory("all");
                 }}
-                className={`${darkMode ? "bg-white/10 hover:bg-white/15" : "bg-slate-900 hover:bg-slate-800"} backdrop-blur-xl rounded-2xl p-6 transition-all duration-200`}
+                className={`${darkMode ? "bg-white/10 hover:bg-white/15" : "bg-slate-900 hover:bg-slate-800"} backdrop-blur-xl rounded-2xl p-6 transition-all duration-200 flex flex-col items-center justify-center`}
               >
                 <div
-                  className={`${darkMode ? "bg-blue-500/20" : "bg-blue-100"} p-3 rounded-xl w-fit mb-3`}
+                  className={`${darkMode ? "bg-blue-500/20" : "bg-blue-100"} p-3 rounded-xl mb-3`}
                 >
                   <BookOpen
                     className={`w-6 h-6 ${darkMode ? "text-blue-400" : "text-blue-600"}`}
@@ -1049,10 +1049,10 @@ export default function T6AEnhancedStudyTool() {
                   setShowQuizSetup(true);
                   setActiveTab("quizsetup");
                 }}
-                className={`${darkMode ? "bg-white/10 hover:bg-white/15" : "bg-slate-900 hover:bg-slate-800"} backdrop-blur-xl rounded-2xl p-6 transition-all duration-200`}
+                className={`${darkMode ? "bg-white/10 hover:bg-white/15" : "bg-slate-900 hover:bg-slate-800"} backdrop-blur-xl rounded-2xl p-6 transition-all duration-200 flex flex-col items-center justify-center`}
               >
                 <div
-                  className={`${darkMode ? "bg-orange-500/20" : "bg-orange-100"} p-3 rounded-xl w-fit mb-3`}
+                  className={`${darkMode ? "bg-orange-500/20" : "bg-orange-100"} p-3 rounded-xl mb-3`}
                 >
                   <Target
                     className={`w-6 h-6 ${darkMode ? "text-orange-400" : "text-orange-600"}`}
@@ -1073,10 +1073,10 @@ export default function T6AEnhancedStudyTool() {
                   setActiveTab("flashcard");
                   loadQuestions("flashcard"); // Load flashcard questions
                 }}
-                className={`${darkMode ? "bg-white/10 hover:bg-white/15" : "bg-slate-900 hover:bg-slate-800"} backdrop-blur-xl rounded-2xl p-6 transition-all duration-200`}
+                className={`${darkMode ? "bg-white/10 hover:bg-white/15" : "bg-slate-900 hover:bg-slate-800"} backdrop-blur-xl rounded-2xl p-6 transition-all duration-200 flex flex-col items-center justify-center`}
               >
                 <div
-                  className={`${darkMode ? "bg-purple-500/20" : "bg-purple-100"} p-3 rounded-xl w-fit mb-3`}
+                  className={`${darkMode ? "bg-purple-500/20" : "bg-purple-100"} p-3 rounded-xl mb-3`}
                 >
                   <RotateCcw
                     className={`w-6 h-6 ${darkMode ? "text-purple-400" : "text-purple-600"}`}
@@ -1093,12 +1093,12 @@ export default function T6AEnhancedStudyTool() {
                 onClick={() => {
                   setActiveTab("learningpath");
                 }}
-                className={`${darkMode ? "bg-white/10 hover:bg-white/15" : "bg-slate-900 hover:bg-slate-800"} backdrop-blur-xl rounded-2xl p-6 transition-all duration-200`}
+                className={`${darkMode ? "bg-white/10 hover:bg-white/15" : "bg-slate-900 hover:bg-slate-800"} backdrop-blur-xl rounded-2xl p-6 transition-all duration-200 flex flex-col items-center justify-center`}
               >
                 <div
-                  className={`${darkMode ? "bg-green-500/20" : "bg-green-100"} p-3 rounded-xl w-fit mb-3`}
+                  className={`${darkMode ? "bg-green-500/20" : "bg-green-100"} p-3 rounded-xl mb-3`}
                 >
-                  <BookOpen
+                  <ArrowRight
                     className={`w-6 h-6 ${darkMode ? "text-green-400" : "text-green-600"}`}
                   />
                 </div>
@@ -1447,7 +1447,15 @@ export default function T6AEnhancedStudyTool() {
               </h3>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                 {(() => {
-                  const allQs = getAllQuestions();
+                  // Get ALL questions regardless of selectedQuestionTypes
+                  const allQs = [];
+                  ["multipleChoice", "trueFalse", "reorderSequence", "matchItems"].forEach((type) => {
+                    const questions = questionDatabase[type] || [];
+                    questions.forEach((q) => {
+                      allQs.push({ ...q, questionType: type });
+                    });
+                  });
+
                   const categoriesData = {};
 
                   // Group questions by category

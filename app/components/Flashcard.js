@@ -25,9 +25,9 @@ export default function Flashcard({
   const recognitionRef = useRef(null);
   const synthRef = useRef(null);
 
-  const handleFlip = () => {
-    setIsFlipped(!isFlipped);
-  };
+  const handleFlip = useCallback(() => {
+    setIsFlipped((prev) => !prev);
+  }, []);
 
   const handleRating = useCallback((quality) => {
     onRate(quality);
@@ -176,7 +176,7 @@ export default function Flashcard({
     }
   }, [question, isListening]);
 
-  const toggleListening = useCallback(() => {
+  const toggleListening = useCallback(async () => {
     if (!recognitionRef.current) return;
 
     if (isListening) {
@@ -189,30 +189,58 @@ export default function Flashcard({
       if (typeof window !== "undefined") {
         window.speechSynthesis.cancel();
       }
-      recognitionRef.current.start();
-      setIsListening(true);
-    }
-  }, [isListening]);
 
-  // Keyboard shortcut for voice mode (Space bar)
-  useEffect(() => {
-    if (!voiceMode || isFlipped) return;
-
-    const handleKeyPress = (e) => {
-      if (e.code === "Space" && !isFlipped) {
-        e.preventDefault();
-        toggleListening();
+      // Request microphone permission
+      try {
+        await navigator.mediaDevices.getUserMedia({ audio: true });
+        recognitionRef.current.start();
+        setIsListening(true);
+      } catch (error) {
+        console.error("Microphone permission denied:", error);
+        speakText("Microphone access denied. Please enable microphone permissions.");
       }
-      // R key to repeat question
-      if (e.code === "KeyR" && !isFlipped) {
+    }
+  }, [isListening, speakText]);
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      // Voice mode shortcuts
+      if (voiceMode && !isFlipped) {
+        if (e.code === "Space") {
+          e.preventDefault();
+          toggleListening();
+        }
+        // R key to repeat question
+        if (e.code === "KeyR") {
+          e.preventDefault();
+          speakText(question.question, speechRate);
+        }
+      }
+
+      // Non-voice mode shortcuts
+      if (!voiceMode) {
+        // Spacebar to flip card
+        if (e.code === "Space") {
+          e.preventDefault();
+          handleFlip();
+        }
+      }
+
+      // Arrow key navigation (works in all modes)
+      if (e.code === "ArrowLeft") {
         e.preventDefault();
-        speakText(question.question, speechRate);
+        onPrevious();
+      }
+      if (e.code === "ArrowRight") {
+        e.preventDefault();
+        onNext();
       }
     };
 
     window.addEventListener("keydown", handleKeyPress);
     return () => window.removeEventListener("keydown", handleKeyPress);
-  }, [voiceMode, isFlipped, toggleListening, speakText, question, speechRate]);
+  }, [voiceMode, isFlipped, toggleListening, speakText, question, speechRate, handleFlip, onPrevious, onNext]);
 
   // Get the answer text based on question type
   const getAnswerText = () => {
@@ -361,7 +389,7 @@ export default function Flashcard({
 
       {/* Flashcard */}
       <div
-        className={`relative w-full h-96 perspective-1000 ${!voiceMode || isFlipped ? "cursor-pointer" : ""}`}
+        className={`relative w-full h-[500px] perspective-1000 ${!voiceMode || isFlipped ? "cursor-pointer" : ""}`}
         onClick={voiceMode && !isFlipped ? undefined : handleFlip}
       >
         <div
@@ -520,7 +548,7 @@ export default function Flashcard({
                   : "bg-red-50 border-red-400 hover:bg-red-100 text-red-700"
               }`}
             >
-              <div className="font-bold text-lg">Don&apos;&apos;t Know</div>
+              <div className="font-bold text-lg">Don&apos;t Know</div>
               <div className="text-xs mt-1">Review soon</div>
             </button>
             <button
