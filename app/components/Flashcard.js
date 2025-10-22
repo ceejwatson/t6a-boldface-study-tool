@@ -242,20 +242,31 @@ export default function Flashcard({
     return () => window.removeEventListener("keydown", handleKeyPress);
   }, [voiceMode, isFlipped, toggleListening, speakText, question, speechRate, handleFlip, onPrevious, onNext]);
 
-  // Get the answer text based on question type
-  const getAnswerText = () => {
+  // Get the answer and explanation separately
+  const getAnswerContent = () => {
+    let answer = "";
+
     switch (question.questionType) {
       case "multipleChoice":
-        return `${question.options[question.correctAnswer]}\n\n${question.explanation}`;
+        answer = question.options[question.correctAnswer];
+        break;
       case "trueFalse":
-        return `${question.correctAnswer ? "TRUE" : "FALSE"}\n\n${question.explanation}`;
+        answer = question.correctAnswer ? "TRUE" : "FALSE";
+        break;
       case "reorderSequence":
-        return `Correct Order:\n${question.correctOrder.map((step, i) => `${i + 1}. ${step}`).join("\n")}\n\n${question.explanation}`;
+        answer = question.correctOrder.map((step, i) => `${i + 1}. ${step}`).join("\n");
+        break;
       case "matchItems":
-        return `Correct Matches:\n${question.pairs.map(pair => `${pair.left} → ${pair.right}`).join("\n")}\n\n${question.explanation}`;
+        answer = question.pairs.map(pair => `${pair.left} → ${pair.right}`).join("\n");
+        break;
       default:
-        return question.explanation || "No explanation available";
+        answer = "No answer available";
     }
+
+    return {
+      answer,
+      explanation: question.explanation || "No explanation available"
+    };
   };
 
   return (
@@ -408,10 +419,10 @@ export default function Flashcard({
             } border-2 rounded-xl p-8 flex flex-col items-center justify-center shadow-lg`}
             style={{ backfaceVisibility: "hidden" }}
           >
-            <div className={`text-xs mb-4 ${darkMode ? "text-blue-400" : "text-blue-600"} font-semibold uppercase tracking-wide`}>
+            <div className={`text-xs mb-6 ${darkMode ? "text-blue-400" : "text-blue-600"} font-semibold uppercase tracking-wide text-center`}>
               {question.category} • {question.topic}
             </div>
-            <div className={`text-xl md:text-2xl font-semibold text-center ${darkMode ? "text-white" : "text-slate-900"}`}>
+            <div className={`text-xl md:text-2xl font-semibold text-center max-w-2xl ${darkMode ? "text-white" : "text-slate-900"} px-4`}>
               {question.question}
             </div>
 
@@ -514,17 +525,39 @@ export default function Flashcard({
           <div
             className={`absolute w-full h-full backface-hidden ${
               darkMode ? "bg-slate-800 border-slate-600" : "bg-white border-slate-300"
-            } border-2 rounded-xl p-8 flex flex-col shadow-lg overflow-y-auto`}
+            } border-2 rounded-xl p-8 flex flex-col items-center justify-center shadow-lg overflow-y-auto`}
             style={{
               backfaceVisibility: "hidden",
               transform: "rotateY(180deg)",
             }}
           >
-            <div className={`text-xs mb-4 ${darkMode ? "text-green-400" : "text-green-600"} font-semibold uppercase tracking-wide text-center`}>
+            <div className={`text-xs mb-6 ${darkMode ? "text-green-400" : "text-green-600"} font-semibold uppercase tracking-wide text-center`}>
               Answer
             </div>
-            <div className={`text-lg whitespace-pre-wrap ${darkMode ? "text-white" : "text-slate-900"}`}>
-              {getAnswerText()}
+
+            {/* Answer Section - Centered and Prominent */}
+            <div className={`text-center mb-8 max-w-xl w-full`}>
+              <div className={`text-2xl font-bold whitespace-pre-wrap leading-relaxed ${
+                darkMode ? "text-white" : "text-slate-900"
+              } p-6 rounded-xl ${
+                darkMode ? "bg-slate-700/50 border-2 border-slate-600" : "bg-slate-100 border-2 border-slate-300"
+              }`}>
+                {getAnswerContent().answer}
+              </div>
+            </div>
+
+            {/* Explanation Section - Separated and Subtle */}
+            <div className={`text-sm whitespace-pre-wrap leading-relaxed text-left max-w-xl w-full ${
+              darkMode ? "text-slate-300" : "text-slate-700"
+            } p-4 rounded-lg ${
+              darkMode ? "bg-slate-700/30" : "bg-slate-100"
+            }`}>
+              <div className={`text-xs font-semibold uppercase tracking-wide mb-2 ${
+                darkMode ? "text-slate-400" : "text-slate-600"
+              }`}>
+                Explanation
+              </div>
+              {getAnswerContent().explanation}
             </div>
           </div>
         </div>

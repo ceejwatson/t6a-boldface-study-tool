@@ -28,6 +28,8 @@ export default function ReorderSequence({
   });
 
   const [initialized, setInitialized] = useState(false);
+  const [draggedIndex, setDraggedIndex] = useState(null);
+  const [dragOverIndex, setDragOverIndex] = useState(null);
 
   // Save initial shuffled state to parent on mount
   useEffect(() => {
@@ -52,26 +54,79 @@ export default function ReorderSequence({
     onAnswer(newItems);
   };
 
+  // Drag and drop handlers
+  const handleDragStart = (e, index) => {
+    if (disabled) return;
+    setDraggedIndex(index);
+    e.dataTransfer.effectAllowed = "move";
+  };
+
+  const handleDragOver = (e, index) => {
+    e.preventDefault();
+    if (disabled || draggedIndex === null) return;
+    setDragOverIndex(index);
+  };
+
+  const handleDragLeave = () => {
+    setDragOverIndex(null);
+  };
+
+  const handleDrop = (e, dropIndex) => {
+    e.preventDefault();
+    if (disabled || draggedIndex === null || draggedIndex === dropIndex) {
+      setDraggedIndex(null);
+      setDragOverIndex(null);
+      return;
+    }
+
+    const newItems = [...items];
+    const [draggedItem] = newItems.splice(draggedIndex, 1);
+    newItems.splice(dropIndex, 0, draggedItem);
+
+    setItems(newItems);
+    onAnswer(newItems);
+    setDraggedIndex(null);
+    setDragOverIndex(null);
+  };
+
+  const handleDragEnd = () => {
+    setDraggedIndex(null);
+    setDragOverIndex(null);
+  };
+
   const isCorrect = () => {
     if (!userAnswer || userAnswer.length === 0) return false;
     return JSON.stringify(userAnswer) === JSON.stringify(question.correctOrder);
   };
 
   const getItemStyle = (index) => {
+    let baseStyle = "";
+
     if (!showExplanation || !showCorrectness) {
-      return darkMode
+      baseStyle = darkMode
         ? "bg-slate-800 border-slate-600 hover:border-blue-500 hover:shadow-md"
         : "bg-white border-slate-300 hover:border-blue-500 hover:shadow-md";
+    } else {
+      // Check if this step is in the correct position (only in quiz mode)
+      const isCorrectPosition =
+        userAnswer && userAnswer[index] === question.correctOrder[index];
+
+      if (isCorrectPosition) {
+        baseStyle = "bg-green-900/30 border-green-600 shadow-lg";
+      } else {
+        baseStyle = "bg-red-900/30 border-red-600 shadow-lg";
+      }
     }
 
-    // Check if this step is in the correct position (only in quiz mode)
-    const isCorrectPosition =
-      userAnswer && userAnswer[index] === question.correctOrder[index];
-
-    if (isCorrectPosition) {
-      return "bg-green-900/30 border-green-600 shadow-lg";
+    // Add drag states
+    if (draggedIndex === index) {
+      baseStyle += " opacity-50";
     }
-    return "bg-red-900/30 border-red-600 shadow-lg";
+    if (dragOverIndex === index && draggedIndex !== index) {
+      baseStyle += " border-blue-400 scale-105";
+    }
+
+    return baseStyle;
   };
 
   const getStepNumber = (item) => {
@@ -91,14 +146,20 @@ export default function ReorderSequence({
       <p
         className={`text-xs mb-3 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
       >
-        Use the arrows to arrange the steps in the correct order
+        Drag items or use arrows to arrange in the correct order
       </p>
 
       <div className="space-y-1.5">
         {items.map((item, index) => (
           <div
             key={index}
-            className={`p-2 rounded-lg border-2 transition-all duration-200 min-h-[44px] ${getItemStyle(index)}`}
+            draggable={!disabled}
+            onDragStart={(e) => handleDragStart(e, index)}
+            onDragOver={(e) => handleDragOver(e, index)}
+            onDragLeave={handleDragLeave}
+            onDrop={(e) => handleDrop(e, index)}
+            onDragEnd={handleDragEnd}
+            className={`p-2 rounded-lg border-2 transition-all duration-200 min-h-[44px] ${getItemStyle(index)} ${!disabled ? 'cursor-move' : 'cursor-default'}`}
           >
             <div className="flex items-center gap-1">
               <div className="flex flex-col gap-0.5">

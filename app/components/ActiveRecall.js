@@ -7,6 +7,7 @@ export default function ActiveRecall({
   question,
   onRate,
   darkMode = true,
+  isWeakArea = false,
 }) {
   const [showAnswer, setShowAnswer] = useState(false);
 
@@ -94,11 +95,6 @@ export default function ActiveRecall({
           <span className={`text-xs px-3 py-1 rounded-full ${darkMode ? "bg-purple-500/20 text-purple-400" : "bg-purple-100 text-purple-700"} font-semibold`}>
             {question.topic}
           </span>
-          {question.difficulty === "critical" && (
-            <span className="text-xs px-3 py-1 rounded-full bg-red-500/20 text-red-400 font-semibold">
-              CRITICAL
-            </span>
-          )}
         </div>
 
         {/* Question */}

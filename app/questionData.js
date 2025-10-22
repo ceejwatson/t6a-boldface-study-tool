@@ -1066,7 +1066,7 @@ export const questionDatabase = {
       topic: "Boldface",
       difficulty: "critical",
       question:
-        "Order the steps correctly:\nEmergency Engine Shutdown on the Ground",
+        "What are the BOLDFACE steps for Emergency Engine Shutdown on the Ground?",
       correctOrder: ["PCL - OFF", "FIREWALL SHUTOFF HANDLE - PULL"],
       explanation:
         "This is the boldface procedure for emergency engine shutdown on the ground.",
@@ -1078,7 +1078,7 @@ export const questionDatabase = {
       topic: "Boldface",
       difficulty: "critical",
       question:
-        "Order the steps correctly:\nFire In Flight (if fire confirmed)",
+        "What are the BOLDFACE steps for Fire In Flight (if fire confirmed)?",
       correctOrder: [
         "PCL - OFF",
         "FIREWALL SHUTOFF HANDLE - PULL",
@@ -1095,7 +1095,7 @@ export const questionDatabase = {
       category: "Emergency",
       topic: "Boldface",
       difficulty: "critical",
-      question: "Order the steps correctly:\nOBOGS Failure",
+      question: "What are the BOLDFACE steps for OBOGS Failure?",
       correctOrder: [
         "OBOGS SUPPLY LEVER - OFF (BOTH)",
         "BOS PUSH MAN - PRESS ON",
@@ -1114,7 +1114,7 @@ export const questionDatabase = {
       topic: "Boldface",
       difficulty: "critical",
       question:
-        "Order the steps correctly:\nInadvertent Departure From Controlled Flight",
+        "What are the BOLDFACE steps for Inadvertent Departure From Controlled Flight (Spin Recovery)?",
       correctOrder: [
         "PCL - IDLE",
         "CONTROLS - NEUTRAL",
@@ -1132,7 +1132,7 @@ export const questionDatabase = {
       topic: "Boldface",
       difficulty: "critical",
       question:
-        "Order the steps correctly:\nEngine Failure During Flight - Immediate Airstart (PMU NORM)",
+        "What are the BOLDFACE steps for Engine Failure During Flight - Immediate Airstart (PMU NORM)?",
       correctOrder: ["PCL - MID RANGE", "PMU SWITCH - OFF"],
       explanation:
         "BOLDFACE for engine failure during flight when PMU is in NORM. This is the IMMEDIATE action - move PCL to mid range to provide fuel, then turn PMU switch OFF to bypass any PMU malfunction that may be causing the failure. If engine doesn't respond, continue with full airstart procedures.",
@@ -1144,7 +1144,7 @@ export const questionDatabase = {
       topic: "Boldface",
       difficulty: "critical",
       question:
-        "Order the steps correctly:\nUncommanded Power Changes / Loss of Power / Uncommanded Propeller Feather",
+        "What are the BOLDFACE steps for Uncommanded Power Changes / Loss of Power / Uncommanded Propeller Feather?",
       correctOrder: ["PCL - AS REQUIRED", "PMU SWITCH - OFF"],
       explanation:
         "BOLDFACE for uncommanded power changes, loss of power, or uncommanded propeller feather. First, move PCL as required to regain power control. Second, turn PMU switch OFF to eliminate PMU as the source of the problem. These are usually PMU malfunctions causing erratic engine behavior.",
@@ -1156,7 +1156,7 @@ export const questionDatabase = {
       topic: "Boldface",
       difficulty: "critical",
       question:
-        "Order the steps correctly:\nEngine Failure Immediately After Takeoff (Sufficient Runway Remaining Straight Ahead)",
+        "What are the BOLDFACE steps for Engine Failure Immediately After Takeoff (Sufficient Runway Remaining)?",
       correctOrder: ["PCL - IDLE", "BRAKES - AS REQUIRED"],
       explanation:
         "BOLDFACE for engine failure on takeoff with sufficient runway remaining STRAIGHT AHEAD to land. First, reduce power to idle (PCL - IDLE). Second, apply brakes as required to stop on remaining runway. Do NOT attempt to restart or troubleshoot - focus on stopping the aircraft safely on the runway.",
@@ -1167,7 +1167,7 @@ export const questionDatabase = {
       category: "Emergency",
       topic: "Boldface",
       difficulty: "critical",
-      question: "Order the steps correctly:\nAbort Takeoff",
+      question: "What are the BOLDFACE steps for Abort Takeoff?",
       correctOrder: ["PCL - IDLE", "BRAKES - AS REQUIRED"],
       explanation:
         "BOLDFACE for abort takeoff (before rotation). First, immediately retard PCL to IDLE to eliminate thrust. Second, apply maximum braking as required without locking the wheels. Focus on directional control and stopping on the runway. Do NOT pull the firewall shutoff handle unless there's a fire.",
@@ -1178,11 +1178,62 @@ export const questionDatabase = {
       category: "Emergency",
       topic: "Boldface",
       difficulty: "critical",
-      question: "Order the steps correctly:\nEjection",
+      question: "What are the BOLDFACE steps for Ejection?",
       correctOrder: ["EJECTION HANDLE - PULL"],
       explanation:
         "BOLDFACE for ejection. When the decision to eject is made, PULL THE EJECTION HANDLE immediately. Don't waste time with other actions. The ejection sequence is automatic: canopy jettisons, seat fires, you separate from seat, parachute deploys. Hesitation costs altitude and can be fatal. Brief ejection decision altitude before every flight.",
       limitation: false,
+    },
+    // Additional reorderSequence for flashcard practice
+    {
+      id: "seq-16",
+      category: "Limitations",
+      topic: "Critical Speeds",
+      difficulty: "high",
+      question: "Order these speeds from slowest to fastest:",
+      correctOrder: ["Best Glide (125 KIAS)", "VLE/VFE (150 KIAS)", "VNE (316 KIAS)"],
+      explanation: "Key airspeed limits in order: Best glide speed for emergency pattern, gear/flap extension speed, and never exceed speed.",
+      limitation: true,
+    },
+    {
+      id: "seq-17",
+      category: "Fuel",
+      topic: "Fuel States",
+      difficulty: "medium",
+      question: "Order these fuel states from most to least fuel:",
+      correctOrder: ["Normal Recovery (200 lbs)", "Minimum Fuel (150 lbs)", "Emergency Fuel (100 lbs)"],
+      explanation: "Fuel states in descending order: Normal recovery, minimum fuel, emergency fuel.",
+      limitation: true,
+    },
+    {
+      id: "seq-18",
+      category: "Propulsion",
+      topic: "ITT Limits",
+      difficulty: "high",
+      question: "Order these ITT limits from lowest to highest:",
+      correctOrder: ["Idle Max (750°C)", "Takeoff Max (820°C)", "Transient 20s (870°C)"],
+      explanation: "ITT limits in ascending order: Idle maximum, takeoff maximum, transient allowable.",
+      limitation: true,
+    },
+    {
+      id: "seq-19",
+      category: "G Limits",
+      topic: "Structural",
+      difficulty: "critical",
+      question: "What are the symmetric clean G-limits?",
+      correctOrder: ["-3.5 G", "0 G", "+7.0 G"],
+      explanation: "Symmetric clean configuration G-limits: negative 3.5, zero, positive 7.0 Gs.",
+      limitation: true,
+    },
+    {
+      id: "seq-20",
+      category: "Wind Limits",
+      topic: "Crosswind",
+      difficulty: "medium",
+      question: "Order crosswind limits from highest to lowest:",
+      correctOrder: ["Dry (25 kts)", "Touch-n-Go (20 kts)", "Wet (10 kts)", "Icy (5 kts)"],
+      explanation: "Crosswind limits decrease with reduced friction: dry, touch-and-go, wet, icy.",
+      limitation: true,
     },
   ],
 
@@ -1193,7 +1244,7 @@ export const questionDatabase = {
       category: "Propulsion",
       topic: "Limitations",
       difficulty: "high",
-      question: "Match the engine parameter to its maximum limit:",
+      question: "What are the maximum engine operating limits?",
       pairs: [
         { left: "Takeoff Torque", right: "100%" },
         { left: "ITT Takeoff", right: "820°C" },
@@ -1209,7 +1260,7 @@ export const questionDatabase = {
       category: "Airspeed",
       topic: "Limitations",
       difficulty: "high",
-      question: "Match the configuration to its maximum airspeed:",
+      question: "What are the airspeed limits by configuration?",
       pairs: [
         { left: "Gear/Flaps Extended", right: "150 KIAS" },
         { left: "Clean Configuration", right: "316 KIAS" },
@@ -1225,7 +1276,7 @@ export const questionDatabase = {
       category: "Wind Limits",
       topic: "Limitations",
       difficulty: "medium",
-      question: "Match the runway condition to maximum crosswind:",
+      question: "What are the maximum crosswind limits by runway condition?",
       pairs: [
         { left: "Dry Runway", right: "25 knots" },
         { left: "Wet Runway", right: "10 knots" },
@@ -1242,7 +1293,7 @@ export const questionDatabase = {
       category: "G Limits",
       topic: "Limitations",
       difficulty: "high",
-      question: "Match the configuration to its G limits:",
+      question: "What are the G limits by configuration?",
       pairs: [
         { left: "Symmetric Clean", right: "-3.5 to +7.0" },
         { left: "Symmetric Gear/Flaps", right: "0 to +2.5" },
@@ -1258,7 +1309,7 @@ export const questionDatabase = {
       category: "Propulsion",
       topic: "Engine Starts",
       difficulty: "high",
-      question: "Match the start attempt to required wait time:",
+      question: "What are the required wait times between engine start attempts?",
       pairs: [
         { left: "After 1st attempt", right: "30 seconds" },
         { left: "After 2nd attempt", right: "2 minutes" },
@@ -1274,7 +1325,7 @@ export const questionDatabase = {
       category: "Propulsion",
       topic: "ITT Limits",
       difficulty: "high",
-      question: "Match the condition to its ITT limit:",
+      question: "What are the ITT limits by operating condition?",
       pairs: [
         { left: "Idle Max", right: "750°C" },
         { left: "Takeoff/Max", right: "820°C" },
@@ -1290,7 +1341,7 @@ export const questionDatabase = {
       category: "Propulsion",
       topic: "Oil Parameters",
       difficulty: "medium",
-      question: "Match the phase to oil pressure range:",
+      question: "What are the oil pressure ranges by flight phase?",
       pairs: [
         { left: "Takeoff/Max", right: "90-120 PSI" },
         { left: "Aerobatics/Spins", right: "40-130 PSI" },
@@ -1306,7 +1357,7 @@ export const questionDatabase = {
       category: "Fuel",
       topic: "Fuel States",
       difficulty: "high",
-      question: "Match the fuel state to its quantity:",
+      question: "What are the fuel state quantities and their meanings?",
       pairs: [
         { left: "Normal Recovery", right: "200 lbs" },
         { left: "Minimum Fuel Dual", right: "150 lbs" },
@@ -1322,7 +1373,7 @@ export const questionDatabase = {
       category: "Propulsion",
       topic: "Np and N1 Parameters",
       difficulty: "medium",
-      question: "Match the parameter to its idle range:",
+      question: "What are the key engine percentage parameters?",
       pairs: [
         { left: "Np Idle", right: "46-50%" },
         { left: "N1 Idle", right: "60-61%" },
@@ -1333,22 +1384,88 @@ export const questionDatabase = {
         "Engine percentage parameters: Np Idle (propeller speed) = 46-50%, N1 Idle (gas generator turbine) = 60-61%, Np Resonance Range to Avoid = 62-80% (harmonic vibration range), Ng Ground Minimum for pressurization = 67%. Understanding these parameters helps you monitor engine health and avoid damaging resonance.",
       limitation: true,
     },
+    // Additional matchItems for flashcard memorization
+    {
+      id: "match-11",
+      category: "Limitations",
+      topic: "Key Speeds",
+      difficulty: "high",
+      question: "What are these key airspeeds?",
+      pairs: [
+        { left: "VNE (Never Exceed)", right: "316 KIAS" },
+        { left: "VLE/VFE", right: "150 KIAS" },
+        { left: "Best Glide", right: "125 KIAS" },
+        { left: "Max Mach", right: "0.67" },
+      ],
+      explanation:
+        "Critical airspeeds to memorize: Never exceed speed, gear/flap extension speed, best glide speed, and maximum Mach number.",
+      limitation: true,
+    },
+    {
+      id: "match-12",
+      category: "Fuel",
+      topic: "Fuel States",
+      difficulty: "medium",
+      question: "Fuel state callouts?",
+      pairs: [
+        { left: "Normal Recovery", right: "200 lbs" },
+        { left: "Minimum (Dual)", right: "150 lbs" },
+        { left: "Minimum (Solo)", right: "200 lbs" },
+        { left: "Emergency", right: "100 lbs" },
+      ],
+      explanation: "Know your fuel states for proper radio calls and decision making.",
+      limitation: true,
+    },
+    {
+      id: "match-13",
+      category: "Propulsion",
+      topic: "Engine Limits",
+      difficulty: "critical",
+      question: "What are the engine torque and ITT limits?",
+      pairs: [
+        { left: "Max Torque Takeoff", right: "100%" },
+        { left: "Max ITT Takeoff", right: "820°C" },
+        { left: "Max ITT Idle", right: "750°C" },
+        { left: "Transient ITT (20s)", right: "870°C" },
+      ],
+      explanation: "Engine operating limits - critical for engine health and safety.",
+      limitation: true,
+    },
+    {
+      id: "match-14",
+      category: "G Limits",
+      topic: "Structural",
+      difficulty: "high",
+      question: "G-limits in clean configuration?",
+      pairs: [
+        { left: "Symmetric Positive", right: "+7.0 G" },
+        { left: "Symmetric Negative", right: "-3.5 G" },
+        { left: "Asymmetric Positive", right: "+4.7 G" },
+        { left: "Asymmetric Negative", right: "-1.0 G" },
+      ],
+      explanation: "Structural G-limits vary by symmetry and configuration.",
+      limitation: true,
+    },
+    {
+      id: "match-15",
+      category: "Wind Limits",
+      topic: "Crosswind",
+      difficulty: "medium",
+      question: "Crosswind limits by runway condition?",
+      pairs: [
+        { left: "Dry Runway", right: "25 kts" },
+        { left: "Wet Runway", right: "10 kts" },
+        { left: "Icy Runway", right: "5 kts" },
+        { left: "Touch & Go", right: "20 kts" },
+      ],
+      explanation: "Crosswind limits decrease significantly with reduced runway friction.",
+      limitation: true,
+    },
   ],
 
-  // FLASHCARD QUESTIONS (already have these, keeping for compatibility)
-  flashcards: [
-    {
-      id: "flash-1",
-      category: "Emergency",
-      difficulty: "critical",
-      type: "boldface",
-      question:
-        "Emergency Engine Shutdown on the Ground - Complete the procedure",
-      answer: "1. PCL - OFF\n2. FIREWALL SHUTOFF HANDLE - PULL",
-      shortAnswer: "PCL OFF, FIREWALL SHUTOFF HANDLE PULL",
-    },
-    // ... existing flashcard data
-  ],
+  // FLASHCARD QUESTIONS - Proper flashcard material with Q&A format
+  // These will display as traditional flashcards using reorderSequence/matchItems types
+  // but with simpler, memorization-focused content
 };
 
 // Topic categories for filtering

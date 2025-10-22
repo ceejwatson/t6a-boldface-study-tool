@@ -32,6 +32,7 @@ import Flashcard from "./components/Flashcard";
 import ActiveRecall from "./components/ActiveRecall";
 import LearningPath from "./components/LearningPath";
 import VoiceRecall from "./components/VoiceRecall";
+import CockpitReference from "./components/CockpitReference";
 import {
   calculateSM2,
   mapPerformanceToQuality,
@@ -984,33 +985,34 @@ export default function T6AEnhancedStudyTool() {
         {/* Main Content */}
         {activeTab === "home" ? (
           <div className="max-w-4xl mx-auto px-4">
-            {/* Hero Section - Clean & Minimal */}
-            <div className="text-center py-8 mb-6">
-              <div className="flex justify-center mb-6">
-                <div className={`p-4 rounded-xl ${darkMode ? "bg-slate-800/50" : "bg-slate-900/10"}`}>
-                  <img
-                    src="/t6atransparent.png"
-                    alt="T-6A Texan II"
-                    className="w-64 h-auto"
-                  />
-                </div>
+            {/* Hero Section - Compact */}
+            <div className="text-center pt-4 pb-6 mb-8">
+              <div className="flex justify-center mb-3">
+                <img
+                  src="/t6atransparent.png"
+                  alt="T-6A Texan II"
+                  className="w-72 h-auto"
+                />
               </div>
               <h1
-                className={`text-5xl font-semibold mb-3 ${darkMode ? "text-white" : "text-slate-900"}`}
+                className={`text-4xl font-bold mb-2 ${darkMode ? "text-white" : "text-slate-900"}`}
               >
                 T-6A Texan II
               </h1>
               <p
-                className={`text-xl ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                className={`text-base ${darkMode ? "text-slate-400" : "text-slate-600"}`}
               >
-                Master your BOLDFACE procedures
+                BOLDFACE Study Tool
               </p>
             </div>
 
-            {/* Main Action Buttons - Compact Grid */}
-            <div className="grid grid-cols-2 gap-3 mb-8">
+            {/* Main Action Buttons - Redesigned */}
+            <div className="grid grid-cols-3 gap-4 mb-6 max-w-2xl mx-auto">
               <button
                 onClick={() => {
+                  // Set all question types first
+                  setSelectedQuestionTypes(["multipleChoice", "trueFalse", "reorderSequence", "matchItems"]);
+
                   // Auto-select all topics for study mode
                   const allCategories = [
                     ...new Set(getAllQuestions().map((q) => q.category)),
@@ -1022,18 +1024,12 @@ export default function T6AEnhancedStudyTool() {
                   setActiveTab("studysetup");
                   setSelectedCategory("all");
                 }}
-                className={`${darkMode ? "bg-white/10 hover:bg-white/15" : "bg-slate-900 hover:bg-slate-800"} backdrop-blur-xl rounded-2xl p-6 transition-all duration-200 flex flex-col items-center justify-center`}
+                className={`group ${darkMode ? "bg-gradient-to-br from-blue-500/20 to-blue-600/10 hover:from-blue-500/30 hover:to-blue-600/20 border border-blue-500/30" : "bg-gradient-to-br from-blue-500 to-blue-600"} backdrop-blur-xl rounded-2xl p-6 transition-all duration-300 flex flex-col items-center justify-center shadow-lg hover:shadow-xl hover:scale-105`}
               >
-                <div
-                  className={`${darkMode ? "bg-blue-500/20" : "bg-blue-100"} p-3 rounded-xl mb-3`}
-                >
-                  <BookOpen
-                    className={`w-6 h-6 ${darkMode ? "text-blue-400" : "text-blue-600"}`}
-                  />
+                <div className={`${darkMode ? "bg-blue-500/40" : "bg-white/30"} p-5 rounded-2xl mb-3 group-hover:scale-110 transition-transform shadow-lg`}>
+                  <BookOpen className={`w-10 h-10 ${darkMode ? "text-blue-200" : "text-white"}`} strokeWidth={2.5} />
                 </div>
-                <h3
-                  className={`text-xl font-semibold ${darkMode ? "text-white" : "text-white"}`}
-                >
+                <h3 className={`text-lg font-semibold ${darkMode ? "text-white" : "text-white"}`}>
                   Study
                 </h3>
               </button>
@@ -1049,18 +1045,12 @@ export default function T6AEnhancedStudyTool() {
                   setShowQuizSetup(true);
                   setActiveTab("quizsetup");
                 }}
-                className={`${darkMode ? "bg-white/10 hover:bg-white/15" : "bg-slate-900 hover:bg-slate-800"} backdrop-blur-xl rounded-2xl p-6 transition-all duration-200 flex flex-col items-center justify-center`}
+                className={`group ${darkMode ? "bg-gradient-to-br from-orange-500/20 to-orange-600/10 hover:from-orange-500/30 hover:to-orange-600/20 border border-orange-500/30" : "bg-gradient-to-br from-orange-500 to-orange-600"} backdrop-blur-xl rounded-2xl p-6 transition-all duration-300 flex flex-col items-center justify-center shadow-lg hover:shadow-xl hover:scale-105`}
               >
-                <div
-                  className={`${darkMode ? "bg-orange-500/20" : "bg-orange-100"} p-3 rounded-xl mb-3`}
-                >
-                  <Target
-                    className={`w-6 h-6 ${darkMode ? "text-orange-400" : "text-orange-600"}`}
-                  />
+                <div className={`${darkMode ? "bg-orange-500/40" : "bg-white/30"} p-5 rounded-2xl mb-3 group-hover:scale-110 transition-transform shadow-lg`}>
+                  <Brain className={`w-10 h-10 ${darkMode ? "text-orange-200" : "text-white"}`} strokeWidth={2.5} />
                 </div>
-                <h3
-                  className={`text-xl font-semibold ${darkMode ? "text-white" : "text-white"}`}
-                >
+                <h3 className={`text-lg font-semibold ${darkMode ? "text-white" : "text-white"}`}>
                   Quiz
                 </h3>
               </button>
@@ -1070,21 +1060,14 @@ export default function T6AEnhancedStudyTool() {
                   // Set flashcard-specific question types (only reorderSequence and matchItems)
                   setSelectedQuestionTypes(["reorderSequence", "matchItems"]);
                   setStudyMode("flashcard");
-                  setActiveTab("flashcard");
-                  loadQuestions("flashcard"); // Load flashcard questions
+                  setActiveTab("flashcardsetup");
                 }}
-                className={`${darkMode ? "bg-white/10 hover:bg-white/15" : "bg-slate-900 hover:bg-slate-800"} backdrop-blur-xl rounded-2xl p-6 transition-all duration-200 flex flex-col items-center justify-center`}
+                className={`group ${darkMode ? "bg-gradient-to-br from-purple-500/20 to-purple-600/10 hover:from-purple-500/30 hover:to-purple-600/20 border border-purple-500/30" : "bg-gradient-to-br from-purple-500 to-purple-600"} backdrop-blur-xl rounded-2xl p-6 transition-all duration-300 flex flex-col items-center justify-center shadow-lg hover:shadow-xl hover:scale-105`}
               >
-                <div
-                  className={`${darkMode ? "bg-purple-500/20" : "bg-purple-100"} p-3 rounded-xl mb-3`}
-                >
-                  <RotateCcw
-                    className={`w-6 h-6 ${darkMode ? "text-purple-400" : "text-purple-600"}`}
-                  />
+                <div className={`${darkMode ? "bg-purple-500/40" : "bg-white/30"} p-5 rounded-2xl mb-3 group-hover:scale-110 transition-transform shadow-lg`}>
+                  <RotateCcw className={`w-10 h-10 ${darkMode ? "text-purple-200" : "text-white"}`} strokeWidth={2.5} />
                 </div>
-                <h3
-                  className={`text-xl font-semibold ${darkMode ? "text-white" : "text-white"}`}
-                >
+                <h3 className={`text-lg font-semibold ${darkMode ? "text-white" : "text-white"}`}>
                   Flashcards
                 </h3>
               </button>
@@ -1093,19 +1076,41 @@ export default function T6AEnhancedStudyTool() {
                 onClick={() => {
                   setActiveTab("learningpath");
                 }}
-                className={`${darkMode ? "bg-white/10 hover:bg-white/15" : "bg-slate-900 hover:bg-slate-800"} backdrop-blur-xl rounded-2xl p-6 transition-all duration-200 flex flex-col items-center justify-center`}
+                className={`group ${darkMode ? "bg-gradient-to-br from-green-500/20 to-green-600/10 hover:from-green-500/30 hover:to-green-600/20 border border-green-500/30" : "bg-gradient-to-br from-green-500 to-green-600"} backdrop-blur-xl rounded-2xl p-6 transition-all duration-300 flex flex-col items-center justify-center shadow-lg hover:shadow-xl hover:scale-105`}
               >
-                <div
-                  className={`${darkMode ? "bg-green-500/20" : "bg-green-100"} p-3 rounded-xl mb-3`}
-                >
-                  <ArrowRight
-                    className={`w-6 h-6 ${darkMode ? "text-green-400" : "text-green-600"}`}
-                  />
+                <div className={`${darkMode ? "bg-green-500/40" : "bg-white/30"} p-5 rounded-2xl mb-3 group-hover:scale-110 transition-transform shadow-lg`}>
+                  <ChevronRight className={`w-10 h-10 ${darkMode ? "text-green-200" : "text-white"}`} strokeWidth={2.5} />
                 </div>
-                <h3
-                  className={`text-xl font-semibold ${darkMode ? "text-white" : "text-white"}`}
-                >
-                  Learning Path
+                <h3 className={`text-lg font-semibold ${darkMode ? "text-white" : "text-white"}`}>
+                  Categories
+                </h3>
+              </button>
+
+              <button
+                onClick={() => {
+                  setActiveTab("cockpit");
+                }}
+                className={`group ${darkMode ? "bg-gradient-to-br from-red-500/20 to-red-600/10 hover:from-red-500/30 hover:to-red-600/20 border border-red-500/30" : "bg-gradient-to-br from-red-500 to-red-600"} backdrop-blur-xl rounded-2xl p-6 transition-all duration-300 flex flex-col items-center justify-center shadow-lg hover:shadow-xl hover:scale-105`}
+              >
+                <div className={`${darkMode ? "bg-red-500/40" : "bg-white/30"} p-5 rounded-2xl mb-3 group-hover:scale-110 transition-transform shadow-lg`}>
+                  <FileText className={`w-10 h-10 ${darkMode ? "text-red-200" : "text-white"}`} strokeWidth={2.5} />
+                </div>
+                <h3 className={`text-lg font-semibold ${darkMode ? "text-white" : "text-white"}`}>
+                  Cockpit
+                </h3>
+              </button>
+
+              <button
+                onClick={() => {
+                  setActiveTab("progress");
+                }}
+                className={`group ${darkMode ? "bg-gradient-to-br from-indigo-500/20 to-indigo-600/10 hover:from-indigo-500/30 hover:to-indigo-600/20 border border-indigo-500/30" : "bg-gradient-to-br from-indigo-500 to-indigo-600"} backdrop-blur-xl rounded-2xl p-6 transition-all duration-300 flex flex-col items-center justify-center shadow-lg hover:shadow-xl hover:scale-105`}
+              >
+                <div className={`${darkMode ? "bg-indigo-500/40" : "bg-white/30"} p-5 rounded-2xl mb-3 group-hover:scale-110 transition-transform shadow-lg`}>
+                  <Award className={`w-10 h-10 ${darkMode ? "text-indigo-200" : "text-white"}`} strokeWidth={2.5} />
+                </div>
+                <h3 className={`text-lg font-semibold ${darkMode ? "text-white" : "text-white"}`}>
+                  Progress
                 </h3>
               </button>
             </div>
@@ -1113,9 +1118,9 @@ export default function T6AEnhancedStudyTool() {
             {/* Stats - Simple & Elegant */}
             {performanceStats.overall.correct > 0 && (
               <div
-                className={`${darkMode ? "bg-white/5" : "bg-slate-100"} rounded-2xl p-6 mb-8`}
+                className={`${darkMode ? "bg-white/5" : "bg-slate-100"} rounded-xl p-5 mb-6 max-w-md mx-auto`}
               >
-                <div className="grid grid-cols-2 gap-4 text-center mb-4">
+                <div className="grid grid-cols-2 gap-4 text-center">
                   <div>
                     <div
                       className={`text-3xl font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
@@ -1155,125 +1160,39 @@ export default function T6AEnhancedStudyTool() {
                     </div>
                   </div>
                 </div>
-                <button
-                  onClick={() => setActiveTab("progress")}
-                  className={`w-full ${darkMode ? "bg-white/10 hover:bg-white/15" : "bg-white hover:bg-slate-50"} rounded-lg p-3 transition-all duration-200 flex items-center justify-center gap-2`}
-                >
-                  <TrendingUp
-                    className={`w-4 h-4 ${darkMode ? "text-slate-300" : "text-slate-700"}`}
-                  />
-                  <span
-                    className={`text-sm font-medium ${darkMode ? "text-slate-300" : "text-slate-700"}`}
-                  >
-                    View Detailed Stats
-                  </span>
-                </button>
               </div>
             )}
 
-            {/* Quick Access - Only show if weak topics, flagged questions, or unknown flashcards exist */}
-            {(weakTopics.length > 0 || flaggedQuestions.length > 0 || unknownFlashcards.length > 0) && (
+            {/* Quick Access - Only show flagged questions */}
+            {flaggedQuestions.length > 0 && (
               <div className="mt-8">
-                <div className="space-y-2">
-                  {/* Study Unknown Flashcards */}
-                  {unknownFlashcards.length > 0 && (
-                    <button
-                      onClick={() => {
-                        // Load only the unknown flashcards
-                        const allQs = getAllQuestions();
-                        const unknownQs = allQs.filter(q => unknownFlashcards.includes(q.id));
-                        setCurrentQuestions(unknownQs);
-                        setCurrentQuestionIndex(0);
-                        setStudyMode("flashcard");
-                        setActiveTab("flashcard");
-                      }}
-                      className={`w-full ${darkMode ? "bg-purple-500/20 hover:bg-purple-500/30 border-2 border-purple-500/50" : "bg-purple-100 hover:bg-purple-200 border-2 border-purple-300"} rounded-xl p-4 transition text-left`}
+                <button
+                  onClick={() => {
+                    setStudyMode("flagged");
+                    setActiveTab("study");
+                    setShowStudySetup(false);
+                    loadQuestions("flagged");
+                  }}
+                  className={`w-full ${darkMode ? "bg-white/5 hover:bg-white/10" : "bg-slate-100 hover:bg-slate-200"} rounded-xl p-4 transition text-left`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <Target
+                        className={`w-5 h-5 ${darkMode ? "text-yellow-400" : "text-yellow-600"}`}
+                      />
+                      <span
+                        className={`font-medium ${darkMode ? "text-white" : "text-slate-900"}`}
+                      >
+                        Flagged Questions
+                      </span>
+                    </div>
+                    <span
+                      className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
                     >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <RotateCcw
-                            className={`w-5 h-5 ${darkMode ? "text-purple-400" : "text-purple-600"}`}
-                          />
-                          <span
-                            className={`font-medium ${darkMode ? "text-white" : "text-slate-900"}`}
-                          >
-                            Study Unknown Flashcards
-                          </span>
-                        </div>
-                        <span
-                          className={`text-sm ${darkMode ? "text-purple-300" : "text-purple-700"}`}
-                        >
-                          {unknownFlashcards.length} cards
-                        </span>
-                      </div>
-                    </button>
-                  )}
-
-                  {weakTopics.length > 0 && (
-                    <button
-                      onClick={() => {
-                        setStudyMode("weak");
-                        setActiveTab("study");
-                        setShowStudySetup(false);
-                        loadQuestions("weak");
-                      }}
-                      className={`w-full ${darkMode ? "bg-orange-500/20 hover:bg-orange-500/30 border-2 border-orange-500/50" : "bg-orange-100 hover:bg-orange-200 border-2 border-orange-300"} rounded-xl p-4 transition text-left`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <Zap
-                            className={`w-5 h-5 ${darkMode ? "text-orange-400" : "text-orange-600"}`}
-                          />
-                          <span
-                            className={`font-medium ${darkMode ? "text-white" : "text-slate-900"}`}
-                          >
-                            Practice Weak Questions
-                          </span>
-                        </div>
-                        <span
-                          className={`text-sm ${darkMode ? "text-orange-300" : "text-orange-700"}`}
-                        >
-                          {
-                            Object.values(questionMastery).filter(
-                              (q) => q.incorrectCount >= 2,
-                            ).length
-                          }{" "}
-                          questions
-                        </span>
-                      </div>
-                    </button>
-                  )}
-
-                  {flaggedQuestions.length > 0 && (
-                    <button
-                      onClick={() => {
-                        setStudyMode("flagged");
-                        setActiveTab("study");
-                        setShowStudySetup(false);
-                        loadQuestions("flagged");
-                      }}
-                      className={`w-full ${darkMode ? "bg-white/5 hover:bg-white/10" : "bg-slate-100 hover:bg-slate-200"} rounded-xl p-4 transition text-left`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <Target
-                            className={`w-5 h-5 ${darkMode ? "text-yellow-400" : "text-yellow-600"}`}
-                          />
-                          <span
-                            className={`font-medium ${darkMode ? "text-white" : "text-slate-900"}`}
-                          >
-                            Flagged Questions
-                          </span>
-                        </div>
-                        <span
-                          className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
-                        >
-                          {flaggedQuestions.length}
-                        </span>
-                      </div>
-                    </button>
-                  )}
-                </div>
+                      {flaggedQuestions.length}
+                    </span>
+                  </div>
+                </button>
               </div>
             )}
           </div>
@@ -1329,18 +1248,18 @@ export default function T6AEnhancedStudyTool() {
               Start Quiz
             </button>
           </div>
-        ) : activeTab === "studysetup" ? (
+        ) : activeTab === "flashcardsetup" ? (
           <div className={`max-w-2xl mx-auto ${darkMode ? "bg-slate-800/50" : "bg-white/50"} backdrop-blur-xl rounded-3xl p-8 shadow-2xl`}>
             <div className="text-center mb-8">
               <h2 className={`text-3xl font-semibold ${darkMode ? "text-white" : "text-slate-900"} mb-2`}>
-                Study Setup
+                Flashcard Setup
               </h2>
               <p className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}>
-                How many questions?
+                How many flashcards?
               </p>
             </div>
 
-            {/* Question Count - Apple Style */}
+            {/* Flashcard Count - Apple Style */}
             <div className="grid grid-cols-3 gap-4 mb-8">
               {[10, 25, 50].map((count) => (
                 <button
@@ -1349,8 +1268,8 @@ export default function T6AEnhancedStudyTool() {
                   className={`p-6 rounded-2xl font-semibold text-2xl transition-all duration-200 ${
                     questionCount === count
                       ? darkMode
-                        ? "bg-blue-500 text-white shadow-lg shadow-blue-500/50 scale-105"
-                        : "bg-blue-500 text-white shadow-lg shadow-blue-500/50 scale-105"
+                        ? "bg-purple-500 text-white shadow-lg shadow-purple-500/50 scale-105"
+                        : "bg-purple-500 text-white shadow-lg shadow-purple-500/50 scale-105"
                       : darkMode
                         ? "bg-slate-700/50 text-slate-300 hover:bg-slate-700 hover:scale-102"
                         : "bg-white text-slate-700 hover:bg-slate-50 hover:scale-102 border-2 border-slate-200"
@@ -1363,24 +1282,138 @@ export default function T6AEnhancedStudyTool() {
 
             <button
               onClick={() => {
-                // Auto-select all topics and question types
-                const allCategories = [...new Set(getAllQuestions().map(q => q.category))];
-                setSelectedTopics(allCategories);
-                setSelectedQuestionTypes(["multipleChoice", "trueFalse", "reorderSequence", "matchItems"]);
-                setStudyMode("study");
-                setStudySubMode("readThrough"); // Default to read-through for simplicity
-                setActiveTab("study");
-                setShowStudySetup(false);
-                loadQuestions("all");
+                setActiveTab("flashcard");
+                loadQuestions("flashcard");
               }}
               className={`w-full px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-200 ${
                 darkMode
-                  ? "bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl"
-                  : "bg-blue-500 hover:bg-blue-600 text-white shadow-lg hover:shadow-xl"
+                  ? "bg-purple-600 hover:bg-purple-700 text-white shadow-lg hover:shadow-xl"
+                  : "bg-purple-500 hover:bg-purple-600 text-white shadow-lg hover:shadow-xl"
               } active:scale-95`}
             >
-              Start Study
+              Start Flashcards
             </button>
+          </div>
+        ) : activeTab === "studysetup" ? (
+          <div className={`max-w-2xl mx-auto ${darkMode ? "bg-slate-800/50" : "bg-white/50"} backdrop-blur-xl rounded-3xl p-8 shadow-2xl`}>
+            <div className="text-center mb-8">
+              <h2 className={`text-3xl font-semibold ${darkMode ? "text-white" : "text-slate-900"} mb-2`}>
+                Study Setup
+              </h2>
+              <p className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}>
+                Choose what to study
+              </p>
+            </div>
+
+            {/* Study Options */}
+            <div className="space-y-3 mb-8">
+              {/* All Questions */}
+              <button
+                onClick={() => {
+                  const allCategories = [...new Set(getAllQuestions().map(q => q.category))];
+                  setSelectedTopics(allCategories);
+                  setSelectedQuestionTypes(["multipleChoice", "trueFalse", "reorderSequence", "matchItems"]);
+                  setStudyMode("study");
+                  setStudySubMode("readThrough");
+                  setActiveTab("study");
+                  setShowStudySetup(false);
+                  loadQuestions("all");
+                }}
+                className={`w-full ${darkMode ? "bg-blue-500/20 hover:bg-blue-500/30 border-2 border-blue-500/50" : "bg-blue-100 hover:bg-blue-200 border-2 border-blue-300"} rounded-2xl p-5 transition text-left hover:scale-[1.02]`}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className={`${darkMode ? "bg-blue-500/30" : "bg-blue-500/20"} p-3 rounded-xl`}>
+                      <BookOpen className={`w-7 h-7 ${darkMode ? "text-blue-300" : "text-blue-600"}`} strokeWidth={2.5} />
+                    </div>
+                    <div>
+                      <div className={`font-semibold text-lg ${darkMode ? "text-white" : "text-slate-900"}`}>
+                        All Questions
+                      </div>
+                      <div className={`text-sm ${darkMode ? "text-blue-300" : "text-blue-700"}`}>
+                        Study everything
+                      </div>
+                    </div>
+                  </div>
+                  <div className={`text-sm font-medium ${darkMode ? "text-blue-300" : "text-blue-700"}`}>
+                    {getAllQuestions().length} questions
+                  </div>
+                </div>
+              </button>
+
+              {/* Weak Questions - Only show if there are weak questions */}
+              {Object.values(questionMastery).filter(q => q.incorrectCount >= 2).length > 0 && (
+                <button
+                  onClick={() => {
+                    const weakCount = Object.values(questionMastery).filter(q => q.incorrectCount >= 2).length;
+                    if (weakCount < 10) {
+                      setQuestionCount(weakCount);
+                    }
+                    setStudyMode("weak");
+                    setActiveTab("study");
+                    setShowStudySetup(false);
+                    loadQuestions("weak");
+                  }}
+                  className={`w-full ${darkMode ? "bg-orange-500/20 hover:bg-orange-500/30 border-2 border-orange-500/50" : "bg-orange-100 hover:bg-orange-200 border-2 border-orange-300"} rounded-2xl p-5 transition text-left hover:scale-[1.02]`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className={`${darkMode ? "bg-orange-500/30" : "bg-orange-500/20"} p-3 rounded-xl`}>
+                        <AlertCircle className={`w-7 h-7 ${darkMode ? "text-orange-300" : "text-orange-600"}`} strokeWidth={2.5} />
+                      </div>
+                      <div>
+                        <div className={`font-semibold text-lg ${darkMode ? "text-white" : "text-slate-900"}`}>
+                          Weak Questions
+                        </div>
+                        <div className={`text-sm ${darkMode ? "text-orange-300" : "text-orange-700"}`}>
+                          Focus on problem areas
+                        </div>
+                      </div>
+                    </div>
+                    <div className={`text-sm font-medium ${darkMode ? "text-orange-300" : "text-orange-700"}`}>
+                      {Object.values(questionMastery).filter(q => q.incorrectCount >= 2).length} questions
+                    </div>
+                  </div>
+                </button>
+              )}
+
+              {/* Unknown Flashcards - Only show if there are unknown flashcards */}
+              {unknownFlashcards.length > 0 && (
+                <button
+                  onClick={() => {
+                    if (unknownFlashcards.length < 10) {
+                      setQuestionCount(unknownFlashcards.length);
+                    }
+                    const allQs = getAllQuestions();
+                    const unknownQs = allQs.filter(q => unknownFlashcards.includes(q.id));
+                    setCurrentQuestions(unknownQs);
+                    setCurrentQuestionIndex(0);
+                    setStudyMode("flashcard");
+                    setActiveTab("flashcard");
+                  }}
+                  className={`w-full ${darkMode ? "bg-purple-500/20 hover:bg-purple-500/30 border-2 border-purple-500/50" : "bg-purple-100 hover:bg-purple-200 border-2 border-purple-300"} rounded-2xl p-5 transition text-left hover:scale-[1.02]`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className={`${darkMode ? "bg-purple-500/30" : "bg-purple-500/20"} p-3 rounded-xl`}>
+                        <RotateCcw className={`w-7 h-7 ${darkMode ? "text-purple-300" : "text-purple-600"}`} strokeWidth={2.5} />
+                      </div>
+                      <div>
+                        <div className={`font-semibold text-lg ${darkMode ? "text-white" : "text-slate-900"}`}>
+                          Unknown Flashcards
+                        </div>
+                        <div className={`text-sm ${darkMode ? "text-purple-300" : "text-purple-700"}`}>
+                          Cards you marked as unknown
+                        </div>
+                      </div>
+                    </div>
+                    <div className={`text-sm font-medium ${darkMode ? "text-purple-300" : "text-purple-700"}`}>
+                      {unknownFlashcards.length} cards
+                    </div>
+                  </div>
+                </button>
+              )}
+            </div>
           </div>
         ) : activeTab === "progress" ? (
           <div className={`max-w-3xl mx-auto space-y-6`}>
@@ -1641,7 +1674,7 @@ export default function T6AEnhancedStudyTool() {
                   }`}
                 >
                   {studyMode === "learningpath"
-                    ? "Back to Learning Path"
+                    ? "Back to Categories"
                     : "Return to Main Menu"}
                 </button>
                 <button
@@ -2114,6 +2147,8 @@ export default function T6AEnhancedStudyTool() {
               </button>
             </div>
           </div>
+        ) : activeTab === "cockpit" ? (
+          <CockpitReference darkMode={darkMode} />
         ) : activeTab === "learningpath" ? (
           <LearningPath
             learningPath={learningPath}
