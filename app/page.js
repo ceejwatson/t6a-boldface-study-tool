@@ -102,6 +102,7 @@ export default function T6AEnhancedStudyTool() {
   // Structure: { questionId: { correctCount: 0, incorrectCount: 0, lastAnswered: timestamp } }
   const [unknownFlashcards, setUnknownFlashcards] = useState([]);
   // Track flashcards marked as "Don't Know" for focused study
+  const [fontSize, setFontSize] = useState("medium"); // 'small', 'medium', 'large'
 
   // Load saved data
   useEffect(() => {
@@ -111,6 +112,7 @@ export default function T6AEnhancedStudyTool() {
     const savedHistory = localStorage.getItem("t6a-session-history");
     const savedMastery = localStorage.getItem("t6a-mastery");
     const savedUnknown = localStorage.getItem("t6a-unknown-flashcards");
+    const savedFontSize = localStorage.getItem("t6a-font-size");
 
     if (savedPerformance) setPerformanceStats(JSON.parse(savedPerformance));
     if (savedFlags) setFlaggedQuestions(JSON.parse(savedFlags));
@@ -118,6 +120,7 @@ export default function T6AEnhancedStudyTool() {
     if (savedHistory) setSessionHistory(JSON.parse(savedHistory));
     if (savedMastery) setQuestionMastery(JSON.parse(savedMastery));
     if (savedUnknown) setUnknownFlashcards(JSON.parse(savedUnknown));
+    if (savedFontSize) setFontSize(savedFontSize);
 
     // Don't auto-load questions - wait for user to configure study setup
 
@@ -157,6 +160,11 @@ export default function T6AEnhancedStudyTool() {
   useEffect(() => {
     localStorage.setItem("t6a-mastery", JSON.stringify(questionMastery));
   }, [questionMastery]);
+
+  // Save font size preference
+  useEffect(() => {
+    localStorage.setItem("t6a-font-size", fontSize);
+  }, [fontSize]);
 
   // Save unknown flashcards
   useEffect(() => {
@@ -298,6 +306,10 @@ export default function T6AEnhancedStudyTool() {
   const getAllQuestions = () => {
     const all = [];
     selectedQuestionTypes.forEach((type) => {
+      // Skip flashcard type if in quiz mode (flashcards are only for flashcard study mode)
+      if (type === "flashcard" && studyMode === "quiz") {
+        return;
+      }
       const questions = questionDatabase[type] || [];
       questions.forEach((q) => {
         all.push({ ...q, questionType: type });
@@ -726,6 +738,18 @@ export default function T6AEnhancedStudyTool() {
     }
   };
 
+  // Helper function for font size classes
+  const getFontSizeClass = () => {
+    switch (fontSize) {
+      case "small":
+        return "text-sm";
+      case "large":
+        return "text-lg";
+      default:
+        return "text-base";
+    }
+  };
+
   const renderQuestion = () => {
     if (!currentQuestion) {
       return (
@@ -785,6 +809,7 @@ export default function T6AEnhancedStudyTool() {
       disabled: showExplanation, // Disable after answer is shown in both modes
       darkMode: darkMode,
       showCorrectness: studyMode === "quiz" || studyMode === "learningpath", // Show green/red in quiz and learning path modes
+      fontSize: fontSize,
     };
 
     switch (currentQuestion.questionType) {
@@ -838,6 +863,48 @@ export default function T6AEnhancedStudyTool() {
             </div>
 
             <div className="flex items-center gap-4">
+              {/* Font Size Selector */}
+              <div className="flex items-center gap-2">
+                <span className={`text-xs ${darkMode ? "text-slate-400" : "text-slate-600"} hidden sm:inline`}>
+                  Text:
+                </span>
+                <div className="flex items-center gap-1 bg-slate-800/50 p-1 rounded-lg">
+                  <button
+                    onClick={() => setFontSize("small")}
+                    className={`px-2 py-1 rounded text-xs font-medium transition ${
+                      fontSize === "small"
+                        ? "bg-blue-600 text-white"
+                        : "text-slate-400 hover:text-white hover:bg-slate-700"
+                    }`}
+                    title="Small text"
+                  >
+                    A
+                  </button>
+                  <button
+                    onClick={() => setFontSize("medium")}
+                    className={`px-2 py-1 rounded text-sm font-medium transition ${
+                      fontSize === "medium"
+                        ? "bg-blue-600 text-white"
+                        : "text-slate-400 hover:text-white hover:bg-slate-700"
+                    }`}
+                    title="Medium text"
+                  >
+                    A
+                  </button>
+                  <button
+                    onClick={() => setFontSize("large")}
+                    className={`px-2 py-1 rounded text-base font-medium transition ${
+                      fontSize === "large"
+                        ? "bg-blue-600 text-white"
+                        : "text-slate-400 hover:text-white hover:bg-slate-700"
+                    }`}
+                    title="Large text"
+                  >
+                    A
+                  </button>
+                </div>
+              </div>
+
               {/* PDF Reference Button */}
               <a
                 href="https://www.sheppard.af.mil/Portals/65/T-6A%20Boldface%20Ops%20Limits%2C%201%20Jun%202023%20%28Filled%29.pdf"
@@ -1057,8 +1124,8 @@ export default function T6AEnhancedStudyTool() {
 
               <button
                 onClick={() => {
-                  // Set flashcard-specific question types (only reorderSequence and matchItems)
-                  setSelectedQuestionTypes(["reorderSequence", "matchItems"]);
+                  // Set flashcard-specific question types (simple Q&A format)
+                  setSelectedQuestionTypes(["flashcard"]);
                   setStudyMode("flashcard");
                   setActiveTab("flashcardsetup");
                 }}
@@ -1377,6 +1444,53 @@ export default function T6AEnhancedStudyTool() {
                 </button>
               )}
 
+              {/* Review Incorrect - Show questions answered incorrectly */}
+              {Object.values(questionMastery).filter(q => q.incorrectCount >= 1).length > 0 && (
+                <button
+                  onClick={() => {
+                    // Get all questions that have been answered incorrectly at least once
+                    const allQs = getAllQuestions();
+                    const incorrectQs = allQs.filter(q => {
+                      const mastery = questionMastery[q.id];
+                      return mastery && mastery.incorrectCount >= 1;
+                    });
+
+                    if (incorrectQs.length < 10) {
+                      setQuestionCount(incorrectQs.length);
+                    }
+
+                    setCurrentQuestions(incorrectQs);
+                    setCurrentQuestionIndex(0);
+                    setUserAnswers({});
+                    setShowExplanation(false);
+                    setStudyMode("quiz");
+                    setReviewIncorrectOnly(true);
+                    setActiveTab("study");
+                    setShowStudySetup(false);
+                  }}
+                  className={`w-full ${darkMode ? "bg-red-500/20 hover:bg-red-500/30 border-2 border-red-500/50" : "bg-red-100 hover:bg-red-200 border-2 border-red-300"} rounded-2xl p-5 transition text-left hover:scale-[1.02]`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className={`${darkMode ? "bg-red-500/30" : "bg-red-500/20"} p-3 rounded-xl`}>
+                        <XCircle className={`w-7 h-7 ${darkMode ? "text-red-300" : "text-red-600"}`} strokeWidth={2.5} />
+                      </div>
+                      <div>
+                        <div className={`font-semibold text-lg ${darkMode ? "text-white" : "text-slate-900"}`}>
+                          Review Incorrect
+                        </div>
+                        <div className={`text-sm ${darkMode ? "text-red-300" : "text-red-700"}`}>
+                          Re-test questions you missed
+                        </div>
+                      </div>
+                    </div>
+                    <div className={`text-sm font-medium ${darkMode ? "text-red-300" : "text-red-700"}`}>
+                      {Object.values(questionMastery).filter(q => q.incorrectCount >= 1).length} questions
+                    </div>
+                  </div>
+                </button>
+              )}
+
               {/* Unknown Flashcards - Only show if there are unknown flashcards */}
               {unknownFlashcards.length > 0 && (
                 <button
@@ -1442,7 +1556,7 @@ export default function T6AEnhancedStudyTool() {
                     strokeWidth="16"
                     fill="none"
                     strokeDasharray={`${2 * Math.PI * 88}`}
-                    strokeDashoffset={`${2 * Math.PI * 88 * (1 - (getAllQuestions().length > 0 ? (Object.values(questionMastery).filter(q => q.correctCount >= 1).length / getAllQuestions().length) : 0))}`}
+                    strokeDashoffset={`${2 * Math.PI * 88 * (1 - (getAllQuestions().length > 0 ? (Object.values(questionMastery).filter(q => q.correctCount >= 3).length / getAllQuestions().length) : 0))}`}
                     strokeLinecap="round"
                   />
                   <defs>
@@ -1456,20 +1570,35 @@ export default function T6AEnhancedStudyTool() {
                   <div>
                     <div className={`text-5xl font-bold ${darkMode ? "text-white" : "text-slate-900"}`}>
                       {getAllQuestions().length > 0
-                        ? Math.round((Object.values(questionMastery).filter(q => q.correctCount >= 1).length / getAllQuestions().length) * 100)
+                        ? Math.round((Object.values(questionMastery).filter(q => q.correctCount >= 3).length / getAllQuestions().length) * 100)
                         : 0}%
                     </div>
                     <div className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}>
-                      Complete
+                      Mastered
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className={`text-lg ${darkMode ? "text-slate-300" : "text-slate-700"}`}>
-                <span className="font-semibold">
-                  {Object.values(questionMastery).filter(q => q.correctCount >= 1).length}
-                </span> of {getAllQuestions().length} questions learned
+              <div className={`grid grid-cols-3 gap-4 text-center ${darkMode ? "text-slate-300" : "text-slate-700"}`}>
+                <div>
+                  <div className="text-2xl font-bold text-green-500">
+                    {Object.values(questionMastery).filter(q => q.correctCount >= 3).length}
+                  </div>
+                  <div className="text-xs text-slate-400">Mastered</div>
+                </div>
+                <div>
+                  <div className="text-2xl font-bold text-blue-500">
+                    {Object.values(questionMastery).filter(q => q.correctCount >= 1 && q.correctCount < 3).length}
+                  </div>
+                  <div className="text-xs text-slate-400">Learning</div>
+                </div>
+                <div>
+                  <div className="text-2xl font-bold text-slate-500">
+                    {getAllQuestions().length - Object.values(questionMastery).filter(q => q.correctCount >= 1).length}
+                  </div>
+                  <div className="text-xs text-slate-400">New</div>
+                </div>
               </div>
             </div>
 
@@ -1498,7 +1627,7 @@ export default function T6AEnhancedStudyTool() {
                     }
                     categoriesData[q.category].total++;
                     const mastery = questionMastery[q.id];
-                    if (mastery && mastery.correctCount >= 1) {
+                    if (mastery && mastery.correctCount >= 3) {
                       categoriesData[q.category].learned++;
                     }
                   });
@@ -2030,7 +2159,41 @@ export default function T6AEnhancedStudyTool() {
               </div>
 
               {/* Action Buttons */}
-              <div className="flex gap-3 mt-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-6">
+                {/* Review Incorrect Answers Button - Only show if there are incorrect answers */}
+                {currentQuestions.filter((q) => {
+                  const answered = userAnswers[q.id] !== undefined;
+                  const isCorrect = answered && checkAnswer(q, userAnswers[q.id]);
+                  return answered && !isCorrect;
+                }).length > 0 && (
+                  <button
+                    onClick={() => {
+                      // Filter to only incorrect questions
+                      const incorrectQuestions = currentQuestions.filter((q) => {
+                        const answered = userAnswers[q.id] !== undefined;
+                        const isCorrect = answered && checkAnswer(q, userAnswers[q.id]);
+                        return answered && !isCorrect;
+                      });
+
+                      // Set up review mode with only incorrect questions
+                      setCurrentQuestions(incorrectQuestions);
+                      setCurrentQuestionIndex(0);
+                      setUserAnswers({});
+                      setShowExplanation(false);
+                      setStudyMode("quiz");
+                      setReviewIncorrectOnly(true);
+                      setActiveTab("study");
+                    }}
+                    className="px-6 py-3 rounded-lg font-medium transition bg-red-600 hover:bg-red-700 text-white shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+                  >
+                    <XCircle className="w-5 h-5" />
+                    Review Incorrect ({currentQuestions.filter((q) => {
+                      const answered = userAnswers[q.id] !== undefined;
+                      const isCorrect = answered && checkAnswer(q, userAnswers[q.id]);
+                      return answered && !isCorrect;
+                    }).length})
+                  </button>
+                )}
                 <button
                   onClick={() => {
                     setActiveTab("home");
@@ -2038,8 +2201,9 @@ export default function T6AEnhancedStudyTool() {
                     setUserAnswers({});
                     setCurrentQuestionIndex(0);
                     setShowExplanation(false);
+                    setReviewIncorrectOnly(false);
                   }}
-                  className={`flex-1 px-6 py-3 rounded-lg font-medium transition ${
+                  className={`px-6 py-3 rounded-lg font-medium transition ${
                     darkMode
                       ? "bg-slate-700 hover:bg-slate-600 text-white"
                       : "bg-slate-300 hover:bg-slate-400 text-slate-900"
@@ -2051,8 +2215,9 @@ export default function T6AEnhancedStudyTool() {
                   onClick={() => {
                     setShowQuizSetup(true);
                     setActiveTab("quizsetup");
+                    setReviewIncorrectOnly(false);
                   }}
-                  className="flex-1 px-6 py-3 rounded-lg font-medium transition bg-orange-600 hover:bg-orange-700 text-white"
+                  className="px-6 py-3 rounded-lg font-medium transition bg-orange-600 hover:bg-orange-700 text-white"
                 >
                   Take Another Quiz
                 </button>
@@ -2152,7 +2317,17 @@ export default function T6AEnhancedStudyTool() {
         ) : activeTab === "learningpath" ? (
           <LearningPath
             learningPath={learningPath}
-            allQuestions={getAllQuestions()}
+            allQuestions={(() => {
+              // Get ALL questions for learning path, ignoring selectedQuestionTypes
+              const all = [];
+              ["multipleChoice", "trueFalse", "reorderSequence", "matchItems", "flashcard"].forEach((type) => {
+                const questions = questionDatabase[type] || [];
+                questions.forEach((q) => {
+                  all.push({ ...q, questionType: type });
+                });
+              });
+              return all;
+            })()}
             questionMastery={questionMastery}
             onStartSection={startLearningPathSection}
             getChapterProgress={getChapterProgress}
@@ -2221,35 +2396,111 @@ export default function T6AEnhancedStudyTool() {
               className={`${darkMode ? "bg-slate-800 border-slate-700" : "bg-white border-slate-300"} rounded-xl shadow-2xl p-4 md:p-5 border-2 question-enter`}
             >
               {currentQuestion && (
-                <div className="mb-2 flex items-center justify-between flex-wrap gap-1">
-                  <div className="flex items-center gap-1">
-                    {currentQuestion.difficulty === "critical" && (
-                      <span className="bg-red-600 text-white px-2 py-0.5 rounded-full text-xs font-bold">
-                        CRITICAL
-                      </span>
-                    )}
-                    {questionMastery[currentQuestion.id]?.incorrectCount >=
-                      2 && (
-                      <span className="bg-orange-600 text-white px-2 py-0.5 rounded-full text-xs font-bold">
-                        WEAK
-                      </span>
-                    )}
+                <>
+                  <div className="mb-2 flex items-center justify-between flex-wrap gap-1">
+                    <div className="flex items-center gap-1">
+                      {currentQuestion.difficulty === "critical" && (
+                        <span className="bg-red-600 text-white px-2 py-0.5 rounded-full text-xs font-bold">
+                          CRITICAL
+                        </span>
+                      )}
+                      {(() => {
+                        const mastery = questionMastery[currentQuestion.id];
+                        const correctCount = mastery?.correctCount || 0;
+                        const incorrectCount = mastery?.incorrectCount || 0;
+
+                        if (incorrectCount >= 2) {
+                          return (
+                            <span className="bg-orange-600 text-white px-2 py-0.5 rounded-full text-xs font-bold flex items-center gap-1">
+                              <XCircle className="w-3 h-3" />
+                              WEAK
+                            </span>
+                          );
+                        } else if (correctCount >= 3) {
+                          return (
+                            <span className="bg-green-600 text-white px-2 py-0.5 rounded-full text-xs font-bold flex items-center gap-1">
+                              <CheckCircle2 className="w-3 h-3" />
+                              MASTERED
+                            </span>
+                          );
+                        } else if (correctCount >= 1) {
+                          return (
+                            <span className="bg-blue-600 text-white px-2 py-0.5 rounded-full text-xs font-bold flex items-center gap-1">
+                              <TrendingUp className="w-3 h-3" />
+                              LEARNING
+                            </span>
+                          );
+                        } else {
+                          return (
+                            <span className="bg-slate-600 text-white px-2 py-0.5 rounded-full text-xs font-bold">
+                              NEW
+                            </span>
+                          );
+                        }
+                      })()}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={toggleFlag}
+                        className={`px-2 py-0.5 rounded-lg text-xs font-medium transition ${
+                          flaggedQuestions.includes(currentQuestion.id)
+                            ? "bg-yellow-600 text-white"
+                            : darkMode
+                              ? "bg-slate-700 text-slate-300 hover:bg-slate-600"
+                              : "bg-slate-200 text-slate-700 hover:bg-slate-300"
+                        }`}
+                      >
+                        {flaggedQuestions.includes(currentQuestion.id) ? "⭐" : "☆"}
+                      </button>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={toggleFlag}
-                      className={`px-2 py-0.5 rounded-lg text-xs font-medium transition ${
-                        flaggedQuestions.includes(currentQuestion.id)
-                          ? "bg-yellow-600 text-white"
-                          : darkMode
-                            ? "bg-slate-700 text-slate-300 hover:bg-slate-600"
-                            : "bg-slate-200 text-slate-700 hover:bg-slate-300"
-                      }`}
-                    >
-                      {flaggedQuestions.includes(currentQuestion.id) ? "⭐" : "☆"}
-                    </button>
-                  </div>
-                </div>
+
+                  {/* Mastery Progress Bar */}
+                  {(() => {
+                    const mastery = questionMastery[currentQuestion.id];
+                    const correctCount = mastery?.correctCount || 0;
+                    const incorrectCount = mastery?.incorrectCount || 0;
+                    const totalAttempts = correctCount + incorrectCount;
+
+                    if (totalAttempts > 0) {
+                      const masteryProgress = Math.min((correctCount / 3) * 100, 100); // 3 correct = 100%
+                      const isWeak = incorrectCount >= 2;
+                      const isMastered = correctCount >= 3;
+
+                      return (
+                        <div className="mb-3">
+                          <div className="flex items-center justify-between text-xs mb-1">
+                            <span className={darkMode ? "text-slate-400" : "text-slate-600"}>
+                              Mastery Progress
+                            </span>
+                            <span className={`font-semibold ${
+                              isMastered
+                                ? "text-green-400"
+                                : isWeak
+                                  ? "text-orange-400"
+                                  : "text-blue-400"
+                            }`}>
+                              {correctCount}/3 correct
+                            </span>
+                          </div>
+                          <div className={`w-full h-2 rounded-full overflow-hidden ${darkMode ? "bg-slate-700" : "bg-slate-200"}`}>
+                            <div
+                              className={`h-full transition-all duration-500 ${
+                                isMastered
+                                  ? "bg-gradient-to-r from-green-500 to-emerald-500"
+                                  : isWeak
+                                    ? "bg-gradient-to-r from-orange-500 to-red-500"
+                                    : "bg-gradient-to-r from-blue-500 to-cyan-500"
+                              }`}
+                              style={{ width: `${masteryProgress}%` }}
+                            />
+                          </div>
+                        </div>
+                      );
+                    }
+                    return null;
+                  })()}
+                </>
               )}
 
               {renderQuestion()}

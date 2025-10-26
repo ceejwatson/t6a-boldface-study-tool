@@ -247,6 +247,9 @@ export default function Flashcard({
     let answer = "";
 
     switch (question.questionType) {
+      case "flashcard":
+        answer = question.answer;
+        break;
       case "multipleChoice":
         answer = question.options[question.correctAnswer];
         break;

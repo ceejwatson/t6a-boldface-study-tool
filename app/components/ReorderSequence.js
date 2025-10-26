@@ -18,6 +18,7 @@ export default function ReorderSequence({
   disabled,
   darkMode = true,
   showCorrectness = true,
+  fontSize = "medium",
 }) {
   const [items, setItems] = useState(() => {
     if (userAnswer && userAnswer.length > 0) {
@@ -135,10 +136,32 @@ export default function ReorderSequence({
     return correctIndex + 1;
   };
 
+  const getFontSizeClass = () => {
+    switch (fontSize) {
+      case "small":
+        return "text-xs";
+      case "large":
+        return "text-base";
+      default:
+        return "text-sm";
+    }
+  };
+
+  const getQuestionFontSize = () => {
+    switch (fontSize) {
+      case "small":
+        return "text-base";
+      case "large":
+        return "text-xl";
+      default:
+        return "text-lg";
+    }
+  };
+
   return (
     <div className="space-y-2">
       <h3
-        className={`text-lg font-semibold mb-2 ${darkMode ? "text-white" : "text-slate-900"}`}
+        className={`${getQuestionFontSize()} font-semibold mb-2 ${darkMode ? "text-white" : "text-slate-900"}`}
       >
         {question.question}
       </h3>
@@ -195,7 +218,7 @@ export default function ReorderSequence({
                     {index + 1}
                   </span>
                   <span
-                    className={`flex-1 text-xs ${darkMode ? "text-white" : "text-slate-900"}`}
+                    className={`flex-1 ${getFontSizeClass()} ${darkMode ? "text-white" : "text-slate-900"}`}
                   >
                     {item}
                   </span>
@@ -237,7 +260,7 @@ export default function ReorderSequence({
           </div>
           {!isCorrect() && (
             <p
-              className={`mt-2 text-sm ${darkMode ? "text-white" : "text-slate-800"}`}
+              className={`mt-2 ${getFontSizeClass()} ${darkMode ? "text-white" : "text-slate-800"}`}
             >
               {question.explanation}
             </p>
@@ -256,7 +279,7 @@ export default function ReorderSequence({
                 {question.correctOrder.map((step, i) => (
                   <li
                     key={i}
-                    className={`text-xs ${darkMode ? "text-white" : "text-slate-900"}`}
+                    className={`${getFontSizeClass()} ${darkMode ? "text-white" : "text-slate-900"}`}
                   >
                     {step}
                   </li>
@@ -280,7 +303,7 @@ export default function ReorderSequence({
               Explanation
             </span>
           </div>
-          <p className={`mt-2 ${darkMode ? "text-white" : "text-slate-800"}`}>
+          <p className={`mt-2 ${getFontSizeClass()} ${darkMode ? "text-white" : "text-slate-800"}`}>
             {question.explanation}
           </p>
 
@@ -297,7 +320,7 @@ export default function ReorderSequence({
               {question.correctOrder.map((step, i) => (
                 <li
                   key={i}
-                  className={`text-sm ${darkMode ? "text-white" : "text-slate-900"}`}
+                  className={`${getFontSizeClass()} ${darkMode ? "text-white" : "text-slate-900"}`}
                 >
                   {step}
                 </li>

@@ -11,6 +11,7 @@ export default function MatchItems({
   disabled,
   darkMode = true,
   showCorrectness = true,
+  fontSize = "medium",
 }) {
   // Use index-based matching to handle duplicate values
   const [matches, setMatches] = useState(() => {
@@ -241,10 +242,32 @@ export default function MatchItems({
     return () => window.removeEventListener("resize", calculateLines);
   }, [matches, showExplanation, showCorrectness, darkMode, isCorrectMatch]);
 
+  const getFontSizeClass = () => {
+    switch (fontSize) {
+      case "small":
+        return "text-xs";
+      case "large":
+        return "text-base";
+      default:
+        return "text-sm";
+    }
+  };
+
+  const getQuestionFontSize = () => {
+    switch (fontSize) {
+      case "small":
+        return "text-base";
+      case "large":
+        return "text-xl";
+      default:
+        return "text-lg";
+    }
+  };
+
   return (
     <div className="space-y-2">
       <h3
-        className={`text-lg font-semibold mb-2 ${darkMode ? "text-white" : "text-slate-900"}`}
+        className={`${getQuestionFontSize()} font-semibold mb-2 ${darkMode ? "text-white" : "text-slate-900"}`}
       >
         {question.question}
       </h3>
@@ -299,7 +322,7 @@ export default function MatchItems({
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-xs">{item.text}</span>
+                    <span className={getFontSizeClass()}>{item.text}</span>
                     {showExplanation &&
                       showCorrectness &&
                       matches[item.index] !== undefined &&
@@ -353,7 +376,7 @@ export default function MatchItems({
                   : "cursor-pointer active:scale-95"
               }`}
             >
-              <span className="text-xs">{item.text}</span>
+              <span className={getFontSizeClass()}>{item.text}</span>
             </button>
           ))}
         </div>
@@ -385,7 +408,7 @@ export default function MatchItems({
           </div>
           {!allCorrect && (
             <p
-              className={`mt-2 text-sm ${darkMode ? "text-white" : "text-slate-800"}`}
+              className={`mt-2 ${getFontSizeClass()} ${darkMode ? "text-white" : "text-slate-800"}`}
             >
               {question.explanation}
             </p>
@@ -402,7 +425,7 @@ export default function MatchItems({
               </p>
               <div className="space-y-0.5">
                 {question.pairs.map((pair, i) => (
-                  <div key={i} className="flex items-center gap-2 text-xs">
+                  <div key={i} className={`flex items-center gap-2 ${getFontSizeClass()}`}>
                     <span
                       className={darkMode ? "text-white" : "text-slate-800"}
                     >
@@ -437,7 +460,7 @@ export default function MatchItems({
               Explanation
             </span>
           </div>
-          <p className={`mt-2 ${darkMode ? "text-white" : "text-slate-800"}`}>
+          <p className={`mt-2 ${getFontSizeClass()} ${darkMode ? "text-white" : "text-slate-800"}`}>
             {question.explanation}
           </p>
 
@@ -452,7 +475,7 @@ export default function MatchItems({
             </p>
             <div className="space-y-1">
               {question.pairs.map((pair, i) => (
-                <div key={i} className="flex items-center gap-2 text-sm">
+                <div key={i} className={`flex items-center gap-2 ${getFontSizeClass()}`}>
                   <span className={darkMode ? "text-white" : "text-slate-900"}>
                     {pair.left}
                   </span>

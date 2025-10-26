@@ -11,6 +11,7 @@ export default function TrueFalse({
   disabled,
   darkMode = true,
   showCorrectness = true,
+  fontSize = "medium",
 }) {
   // Randomize True/False order - memoized so it doesn't change during component lifecycle
   const buttonOrder = useMemo(() => {
@@ -55,10 +56,43 @@ export default function TrueFalse({
     return null;
   };
 
+  const getFontSizeClass = () => {
+    switch (fontSize) {
+      case "small":
+        return "text-sm";
+      case "large":
+        return "text-lg";
+      default:
+        return "text-base";
+    }
+  };
+
+  const getQuestionFontSize = () => {
+    switch (fontSize) {
+      case "small":
+        return "text-base";
+      case "large":
+        return "text-xl";
+      default:
+        return "text-lg";
+    }
+  };
+
+  const getButtonFontSize = () => {
+    switch (fontSize) {
+      case "small":
+        return "text-lg";
+      case "large":
+        return "text-2xl";
+      default:
+        return "text-xl";
+    }
+  };
+
   return (
     <div className="space-y-6">
       <h3
-        className={`text-lg font-semibold mb-4 ${darkMode ? "text-white" : "text-slate-900"}`}
+        className={`${getQuestionFontSize()} font-semibold mb-4 ${darkMode ? "text-white" : "text-slate-900"}`}
       >
         True or False: {question.question}
       </h3>
@@ -74,7 +108,7 @@ export default function TrueFalse({
             }`}
           >
             {getIcon(value)}
-            <span className="text-xl font-bold">
+            <span className={`${getButtonFontSize()} font-bold`}>
               {value ? "TRUE" : "FALSE"}
             </span>
           </button>
@@ -107,7 +141,7 @@ export default function TrueFalse({
           </div>
           {userAnswer !== question.correctAnswer && (
             <p
-              className={`mt-2 text-sm ${darkMode ? "text-white" : "text-slate-900"}`}
+              className={`mt-2 ${getFontSizeClass()} ${darkMode ? "text-white" : "text-slate-900"}`}
             >
               {question.explanation}
             </p>
@@ -137,7 +171,7 @@ export default function TrueFalse({
             </span>
           </div>
           <p
-            className={`mt-2 text-sm ${darkMode ? "text-white" : "text-slate-800"}`}
+            className={`mt-2 ${getFontSizeClass()} ${darkMode ? "text-white" : "text-slate-800"}`}
           >
             {question.explanation}
           </p>
@@ -152,7 +186,7 @@ export default function TrueFalse({
               Correct Answer:
             </p>
             <p
-              className={`font-medium text-sm ${darkMode ? "text-white" : "text-slate-900"}`}
+              className={`font-medium ${getFontSizeClass()} ${darkMode ? "text-white" : "text-slate-900"}`}
             >
               {question.correctAnswer ? "True" : "False"}
             </p>

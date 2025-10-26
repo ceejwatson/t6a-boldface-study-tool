@@ -11,6 +11,7 @@ export default function MultipleChoice({
   disabled,
   darkMode = true,
   showCorrectness = true,
+  fontSize = "medium",
 }) {
   // Randomize answer order - memoized so it doesn't change during component lifecycle
   const shuffledOptions = useMemo(() => {
@@ -69,10 +70,32 @@ export default function MultipleChoice({
     return null;
   };
 
+  const getFontSizeClass = () => {
+    switch (fontSize) {
+      case "small":
+        return "text-sm";
+      case "large":
+        return "text-lg";
+      default:
+        return "text-base";
+    }
+  };
+
+  const getQuestionFontSize = () => {
+    switch (fontSize) {
+      case "small":
+        return "text-base";
+      case "large":
+        return "text-xl";
+      default:
+        return "text-lg";
+    }
+  };
+
   return (
     <div className="space-y-2">
       <h3
-        className={`text-lg font-semibold mb-3 ${darkMode ? "text-white" : "text-slate-900"}`}
+        className={`${getQuestionFontSize()} font-semibold mb-3 ${darkMode ? "text-white" : "text-slate-900"}`}
       >
         {question.question}
       </h3>
@@ -87,7 +110,7 @@ export default function MultipleChoice({
               disabled ? "cursor-not-allowed" : "cursor-pointer active:scale-95"
             }`}
           >
-            <span className="flex-1 text-sm">{option}</span>
+            <span className={`flex-1 ${getFontSizeClass()}`}>{option}</span>
             {getOptionIcon(originalIndex)}
           </button>
         ))}
@@ -119,7 +142,7 @@ export default function MultipleChoice({
           </div>
           {userAnswer !== question.correctAnswer && (
             <p
-              className={`mt-2 text-sm ${darkMode ? "text-white" : "text-slate-900"}`}
+              className={`mt-2 ${getFontSizeClass()} ${darkMode ? "text-white" : "text-slate-900"}`}
             >
               {question.explanation}
             </p>
@@ -149,7 +172,7 @@ export default function MultipleChoice({
             </span>
           </div>
           <p
-            className={`mt-2 text-sm ${darkMode ? "text-white" : "text-slate-800"}`}
+            className={`mt-2 ${getFontSizeClass()} ${darkMode ? "text-white" : "text-slate-800"}`}
           >
             {question.explanation}
           </p>
@@ -164,7 +187,7 @@ export default function MultipleChoice({
               Correct Answer:
             </p>
             <p
-              className={`font-medium text-sm ${darkMode ? "text-white" : "text-slate-900"}`}
+              className={`font-medium ${getFontSizeClass()} ${darkMode ? "text-white" : "text-slate-900"}`}
             >
               {question.options[question.correctAnswer]}
             </p>
