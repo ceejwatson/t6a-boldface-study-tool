@@ -125,13 +125,13 @@ export default function CockpitReference({ darkMode = true }) {
 
   return (
     <div
-      className="min-h-screen flex gap-3 px-3 py-3"
+      className="flex flex-col lg:flex-row gap-3 px-3 py-3"
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
     >
-      {/* Left Side - Fixed/Frozen Sidebar */}
-      <div className={`w-72 flex-shrink-0 sticky top-3 h-[calc(100vh-100px)] ${darkMode ? "bg-slate-800/50" : "bg-white/50"} backdrop-blur-xl rounded-xl p-4 shadow-xl flex flex-col overflow-y-auto`}>
+      {/* Left Side - Procedure Selector (Full width on mobile, sidebar on desktop) */}
+      <div className={`w-full lg:w-72 lg:flex-shrink-0 lg:sticky lg:top-3 lg:h-[calc(100vh-100px)] ${darkMode ? "bg-slate-800/50" : "bg-white/50"} backdrop-blur-xl rounded-xl p-3 sm:p-4 shadow-xl flex flex-col overflow-y-auto`}>
         {/* Dropdown Selector */}
         <div className="mb-4">
           <label className={`text-sm font-bold mb-2 block ${darkMode ? "text-slate-300" : "text-slate-700"}`}>
@@ -191,12 +191,12 @@ export default function CockpitReference({ darkMode = true }) {
         )}
       </div>
 
-      {/* Right Side - Resizable Cockpit Panels */}
-      <div className="flex-1 flex flex-col gap-0">
+      {/* Right Side - Cockpit Panels (Stacked on mobile, resizable on desktop) */}
+      <div className="flex-1 flex flex-col gap-3 lg:gap-0">
         {/* Instrument Panel - Top */}
         <div
-          className={`${darkMode ? "bg-slate-800/50" : "bg-white/50"} backdrop-blur-xl rounded-t-2xl shadow-xl overflow-auto relative`}
-          style={{ height: `${topPanelHeight}px` }}
+          className={`${darkMode ? "bg-slate-800/50" : "bg-white/50"} backdrop-blur-xl rounded-xl lg:rounded-t-2xl lg:rounded-b-none shadow-xl overflow-auto relative`}
+          style={{ height: window.innerWidth >= 1024 ? `${topPanelHeight}px` : '400px', minHeight: '300px' }}
         >
           <div className="w-full h-full bg-slate-900">
             <iframe
@@ -218,9 +218,9 @@ export default function CockpitReference({ darkMode = true }) {
           </a>
         </div>
 
-        {/* Resizable Divider */}
+        {/* Resizable Divider (Desktop only) */}
         <div
-          className={`h-2 cursor-ns-resize group relative flex items-center justify-center ${
+          className={`hidden lg:flex h-2 cursor-ns-resize group relative items-center justify-center ${
             isDragging ? "bg-blue-500" : darkMode ? "bg-slate-700 hover:bg-blue-600" : "bg-slate-300 hover:bg-blue-500"
           } transition-colors`}
           onMouseDown={handleMouseDown}
@@ -230,8 +230,8 @@ export default function CockpitReference({ darkMode = true }) {
 
         {/* Side Panel - Bottom */}
         <div
-          className={`flex-1 ${darkMode ? "bg-slate-800/50" : "bg-white/50"} backdrop-blur-xl rounded-b-2xl shadow-xl overflow-auto relative`}
-          style={{ minHeight: '1000px' }}
+          className={`flex-1 ${darkMode ? "bg-slate-800/50" : "bg-white/50"} backdrop-blur-xl rounded-xl lg:rounded-t-none lg:rounded-b-2xl shadow-xl overflow-auto relative`}
+          style={{ height: window.innerWidth >= 1024 ? 'auto' : '400px', minHeight: window.innerWidth >= 1024 ? '1000px' : '300px' }}
         >
           <div className="w-full h-full bg-slate-900">
             <iframe
