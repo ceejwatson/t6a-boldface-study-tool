@@ -836,11 +836,11 @@ export default function T6AEnhancedStudyTool() {
 
   return (
     <div
-      className={`min-h-screen ${darkMode ? "bg-slate-700" : "bg-slate-100"}`}
+      className={`h-screen overflow-hidden flex flex-col ${darkMode ? "bg-slate-700" : "bg-slate-100"}`}
     >
       {/* Header */}
       <header
-        className={`${darkMode ? "bg-slate-900/95 border-blue-700/50" : "bg-white/95 border-blue-300/50"} backdrop-blur border-b sticky top-0 z-20 shadow-xl`}
+        className={`${darkMode ? "bg-slate-900/95 border-blue-700/50" : "bg-white/95 border-blue-300/50"} backdrop-blur border-b z-20 shadow-xl flex-shrink-0`}
       >
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between flex-wrap gap-4">
@@ -929,7 +929,8 @@ export default function T6AEnhancedStudyTool() {
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-8">
+      <main className="flex-1 overflow-y-auto">
+        <div className="container mx-auto px-4 py-8">
         {/* Simplified Navigation Bar - Only show when not on home screen */}
         {activeTab !== "home" && (
           <div className="mb-6">
@@ -2671,6 +2672,7 @@ export default function T6AEnhancedStudyTool() {
             </div>
           </div>
         )}
+        </div>
       </main>
     </div>
   );
