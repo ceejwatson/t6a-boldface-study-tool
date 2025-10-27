@@ -842,27 +842,27 @@ export default function T6AEnhancedStudyTool() {
       <header
         className={`${darkMode ? "bg-slate-900/95 border-blue-700/50" : "bg-white/95 border-blue-300/50"} backdrop-blur border-b z-20 shadow-xl flex-shrink-0`}
       >
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between flex-wrap gap-4">
-            <div className="flex items-center gap-3">
-              <div className="bg-blue-600 p-2 rounded-lg">
-                <BookOpen className="w-8 h-8 text-white" />
+        <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-4">
+          <div className="flex items-center justify-between flex-wrap gap-2 sm:gap-4">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="bg-blue-600 p-1.5 sm:p-2 rounded-lg">
+                <BookOpen className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
               </div>
               <div>
                 <h1
-                  className={`text-2xl font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
+                  className={`text-lg sm:text-xl md:text-2xl font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
                 >
                   T-6A Texan II
                 </h1>
                 <p
-                  className={`text-sm ${darkMode ? "text-blue-300" : "text-blue-600"}`}
+                  className={`text-xs sm:text-sm ${darkMode ? "text-blue-300" : "text-blue-600"}`}
                 >
                   Enhanced Study Tool
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 sm:gap-4">
               {/* Font Size Selector */}
               <div className="flex items-center gap-2">
                 <span className={`text-xs ${darkMode ? "text-slate-400" : "text-slate-600"} hidden sm:inline`}>
@@ -910,18 +910,21 @@ export default function T6AEnhancedStudyTool() {
                 href="https://www.sheppard.af.mil/Portals/65/T-6A%20Boldface%20Ops%20Limits%2C%201%20Jun%202023%20%28Filled%29.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
+                className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-all touch-manipulation ${
                   darkMode
                     ? "bg-blue-600 hover:bg-blue-700 text-white"
                     : "bg-blue-500 hover:bg-blue-600 text-white"
                 }`}
                 title="Official T-6A BOLDFACE Emergency Procedures and Operating Limitations PDF"
               >
-                <FileText className="w-5 h-5" />
-                <span className="hidden sm:inline font-medium">
+                <FileText className="w-4 h-4 sm:w-5 sm:h-5" />
+                <span className="hidden md:inline font-medium text-sm">
                   T-6A BOLDFACE Reference
                 </span>
-                <ExternalLink className="w-4 h-4" />
+                <span className="md:hidden font-medium text-xs">
+                  PDF
+                </span>
+                <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
               </a>
 
             </div>
@@ -930,25 +933,26 @@ export default function T6AEnhancedStudyTool() {
       </header>
 
       <main className="flex-1 overflow-y-auto">
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-8">
         {/* Simplified Navigation Bar - Only show when not on home screen */}
         {activeTab !== "home" && (
-          <div className="mb-6">
+          <div className="mb-4 sm:mb-6">
             <div
-              className={`flex items-center justify-between gap-3 p-3 rounded-xl ${darkMode ? "bg-slate-800/50" : "bg-white/50"} backdrop-blur-sm border ${darkMode ? "border-slate-700" : "border-slate-200"}`}
+              className={`flex items-center justify-between gap-2 sm:gap-3 p-2 sm:p-3 rounded-xl ${darkMode ? "bg-slate-800/50" : "bg-white/50"} backdrop-blur-sm border ${darkMode ? "border-slate-700" : "border-slate-200"}`}
             >
               {/* Left: Home + Current Mode */}
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 sm:gap-3">
                 <button
                   onClick={() => setActiveTab("home")}
-                  className={`px-3 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 ${
+                  className={`px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-1 sm:gap-2 touch-manipulation text-sm sm:text-base ${
                     darkMode
                       ? "bg-slate-700 hover:bg-slate-600 text-white"
                       : "bg-slate-200 hover:bg-slate-300 text-slate-900"
                   }`}
                 >
-                  <ChevronRight className="w-4 h-4 rotate-180" />
+                  <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4 rotate-180" />
                   <span className="hidden sm:inline">Home</span>
+                  <span className="sm:hidden">←</span>
                 </button>
 
                 {/* Current Mode Indicator */}
@@ -1054,28 +1058,28 @@ export default function T6AEnhancedStudyTool() {
         {activeTab === "home" ? (
           <div className="max-w-4xl mx-auto px-4">
             {/* Hero Section - Compact */}
-            <div className="text-center pt-4 pb-6 mb-8">
-              <div className="flex justify-center mb-3">
+            <div className="text-center pt-2 sm:pt-4 pb-4 sm:pb-6 mb-4 sm:mb-8">
+              <div className="flex justify-center mb-2 sm:mb-3">
                 <img
                   src="/t6atransparent.png"
                   alt="T-6A Texan II"
-                  className="w-72 h-auto"
+                  className="w-48 sm:w-64 md:w-72 h-auto"
                 />
               </div>
               <h1
-                className={`text-4xl font-bold mb-2 ${darkMode ? "text-white" : "text-slate-900"}`}
+                className={`text-2xl sm:text-3xl md:text-4xl font-bold mb-1 sm:mb-2 ${darkMode ? "text-white" : "text-slate-900"}`}
               >
                 T-6A Texan II
               </h1>
               <p
-                className={`text-base ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                className={`text-sm sm:text-base ${darkMode ? "text-slate-400" : "text-slate-600"}`}
               >
                 BOLDFACE Study Tool
               </p>
             </div>
 
             {/* Main Action Buttons - Redesigned */}
-            <div className="grid grid-cols-3 gap-4 mb-6 max-w-2xl mx-auto">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6 max-w-2xl mx-auto">
               <button
                 onClick={() => {
                   // Set all question types first
@@ -1092,12 +1096,12 @@ export default function T6AEnhancedStudyTool() {
                   setActiveTab("studysetup");
                   setSelectedCategory("all");
                 }}
-                className={`group ${darkMode ? "bg-gradient-to-br from-blue-500/20 to-blue-600/10 hover:from-blue-500/30 hover:to-blue-600/20 border border-blue-500/30" : "bg-gradient-to-br from-blue-500 to-blue-600"} backdrop-blur-xl rounded-2xl p-6 transition-all duration-300 flex flex-col items-center justify-center shadow-lg hover:shadow-xl hover:scale-105`}
+                className={`group ${darkMode ? "bg-gradient-to-br from-blue-500/20 to-blue-600/10 hover:from-blue-500/30 hover:to-blue-600/20 border border-blue-500/30" : "bg-gradient-to-br from-blue-500 to-blue-600"} backdrop-blur-xl rounded-2xl p-4 sm:p-6 transition-all duration-300 flex flex-col items-center justify-center shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 touch-manipulation`}
               >
-                <div className={`${darkMode ? "bg-blue-500/40" : "bg-white/30"} p-5 rounded-2xl mb-3 group-hover:scale-110 transition-transform shadow-lg`}>
-                  <BookOpen className={`w-10 h-10 ${darkMode ? "text-blue-200" : "text-white"}`} strokeWidth={2.5} />
+                <div className={`${darkMode ? "bg-blue-500/40" : "bg-white/30"} p-3 sm:p-5 rounded-2xl mb-2 sm:mb-3 group-hover:scale-110 transition-transform shadow-lg`}>
+                  <BookOpen className={`w-8 h-8 sm:w-10 sm:h-10 ${darkMode ? "text-blue-200" : "text-white"}`} strokeWidth={2.5} />
                 </div>
-                <h3 className={`text-lg font-semibold ${darkMode ? "text-white" : "text-white"}`}>
+                <h3 className={`text-base sm:text-lg font-semibold ${darkMode ? "text-white" : "text-white"}`}>
                   Study
                 </h3>
               </button>
@@ -1113,12 +1117,12 @@ export default function T6AEnhancedStudyTool() {
                   setShowQuizSetup(true);
                   setActiveTab("quizsetup");
                 }}
-                className={`group ${darkMode ? "bg-gradient-to-br from-orange-500/20 to-orange-600/10 hover:from-orange-500/30 hover:to-orange-600/20 border border-orange-500/30" : "bg-gradient-to-br from-orange-500 to-orange-600"} backdrop-blur-xl rounded-2xl p-6 transition-all duration-300 flex flex-col items-center justify-center shadow-lg hover:shadow-xl hover:scale-105`}
+                className={`group ${darkMode ? "bg-gradient-to-br from-orange-500/20 to-orange-600/10 hover:from-orange-500/30 hover:to-orange-600/20 border border-orange-500/30" : "bg-gradient-to-br from-orange-500 to-orange-600"} backdrop-blur-xl rounded-2xl p-4 sm:p-6 transition-all duration-300 flex flex-col items-center justify-center shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 touch-manipulation`}
               >
-                <div className={`${darkMode ? "bg-orange-500/40" : "bg-white/30"} p-5 rounded-2xl mb-3 group-hover:scale-110 transition-transform shadow-lg`}>
-                  <Brain className={`w-10 h-10 ${darkMode ? "text-orange-200" : "text-white"}`} strokeWidth={2.5} />
+                <div className={`${darkMode ? "bg-orange-500/40" : "bg-white/30"} p-3 sm:p-5 rounded-2xl mb-2 sm:mb-3 group-hover:scale-110 transition-transform shadow-lg`}>
+                  <Brain className={`w-8 h-8 sm:w-10 sm:h-10 ${darkMode ? "text-orange-200" : "text-white"}`} strokeWidth={2.5} />
                 </div>
-                <h3 className={`text-lg font-semibold ${darkMode ? "text-white" : "text-white"}`}>
+                <h3 className={`text-base sm:text-lg font-semibold ${darkMode ? "text-white" : "text-white"}`}>
                   Quiz
                 </h3>
               </button>
@@ -1130,12 +1134,12 @@ export default function T6AEnhancedStudyTool() {
                   setStudyMode("flashcard");
                   setActiveTab("flashcardsetup");
                 }}
-                className={`group ${darkMode ? "bg-gradient-to-br from-purple-500/20 to-purple-600/10 hover:from-purple-500/30 hover:to-purple-600/20 border border-purple-500/30" : "bg-gradient-to-br from-purple-500 to-purple-600"} backdrop-blur-xl rounded-2xl p-6 transition-all duration-300 flex flex-col items-center justify-center shadow-lg hover:shadow-xl hover:scale-105`}
+                className={`group ${darkMode ? "bg-gradient-to-br from-purple-500/20 to-purple-600/10 hover:from-purple-500/30 hover:to-purple-600/20 border border-purple-500/30" : "bg-gradient-to-br from-purple-500 to-purple-600"} backdrop-blur-xl rounded-2xl p-4 sm:p-6 transition-all duration-300 flex flex-col items-center justify-center shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 touch-manipulation`}
               >
-                <div className={`${darkMode ? "bg-purple-500/40" : "bg-white/30"} p-5 rounded-2xl mb-3 group-hover:scale-110 transition-transform shadow-lg`}>
-                  <RotateCcw className={`w-10 h-10 ${darkMode ? "text-purple-200" : "text-white"}`} strokeWidth={2.5} />
+                <div className={`${darkMode ? "bg-purple-500/40" : "bg-white/30"} p-3 sm:p-5 rounded-2xl mb-2 sm:mb-3 group-hover:scale-110 transition-transform shadow-lg`}>
+                  <RotateCcw className={`w-8 h-8 sm:w-10 sm:h-10 ${darkMode ? "text-purple-200" : "text-white"}`} strokeWidth={2.5} />
                 </div>
-                <h3 className={`text-lg font-semibold ${darkMode ? "text-white" : "text-white"}`}>
+                <h3 className={`text-base sm:text-lg font-semibold ${darkMode ? "text-white" : "text-white"}`}>
                   Flashcards
                 </h3>
               </button>
@@ -1144,12 +1148,12 @@ export default function T6AEnhancedStudyTool() {
                 onClick={() => {
                   setActiveTab("learningpath");
                 }}
-                className={`group ${darkMode ? "bg-gradient-to-br from-green-500/20 to-green-600/10 hover:from-green-500/30 hover:to-green-600/20 border border-green-500/30" : "bg-gradient-to-br from-green-500 to-green-600"} backdrop-blur-xl rounded-2xl p-6 transition-all duration-300 flex flex-col items-center justify-center shadow-lg hover:shadow-xl hover:scale-105`}
+                className={`group ${darkMode ? "bg-gradient-to-br from-green-500/20 to-green-600/10 hover:from-green-500/30 hover:to-green-600/20 border border-green-500/30" : "bg-gradient-to-br from-green-500 to-green-600"} backdrop-blur-xl rounded-2xl p-4 sm:p-6 transition-all duration-300 flex flex-col items-center justify-center shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 touch-manipulation`}
               >
-                <div className={`${darkMode ? "bg-green-500/40" : "bg-white/30"} p-5 rounded-2xl mb-3 group-hover:scale-110 transition-transform shadow-lg`}>
-                  <ChevronRight className={`w-10 h-10 ${darkMode ? "text-green-200" : "text-white"}`} strokeWidth={2.5} />
+                <div className={`${darkMode ? "bg-green-500/40" : "bg-white/30"} p-3 sm:p-5 rounded-2xl mb-2 sm:mb-3 group-hover:scale-110 transition-transform shadow-lg`}>
+                  <ChevronRight className={`w-8 h-8 sm:w-10 sm:h-10 ${darkMode ? "text-green-200" : "text-white"}`} strokeWidth={2.5} />
                 </div>
-                <h3 className={`text-lg font-semibold ${darkMode ? "text-white" : "text-white"}`}>
+                <h3 className={`text-base sm:text-lg font-semibold ${darkMode ? "text-white" : "text-white"}`}>
                   Categories
                 </h3>
               </button>
@@ -1158,12 +1162,12 @@ export default function T6AEnhancedStudyTool() {
                 onClick={() => {
                   setActiveTab("cockpit");
                 }}
-                className={`group ${darkMode ? "bg-gradient-to-br from-red-500/20 to-red-600/10 hover:from-red-500/30 hover:to-red-600/20 border border-red-500/30" : "bg-gradient-to-br from-red-500 to-red-600"} backdrop-blur-xl rounded-2xl p-6 transition-all duration-300 flex flex-col items-center justify-center shadow-lg hover:shadow-xl hover:scale-105`}
+                className={`group ${darkMode ? "bg-gradient-to-br from-red-500/20 to-red-600/10 hover:from-red-500/30 hover:to-red-600/20 border border-red-500/30" : "bg-gradient-to-br from-red-500 to-red-600"} backdrop-blur-xl rounded-2xl p-4 sm:p-6 transition-all duration-300 flex flex-col items-center justify-center shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 touch-manipulation`}
               >
-                <div className={`${darkMode ? "bg-red-500/40" : "bg-white/30"} p-5 rounded-2xl mb-3 group-hover:scale-110 transition-transform shadow-lg`}>
-                  <FileText className={`w-10 h-10 ${darkMode ? "text-red-200" : "text-white"}`} strokeWidth={2.5} />
+                <div className={`${darkMode ? "bg-red-500/40" : "bg-white/30"} p-3 sm:p-5 rounded-2xl mb-2 sm:mb-3 group-hover:scale-110 transition-transform shadow-lg`}>
+                  <FileText className={`w-8 h-8 sm:w-10 sm:h-10 ${darkMode ? "text-red-200" : "text-white"}`} strokeWidth={2.5} />
                 </div>
-                <h3 className={`text-lg font-semibold ${darkMode ? "text-white" : "text-white"}`}>
+                <h3 className={`text-base sm:text-lg font-semibold ${darkMode ? "text-white" : "text-white"}`}>
                   Cockpit
                 </h3>
               </button>
@@ -1172,12 +1176,12 @@ export default function T6AEnhancedStudyTool() {
                 onClick={() => {
                   setActiveTab("progress");
                 }}
-                className={`group ${darkMode ? "bg-gradient-to-br from-indigo-500/20 to-indigo-600/10 hover:from-indigo-500/30 hover:to-indigo-600/20 border border-indigo-500/30" : "bg-gradient-to-br from-indigo-500 to-indigo-600"} backdrop-blur-xl rounded-2xl p-6 transition-all duration-300 flex flex-col items-center justify-center shadow-lg hover:shadow-xl hover:scale-105`}
+                className={`group ${darkMode ? "bg-gradient-to-br from-indigo-500/20 to-indigo-600/10 hover:from-indigo-500/30 hover:to-indigo-600/20 border border-indigo-500/30" : "bg-gradient-to-br from-indigo-500 to-indigo-600"} backdrop-blur-xl rounded-2xl p-4 sm:p-6 transition-all duration-300 flex flex-col items-center justify-center shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 touch-manipulation`}
               >
-                <div className={`${darkMode ? "bg-indigo-500/40" : "bg-white/30"} p-5 rounded-2xl mb-3 group-hover:scale-110 transition-transform shadow-lg`}>
-                  <Award className={`w-10 h-10 ${darkMode ? "text-indigo-200" : "text-white"}`} strokeWidth={2.5} />
+                <div className={`${darkMode ? "bg-indigo-500/40" : "bg-white/30"} p-3 sm:p-5 rounded-2xl mb-2 sm:mb-3 group-hover:scale-110 transition-transform shadow-lg`}>
+                  <Award className={`w-8 h-8 sm:w-10 sm:h-10 ${darkMode ? "text-indigo-200" : "text-white"}`} strokeWidth={2.5} />
                 </div>
-                <h3 className={`text-lg font-semibold ${darkMode ? "text-white" : "text-white"}`}>
+                <h3 className={`text-base sm:text-lg font-semibold ${darkMode ? "text-white" : "text-white"}`}>
                   Progress
                 </h3>
               </button>

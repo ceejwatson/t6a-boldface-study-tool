@@ -403,7 +403,7 @@ export default function Flashcard({
 
       {/* Flashcard */}
       <div
-        className={`relative w-full h-[500px] perspective-1000 ${!voiceMode || isFlipped ? "cursor-pointer" : ""}`}
+        className={`relative w-full h-[400px] sm:h-[500px] perspective-1000 ${!voiceMode || isFlipped ? "cursor-pointer" : ""}`}
         onClick={voiceMode && !isFlipped ? undefined : handleFlip}
       >
         <div
@@ -419,19 +419,19 @@ export default function Flashcard({
           <div
             className={`absolute w-full h-full backface-hidden ${
               darkMode ? "bg-slate-800 border-slate-600" : "bg-white border-slate-300"
-            } border-2 rounded-xl p-8 flex flex-col items-center justify-center shadow-lg`}
+            } border-2 rounded-xl p-4 sm:p-8 flex flex-col items-center justify-center shadow-lg`}
             style={{ backfaceVisibility: "hidden" }}
           >
-            <div className={`text-xs mb-6 ${darkMode ? "text-blue-400" : "text-blue-600"} font-semibold uppercase tracking-wide text-center`}>
+            <div className={`text-xs mb-3 sm:mb-6 ${darkMode ? "text-blue-400" : "text-blue-600"} font-semibold uppercase tracking-wide text-center`}>
               {question.category} • {question.topic}
             </div>
-            <div className={`text-xl md:text-2xl font-semibold text-center max-w-2xl ${darkMode ? "text-white" : "text-slate-900"} px-4`}>
+            <div className={`text-lg sm:text-xl md:text-2xl font-semibold text-center max-w-2xl ${darkMode ? "text-white" : "text-slate-900"} px-2 sm:px-4`}>
               {question.question}
             </div>
 
             {/* Voice Mode Controls */}
             {voiceMode ? (
-              <div className="mt-8 flex flex-col items-center gap-4 w-full max-w-md">
+              <div className="mt-4 sm:mt-8 flex flex-col items-center gap-3 sm:gap-4 w-full max-w-md px-2">
                 {/* Listening Animation */}
                 <div className="relative">
                   <button
@@ -439,7 +439,7 @@ export default function Flashcard({
                       e.stopPropagation();
                       toggleListening();
                     }}
-                    className={`p-6 rounded-full transition-all relative ${
+                    className={`p-4 sm:p-6 rounded-full transition-all relative ${
                       isListening
                         ? "bg-red-500 hover:bg-red-600"
                         : darkMode
@@ -447,7 +447,7 @@ export default function Flashcard({
                           : "bg-blue-500 hover:bg-blue-600"
                     }`}
                   >
-                    <Mic className="w-10 h-10 text-white relative z-10" />
+                    <Mic className="w-8 h-8 sm:w-10 sm:h-10 text-white relative z-10" />
 
                     {/* Pulsing rings when listening */}
                     {isListening && (
@@ -517,9 +517,9 @@ export default function Flashcard({
                 </div>
               </div>
             ) : (
-              <div className={`mt-8 flex items-center gap-2 ${darkMode ? "text-slate-400" : "text-slate-500"}`}>
+              <div className={`mt-4 sm:mt-8 flex items-center gap-2 ${darkMode ? "text-slate-400" : "text-slate-500"}`}>
                 <Eye className="w-4 h-4" />
-                <span className="text-sm">Click to reveal answer</span>
+                <span className="text-xs sm:text-sm">Tap to reveal answer</span>
               </div>
             )}
           </div>
@@ -528,21 +528,21 @@ export default function Flashcard({
           <div
             className={`absolute w-full h-full backface-hidden ${
               darkMode ? "bg-slate-800 border-slate-600" : "bg-white border-slate-300"
-            } border-2 rounded-xl p-8 flex flex-col items-center justify-center shadow-lg overflow-y-auto`}
+            } border-2 rounded-xl p-4 sm:p-8 flex flex-col items-center justify-center shadow-lg overflow-y-auto`}
             style={{
               backfaceVisibility: "hidden",
               transform: "rotateY(180deg)",
             }}
           >
-            <div className={`text-xs mb-6 ${darkMode ? "text-green-400" : "text-green-600"} font-semibold uppercase tracking-wide text-center`}>
+            <div className={`text-xs mb-3 sm:mb-6 ${darkMode ? "text-green-400" : "text-green-600"} font-semibold uppercase tracking-wide text-center`}>
               Answer
             </div>
 
             {/* Answer Section - Centered and Prominent */}
-            <div className={`text-center mb-8 max-w-xl w-full`}>
-              <div className={`text-2xl font-bold whitespace-pre-wrap leading-relaxed ${
+            <div className={`text-center mb-4 sm:mb-8 max-w-xl w-full`}>
+              <div className={`text-lg sm:text-xl md:text-2xl font-bold whitespace-pre-wrap leading-relaxed ${
                 darkMode ? "text-white" : "text-slate-900"
-              } p-6 rounded-xl ${
+              } p-3 sm:p-6 rounded-xl ${
                 darkMode ? "bg-slate-700/50 border-2 border-slate-600" : "bg-slate-100 border-2 border-slate-300"
               }`}>
                 {getAnswerContent().answer}
@@ -550,9 +550,9 @@ export default function Flashcard({
             </div>
 
             {/* Explanation Section - Separated and Subtle */}
-            <div className={`text-sm whitespace-pre-wrap leading-relaxed text-left max-w-xl w-full ${
+            <div className={`text-xs sm:text-sm whitespace-pre-wrap leading-relaxed text-left max-w-xl w-full ${
               darkMode ? "text-slate-300" : "text-slate-700"
-            } p-4 rounded-lg ${
+            } p-3 sm:p-4 rounded-lg ${
               darkMode ? "bg-slate-700/30" : "bg-slate-100"
             }`}>
               <div className={`text-xs font-semibold uppercase tracking-wide mb-2 ${
@@ -568,23 +568,23 @@ export default function Flashcard({
 
       {/* Rating Buttons (shown when flipped) */}
       {isFlipped && (
-        <div className="mt-6">
-          <div className={`text-center mb-3 text-sm ${darkMode ? "text-slate-300" : "text-slate-700"}`}>
+        <div className="mt-4 sm:mt-6">
+          <div className={`text-center mb-2 sm:mb-3 text-xs sm:text-sm ${darkMode ? "text-slate-300" : "text-slate-700"}`}>
             Did you know this?
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4">
             <button
               onClick={(e) => {
                 e.stopPropagation();
                 handleRating(0);
               }}
-              className={`p-4 rounded-lg border-2 transition ${
+              className={`p-3 sm:p-4 rounded-lg border-2 transition touch-manipulation ${
                 darkMode
-                  ? "bg-red-900/20 border-red-600 hover:bg-red-900/40 text-red-400"
-                  : "bg-red-50 border-red-400 hover:bg-red-100 text-red-700"
+                  ? "bg-red-900/20 border-red-600 hover:bg-red-900/40 text-red-400 active:scale-95"
+                  : "bg-red-50 border-red-400 hover:bg-red-100 text-red-700 active:scale-95"
               }`}
             >
-              <div className="font-bold text-lg">Don&apos;t Know</div>
+              <div className="font-bold text-base sm:text-lg">Don&apos;t Know</div>
               <div className="text-xs mt-1">Review soon</div>
             </button>
             <button
@@ -592,13 +592,13 @@ export default function Flashcard({
                 e.stopPropagation();
                 handleRating(5);
               }}
-              className={`p-4 rounded-lg border-2 transition ${
+              className={`p-3 sm:p-4 rounded-lg border-2 transition touch-manipulation ${
                 darkMode
-                  ? "bg-green-900/20 border-green-600 hover:bg-green-900/40 text-green-400"
-                  : "bg-green-50 border-green-400 hover:bg-green-100 text-green-700"
+                  ? "bg-green-900/20 border-green-600 hover:bg-green-900/40 text-green-400 active:scale-95"
+                  : "bg-green-50 border-green-400 hover:bg-green-100 text-green-700 active:scale-95"
               }`}
             >
-              <div className="font-bold text-lg">Know It</div>
+              <div className="font-bold text-base sm:text-lg">Know It</div>
               <div className="text-xs mt-1">Review later</div>
             </button>
           </div>
@@ -607,23 +607,24 @@ export default function Flashcard({
 
       {/* Navigation Buttons */}
       {!isFlipped && (
-        <div className="flex justify-between mt-6 gap-4">
+        <div className="flex justify-between mt-4 sm:mt-6 gap-2 sm:gap-4">
           <button
             onClick={(e) => {
               e.stopPropagation();
               onPrevious();
             }}
             disabled={currentIndex === 0}
-            className={`flex items-center gap-2 px-6 py-3 rounded-lg border-2 transition ${
+            className={`flex items-center gap-1 sm:gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-lg border-2 transition touch-manipulation text-sm sm:text-base ${
               currentIndex === 0
                 ? "opacity-50 cursor-not-allowed"
                 : darkMode
-                  ? "border-slate-600 hover:border-blue-500 text-slate-300"
-                  : "border-slate-300 hover:border-blue-500 text-slate-700"
+                  ? "border-slate-600 hover:border-blue-500 text-slate-300 active:scale-95"
+                  : "border-slate-300 hover:border-blue-500 text-slate-700 active:scale-95"
             }`}
           >
             <ChevronLeft className="w-4 h-4" />
-            Previous
+            <span className="hidden sm:inline">Previous</span>
+            <span className="sm:hidden">Prev</span>
           </button>
           <button
             onClick={(e) => {
@@ -631,12 +632,12 @@ export default function Flashcard({
               onNext();
             }}
             disabled={currentIndex === totalCards - 1}
-            className={`flex items-center gap-2 px-6 py-3 rounded-lg border-2 transition ${
+            className={`flex items-center gap-1 sm:gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-lg border-2 transition touch-manipulation text-sm sm:text-base ${
               currentIndex === totalCards - 1
                 ? "opacity-50 cursor-not-allowed"
                 : darkMode
-                  ? "border-slate-600 hover:border-blue-500 text-slate-300"
-                  : "border-slate-300 hover:border-blue-500 text-slate-700"
+                  ? "border-slate-600 hover:border-blue-500 text-slate-300 active:scale-95"
+                  : "border-slate-300 hover:border-blue-500 text-slate-700 active:scale-95"
             }`}
           >
             Next
