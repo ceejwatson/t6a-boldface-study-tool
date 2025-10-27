@@ -1528,12 +1528,21 @@ export default function T6AEnhancedStudyTool() {
                     if (unknownFlashcards.length < 10) {
                       setQuestionCount(unknownFlashcards.length);
                     }
-                    const allQs = getAllQuestions();
-                    const unknownQs = allQs.filter(q => unknownFlashcards.includes(q.id));
+
+                    // Get flashcard questions directly from database
+                    const flashcardQuestions = questionDatabase.flashcard || [];
+                    const allFlashcards = flashcardQuestions.map(q => ({ ...q, questionType: "flashcard" }));
+
+                    // Filter to only unknown flashcards
+                    const unknownQs = allFlashcards.filter(q => unknownFlashcards.includes(q.id));
+
                     setCurrentQuestions(unknownQs);
                     setCurrentQuestionIndex(0);
+                    setUserAnswers({});
+                    setShowExplanation(false);
                     setStudyMode("flashcard");
                     setActiveTab("flashcard");
+                    setShowStudySetup(false);
                   }}
                   className={`w-full ${darkMode ? "bg-purple-500/20 hover:bg-purple-500/30 border-2 border-purple-500/50" : "bg-purple-100 hover:bg-purple-200 border-2 border-purple-300"} rounded-2xl p-5 transition text-left hover:scale-[1.02]`}
                 >
