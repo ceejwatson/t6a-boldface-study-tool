@@ -1302,14 +1302,39 @@ export default function T6AEnhancedStudyTool() {
 
             <button
               onClick={() => {
-                // Auto-select all topics and question types
-                const allCategories = [...new Set(getAllQuestions().map(q => q.category))];
+                // Set question types first
+                const quizTypes = ["multipleChoice", "trueFalse", "reorderSequence", "matchItems"];
+                setSelectedQuestionTypes(quizTypes);
+
+                // Get all questions with quiz types
+                const all = [];
+                quizTypes.forEach((type) => {
+                  const questions = questionDatabase[type] || [];
+                  questions.forEach((q) => {
+                    all.push({ ...q, questionType: type });
+                  });
+                });
+
+                // Auto-select all topics
+                const allCategories = [...new Set(all.map(q => q.category))];
                 setSelectedTopics(allCategories);
-                setSelectedQuestionTypes(["multipleChoice", "trueFalse", "reorderSequence", "matchItems"]);
+
+                // Shuffle questions
+                for (let i = all.length - 1; i > 0; i--) {
+                  const j = Math.floor(Math.random() * (i + 1));
+                  [all[i], all[j]] = [all[j], all[i]];
+                }
+
+                // Limit to selected count
+                const limitedQuestions = all.slice(0, questionCount);
+
+                setCurrentQuestions(limitedQuestions);
+                setCurrentQuestionIndex(0);
+                setUserAnswers({});
+                setShowExplanation(false);
                 setStudyMode("quiz");
                 setActiveTab("study");
                 setShowQuizSetup(false);
-                loadQuestions("all");
               }}
               className={`w-full px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-200 ${
                 darkMode
