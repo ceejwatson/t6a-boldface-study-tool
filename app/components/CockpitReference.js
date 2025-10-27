@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { FileText, ChevronDown, GripHorizontal } from "lucide-react";
+import { FileText, ChevronDown, GripHorizontal, ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function CockpitReference({ darkMode = true }) {
   const [selectedProcedure, setSelectedProcedure] = useState("emergency-shutdown");
   const [topPanelHeight, setTopPanelHeight] = useState(1000); // Height in pixels for top panel
   const [isDragging, setIsDragging] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const dragStartY = useRef(0);
   const dragStartHeight = useRef(0);
 
@@ -130,8 +131,27 @@ export default function CockpitReference({ darkMode = true }) {
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
     >
-      {/* Left Side - Procedure Selector (Full width on mobile, sidebar on desktop) */}
-      <div className={`w-full lg:w-72 lg:flex-shrink-0 lg:sticky lg:top-3 lg:h-[calc(100vh-100px)] ${darkMode ? "bg-slate-800/50" : "bg-white/50"} backdrop-blur-xl rounded-xl p-3 sm:p-4 shadow-xl flex flex-col overflow-y-auto`}>
+      {/* Left Side - Procedure Selector (Full width on mobile, collapsible sidebar on desktop) */}
+      <div className={`w-full transition-all duration-300 ${isSidebarCollapsed ? 'lg:w-12' : 'lg:w-72'} lg:flex-shrink-0 lg:sticky lg:top-3 lg:h-[calc(100vh-100px)] ${darkMode ? "bg-slate-800/50" : "bg-white/50"} backdrop-blur-xl rounded-xl ${isSidebarCollapsed ? 'lg:p-2' : 'p-3 sm:p-4'} shadow-xl flex flex-col overflow-y-auto relative`}>
+
+        {/* Collapse/Expand Button (Desktop only) */}
+        <button
+          onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+          className={`hidden lg:block absolute top-3 right-3 p-2 rounded-lg transition-all z-10 ${
+            darkMode ? 'bg-slate-700 hover:bg-slate-600 text-white' : 'bg-slate-200 hover:bg-slate-300 text-slate-900'
+          }`}
+          title={isSidebarCollapsed ? 'Expand' : 'Collapse'}
+        >
+          {isSidebarCollapsed ? (
+            <ChevronRight className="w-4 h-4" />
+          ) : (
+            <ChevronLeft className="w-4 h-4" />
+          )}
+        </button>
+
+        {/* Content (Hidden when collapsed) */}
+        {!isSidebarCollapsed && (
+          <>
         {/* Dropdown Selector */}
         <div className="mb-4">
           <label className={`text-sm font-bold mb-2 block ${darkMode ? "text-slate-300" : "text-slate-700"}`}>
@@ -188,6 +208,8 @@ export default function CockpitReference({ darkMode = true }) {
               ))}
             </div>
           </div>
+        )}
+        </>
         )}
       </div>
 
