@@ -217,27 +217,35 @@ export default function CockpitReference({ darkMode = true }) {
       <div className="flex-1 flex flex-col gap-3 lg:gap-0">
         {/* Instrument Panel - Top */}
         <div
-          className={`${darkMode ? "bg-slate-800/50" : "bg-white/50"} backdrop-blur-xl rounded-xl lg:rounded-t-2xl lg:rounded-b-none shadow-xl overflow-auto relative`}
+          className={`${darkMode ? "bg-slate-800/50" : "bg-white/50"} backdrop-blur-xl rounded-xl lg:rounded-t-2xl lg:rounded-b-none shadow-xl overflow-auto relative touch-pan-x touch-pan-y touch-pinch-zoom`}
           style={{ height: window.innerWidth >= 1024 ? `${topPanelHeight}px` : '400px', minHeight: '300px' }}
         >
-          <div className="w-full h-full bg-slate-900">
+          <div className="w-full h-full bg-slate-900 relative">
             <iframe
-              src="/CockpitInstrtFrt_V300.pdf#view=FitH"
+              src="/CockpitInstrtFrt_V300.pdf#view=FitH&zoom=page-width"
               className="w-full h-full"
               title="Instrument Panel Reference"
+              style={{ touchAction: 'pan-x pan-y pinch-zoom' }}
             />
           </div>
-          <a
-            href="/CockpitInstrtFrt_V300.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`absolute top-2 right-2 inline-flex items-center gap-1 px-2 py-1 rounded text-xs ${
-              darkMode ? "bg-slate-900/80 text-blue-400 hover:text-blue-300" : "bg-white/80 text-blue-600 hover:text-blue-500"
-            } transition backdrop-blur-sm z-10`}
-          >
-            <FileText className="w-3 h-3" />
-            Open
-          </a>
+          <div className="absolute top-2 right-2 flex flex-col gap-2 z-10">
+            <a
+              href="/CockpitInstrtFrt_V300.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`inline-flex items-center gap-2 px-4 py-3 rounded-lg text-sm font-bold ${
+                darkMode ? "bg-blue-600 hover:bg-blue-700 text-white" : "bg-blue-500 hover:bg-blue-600 text-white"
+              } transition shadow-xl touch-manipulation active:scale-95`}
+            >
+              <FileText className="w-5 h-5" />
+              <span>Open to Zoom</span>
+            </a>
+            <div className={`lg:hidden text-xs text-center px-2 py-1 rounded ${
+              darkMode ? "bg-slate-900/80 text-slate-300" : "bg-white/80 text-slate-700"
+            } backdrop-blur-sm`}>
+              Tap to zoom
+            </div>
+          </div>
         </div>
 
         {/* Resizable Divider (Desktop only) */}
@@ -252,27 +260,35 @@ export default function CockpitReference({ darkMode = true }) {
 
         {/* Side Panel - Bottom */}
         <div
-          className={`flex-1 ${darkMode ? "bg-slate-800/50" : "bg-white/50"} backdrop-blur-xl rounded-xl lg:rounded-t-none lg:rounded-b-2xl shadow-xl overflow-auto relative`}
+          className={`flex-1 ${darkMode ? "bg-slate-800/50" : "bg-white/50"} backdrop-blur-xl rounded-xl lg:rounded-t-none lg:rounded-b-2xl shadow-xl overflow-auto relative touch-pan-x touch-pan-y touch-pinch-zoom`}
           style={{ height: window.innerWidth >= 1024 ? 'auto' : '400px', minHeight: window.innerWidth >= 1024 ? '1000px' : '300px' }}
         >
-          <div className="w-full h-full bg-slate-900">
+          <div className="w-full h-full bg-slate-900 relative">
             <iframe
-              src="/SidePanelsFront_V300.pdf#view=FitH"
+              src="/SidePanelsFront_V300.pdf#view=FitH&zoom=page-width"
               className="w-full h-full"
               title="Side Panels Reference"
+              style={{ touchAction: 'pan-x pan-y pinch-zoom' }}
             />
           </div>
-          <a
-            href="/SidePanelsFront_V300.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`absolute top-2 right-2 inline-flex items-center gap-1 px-2 py-1 rounded text-xs ${
-              darkMode ? "bg-slate-900/80 text-blue-400 hover:text-blue-300" : "bg-white/80 text-blue-600 hover:text-blue-500"
-            } transition backdrop-blur-sm z-10`}
-          >
-            <FileText className="w-3 h-3" />
-            Open
-          </a>
+          <div className="absolute top-2 right-2 flex flex-col gap-2 z-10">
+            <a
+              href="/SidePanelsFront_V300.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`inline-flex items-center gap-2 px-4 py-3 rounded-lg text-sm font-bold ${
+                darkMode ? "bg-blue-600 hover:bg-blue-700 text-white" : "bg-blue-500 hover:bg-blue-600 text-white"
+              } transition shadow-xl touch-manipulation active:scale-95`}
+            >
+              <FileText className="w-5 h-5" />
+              <span>Open to Zoom</span>
+            </a>
+            <div className={`lg:hidden text-xs text-center px-2 py-1 rounded ${
+              darkMode ? "bg-slate-900/80 text-slate-300" : "bg-white/80 text-slate-700"
+            } backdrop-blur-sm`}>
+              Tap to zoom
+            </div>
+          </div>
         </div>
       </div>
     </div>
