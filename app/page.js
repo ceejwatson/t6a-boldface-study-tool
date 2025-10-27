@@ -950,9 +950,9 @@ export default function T6AEnhancedStudyTool() {
                       : "bg-slate-200 hover:bg-slate-300 text-slate-900"
                   }`}
                 >
-                  <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4 rotate-180" />
+                  <ChevronRight className="w-4 h-4 rotate-180 hidden sm:inline" />
                   <span className="hidden sm:inline">Home</span>
-                  <span className="sm:hidden">←</span>
+                  <span className="sm:hidden">← Home</span>
                 </button>
 
                 {/* Current Mode Indicator */}
