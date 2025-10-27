@@ -1379,8 +1379,25 @@ export default function T6AEnhancedStudyTool() {
 
             <button
               onClick={() => {
+                // Get flashcard questions directly from database
+                const flashcardQuestions = questionDatabase.flashcard || [];
+                const allFlashcards = flashcardQuestions.map(q => ({ ...q, questionType: "flashcard" }));
+
+                // Shuffle
+                for (let i = allFlashcards.length - 1; i > 0; i--) {
+                  const j = Math.floor(Math.random() * (i + 1));
+                  [allFlashcards[i], allFlashcards[j]] = [allFlashcards[j], allFlashcards[i]];
+                }
+
+                // Limit to selected count
+                const limitedFlashcards = allFlashcards.slice(0, questionCount);
+
+                setCurrentQuestions(limitedFlashcards);
+                setCurrentQuestionIndex(0);
+                setUserAnswers({});
+                setShowExplanation(false);
+                setStudyMode("flashcard");
                 setActiveTab("flashcard");
-                loadQuestions("flashcard");
               }}
               className={`w-full px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-200 ${
                 darkMode
