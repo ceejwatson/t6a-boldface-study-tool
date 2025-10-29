@@ -142,6 +142,8 @@ export default function ReorderSequence({
         return "text-xs sm:text-sm";
       case "large":
         return "text-base sm:text-lg";
+      case "xlarge":
+        return "text-lg sm:text-xl";
       default:
         return "text-sm sm:text-base";
     }
@@ -153,6 +155,8 @@ export default function ReorderSequence({
         return "text-base sm:text-lg";
       case "large":
         return "text-xl sm:text-2xl";
+      case "xlarge":
+        return "text-2xl sm:text-3xl";
       default:
         return "text-lg sm:text-xl";
     }

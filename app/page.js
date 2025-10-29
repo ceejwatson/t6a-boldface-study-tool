@@ -892,6 +892,17 @@ export default function T6AEnhancedStudyTool() {
                   >
                     A
                   </button>
+                  <button
+                    onClick={() => setFontSize("xlarge")}
+                    className={`px-2 py-1 rounded text-lg font-medium transition ${
+                      fontSize === "xlarge"
+                        ? "bg-blue-600 text-white"
+                        : "text-slate-400 hover:text-white hover:bg-slate-700"
+                    }`}
+                    title="Extra large text"
+                  >
+                    A
+                  </button>
                 </div>
               </div>
 

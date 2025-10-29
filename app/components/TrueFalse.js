@@ -62,6 +62,8 @@ export default function TrueFalse({
         return "text-sm sm:text-base";
       case "large":
         return "text-lg sm:text-xl";
+      case "xlarge":
+        return "text-xl sm:text-2xl";
       default:
         return "text-base sm:text-lg";
     }
@@ -73,6 +75,8 @@ export default function TrueFalse({
         return "text-base sm:text-lg";
       case "large":
         return "text-xl sm:text-2xl";
+      case "xlarge":
+        return "text-2xl sm:text-3xl";
       default:
         return "text-lg sm:text-xl";
     }
@@ -84,6 +88,8 @@ export default function TrueFalse({
         return "text-lg sm:text-xl";
       case "large":
         return "text-2xl sm:text-3xl";
+      case "xlarge":
+        return "text-3xl sm:text-4xl";
       default:
         return "text-xl sm:text-2xl";
     }
