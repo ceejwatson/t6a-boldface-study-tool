@@ -105,9 +105,12 @@ export default function CockpitReference({ darkMode = true }) {
   const selectedProc = boldfaceProcedures.find(p => p.id === selectedProcedure);
 
   const handleMouseDown = (e) => {
+    e.preventDefault();
     setIsDragging(true);
     dragStartY.current = e.clientY;
     dragStartHeight.current = topPanelHeight;
+    document.body.style.cursor = 'ns-resize';
+    document.body.style.userSelect = 'none';
   };
 
   const handleMouseMove = (e) => {
@@ -116,11 +119,40 @@ export default function CockpitReference({ darkMode = true }) {
     const deltaY = e.clientY - dragStartY.current;
     const newHeight = dragStartHeight.current + deltaY;
 
-    // Constrain between 400px and 1400px
-    setTopPanelHeight(Math.min(Math.max(newHeight, 400), 1400));
+    // Constrain between 300px and 1600px
+    const constrainedHeight = Math.min(Math.max(newHeight, 300), 1600);
+    setTopPanelHeight(constrainedHeight);
   };
 
   const handleMouseUp = () => {
+    if (isDragging) {
+      setIsDragging(false);
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+    }
+  };
+
+  const handleTouchStart = (e) => {
+    const touch = e.touches[0];
+    setIsDragging(true);
+    dragStartY.current = touch.clientY;
+    dragStartHeight.current = topPanelHeight;
+  };
+
+  const handleTouchMove = (e) => {
+    if (!isDragging) return;
+    e.preventDefault();
+
+    const touch = e.touches[0];
+    const deltaY = touch.clientY - dragStartY.current;
+    const newHeight = dragStartHeight.current + deltaY;
+
+    // Constrain between 300px and 1600px
+    const constrainedHeight = Math.min(Math.max(newHeight, 300), 1600);
+    setTopPanelHeight(constrainedHeight);
+  };
+
+  const handleTouchEnd = () => {
     setIsDragging(false);
   };
 
@@ -217,7 +249,7 @@ export default function CockpitReference({ darkMode = true }) {
       <div className="flex-1 flex flex-col gap-3 lg:gap-0">
         {/* Instrument Panel - Top */}
         <div
-          className={`${darkMode ? "bg-slate-800/50" : "bg-white/50"} backdrop-blur-xl rounded-xl lg:rounded-t-2xl lg:rounded-b-none shadow-xl overflow-auto relative touch-pan-x touch-pan-y touch-pinch-zoom`}
+          className={`${darkMode ? "bg-slate-800/50" : "bg-white/50"} backdrop-blur-xl rounded-xl lg:rounded-t-2xl lg:rounded-b-none shadow-xl overflow-auto relative touch-pan-x touch-pan-y touch-pinch-zoom ${!isDragging ? 'transition-all duration-150' : ''}`}
           style={{ height: window.innerWidth >= 1024 ? `${topPanelHeight}px` : '400px', minHeight: '300px' }}
         >
           <div className="w-full h-full bg-slate-900 relative">
@@ -248,14 +280,26 @@ export default function CockpitReference({ darkMode = true }) {
           </div>
         </div>
 
-        {/* Resizable Divider (Desktop only) */}
+        {/* Resizable Divider (Desktop and Tablet) */}
         <div
-          className={`hidden lg:flex h-2 cursor-ns-resize group relative items-center justify-center ${
-            isDragging ? "bg-blue-500" : darkMode ? "bg-slate-700 hover:bg-blue-600" : "bg-slate-300 hover:bg-blue-500"
-          } transition-colors`}
+          className={`hidden sm:flex h-8 cursor-ns-resize group relative items-center justify-center select-none ${
+            isDragging
+              ? "bg-blue-500 shadow-lg scale-y-150"
+              : darkMode
+                ? "bg-slate-700 hover:bg-blue-600 hover:shadow-md"
+                : "bg-slate-300 hover:bg-blue-500 hover:shadow-md"
+          } transition-all duration-200`}
           onMouseDown={handleMouseDown}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
         >
-          <GripHorizontal className={`w-6 h-6 ${isDragging ? "text-white" : "text-slate-500 group-hover:text-white"}`} />
+          <div className="flex flex-col gap-0.5 items-center">
+            <GripHorizontal className={`w-6 h-6 ${isDragging ? "text-white animate-pulse" : "text-slate-500 group-hover:text-white"} transition-colors`} />
+            <div className={`text-xs font-medium ${isDragging ? "text-white" : "text-slate-500 group-hover:text-white opacity-0 group-hover:opacity-100"} transition-all`}>
+              Drag to resize
+            </div>
+          </div>
         </div>
 
         {/* Side Panel - Bottom */}
