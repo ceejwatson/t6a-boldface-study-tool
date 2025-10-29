@@ -650,20 +650,17 @@ export default function T6AEnhancedStudyTool() {
     }
 
     if (reviewIncorrectOnly) {
-      // Find next incorrect answer
-      for (let i = currentQuestionIndex + 1; i < currentQuestions.length; i++) {
-        const q = currentQuestions[i];
-        const answered = userAnswers[q.id] !== undefined;
-        const isCorrect = answered && checkAnswer(q, userAnswers[q.id]);
-        if (answered && !isCorrect) {
-          setCurrentQuestionIndex(i);
-          setShowExplanation(true);
-          return;
-        }
+      // Move to next question in the incorrect questions list
+      if (currentQuestionIndex < currentQuestions.length - 1) {
+        setCurrentQuestionIndex(currentQuestionIndex + 1);
+        setShowExplanation(false);
+        return;
+      } else {
+        // Completed all incorrect questions, exit review
+        setActiveTab("results");
+        setReviewIncorrectOnly(false);
+        return;
       }
-      // No more incorrect answers, exit review
-      setActiveTab("results");
-      setReviewIncorrectOnly(false);
     } else if (currentQuestionIndex < currentQuestions.length - 1) {
       setCurrentQuestionIndex((prev) => prev + 1);
       // In quiz mode, keep explanation visible for already answered questions
@@ -681,18 +678,11 @@ export default function T6AEnhancedStudyTool() {
 
   const handlePrevious = () => {
     if (reviewIncorrectOnly) {
-      // Find previous incorrect answer
-      for (let i = currentQuestionIndex - 1; i >= 0; i--) {
-        const q = currentQuestions[i];
-        const answered = userAnswers[q.id] !== undefined;
-        const isCorrect = answered && checkAnswer(q, userAnswers[q.id]);
-        if (answered && !isCorrect) {
-          setCurrentQuestionIndex(i);
-          setShowExplanation(true);
-          return;
-        }
+      // Move to previous question in the incorrect questions list
+      if (currentQuestionIndex > 0) {
+        setCurrentQuestionIndex(currentQuestionIndex - 1);
+        setShowExplanation(false);
       }
-      // No previous incorrect answers
     } else if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex((prev) => prev - 1);
       // In quiz mode, keep explanation visible for already answered questions
