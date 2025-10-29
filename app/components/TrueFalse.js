@@ -59,33 +59,33 @@ export default function TrueFalse({
   const getFontSizeClass = () => {
     switch (fontSize) {
       case "small":
-        return "text-sm";
+        return "text-sm sm:text-base";
       case "large":
-        return "text-lg";
+        return "text-lg sm:text-xl";
       default:
-        return "text-base";
+        return "text-base sm:text-lg";
     }
   };
 
   const getQuestionFontSize = () => {
     switch (fontSize) {
       case "small":
-        return "text-base";
+        return "text-base sm:text-lg";
       case "large":
-        return "text-xl";
+        return "text-xl sm:text-2xl";
       default:
-        return "text-lg";
+        return "text-lg sm:text-xl";
     }
   };
 
   const getButtonFontSize = () => {
     switch (fontSize) {
       case "small":
-        return "text-lg";
+        return "text-lg sm:text-xl";
       case "large":
-        return "text-2xl";
+        return "text-2xl sm:text-3xl";
       default:
-        return "text-xl";
+        return "text-xl sm:text-2xl";
     }
   };
 

@@ -139,22 +139,22 @@ export default function ReorderSequence({
   const getFontSizeClass = () => {
     switch (fontSize) {
       case "small":
-        return "text-xs";
+        return "text-xs sm:text-sm";
       case "large":
-        return "text-base";
+        return "text-base sm:text-lg";
       default:
-        return "text-sm";
+        return "text-sm sm:text-base";
     }
   };
 
   const getQuestionFontSize = () => {
     switch (fontSize) {
       case "small":
-        return "text-base";
+        return "text-base sm:text-lg";
       case "large":
-        return "text-xl";
+        return "text-xl sm:text-2xl";
       default:
-        return "text-lg";
+        return "text-lg sm:text-xl";
     }
   };
 
