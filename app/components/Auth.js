@@ -69,19 +69,19 @@ export default function Auth({ onAuthSuccess }) {
   return (
     <div className="min-h-screen relative overflow-hidden">
       {/* Blurred Background Preview - Shows the app in background */}
-      <div className="absolute inset-0 bg-gray-900">
+      <div className="absolute inset-0 bg-[#0a0a0a]">
         {/* Simulated app background with gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/30 via-gray-900 to-purple-900/30" />
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 via-[#0a0a0a] to-indigo-600/20" />
 
-        {/* Decorative elements to make it look like content behind */}
-        <div className="absolute top-20 left-10 w-64 h-32 bg-blue-500/20 rounded-lg blur-xl" />
-        <div className="absolute bottom-40 right-20 w-80 h-40 bg-purple-500/20 rounded-lg blur-xl" />
-        <div className="absolute top-1/2 left-1/3 w-96 h-48 bg-indigo-500/20 rounded-lg blur-2xl" />
-        <div className="absolute top-1/4 right-1/4 w-72 h-36 bg-pink-500/15 rounded-lg blur-2xl" />
-        <div className="absolute bottom-1/4 left-1/4 w-64 h-40 bg-cyan-500/15 rounded-lg blur-2xl" />
+        {/* Decorative elements to simulate app content */}
+        <div className="absolute top-24 left-8 w-72 h-40 bg-blue-500/25 rounded-2xl blur-2xl" />
+        <div className="absolute top-48 right-12 w-64 h-32 bg-indigo-500/25 rounded-2xl blur-2xl" />
+        <div className="absolute bottom-32 left-16 w-80 h-36 bg-purple-500/20 rounded-2xl blur-2xl" />
+        <div className="absolute bottom-48 right-20 w-64 h-40 bg-blue-400/20 rounded-2xl blur-2xl" />
+        <div className="absolute top-1/3 left-1/2 w-96 h-48 bg-indigo-600/15 rounded-2xl blur-3xl" />
 
-        {/* Medium blur overlay - more visible background */}
-        <div className="absolute inset-0 backdrop-blur-xl bg-gray-900/40" />
+        {/* Lighter blur overlay - more visible background */}
+        <div className="absolute inset-0 backdrop-blur-lg bg-[#0a0a0a]/50" />
       </div>
 
       {/* Auth Content */}
