@@ -80,6 +80,7 @@ export default function T6AEnhancedStudyTool() {
   const [reviewIncorrectOnly, setReviewIncorrectOnly] = useState(false); // Track if reviewing incorrect answers only
   const [viewingSingleQuestion, setViewingSingleQuestion] = useState(false); // Track if viewing single question from results
   const [voiceRecallMode, setVoiceRecallMode] = useState(false); // Voice mode for answering questions
+  const [reviewSessionCorrect, setReviewSessionCorrect] = useState([]); // Track questions answered correctly in current review session
 
   // Performance Tracking
   const [performanceStats, setPerformanceStats] = useState({
@@ -462,24 +463,14 @@ export default function T6AEnhancedStudyTool() {
         const isCorrect = checkAnswer(currentQuestion, answer);
         updatePerformance(currentQuestion, isCorrect);
 
-        // In review mode, if answered correctly, remove from review lists
+        // In review mode, track correct answers in session
         if (studyMode === "study" && isCorrect) {
-          // Remove from questionMastery incorrect count (set to 0)
-          setQuestionMastery((prev) => {
-            const updated = { ...prev };
-            if (updated[currentQuestion.id]) {
-              updated[currentQuestion.id] = {
-                ...updated[currentQuestion.id],
-                incorrectCount: 0,
-              };
+          setReviewSessionCorrect((prev) => {
+            if (!prev.includes(currentQuestion.id)) {
+              return [...prev, currentQuestion.id];
             }
-            return updated;
+            return prev;
           });
-
-          // Remove from unknownFlashcards
-          setUnknownFlashcards((prev) =>
-            prev.filter((id) => id !== currentQuestion.id),
-          );
         }
       }
       return;
@@ -497,22 +488,14 @@ export default function T6AEnhancedStudyTool() {
         const isCorrect = checkAnswer(currentQuestion, answer);
         updatePerformance(currentQuestion, isCorrect);
 
-        // In review mode, if answered correctly, remove from review lists
+        // In review mode, track correct answers in session
         if (studyMode === "study" && isCorrect) {
-          setQuestionMastery((prev) => {
-            const updated = { ...prev };
-            if (updated[currentQuestion.id]) {
-              updated[currentQuestion.id] = {
-                ...updated[currentQuestion.id],
-                incorrectCount: 0,
-              };
+          setReviewSessionCorrect((prev) => {
+            if (!prev.includes(currentQuestion.id)) {
+              return [...prev, currentQuestion.id];
             }
-            return updated;
+            return prev;
           });
-
-          setUnknownFlashcards((prev) =>
-            prev.filter((id) => id !== currentQuestion.id),
-          );
         }
       }
     }
@@ -687,22 +670,14 @@ export default function T6AEnhancedStudyTool() {
           const isCorrect = checkAnswer(currentQuestion, answer);
           updatePerformance(currentQuestion, isCorrect);
 
-          // In review mode, if answered correctly, remove from review lists
+          // In review mode, track correct answers in session
           if (studyMode === "study" && isCorrect) {
-            setQuestionMastery((prev) => {
-              const updated = { ...prev };
-              if (updated[currentQuestion.id]) {
-                updated[currentQuestion.id] = {
-                  ...updated[currentQuestion.id],
-                  incorrectCount: 0,
-                };
+            setReviewSessionCorrect((prev) => {
+              if (!prev.includes(currentQuestion.id)) {
+                return [...prev, currentQuestion.id];
               }
-              return updated;
+              return prev;
             });
-
-            setUnknownFlashcards((prev) =>
-              prev.filter((id) => id !== currentQuestion.id),
-            );
           }
 
           return; // Don't move to next yet, let user see the result
@@ -717,9 +692,29 @@ export default function T6AEnhancedStudyTool() {
         setShowExplanation(false);
         return;
       } else {
-        // Completed all incorrect questions, exit review
+        // Completed all review questions, remove correctly answered ones from review lists
+        reviewSessionCorrect.forEach((questionId) => {
+          // Remove from questionMastery incorrect count (set to 0)
+          setQuestionMastery((prev) => {
+            const updated = { ...prev };
+            if (updated[questionId]) {
+              updated[questionId] = {
+                ...updated[questionId],
+                incorrectCount: 0,
+              };
+            }
+            return updated;
+          });
+        });
+
+        // Remove from unknownFlashcards
+        setUnknownFlashcards((prev) =>
+          prev.filter((id) => !reviewSessionCorrect.includes(id)),
+        );
+
         setActiveTab("results");
         setReviewIncorrectOnly(false);
+        setReviewSessionCorrect([]);
         return;
       }
     } else if (currentQuestionIndex < currentQuestions.length - 1) {
@@ -1205,6 +1200,7 @@ export default function T6AEnhancedStudyTool() {
                     setShowExplanation(false);
                     setStudyMode("study");
                     setReviewIncorrectOnly(true);
+                    setReviewSessionCorrect([]); // Reset review session tracking
                     setActiveTab("study");
                   }}
                   className={`group ${darkMode ? "bg-gradient-to-br from-red-500/20 to-red-600/10 hover:from-red-500/30 hover:to-red-600/20 border border-red-500/30" : "bg-gradient-to-br from-red-500 to-red-600"} backdrop-blur-xl rounded-2xl p-4 sm:p-6 transition-all duration-300 flex flex-col items-center justify-center shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 touch-manipulation`}
@@ -2561,12 +2557,37 @@ export default function T6AEnhancedStudyTool() {
                   )}
                   <button
                     onClick={() => {
+                      // Clean up review session data when returning to main menu
+                      if (
+                        reviewIncorrectOnly &&
+                        reviewSessionCorrect.length > 0
+                      ) {
+                        reviewSessionCorrect.forEach((questionId) => {
+                          setQuestionMastery((prev) => {
+                            const updated = { ...prev };
+                            if (updated[questionId]) {
+                              updated[questionId] = {
+                                ...updated[questionId],
+                                incorrectCount: 0,
+                              };
+                            }
+                            return updated;
+                          });
+                        });
+                        setUnknownFlashcards((prev) =>
+                          prev.filter(
+                            (id) => !reviewSessionCorrect.includes(id),
+                          ),
+                        );
+                      }
+
                       setActiveTab("home");
                       setStudyMode("study");
                       setUserAnswers({});
                       setCurrentQuestionIndex(0);
                       setShowExplanation(false);
                       setReviewIncorrectOnly(false);
+                      setReviewSessionCorrect([]);
                     }}
                     className={`px-6 py-3 rounded-lg font-medium transition ${
                       darkMode
@@ -2578,9 +2599,34 @@ export default function T6AEnhancedStudyTool() {
                   </button>
                   <button
                     onClick={() => {
+                      // Clean up review session data
+                      if (
+                        reviewIncorrectOnly &&
+                        reviewSessionCorrect.length > 0
+                      ) {
+                        reviewSessionCorrect.forEach((questionId) => {
+                          setQuestionMastery((prev) => {
+                            const updated = { ...prev };
+                            if (updated[questionId]) {
+                              updated[questionId] = {
+                                ...updated[questionId],
+                                incorrectCount: 0,
+                              };
+                            }
+                            return updated;
+                          });
+                        });
+                        setUnknownFlashcards((prev) =>
+                          prev.filter(
+                            (id) => !reviewSessionCorrect.includes(id),
+                          ),
+                        );
+                      }
+
                       setShowQuizSetup(true);
                       setActiveTab("quizsetup");
                       setReviewIncorrectOnly(false);
+                      setReviewSessionCorrect([]);
                     }}
                     className="px-6 py-3 rounded-lg font-medium transition bg-orange-600 hover:bg-orange-700 text-white"
                   >
