@@ -389,26 +389,37 @@ export default function CockpitReference({ darkMode = true }) {
 
         {/* Resizable Divider */}
         <div
-          className={`hidden lg:flex h-10 cursor-ns-resize group relative items-center justify-center select-none ${
+          className={`hidden lg:flex h-14 cursor-ns-resize group relative items-center justify-center select-none ${
             isDragging
-              ? "bg-teal-500 shadow-lg"
+              ? "bg-teal-500 shadow-2xl scale-y-110"
               : darkMode
-                ? "bg-slate-700/80 hover:bg-teal-600 hover:shadow-md"
-                : "bg-slate-300 hover:bg-teal-500 hover:shadow-md"
-          } transition-all duration-200`}
+                ? "bg-slate-700 hover:bg-teal-600/80 hover:shadow-lg"
+                : "bg-slate-300 hover:bg-teal-500 hover:shadow-lg"
+          } transition-all duration-150`}
           onMouseDown={handleMouseDown}
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
         >
-          <div className="flex flex-col gap-0.5 items-center">
+          {/* Visual indicator bars */}
+          <div className="absolute inset-0 flex items-center justify-center gap-1 pointer-events-none -mt-1">
+            <div
+              className={`w-16 h-1 rounded-full ${isDragging ? "bg-white/80" : "bg-slate-400/40 group-hover:bg-white/60"} transition-all`}
+            />
+          </div>
+          <div className="absolute inset-0 flex items-center justify-center gap-1 pointer-events-none mt-1">
+            <div
+              className={`w-16 h-1 rounded-full ${isDragging ? "bg-white/80" : "bg-slate-400/40 group-hover:bg-white/60"} transition-all`}
+            />
+          </div>
+          <div className="flex flex-col gap-0.5 items-center z-10">
             <GripHorizontal
-              className={`w-6 h-6 ${isDragging ? "text-white animate-pulse" : "text-slate-400 group-hover:text-white"} transition-colors`}
+              className={`w-7 h-7 ${isDragging ? "text-white scale-110" : "text-slate-400 group-hover:text-white group-hover:scale-105"} transition-all`}
             />
             <div
-              className={`text-xs font-bold ${isDragging ? "text-white" : "text-slate-400 group-hover:text-white opacity-0 group-hover:opacity-100"} transition-all`}
+              className={`text-xs font-bold whitespace-nowrap ${isDragging ? "text-white" : "text-slate-400 group-hover:text-white opacity-0 group-hover:opacity-100"} transition-all`}
             >
-              Drag to resize
+              {isDragging ? "Resizing..." : "Drag to resize"}
             </div>
           </div>
         </div>
