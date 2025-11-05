@@ -58,7 +58,6 @@ export default function UserProfile({ user, onLogout }) {
           </div>
           <div>
             <p className="font-medium text-gray-100 text-sm">{user.email}</p>
-            <p className="text-xs text-gray-400">Cloud sync enabled</p>
           </div>
         </div>
 
