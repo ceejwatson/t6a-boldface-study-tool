@@ -168,7 +168,10 @@ export default function T6AEnhancedStudyTool() {
 
   // Save unknown flashcards
   useEffect(() => {
-    localStorage.setItem("t6a-unknown-flashcards", JSON.stringify(unknownFlashcards));
+    localStorage.setItem(
+      "t6a-unknown-flashcards",
+      JSON.stringify(unknownFlashcards),
+    );
   }, [unknownFlashcards]);
 
   // Calculate weak topics based on performance
@@ -855,7 +858,9 @@ export default function T6AEnhancedStudyTool() {
             <div className="flex items-center gap-2 sm:gap-4">
               {/* Font Size Selector */}
               <div className="flex items-center gap-2">
-                <span className={`text-xs ${darkMode ? "text-slate-400" : "text-slate-600"} hidden sm:inline`}>
+                <span
+                  className={`text-xs ${darkMode ? "text-slate-400" : "text-slate-600"} hidden sm:inline`}
+                >
                   Text:
                 </span>
                 <div className="flex items-center gap-1 bg-slate-800/50 p-1 rounded-lg">
@@ -922,12 +927,9 @@ export default function T6AEnhancedStudyTool() {
                 <span className="hidden md:inline font-medium text-sm">
                   T-6A BOLDFACE Reference
                 </span>
-                <span className="md:hidden font-medium text-xs">
-                  PDF
-                </span>
+                <span className="md:hidden font-medium text-xs">PDF</span>
                 <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
               </a>
-
             </div>
           </div>
         </div>
@@ -935,1799 +937,2054 @@ export default function T6AEnhancedStudyTool() {
 
       <main className="flex-1 overflow-y-auto">
         <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-8">
-        {/* Simplified Navigation Bar - Only show when not on home screen */}
-        {activeTab !== "home" && (
-          <div className="mb-4 sm:mb-6">
-            <div
-              className={`flex items-center justify-between gap-2 sm:gap-3 p-2 sm:p-3 rounded-xl ${darkMode ? "bg-slate-800/50" : "bg-white/50"} backdrop-blur-sm border ${darkMode ? "border-slate-700" : "border-slate-200"}`}
-            >
-              {/* Left: Home + Current Mode */}
-              <div className="flex items-center gap-2 sm:gap-3">
-                <button
-                  onClick={() => setActiveTab("home")}
-                  className={`px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-1 sm:gap-2 touch-manipulation text-sm sm:text-base ${
-                    darkMode
-                      ? "bg-slate-700 hover:bg-slate-600 text-white"
-                      : "bg-slate-200 hover:bg-slate-300 text-slate-900"
-                  }`}
-                >
-                  <ChevronRight className="w-4 h-4 rotate-180 hidden sm:inline" />
-                  <span className="hidden sm:inline">Home</span>
-                  <span className="sm:hidden">← Home</span>
-                </button>
-
-                {/* Current Mode Indicator */}
-                {(activeTab === "study" ||
-                  activeTab === "studysetup" ||
-                  activeTab === "quizsetup") && (
-                  <div className="flex items-center gap-2 px-3 py-2">
-                    {studyMode === "study" && (
-                      <>
-                        <BookOpen className="w-4 h-4 text-blue-400" />
-                        <span
-                          className={`font-medium ${darkMode ? "text-white" : "text-slate-900"}`}
-                        >
-                          Study Mode
-                        </span>
-                      </>
-                    )}
-                    {studyMode === "quiz" && (
-                      <>
-                        <Brain className="w-4 h-4 text-orange-400" />
-                        <span
-                          className={`font-medium ${darkMode ? "text-white" : "text-slate-900"}`}
-                        >
-                          Quiz Mode
-                        </span>
-                      </>
-                    )}
-                    {studyMode === "weak" && (
-                      <>
-                        <Zap className="w-4 h-4 text-orange-400" />
-                        <span
-                          className={`font-medium ${darkMode ? "text-white" : "text-slate-900"}`}
-                        >
-                          Weak Topics
-                        </span>
-                      </>
-                    )}
-                    {studyMode === "review" && (
-                      <>
-                        <RotateCcw className="w-4 h-4 text-teal-400" />
-                        <span
-                          className={`font-medium ${darkMode ? "text-white" : "text-slate-900"}`}
-                        >
-                          Review
-                        </span>
-                      </>
-                    )}
-                    {studyMode === "flagged" && (
-                      <>
-                        <Target className="w-4 h-4 text-yellow-400" />
-                        <span
-                          className={`font-medium ${darkMode ? "text-white" : "text-slate-900"}`}
-                        >
-                          Flagged
-                        </span>
-                      </>
-                    )}
-                  </div>
-                )}
-
-                {activeTab === "progress" && (
-                  <div className="flex items-center gap-2 px-3 py-2">
-                    <TrendingUp className="w-4 h-4 text-indigo-400" />
-                    <span
-                      className={`font-medium ${darkMode ? "text-white" : "text-slate-900"}`}
-                    >
-                      Progress
-                    </span>
-                  </div>
-                )}
-              </div>
-
-              {/* Right: Quick Actions */}
-              <div className="flex items-center gap-2">
-                {/* Exit Quiz Button - Only in quiz mode */}
-                {studyMode === "quiz" && activeTab === "study" && (
+          {/* Simplified Navigation Bar - Only show when not on home screen */}
+          {activeTab !== "home" && (
+            <div className="mb-4 sm:mb-6">
+              <div
+                className={`flex items-center justify-between gap-2 sm:gap-3 p-2 sm:p-3 rounded-xl ${darkMode ? "bg-slate-800/50" : "bg-white/50"} backdrop-blur-sm border ${darkMode ? "border-slate-700" : "border-slate-200"}`}
+              >
+                {/* Left: Home + Current Mode */}
+                <div className="flex items-center gap-2 sm:gap-3">
                   <button
-                    onClick={() => {
-                      if (
-                        window.confirm(
-                          "Are you sure you want to exit this quiz? Your progress will be saved.",
-                        )
-                      ) {
-                        setActiveTab("results");
-                      }
-                    }}
-                    className={`px-3 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 ${
+                    onClick={() => setActiveTab("home")}
+                    className={`px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-1 sm:gap-2 touch-manipulation text-sm sm:text-base ${
                       darkMode
-                        ? "bg-slate-700 text-slate-300 hover:bg-slate-600"
-                        : "bg-slate-200 text-slate-700 hover:bg-slate-300"
+                        ? "bg-slate-700 hover:bg-slate-600 text-white"
+                        : "bg-slate-200 hover:bg-slate-300 text-slate-900"
                     }`}
                   >
-                    <XCircle className="w-4 h-4" />
-                    <span className="hidden sm:inline">Exit Quiz</span>
+                    <ChevronRight className="w-4 h-4 rotate-180 hidden sm:inline" />
+                    <span className="hidden sm:inline">Home</span>
+                    <span className="sm:hidden">← Home</span>
                   </button>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
 
-        {/* Main Content */}
-        {activeTab === "home" ? (
-          <div className="max-w-4xl mx-auto px-4">
-            {/* Hero Section - Compact */}
-            <div className="text-center pt-2 sm:pt-4 pb-4 sm:pb-6 mb-4 sm:mb-8">
-              <div className="flex justify-center mb-2 sm:mb-3">
-                <img
-                  src="/t6atransparent.png"
-                  alt="T-6A Texan II"
-                  className="w-48 sm:w-64 md:w-72 h-auto"
-                />
-              </div>
-              <h1
-                className={`text-2xl sm:text-3xl md:text-4xl font-bold mb-1 sm:mb-2 ${darkMode ? "text-white" : "text-slate-900"}`}
-              >
-                T-6A Texan II
-              </h1>
-              <p
-                className={`text-sm sm:text-base ${darkMode ? "text-slate-400" : "text-slate-600"}`}
-              >
-                BOLDFACE Study Tool
-              </p>
-            </div>
-
-            {/* Main Action Buttons - Redesigned */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6 max-w-2xl mx-auto">
-              <button
-                onClick={() => {
-                  // Set all question types first
-                  setSelectedQuestionTypes(["multipleChoice", "trueFalse", "reorderSequence", "matchItems"]);
-
-                  // Auto-select all topics for study mode
-                  const allCategories = [
-                    ...new Set(getAllQuestions().map((q) => q.category)),
-                  ];
-                  setSelectedTopics(allCategories);
-                  setStudyMode("study");
-                  setShowStudySetup(true);
-                  setShowQuizSetup(false);
-                  setActiveTab("studysetup");
-                  setSelectedCategory("all");
-                }}
-                className={`group ${darkMode ? "bg-gradient-to-br from-blue-500/20 to-blue-600/10 hover:from-blue-500/30 hover:to-blue-600/20 border border-blue-500/30" : "bg-gradient-to-br from-blue-500 to-blue-600"} backdrop-blur-xl rounded-2xl p-4 sm:p-6 transition-all duration-300 flex flex-col items-center justify-center shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 touch-manipulation`}
-              >
-                <div className={`${darkMode ? "bg-blue-500/40" : "bg-white/30"} p-3 sm:p-5 rounded-2xl mb-2 sm:mb-3 group-hover:scale-110 transition-transform shadow-lg`}>
-                  <BookOpen className={`w-8 h-8 sm:w-10 sm:h-10 ${darkMode ? "text-blue-200" : "text-white"}`} strokeWidth={2.5} />
-                </div>
-                <h3 className={`text-base sm:text-lg font-semibold ${darkMode ? "text-white" : "text-white"}`}>
-                  Study
-                </h3>
-              </button>
-
-              <button
-                onClick={() => {
-                  // Auto-select all topics for quiz mode
-                  const allCategories = [
-                    ...new Set(getAllQuestions().map((q) => q.category)),
-                  ];
-                  setSelectedTopics(allCategories);
-                  setStudyMode("quiz"); // Set to quiz mode immediately
-                  setShowQuizSetup(true);
-                  setActiveTab("quizsetup");
-                }}
-                className={`group ${darkMode ? "bg-gradient-to-br from-orange-500/20 to-orange-600/10 hover:from-orange-500/30 hover:to-orange-600/20 border border-orange-500/30" : "bg-gradient-to-br from-orange-500 to-orange-600"} backdrop-blur-xl rounded-2xl p-4 sm:p-6 transition-all duration-300 flex flex-col items-center justify-center shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 touch-manipulation`}
-              >
-                <div className={`${darkMode ? "bg-orange-500/40" : "bg-white/30"} p-3 sm:p-5 rounded-2xl mb-2 sm:mb-3 group-hover:scale-110 transition-transform shadow-lg`}>
-                  <Brain className={`w-8 h-8 sm:w-10 sm:h-10 ${darkMode ? "text-orange-200" : "text-white"}`} strokeWidth={2.5} />
-                </div>
-                <h3 className={`text-base sm:text-lg font-semibold ${darkMode ? "text-white" : "text-white"}`}>
-                  Quiz
-                </h3>
-              </button>
-
-              <button
-                onClick={() => {
-                  // Set flashcard-specific question types (simple Q&A format)
-                  setSelectedQuestionTypes(["flashcard"]);
-                  setStudyMode("flashcard");
-                  setActiveTab("flashcardsetup");
-                }}
-                className={`group ${darkMode ? "bg-gradient-to-br from-purple-500/20 to-purple-600/10 hover:from-purple-500/30 hover:to-purple-600/20 border border-purple-500/30" : "bg-gradient-to-br from-purple-500 to-purple-600"} backdrop-blur-xl rounded-2xl p-4 sm:p-6 transition-all duration-300 flex flex-col items-center justify-center shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 touch-manipulation`}
-              >
-                <div className={`${darkMode ? "bg-purple-500/40" : "bg-white/30"} p-3 sm:p-5 rounded-2xl mb-2 sm:mb-3 group-hover:scale-110 transition-transform shadow-lg`}>
-                  <RotateCcw className={`w-8 h-8 sm:w-10 sm:h-10 ${darkMode ? "text-purple-200" : "text-white"}`} strokeWidth={2.5} />
-                </div>
-                <h3 className={`text-base sm:text-lg font-semibold ${darkMode ? "text-white" : "text-white"}`}>
-                  Flashcards
-                </h3>
-              </button>
-
-              <button
-                onClick={() => {
-                  setActiveTab("learningpath");
-                }}
-                className={`group ${darkMode ? "bg-gradient-to-br from-green-500/20 to-green-600/10 hover:from-green-500/30 hover:to-green-600/20 border border-green-500/30" : "bg-gradient-to-br from-green-500 to-green-600"} backdrop-blur-xl rounded-2xl p-4 sm:p-6 transition-all duration-300 flex flex-col items-center justify-center shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 touch-manipulation`}
-              >
-                <div className={`${darkMode ? "bg-green-500/40" : "bg-white/30"} p-3 sm:p-5 rounded-2xl mb-2 sm:mb-3 group-hover:scale-110 transition-transform shadow-lg`}>
-                  <ChevronRight className={`w-8 h-8 sm:w-10 sm:h-10 ${darkMode ? "text-green-200" : "text-white"}`} strokeWidth={2.5} />
-                </div>
-                <h3 className={`text-base sm:text-lg font-semibold ${darkMode ? "text-white" : "text-white"}`}>
-                  Categories
-                </h3>
-              </button>
-
-              <button
-                onClick={() => {
-                  setActiveTab("cockpit");
-                }}
-                className={`group ${darkMode ? "bg-gradient-to-br from-red-500/20 to-red-600/10 hover:from-red-500/30 hover:to-red-600/20 border border-red-500/30" : "bg-gradient-to-br from-red-500 to-red-600"} backdrop-blur-xl rounded-2xl p-4 sm:p-6 transition-all duration-300 flex flex-col items-center justify-center shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 touch-manipulation`}
-              >
-                <div className={`${darkMode ? "bg-red-500/40" : "bg-white/30"} p-3 sm:p-5 rounded-2xl mb-2 sm:mb-3 group-hover:scale-110 transition-transform shadow-lg`}>
-                  <FileText className={`w-8 h-8 sm:w-10 sm:h-10 ${darkMode ? "text-red-200" : "text-white"}`} strokeWidth={2.5} />
-                </div>
-                <h3 className={`text-base sm:text-lg font-semibold ${darkMode ? "text-white" : "text-white"}`}>
-                  Cockpit
-                </h3>
-              </button>
-
-              <button
-                onClick={() => {
-                  setActiveTab("progress");
-                }}
-                className={`group ${darkMode ? "bg-gradient-to-br from-indigo-500/20 to-indigo-600/10 hover:from-indigo-500/30 hover:to-indigo-600/20 border border-indigo-500/30" : "bg-gradient-to-br from-indigo-500 to-indigo-600"} backdrop-blur-xl rounded-2xl p-4 sm:p-6 transition-all duration-300 flex flex-col items-center justify-center shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 touch-manipulation`}
-              >
-                <div className={`${darkMode ? "bg-indigo-500/40" : "bg-white/30"} p-3 sm:p-5 rounded-2xl mb-2 sm:mb-3 group-hover:scale-110 transition-transform shadow-lg`}>
-                  <Award className={`w-8 h-8 sm:w-10 sm:h-10 ${darkMode ? "text-indigo-200" : "text-white"}`} strokeWidth={2.5} />
-                </div>
-                <h3 className={`text-base sm:text-lg font-semibold ${darkMode ? "text-white" : "text-white"}`}>
-                  Progress
-                </h3>
-              </button>
-            </div>
-
-            {/* Stats - Simple & Elegant */}
-            {performanceStats.overall.correct > 0 && (
-              <div
-                className={`${darkMode ? "bg-white/5" : "bg-slate-100"} rounded-xl p-5 mb-6 max-w-md mx-auto`}
-              >
-                <div className="grid grid-cols-2 gap-4 text-center">
-                  <div>
-                    <div
-                      className={`text-3xl font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
-                    >
-                      {
-                        Object.values(questionMastery).filter(
-                          (q) => q.correctCount >= 3,
-                        ).length
-                      }
+                  {/* Current Mode Indicator */}
+                  {(activeTab === "study" ||
+                    activeTab === "studysetup" ||
+                    activeTab === "quizsetup") && (
+                    <div className="flex items-center gap-2 px-3 py-2">
+                      {studyMode === "study" && (
+                        <>
+                          <BookOpen className="w-4 h-4 text-blue-400" />
+                          <span
+                            className={`font-medium ${darkMode ? "text-white" : "text-slate-900"}`}
+                          >
+                            Study Mode
+                          </span>
+                        </>
+                      )}
+                      {studyMode === "quiz" && (
+                        <>
+                          <Brain className="w-4 h-4 text-orange-400" />
+                          <span
+                            className={`font-medium ${darkMode ? "text-white" : "text-slate-900"}`}
+                          >
+                            Quiz Mode
+                          </span>
+                        </>
+                      )}
+                      {studyMode === "weak" && (
+                        <>
+                          <Zap className="w-4 h-4 text-orange-400" />
+                          <span
+                            className={`font-medium ${darkMode ? "text-white" : "text-slate-900"}`}
+                          >
+                            Weak Topics
+                          </span>
+                        </>
+                      )}
+                      {studyMode === "review" && (
+                        <>
+                          <RotateCcw className="w-4 h-4 text-teal-400" />
+                          <span
+                            className={`font-medium ${darkMode ? "text-white" : "text-slate-900"}`}
+                          >
+                            Review
+                          </span>
+                        </>
+                      )}
+                      {studyMode === "flagged" && (
+                        <>
+                          <Target className="w-4 h-4 text-yellow-400" />
+                          <span
+                            className={`font-medium ${darkMode ? "text-white" : "text-slate-900"}`}
+                          >
+                            Flagged
+                          </span>
+                        </>
+                      )}
                     </div>
-                    <div
-                      className={`text-xs mt-1 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
-                    >
-                      Mastered
-                    </div>
-                  </div>
-                  <div>
-                    <div
-                      className={`text-3xl font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
-                    >
-                      {performanceStats.overall.correct +
-                        performanceStats.overall.incorrect >
-                      0
-                        ? Math.round(
-                            (performanceStats.overall.correct /
-                              (performanceStats.overall.correct +
-                                performanceStats.overall.incorrect)) *
-                              100,
-                          )
-                        : 0}
-                      %
-                    </div>
-                    <div
-                      className={`text-xs mt-1 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
-                    >
-                      Accuracy
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
+                  )}
 
-            {/* Quick Access - Only show flagged questions */}
-            {flaggedQuestions.length > 0 && (
-              <div className="mt-8">
-                <button
-                  onClick={() => {
-                    setStudyMode("flagged");
-                    setActiveTab("study");
-                    setShowStudySetup(false);
-                    loadQuestions("flagged");
-                  }}
-                  className={`w-full ${darkMode ? "bg-white/5 hover:bg-white/10" : "bg-slate-100 hover:bg-slate-200"} rounded-xl p-4 transition text-left`}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <Target
-                        className={`w-5 h-5 ${darkMode ? "text-yellow-400" : "text-yellow-600"}`}
-                      />
+                  {activeTab === "progress" && (
+                    <div className="flex items-center gap-2 px-3 py-2">
+                      <TrendingUp className="w-4 h-4 text-indigo-400" />
                       <span
                         className={`font-medium ${darkMode ? "text-white" : "text-slate-900"}`}
                       >
-                        Flagged Questions
+                        Progress
                       </span>
                     </div>
-                    <span
-                      className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                  )}
+                </div>
+
+                {/* Right: Quick Actions */}
+                <div className="flex items-center gap-2">
+                  {/* Exit Quiz Button - Only in quiz mode */}
+                  {studyMode === "quiz" && activeTab === "study" && (
+                    <button
+                      onClick={() => {
+                        if (
+                          window.confirm(
+                            "Are you sure you want to exit this quiz? Your progress will be saved.",
+                          )
+                        ) {
+                          setActiveTab("results");
+                        }
+                      }}
+                      className={`px-3 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 ${
+                        darkMode
+                          ? "bg-slate-700 text-slate-300 hover:bg-slate-600"
+                          : "bg-slate-200 text-slate-700 hover:bg-slate-300"
+                      }`}
                     >
-                      {flaggedQuestions.length}
-                    </span>
-                  </div>
-                </button>
-              </div>
-            )}
-          </div>
-        ) : activeTab === "quizsetup" ? (
-          <div className={`max-w-2xl mx-auto ${darkMode ? "bg-slate-800/50" : "bg-white/50"} backdrop-blur-xl rounded-3xl p-8 shadow-2xl`}>
-            <div className="text-center mb-8">
-              <h2 className={`text-3xl font-semibold ${darkMode ? "text-white" : "text-slate-900"} mb-2`}>
-                Quiz Setup
-              </h2>
-              <p className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}>
-                How many questions?
-              </p>
-            </div>
-
-            {/* Question Count - Apple Style */}
-            <div className="grid grid-cols-3 gap-4 mb-8">
-              {[10, 25, 50].map((count) => (
-                <button
-                  key={count}
-                  onClick={() => setQuestionCount(count)}
-                  className={`p-6 rounded-2xl font-semibold text-2xl transition-all duration-200 ${
-                    questionCount === count
-                      ? darkMode
-                        ? "bg-orange-500 text-white shadow-lg shadow-orange-500/50 scale-105"
-                        : "bg-orange-500 text-white shadow-lg shadow-orange-500/50 scale-105"
-                      : darkMode
-                        ? "bg-slate-700/50 text-slate-300 hover:bg-slate-700 hover:scale-102"
-                        : "bg-white text-slate-700 hover:bg-slate-50 hover:scale-102 border-2 border-slate-200"
-                  }`}
-                >
-                  {count}
-                </button>
-              ))}
-            </div>
-
-            <button
-              onClick={() => {
-                // Set question types first
-                const quizTypes = ["multipleChoice", "trueFalse", "reorderSequence", "matchItems"];
-                setSelectedQuestionTypes(quizTypes);
-
-                // Get all questions with quiz types
-                const all = [];
-                quizTypes.forEach((type) => {
-                  const questions = questionDatabase[type] || [];
-                  questions.forEach((q) => {
-                    all.push({ ...q, questionType: type });
-                  });
-                });
-
-                // Auto-select all topics
-                const allCategories = [...new Set(all.map(q => q.category))];
-                setSelectedTopics(allCategories);
-
-                // Shuffle questions
-                for (let i = all.length - 1; i > 0; i--) {
-                  const j = Math.floor(Math.random() * (i + 1));
-                  [all[i], all[j]] = [all[j], all[i]];
-                }
-
-                // Limit to selected count
-                const limitedQuestions = all.slice(0, questionCount);
-
-                setCurrentQuestions(limitedQuestions);
-                setCurrentQuestionIndex(0);
-                setUserAnswers({});
-                setShowExplanation(false);
-                setStudyMode("quiz");
-                setActiveTab("study");
-                setShowQuizSetup(false);
-              }}
-              className={`w-full px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-200 ${
-                darkMode
-                  ? "bg-orange-600 hover:bg-orange-700 text-white shadow-lg hover:shadow-xl"
-                  : "bg-orange-500 hover:bg-orange-600 text-white shadow-lg hover:shadow-xl"
-              } active:scale-95`}
-            >
-              Start Quiz
-            </button>
-          </div>
-        ) : activeTab === "flashcardsetup" ? (
-          <div className={`max-w-2xl mx-auto ${darkMode ? "bg-slate-800/50" : "bg-white/50"} backdrop-blur-xl rounded-3xl p-8 shadow-2xl`}>
-            <div className="text-center mb-8">
-              <h2 className={`text-3xl font-semibold ${darkMode ? "text-white" : "text-slate-900"} mb-2`}>
-                Flashcard Setup
-              </h2>
-              <p className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}>
-                How many flashcards?
-              </p>
-            </div>
-
-            {/* Flashcard Count - Apple Style */}
-            <div className="grid grid-cols-3 gap-4 mb-8">
-              {[10, 25, 50].map((count) => (
-                <button
-                  key={count}
-                  onClick={() => setQuestionCount(count)}
-                  className={`p-6 rounded-2xl font-semibold text-2xl transition-all duration-200 ${
-                    questionCount === count
-                      ? darkMode
-                        ? "bg-purple-500 text-white shadow-lg shadow-purple-500/50 scale-105"
-                        : "bg-purple-500 text-white shadow-lg shadow-purple-500/50 scale-105"
-                      : darkMode
-                        ? "bg-slate-700/50 text-slate-300 hover:bg-slate-700 hover:scale-102"
-                        : "bg-white text-slate-700 hover:bg-slate-50 hover:scale-102 border-2 border-slate-200"
-                  }`}
-                >
-                  {count}
-                </button>
-              ))}
-            </div>
-
-            <button
-              onClick={() => {
-                // Get flashcard questions directly from database
-                const flashcardQuestions = questionDatabase.flashcard || [];
-                const allFlashcards = flashcardQuestions.map(q => ({ ...q, questionType: "flashcard" }));
-
-                // Shuffle
-                for (let i = allFlashcards.length - 1; i > 0; i--) {
-                  const j = Math.floor(Math.random() * (i + 1));
-                  [allFlashcards[i], allFlashcards[j]] = [allFlashcards[j], allFlashcards[i]];
-                }
-
-                // Limit to selected count
-                const limitedFlashcards = allFlashcards.slice(0, questionCount);
-
-                setCurrentQuestions(limitedFlashcards);
-                setCurrentQuestionIndex(0);
-                setUserAnswers({});
-                setShowExplanation(false);
-                setStudyMode("flashcard");
-                setActiveTab("flashcard");
-              }}
-              className={`w-full px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-200 ${
-                darkMode
-                  ? "bg-purple-600 hover:bg-purple-700 text-white shadow-lg hover:shadow-xl"
-                  : "bg-purple-500 hover:bg-purple-600 text-white shadow-lg hover:shadow-xl"
-              } active:scale-95`}
-            >
-              Start Flashcards
-            </button>
-          </div>
-        ) : activeTab === "studysetup" ? (
-          <div className={`max-w-2xl mx-auto ${darkMode ? "bg-slate-800/50" : "bg-white/50"} backdrop-blur-xl rounded-3xl p-8 shadow-2xl`}>
-            <div className="text-center mb-8">
-              <h2 className={`text-3xl font-semibold ${darkMode ? "text-white" : "text-slate-900"} mb-2`}>
-                Study Setup
-              </h2>
-              <p className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}>
-                Choose what to study
-              </p>
-            </div>
-
-            {/* Study Options */}
-            <div className="space-y-3 mb-8">
-              {/* All Questions */}
-              <button
-                onClick={() => {
-                  const allCategories = [...new Set(getAllQuestions().map(q => q.category))];
-                  setSelectedTopics(allCategories);
-                  setSelectedQuestionTypes(["multipleChoice", "trueFalse", "reorderSequence", "matchItems"]);
-                  setStudyMode("study");
-                  setStudySubMode("readThrough");
-                  setActiveTab("study");
-                  setShowStudySetup(false);
-                  loadQuestions("all");
-                }}
-                className={`w-full ${darkMode ? "bg-blue-500/20 hover:bg-blue-500/30 border-2 border-blue-500/50" : "bg-blue-100 hover:bg-blue-200 border-2 border-blue-300"} rounded-2xl p-5 transition text-left hover:scale-[1.02]`}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className={`${darkMode ? "bg-blue-500/30" : "bg-blue-500/20"} p-3 rounded-xl`}>
-                      <BookOpen className={`w-7 h-7 ${darkMode ? "text-blue-300" : "text-blue-600"}`} strokeWidth={2.5} />
-                    </div>
-                    <div>
-                      <div className={`font-semibold text-lg ${darkMode ? "text-white" : "text-slate-900"}`}>
-                        All Questions
-                      </div>
-                      <div className={`text-sm ${darkMode ? "text-blue-300" : "text-blue-700"}`}>
-                        Study everything
-                      </div>
-                    </div>
-                  </div>
-                  <div className={`text-sm font-medium ${darkMode ? "text-blue-300" : "text-blue-700"}`}>
-                    {getAllQuestions().length} questions
-                  </div>
+                      <XCircle className="w-4 h-4" />
+                      <span className="hidden sm:inline">Exit Quiz</span>
+                    </button>
+                  )}
                 </div>
-              </button>
-
-              {/* Weak Questions - Only show if there are weak questions */}
-              {Object.values(questionMastery).filter(q => q.incorrectCount >= 2).length > 0 && (
-                <button
-                  onClick={() => {
-                    const weakCount = Object.values(questionMastery).filter(q => q.incorrectCount >= 2).length;
-                    if (weakCount < 10) {
-                      setQuestionCount(weakCount);
-                    }
-                    setStudyMode("weak");
-                    setActiveTab("study");
-                    setShowStudySetup(false);
-                    loadQuestions("weak");
-                  }}
-                  className={`w-full ${darkMode ? "bg-orange-500/20 hover:bg-orange-500/30 border-2 border-orange-500/50" : "bg-orange-100 hover:bg-orange-200 border-2 border-orange-300"} rounded-2xl p-5 transition text-left hover:scale-[1.02]`}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className={`${darkMode ? "bg-orange-500/30" : "bg-orange-500/20"} p-3 rounded-xl`}>
-                        <AlertCircle className={`w-7 h-7 ${darkMode ? "text-orange-300" : "text-orange-600"}`} strokeWidth={2.5} />
-                      </div>
-                      <div>
-                        <div className={`font-semibold text-lg ${darkMode ? "text-white" : "text-slate-900"}`}>
-                          Weak Questions
-                        </div>
-                        <div className={`text-sm ${darkMode ? "text-orange-300" : "text-orange-700"}`}>
-                          Focus on problem areas
-                        </div>
-                      </div>
-                    </div>
-                    <div className={`text-sm font-medium ${darkMode ? "text-orange-300" : "text-orange-700"}`}>
-                      {Object.values(questionMastery).filter(q => q.incorrectCount >= 2).length} questions
-                    </div>
-                  </div>
-                </button>
-              )}
-
-              {/* Review Incorrect - Show questions answered incorrectly */}
-              {Object.values(questionMastery).filter(q => q.incorrectCount >= 1).length > 0 && (
-                <button
-                  onClick={() => {
-                    // Get all questions that have been answered incorrectly at least once
-                    const allQs = getAllQuestions();
-                    const incorrectQs = allQs.filter(q => {
-                      const mastery = questionMastery[q.id];
-                      return mastery && mastery.incorrectCount >= 1;
-                    });
-
-                    if (incorrectQs.length < 10) {
-                      setQuestionCount(incorrectQs.length);
-                    }
-
-                    setCurrentQuestions(incorrectQs);
-                    setCurrentQuestionIndex(0);
-                    setUserAnswers({});
-                    setShowExplanation(false);
-                    setStudyMode("quiz");
-                    setReviewIncorrectOnly(true);
-                    setActiveTab("study");
-                    setShowStudySetup(false);
-                  }}
-                  className={`w-full ${darkMode ? "bg-red-500/20 hover:bg-red-500/30 border-2 border-red-500/50" : "bg-red-100 hover:bg-red-200 border-2 border-red-300"} rounded-2xl p-5 transition text-left hover:scale-[1.02]`}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className={`${darkMode ? "bg-red-500/30" : "bg-red-500/20"} p-3 rounded-xl`}>
-                        <XCircle className={`w-7 h-7 ${darkMode ? "text-red-300" : "text-red-600"}`} strokeWidth={2.5} />
-                      </div>
-                      <div>
-                        <div className={`font-semibold text-lg ${darkMode ? "text-white" : "text-slate-900"}`}>
-                          Review Incorrect
-                        </div>
-                        <div className={`text-sm ${darkMode ? "text-red-300" : "text-red-700"}`}>
-                          Re-test questions you missed
-                        </div>
-                      </div>
-                    </div>
-                    <div className={`text-sm font-medium ${darkMode ? "text-red-300" : "text-red-700"}`}>
-                      {Object.values(questionMastery).filter(q => q.incorrectCount >= 1).length} questions
-                    </div>
-                  </div>
-                </button>
-              )}
-
-              {/* Unknown Flashcards - Only show if there are unknown flashcards */}
-              {unknownFlashcards.length > 0 && (
-                <button
-                  onClick={() => {
-                    if (unknownFlashcards.length < 10) {
-                      setQuestionCount(unknownFlashcards.length);
-                    }
-
-                    // Get flashcard questions directly from database
-                    const flashcardQuestions = questionDatabase.flashcard || [];
-                    const allFlashcards = flashcardQuestions.map(q => ({ ...q, questionType: "flashcard" }));
-
-                    // Filter to only unknown flashcards
-                    const unknownQs = allFlashcards.filter(q => unknownFlashcards.includes(q.id));
-
-                    setCurrentQuestions(unknownQs);
-                    setCurrentQuestionIndex(0);
-                    setUserAnswers({});
-                    setShowExplanation(false);
-                    setStudyMode("flashcard");
-                    setActiveTab("flashcard");
-                    setShowStudySetup(false);
-                  }}
-                  className={`w-full ${darkMode ? "bg-purple-500/20 hover:bg-purple-500/30 border-2 border-purple-500/50" : "bg-purple-100 hover:bg-purple-200 border-2 border-purple-300"} rounded-2xl p-5 transition text-left hover:scale-[1.02]`}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className={`${darkMode ? "bg-purple-500/30" : "bg-purple-500/20"} p-3 rounded-xl`}>
-                        <RotateCcw className={`w-7 h-7 ${darkMode ? "text-purple-300" : "text-purple-600"}`} strokeWidth={2.5} />
-                      </div>
-                      <div>
-                        <div className={`font-semibold text-lg ${darkMode ? "text-white" : "text-slate-900"}`}>
-                          Unknown Flashcards
-                        </div>
-                        <div className={`text-sm ${darkMode ? "text-purple-300" : "text-purple-700"}`}>
-                          Cards you marked as unknown
-                        </div>
-                      </div>
-                    </div>
-                    <div className={`text-sm font-medium ${darkMode ? "text-purple-300" : "text-purple-700"}`}>
-                      {unknownFlashcards.length} cards
-                    </div>
-                  </div>
-                </button>
-              )}
+              </div>
             </div>
-          </div>
-        ) : activeTab === "progress" ? (
-          <div className={`max-w-3xl mx-auto space-y-6`}>
-            {/* Overall Progress - Apple Style */}
-            <div className={`${darkMode ? "bg-slate-800/50" : "bg-white/50"} backdrop-blur-xl rounded-3xl p-8 shadow-2xl text-center`}>
-              <h2 className={`text-4xl font-semibold mb-8 ${darkMode ? "text-white" : "text-slate-900"}`}>
-                Progress
-              </h2>
+          )}
 
-              {/* Big Circle Progress */}
-              <div className="relative w-48 h-48 mx-auto mb-6">
-                <svg className="transform -rotate-90 w-48 h-48">
-                  <circle
-                    cx="96"
-                    cy="96"
-                    r="88"
-                    stroke={darkMode ? "#334155" : "#e2e8f0"}
-                    strokeWidth="16"
-                    fill="none"
+          {/* Main Content */}
+          {activeTab === "home" ? (
+            <div className="max-w-4xl mx-auto px-4">
+              {/* Hero Section - Compact */}
+              <div className="text-center pt-2 sm:pt-4 pb-4 sm:pb-6 mb-4 sm:mb-8">
+                <div className="flex justify-center mb-2 sm:mb-3">
+                  <img
+                    src="/t6atransparent.png"
+                    alt="T-6A Texan II"
+                    className="w-48 sm:w-64 md:w-72 h-auto"
                   />
-                  <circle
-                    cx="96"
-                    cy="96"
-                    r="88"
-                    stroke="url(#gradient)"
-                    strokeWidth="16"
-                    fill="none"
-                    strokeDasharray={`${2 * Math.PI * 88}`}
-                    strokeDashoffset={`${2 * Math.PI * 88 * (1 - (getAllQuestions().length > 0 ? (Object.values(questionMastery).filter(q => q.correctCount >= 3).length / getAllQuestions().length) : 0))}`}
-                    strokeLinecap="round"
-                  />
-                  <defs>
-                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#3b82f6" />
-                      <stop offset="100%" stopColor="#10b981" />
-                    </linearGradient>
-                  </defs>
-                </svg>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div>
-                    <div className={`text-5xl font-bold ${darkMode ? "text-white" : "text-slate-900"}`}>
-                      {getAllQuestions().length > 0
-                        ? Math.round((Object.values(questionMastery).filter(q => q.correctCount >= 3).length / getAllQuestions().length) * 100)
-                        : 0}%
-                    </div>
-                    <div className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}>
-                      Mastered
-                    </div>
-                  </div>
                 </div>
-              </div>
-
-              <div className={`grid grid-cols-3 gap-4 text-center ${darkMode ? "text-slate-300" : "text-slate-700"}`}>
-                <div>
-                  <div className="text-2xl font-bold text-green-500">
-                    {Object.values(questionMastery).filter(q => q.correctCount >= 3).length}
-                  </div>
-                  <div className="text-xs text-slate-400">Mastered</div>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-blue-500">
-                    {Object.values(questionMastery).filter(q => q.correctCount >= 1 && q.correctCount < 3).length}
-                  </div>
-                  <div className="text-xs text-slate-400">Learning</div>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-slate-500">
-                    {getAllQuestions().length - Object.values(questionMastery).filter(q => q.correctCount >= 1).length}
-                  </div>
-                  <div className="text-xs text-slate-400">New</div>
-                </div>
-              </div>
-            </div>
-
-            {/* Categories Mastered - Compact */}
-            <div className="bg-slate-800/50 backdrop-blur-xl rounded-3xl p-6 shadow-2xl">
-              <h3 className="text-xl font-semibold mb-4 text-white">
-                Categories Mastered
-              </h3>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                {(() => {
-                  // Get ALL questions regardless of selectedQuestionTypes
-                  const allQs = [];
-                  ["multipleChoice", "trueFalse", "reorderSequence", "matchItems"].forEach((type) => {
-                    const questions = questionDatabase[type] || [];
-                    questions.forEach((q) => {
-                      allQs.push({ ...q, questionType: type });
-                    });
-                  });
-
-                  const categoriesData = {};
-
-                  // Group questions by category
-                  allQs.forEach(q => {
-                    if (!categoriesData[q.category]) {
-                      categoriesData[q.category] = { total: 0, learned: 0 };
-                    }
-                    categoriesData[q.category].total++;
-                    const mastery = questionMastery[q.id];
-                    if (mastery && mastery.correctCount >= 3) {
-                      categoriesData[q.category].learned++;
-                    }
-                  });
-
-                  return Object.entries(categoriesData)
-                    .sort((a, b) => a[0].localeCompare(b[0]))
-                    .map(([category, data]) => {
-                      const percentage = Math.round((data.learned / data.total) * 100);
-                      const isComplete = percentage === 100;
-
-                      return (
-                        <div
-                          key={category}
-                          className={`p-3 rounded-xl transition-all ${
-                            isComplete
-                              ? "bg-green-500/20 border border-green-500/50"
-                              : "bg-slate-700/50 border border-slate-600"
-                          }`}
-                        >
-                          <div className="flex items-center justify-between mb-1.5">
-                            <div className="text-sm font-medium text-white truncate pr-2">
-                              {category}
-                            </div>
-                            {isComplete && (
-                              <CheckCircle2 className="w-4 h-4 text-green-400 flex-shrink-0" />
-                            )}
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <div className="flex-1 h-1.5 rounded-full overflow-hidden bg-slate-600">
-                              <div
-                                className={`h-full transition-all duration-500 ${
-                                  isComplete ? "bg-green-500" : "bg-blue-500"
-                                }`}
-                                style={{ width: `${percentage}%` }}
-                              />
-                            </div>
-                            <div className="text-xs font-medium w-10 text-right text-slate-300">
-                              {percentage}%
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    });
-                })()}
-              </div>
-            </div>
-
-            {/* Key Stats - Simple Cards */}
-            {(performanceStats.overall.correct + performanceStats.overall.incorrect > 0 ||
-              performanceStats.overall.bestStreak > 0) && (
-              <div className="grid grid-cols-2 gap-4">
-                {performanceStats.overall.correct + performanceStats.overall.incorrect > 0 && (
-                  <div className={`${darkMode ? "bg-slate-800/50" : "bg-white/50"} backdrop-blur-xl rounded-3xl p-6 shadow-2xl text-center`}>
-                    <div className={`text-4xl font-bold mb-2 ${darkMode ? "text-blue-400" : "text-blue-600"}`}>
-                      {Math.round((performanceStats.overall.correct / (performanceStats.overall.correct + performanceStats.overall.incorrect)) * 100)}%
-                    </div>
-                    <div className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}>
-                      Quiz Accuracy
-                    </div>
-                  </div>
-                )}
-
-                {performanceStats.overall.bestStreak > 0 && (
-                  <div className={`${darkMode ? "bg-slate-800/50" : "bg-white/50"} backdrop-blur-xl rounded-3xl p-6 shadow-2xl text-center`}>
-                    <div className={`text-4xl font-bold mb-2 ${darkMode ? "text-orange-400" : "text-orange-600"}`}>
-                      {performanceStats.overall.bestStreak}
-                    </div>
-                    <div className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}>
-                      Best Streak
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        ) : activeTab === "studycomplete" ? (
-          <div className="max-w-4xl mx-auto">
-            {/* Study Session Complete */}
-            <div
-              className={`${darkMode ? "bg-slate-800" : "bg-white"} rounded-xl p-6 mb-6`}
-            >
-              <div className="text-center mb-8">
-                <div className="inline-block p-4 rounded-full bg-green-500/20 mb-4">
-                  <CheckCircle2 className="w-16 h-16 text-green-500" />
-                </div>
-                <h2
-                  className={`text-3xl font-bold ${darkMode ? "text-white" : "text-slate-900"} mb-2`}
+                <h1
+                  className={`text-2xl sm:text-3xl md:text-4xl font-bold mb-1 sm:mb-2 ${darkMode ? "text-white" : "text-slate-900"}`}
                 >
-                  Study Session Complete! 🎉
-                </h2>
+                  T-6A Texan II
+                </h1>
                 <p
-                  className={`text-lg ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                  className={`text-sm sm:text-base ${darkMode ? "text-slate-400" : "text-slate-600"}`}
                 >
-                  You&apos;ve reviewed all {currentQuestions?.length || 0}{" "}
-                  questions
+                  BOLDFACE Study Tool
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                <div
-                  className={`${darkMode ? "bg-slate-700/50" : "bg-slate-50"} rounded-lg p-4 text-center`}
-                >
-                  <BookOpen
-                    className={`w-8 h-8 mx-auto mb-2 ${darkMode ? "text-blue-400" : "text-blue-600"}`}
-                  />
-                  <p
-                    className={`text-2xl font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
-                  >
-                    {currentQuestions?.length || 0}
-                  </p>
-                  <p
-                    className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
-                  >
-                    Questions Studied
-                  </p>
-                </div>
+              {/* Main Action Buttons - Redesigned */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6 max-w-2xl mx-auto">
+                <button
+                  onClick={() => {
+                    // Set all question types first
+                    setSelectedQuestionTypes([
+                      "multipleChoice",
+                      "trueFalse",
+                      "reorderSequence",
+                      "matchItems",
+                    ]);
 
-                <div
-                  className={`${darkMode ? "bg-slate-700/50" : "bg-slate-50"} rounded-lg p-4 text-center`}
+                    // Auto-select all topics for study mode
+                    const allCategories = [
+                      ...new Set(getAllQuestions().map((q) => q.category)),
+                    ];
+                    setSelectedTopics(allCategories);
+                    setStudyMode("study");
+                    setShowStudySetup(true);
+                    setShowQuizSetup(false);
+                    setActiveTab("studysetup");
+                    setSelectedCategory("all");
+                  }}
+                  className={`group ${darkMode ? "bg-gradient-to-br from-blue-500/20 to-blue-600/10 hover:from-blue-500/30 hover:to-blue-600/20 border border-blue-500/30" : "bg-gradient-to-br from-blue-500 to-blue-600"} backdrop-blur-xl rounded-2xl p-4 sm:p-6 transition-all duration-300 flex flex-col items-center justify-center shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 touch-manipulation`}
                 >
-                  <Target
-                    className={`w-8 h-8 mx-auto mb-2 ${darkMode ? "text-green-400" : "text-green-600"}`}
-                  />
-                  <p
-                    className={`text-2xl font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
+                  <div
+                    className={`${darkMode ? "bg-blue-500/40" : "bg-white/30"} p-3 sm:p-5 rounded-2xl mb-2 sm:mb-3 group-hover:scale-110 transition-transform shadow-lg`}
                   >
-                    {currentQuestions?.length > 0
-                      ? new Set(currentQuestions.map((q) => q.category)).size
-                      : 0}
-                  </p>
-                  <p
-                    className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
-                  >
-                    Topics Covered
-                  </p>
-                </div>
-
-                <div
-                  className={`${darkMode ? "bg-slate-700/50" : "bg-slate-50"} rounded-lg p-4 text-center`}
-                >
-                  <Clock
-                    className={`w-8 h-8 mx-auto mb-2 ${darkMode ? "text-purple-400" : "text-purple-600"}`}
-                  />
-                  <p
-                    className={`text-2xl font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
+                    <BookOpen
+                      className={`w-8 h-8 sm:w-10 sm:h-10 ${darkMode ? "text-blue-200" : "text-white"}`}
+                      strokeWidth={2.5}
+                    />
+                  </div>
+                  <h3
+                    className={`text-base sm:text-lg font-semibold ${darkMode ? "text-white" : "text-white"}`}
                   >
                     Study
-                  </p>
-                  <p
-                    className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
-                  >
-                    Mode
-                  </p>
-                </div>
-              </div>
+                  </h3>
+                </button>
 
-              <div className="flex gap-3 flex-wrap">
                 <button
                   onClick={() => {
-                    // If in learning path mode, return to learning path; otherwise go home
-                    setActiveTab(
-                      studyMode === "learningpath" ? "learningpath" : "home",
-                    );
-                    setStudyMode("study");
-                    setUserAnswers({});
-                    setCurrentQuestionIndex(0);
-                    setShowExplanation(false);
+                    // Auto-select all topics for quiz mode
+                    const allCategories = [
+                      ...new Set(getAllQuestions().map((q) => q.category)),
+                    ];
+                    setSelectedTopics(allCategories);
+                    setStudyMode("quiz"); // Set to quiz mode immediately
+                    setShowQuizSetup(true);
+                    setActiveTab("quizsetup");
                   }}
-                  className={`flex-1 px-6 py-3 rounded-lg font-medium transition ${
-                    darkMode
-                      ? "bg-slate-700 hover:bg-slate-600 text-white"
-                      : "bg-slate-300 hover:bg-slate-400 text-slate-900"
-                  }`}
+                  className={`group ${darkMode ? "bg-gradient-to-br from-orange-500/20 to-orange-600/10 hover:from-orange-500/30 hover:to-orange-600/20 border border-orange-500/30" : "bg-gradient-to-br from-orange-500 to-orange-600"} backdrop-blur-xl rounded-2xl p-4 sm:p-6 transition-all duration-300 flex flex-col items-center justify-center shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 touch-manipulation`}
                 >
-                  {studyMode === "learningpath"
-                    ? "Back to Categories"
-                    : "Return to Main Menu"}
+                  <div
+                    className={`${darkMode ? "bg-orange-500/40" : "bg-white/30"} p-3 sm:p-5 rounded-2xl mb-2 sm:mb-3 group-hover:scale-110 transition-transform shadow-lg`}
+                  >
+                    <Brain
+                      className={`w-8 h-8 sm:w-10 sm:h-10 ${darkMode ? "text-orange-200" : "text-white"}`}
+                      strokeWidth={2.5}
+                    />
+                  </div>
+                  <h3
+                    className={`text-base sm:text-lg font-semibold ${darkMode ? "text-white" : "text-white"}`}
+                  >
+                    Quiz
+                  </h3>
                 </button>
+
                 <button
                   onClick={() => {
-                    setCurrentQuestionIndex(0);
-                    setShowExplanation(false);
-                    setUserAnswers({});
-                    setActiveTab("study");
+                    // Set flashcard-specific question types (simple Q&A format)
+                    setSelectedQuestionTypes(["flashcard"]);
+                    setStudyMode("flashcard");
+                    setActiveTab("flashcardsetup");
                   }}
-                  className="flex-1 px-6 py-3 rounded-lg font-medium transition bg-green-600 hover:bg-green-700 text-white"
+                  className={`group ${darkMode ? "bg-gradient-to-br from-purple-500/20 to-purple-600/10 hover:from-purple-500/30 hover:to-purple-600/20 border border-purple-500/30" : "bg-gradient-to-br from-purple-500 to-purple-600"} backdrop-blur-xl rounded-2xl p-4 sm:p-6 transition-all duration-300 flex flex-col items-center justify-center shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 touch-manipulation`}
                 >
-                  Study Again
+                  <div
+                    className={`${darkMode ? "bg-purple-500/40" : "bg-white/30"} p-3 sm:p-5 rounded-2xl mb-2 sm:mb-3 group-hover:scale-110 transition-transform shadow-lg`}
+                  >
+                    <RotateCcw
+                      className={`w-8 h-8 sm:w-10 sm:h-10 ${darkMode ? "text-purple-200" : "text-white"}`}
+                      strokeWidth={2.5}
+                    />
+                  </div>
+                  <h3
+                    className={`text-base sm:text-lg font-semibold ${darkMode ? "text-white" : "text-white"}`}
+                  >
+                    Flashcards
+                  </h3>
+                </button>
+
+                <button
+                  onClick={() => {
+                    setActiveTab("learningpath");
+                  }}
+                  className={`group ${darkMode ? "bg-gradient-to-br from-green-500/20 to-green-600/10 hover:from-green-500/30 hover:to-green-600/20 border border-green-500/30" : "bg-gradient-to-br from-green-500 to-green-600"} backdrop-blur-xl rounded-2xl p-4 sm:p-6 transition-all duration-300 flex flex-col items-center justify-center shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 touch-manipulation`}
+                >
+                  <div
+                    className={`${darkMode ? "bg-green-500/40" : "bg-white/30"} p-3 sm:p-5 rounded-2xl mb-2 sm:mb-3 group-hover:scale-110 transition-transform shadow-lg`}
+                  >
+                    <ChevronRight
+                      className={`w-8 h-8 sm:w-10 sm:h-10 ${darkMode ? "text-green-200" : "text-white"}`}
+                      strokeWidth={2.5}
+                    />
+                  </div>
+                  <h3
+                    className={`text-base sm:text-lg font-semibold ${darkMode ? "text-white" : "text-white"}`}
+                  >
+                    Categories
+                  </h3>
+                </button>
+
+                <button
+                  onClick={() => {
+                    setActiveTab("cockpit");
+                  }}
+                  className={`group ${darkMode ? "bg-gradient-to-br from-red-500/20 to-red-600/10 hover:from-red-500/30 hover:to-red-600/20 border border-red-500/30" : "bg-gradient-to-br from-red-500 to-red-600"} backdrop-blur-xl rounded-2xl p-4 sm:p-6 transition-all duration-300 flex flex-col items-center justify-center shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 touch-manipulation`}
+                >
+                  <div
+                    className={`${darkMode ? "bg-red-500/40" : "bg-white/30"} p-3 sm:p-5 rounded-2xl mb-2 sm:mb-3 group-hover:scale-110 transition-transform shadow-lg`}
+                  >
+                    <FileText
+                      className={`w-8 h-8 sm:w-10 sm:h-10 ${darkMode ? "text-red-200" : "text-white"}`}
+                      strokeWidth={2.5}
+                    />
+                  </div>
+                  <h3
+                    className={`text-base sm:text-lg font-semibold ${darkMode ? "text-white" : "text-white"}`}
+                  >
+                    Cockpit
+                  </h3>
+                </button>
+
+                <button
+                  onClick={() => {
+                    setActiveTab("progress");
+                  }}
+                  className={`group ${darkMode ? "bg-gradient-to-br from-indigo-500/20 to-indigo-600/10 hover:from-indigo-500/30 hover:to-indigo-600/20 border border-indigo-500/30" : "bg-gradient-to-br from-indigo-500 to-indigo-600"} backdrop-blur-xl rounded-2xl p-4 sm:p-6 transition-all duration-300 flex flex-col items-center justify-center shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 touch-manipulation`}
+                >
+                  <div
+                    className={`${darkMode ? "bg-indigo-500/40" : "bg-white/30"} p-3 sm:p-5 rounded-2xl mb-2 sm:mb-3 group-hover:scale-110 transition-transform shadow-lg`}
+                  >
+                    <Award
+                      className={`w-8 h-8 sm:w-10 sm:h-10 ${darkMode ? "text-indigo-200" : "text-white"}`}
+                      strokeWidth={2.5}
+                    />
+                  </div>
+                  <h3
+                    className={`text-base sm:text-lg font-semibold ${darkMode ? "text-white" : "text-white"}`}
+                  >
+                    Progress
+                  </h3>
                 </button>
               </div>
-            </div>
-          </div>
-        ) : activeTab === "results" ? (
-          <div className="max-w-4xl mx-auto">
-            {/* Quiz Results */}
-            <div
-              className={`${darkMode ? "bg-slate-800" : "bg-white"} rounded-xl p-6 mb-6`}
-            >
-              <div className="mb-6">
-                <h2
-                  className={`text-2xl font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
-                >
-                  Quiz Results
-                </h2>
-              </div>
 
-              {/* Score Summary */}
-              <div className="grid grid-cols-3 gap-4 mb-6">
+              {/* Stats - Simple & Elegant */}
+              {performanceStats.overall.correct > 0 && (
                 <div
-                  className={`p-4 rounded-lg ${darkMode ? "bg-green-900/30 border-2 border-green-600" : "bg-green-100 border-2 border-green-400"}`}
+                  className={`${darkMode ? "bg-white/5" : "bg-slate-100"} rounded-xl p-5 mb-6 max-w-md mx-auto`}
                 >
-                  <div
-                    className={`text-3xl font-bold ${darkMode ? "text-green-400" : "text-green-700"}`}
-                  >
-                    {
-                      Object.keys(userAnswers).filter((id) => {
-                        const question = currentQuestions.find(
-                          (q) => q.id === id,
-                        );
-                        return (
-                          question && checkAnswer(question, userAnswers[id])
-                        );
-                      }).length
-                    }
-                  </div>
-                  <div
-                    className={`text-sm ${darkMode ? "text-green-300" : "text-green-600"}`}
-                  >
-                    Correct
-                  </div>
-                </div>
-                <div
-                  className={`p-4 rounded-lg ${darkMode ? "bg-red-900/30 border-2 border-red-600" : "bg-red-100 border-2 border-red-400"}`}
-                >
-                  <div
-                    className={`text-3xl font-bold ${darkMode ? "text-red-400" : "text-red-700"}`}
-                  >
-                    {
-                      Object.keys(userAnswers).filter((id) => {
-                        const question = currentQuestions.find(
-                          (q) => q.id === id,
-                        );
-                        return (
-                          question && !checkAnswer(question, userAnswers[id])
-                        );
-                      }).length
-                    }
-                  </div>
-                  <div
-                    className={`text-sm ${darkMode ? "text-red-300" : "text-red-600"}`}
-                  >
-                    Incorrect
-                  </div>
-                </div>
-                <div
-                  className={`p-4 rounded-lg ${darkMode ? "bg-yellow-900/30 border-2 border-yellow-600" : "bg-yellow-100 border-2 border-yellow-400"}`}
-                >
-                  <div
-                    className={`text-3xl font-bold ${darkMode ? "text-yellow-400" : "text-yellow-700"}`}
-                  >
-                    {currentQuestions.length - Object.keys(userAnswers).length}
-                  </div>
-                  <div
-                    className={`text-sm ${darkMode ? "text-yellow-300" : "text-yellow-600"}`}
-                  >
-                    Unanswered
-                  </div>
-                </div>
-              </div>
-
-              {/* Question Review - Incorrect Answers Only */}
-              <div className="mb-4">
-                <h3
-                  className={`text-lg font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
-                >
-                  Incorrect Answers to Review:
-                </h3>
-              </div>
-              <div className="space-y-3">
-                {currentQuestions
-                  .map((question, index) => ({ question, index }))
-                  .filter(({ question }) => {
-                    const answered = userAnswers[question.id] !== undefined;
-                    const isCorrect =
-                      answered &&
-                      checkAnswer(question, userAnswers[question.id]);
-                    return answered && !isCorrect; // Only show incorrect answers
-                  })
-                  .map(({ question, index }) => {
-                    const answered = userAnswers[question.id] !== undefined;
-                    const isCorrect =
-                      answered &&
-                      checkAnswer(question, userAnswers[question.id]);
-
-                    return (
+                  <div className="grid grid-cols-2 gap-4 text-center">
+                    <div>
                       <div
-                        key={question.id}
-                        className={`p-4 rounded-lg border-2 ${
-                          darkMode
-                            ? "bg-red-900/20 border-red-600"
-                            : "bg-red-50 border-red-400"
-                        }`}
+                        className={`text-3xl font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
                       >
-                        <div className="mb-3">
-                          <div className="flex items-start justify-between gap-3 mb-2">
-                            <div className="flex items-start gap-3 flex-1">
-                              <span
-                                className={`font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
-                              >
-                                #{index + 1}
-                              </span>
-                              <div className="flex-1">
-                                <p
-                                  className={`font-semibold mb-2 ${darkMode ? "text-white" : "text-slate-900"}`}
-                                >
-                                  {question.question}
-                                </p>
-                              </div>
-                            </div>
-                            <XCircle
-                              className={`w-5 h-5 flex-shrink-0 ${darkMode ? "text-red-400" : "text-red-600"}`}
-                            />
-                          </div>
+                        {
+                          Object.values(questionMastery).filter(
+                            (q) => q.correctCount >= 3,
+                          ).length
+                        }
+                      </div>
+                      <div
+                        className={`text-xs mt-1 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                      >
+                        Mastered
+                      </div>
+                    </div>
+                    <div>
+                      <div
+                        className={`text-3xl font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
+                      >
+                        {performanceStats.overall.correct +
+                          performanceStats.overall.incorrect >
+                        0
+                          ? Math.round(
+                              (performanceStats.overall.correct /
+                                (performanceStats.overall.correct +
+                                  performanceStats.overall.incorrect)) *
+                                100,
+                            )
+                          : 0}
+                        %
+                      </div>
+                      <div
+                        className={`text-xs mt-1 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                      >
+                        Accuracy
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
 
-                          {/* Show answers */}
+              {/* Quick Access - Only show flagged questions */}
+              {flaggedQuestions.length > 0 && (
+                <div className="mt-8">
+                  <button
+                    onClick={() => {
+                      setStudyMode("flagged");
+                      setActiveTab("study");
+                      setShowStudySetup(false);
+                      loadQuestions("flagged");
+                    }}
+                    className={`w-full ${darkMode ? "bg-white/5 hover:bg-white/10" : "bg-slate-100 hover:bg-slate-200"} rounded-xl p-4 transition text-left`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <Target
+                          className={`w-5 h-5 ${darkMode ? "text-yellow-400" : "text-yellow-600"}`}
+                        />
+                        <span
+                          className={`font-medium ${darkMode ? "text-white" : "text-slate-900"}`}
+                        >
+                          Flagged Questions
+                        </span>
+                      </div>
+                      <span
+                        className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                      >
+                        {flaggedQuestions.length}
+                      </span>
+                    </div>
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : activeTab === "quizsetup" ? (
+            <div
+              className={`max-w-2xl mx-auto ${darkMode ? "bg-slate-800/50" : "bg-white/50"} backdrop-blur-xl rounded-3xl p-8 shadow-2xl`}
+            >
+              <div className="text-center mb-8">
+                <h2
+                  className={`text-3xl font-semibold ${darkMode ? "text-white" : "text-slate-900"} mb-2`}
+                >
+                  Quiz Setup
+                </h2>
+                <p
+                  className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                >
+                  How many questions?
+                </p>
+              </div>
+
+              {/* Question Count - Apple Style */}
+              <div className="grid grid-cols-3 gap-4 mb-8">
+                {[10, 25, 50].map((count) => (
+                  <button
+                    key={count}
+                    onClick={() => setQuestionCount(count)}
+                    className={`p-6 rounded-2xl font-semibold text-2xl transition-all duration-200 ${
+                      questionCount === count
+                        ? darkMode
+                          ? "bg-orange-500 text-white shadow-lg shadow-orange-500/50 scale-105"
+                          : "bg-orange-500 text-white shadow-lg shadow-orange-500/50 scale-105"
+                        : darkMode
+                          ? "bg-slate-700/50 text-slate-300 hover:bg-slate-700 hover:scale-102"
+                          : "bg-white text-slate-700 hover:bg-slate-50 hover:scale-102 border-2 border-slate-200"
+                    }`}
+                  >
+                    {count}
+                  </button>
+                ))}
+              </div>
+
+              <button
+                onClick={() => {
+                  // Set question types first
+                  const quizTypes = [
+                    "multipleChoice",
+                    "trueFalse",
+                    "reorderSequence",
+                    "matchItems",
+                  ];
+                  setSelectedQuestionTypes(quizTypes);
+
+                  // Get all questions with quiz types
+                  const all = [];
+                  quizTypes.forEach((type) => {
+                    const questions = questionDatabase[type] || [];
+                    questions.forEach((q) => {
+                      all.push({ ...q, questionType: type });
+                    });
+                  });
+
+                  // Auto-select all topics
+                  const allCategories = [
+                    ...new Set(all.map((q) => q.category)),
+                  ];
+                  setSelectedTopics(allCategories);
+
+                  // Shuffle questions
+                  for (let i = all.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [all[i], all[j]] = [all[j], all[i]];
+                  }
+
+                  // Limit to selected count
+                  const limitedQuestions = all.slice(0, questionCount);
+
+                  setCurrentQuestions(limitedQuestions);
+                  setCurrentQuestionIndex(0);
+                  setUserAnswers({});
+                  setShowExplanation(false);
+                  setStudyMode("quiz");
+                  setActiveTab("study");
+                  setShowQuizSetup(false);
+                }}
+                className={`w-full px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-200 ${
+                  darkMode
+                    ? "bg-orange-600 hover:bg-orange-700 text-white shadow-lg hover:shadow-xl"
+                    : "bg-orange-500 hover:bg-orange-600 text-white shadow-lg hover:shadow-xl"
+                } active:scale-95`}
+              >
+                Start Quiz
+              </button>
+            </div>
+          ) : activeTab === "flashcardsetup" ? (
+            <div
+              className={`max-w-2xl mx-auto ${darkMode ? "bg-slate-800/50" : "bg-white/50"} backdrop-blur-xl rounded-3xl p-8 shadow-2xl`}
+            >
+              <div className="text-center mb-8">
+                <h2
+                  className={`text-3xl font-semibold ${darkMode ? "text-white" : "text-slate-900"} mb-2`}
+                >
+                  Flashcard Setup
+                </h2>
+                <p
+                  className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                >
+                  How many flashcards?
+                </p>
+              </div>
+
+              {/* Flashcard Count - Apple Style */}
+              <div className="grid grid-cols-3 gap-4 mb-8">
+                {[10, 25, 50].map((count) => (
+                  <button
+                    key={count}
+                    onClick={() => setQuestionCount(count)}
+                    className={`p-6 rounded-2xl font-semibold text-2xl transition-all duration-200 ${
+                      questionCount === count
+                        ? darkMode
+                          ? "bg-purple-500 text-white shadow-lg shadow-purple-500/50 scale-105"
+                          : "bg-purple-500 text-white shadow-lg shadow-purple-500/50 scale-105"
+                        : darkMode
+                          ? "bg-slate-700/50 text-slate-300 hover:bg-slate-700 hover:scale-102"
+                          : "bg-white text-slate-700 hover:bg-slate-50 hover:scale-102 border-2 border-slate-200"
+                    }`}
+                  >
+                    {count}
+                  </button>
+                ))}
+              </div>
+
+              <button
+                onClick={() => {
+                  // Get flashcard questions directly from database
+                  const flashcardQuestions = questionDatabase.flashcard || [];
+                  const allFlashcards = flashcardQuestions.map((q) => ({
+                    ...q,
+                    questionType: "flashcard",
+                  }));
+
+                  // Shuffle
+                  for (let i = allFlashcards.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [allFlashcards[i], allFlashcards[j]] = [
+                      allFlashcards[j],
+                      allFlashcards[i],
+                    ];
+                  }
+
+                  // Limit to selected count
+                  const limitedFlashcards = allFlashcards.slice(
+                    0,
+                    questionCount,
+                  );
+
+                  setCurrentQuestions(limitedFlashcards);
+                  setCurrentQuestionIndex(0);
+                  setUserAnswers({});
+                  setShowExplanation(false);
+                  setStudyMode("flashcard");
+                  setActiveTab("flashcard");
+                }}
+                className={`w-full px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-200 ${
+                  darkMode
+                    ? "bg-purple-600 hover:bg-purple-700 text-white shadow-lg hover:shadow-xl"
+                    : "bg-purple-500 hover:bg-purple-600 text-white shadow-lg hover:shadow-xl"
+                } active:scale-95`}
+              >
+                Start Flashcards
+              </button>
+            </div>
+          ) : activeTab === "studysetup" ? (
+            <div
+              className={`max-w-2xl mx-auto ${darkMode ? "bg-slate-800/50" : "bg-white/50"} backdrop-blur-xl rounded-3xl p-8 shadow-2xl`}
+            >
+              <div className="text-center mb-8">
+                <h2
+                  className={`text-3xl font-semibold ${darkMode ? "text-white" : "text-slate-900"} mb-2`}
+                >
+                  Study Setup
+                </h2>
+                <p
+                  className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                >
+                  Choose what to study
+                </p>
+              </div>
+
+              {/* Study Options */}
+              <div className="space-y-3 mb-8">
+                {/* All Questions */}
+                <button
+                  onClick={() => {
+                    const allCategories = [
+                      ...new Set(getAllQuestions().map((q) => q.category)),
+                    ];
+                    setSelectedTopics(allCategories);
+                    setSelectedQuestionTypes([
+                      "multipleChoice",
+                      "trueFalse",
+                      "reorderSequence",
+                      "matchItems",
+                    ]);
+                    setStudyMode("study");
+                    setStudySubMode("readThrough");
+                    setActiveTab("study");
+                    setShowStudySetup(false);
+                    loadQuestions("all");
+                  }}
+                  className={`w-full ${darkMode ? "bg-blue-500/20 hover:bg-blue-500/30 border-2 border-blue-500/50" : "bg-blue-100 hover:bg-blue-200 border-2 border-blue-300"} rounded-2xl p-5 transition text-left hover:scale-[1.02]`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div
+                        className={`${darkMode ? "bg-blue-500/30" : "bg-blue-500/20"} p-3 rounded-xl`}
+                      >
+                        <BookOpen
+                          className={`w-7 h-7 ${darkMode ? "text-blue-300" : "text-blue-600"}`}
+                          strokeWidth={2.5}
+                        />
+                      </div>
+                      <div>
+                        <div
+                          className={`font-semibold text-lg ${darkMode ? "text-white" : "text-slate-900"}`}
+                        >
+                          All Questions
+                        </div>
+                        <div
+                          className={`text-sm ${darkMode ? "text-blue-300" : "text-blue-700"}`}
+                        >
+                          Study everything
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      className={`text-sm font-medium ${darkMode ? "text-blue-300" : "text-blue-700"}`}
+                    >
+                      {getAllQuestions().length} questions
+                    </div>
+                  </div>
+                </button>
+
+                {/* Weak Questions - Only show if there are weak questions */}
+                {Object.values(questionMastery).filter(
+                  (q) => q.incorrectCount >= 2,
+                ).length > 0 && (
+                  <button
+                    onClick={() => {
+                      const weakCount = Object.values(questionMastery).filter(
+                        (q) => q.incorrectCount >= 2,
+                      ).length;
+                      if (weakCount < 10) {
+                        setQuestionCount(weakCount);
+                      }
+                      setStudyMode("weak");
+                      setActiveTab("study");
+                      setShowStudySetup(false);
+                      loadQuestions("weak");
+                    }}
+                    className={`w-full ${darkMode ? "bg-orange-500/20 hover:bg-orange-500/30 border-2 border-orange-500/50" : "bg-orange-100 hover:bg-orange-200 border-2 border-orange-300"} rounded-2xl p-5 transition text-left hover:scale-[1.02]`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <div
+                          className={`${darkMode ? "bg-orange-500/30" : "bg-orange-500/20"} p-3 rounded-xl`}
+                        >
+                          <AlertCircle
+                            className={`w-7 h-7 ${darkMode ? "text-orange-300" : "text-orange-600"}`}
+                            strokeWidth={2.5}
+                          />
+                        </div>
+                        <div>
                           <div
-                            className={`mt-3 p-3 rounded ${darkMode ? "bg-slate-800/50" : "bg-white/50"} space-y-2`}
+                            className={`font-semibold text-lg ${darkMode ? "text-white" : "text-slate-900"}`}
                           >
-                            {/* Multiple Choice or True/False */}
-                            {(question.questionType === "multipleChoice" ||
-                              question.questionType === "trueFalse") && (
-                              <>
-                                <div>
-                                  <p
-                                    className={`text-xs font-semibold ${darkMode ? "text-red-400" : "text-red-600"} mb-1`}
-                                  >
-                                    Your Answer:
-                                  </p>
-                                  <p
-                                    className={`text-sm ${darkMode ? "text-slate-200" : "text-slate-800"}`}
-                                  >
-                                    {question.questionType === "multipleChoice"
-                                      ? question.options[
-                                          userAnswers[question.id]
-                                        ]
-                                      : userAnswers[question.id]
-                                        ? "True"
-                                        : "False"}
-                                  </p>
-                                </div>
-                                <div>
-                                  <p
-                                    className={`text-xs font-semibold ${darkMode ? "text-green-400" : "text-green-600"} mb-1`}
-                                  >
-                                    Correct Answer:
-                                  </p>
-                                  <p
-                                    className={`text-sm ${darkMode ? "text-slate-200" : "text-slate-800"}`}
-                                  >
-                                    {question.questionType === "multipleChoice"
-                                      ? question.options[question.correctAnswer]
-                                      : question.correctAnswer
-                                        ? "True"
-                                        : "False"}
-                                  </p>
-                                </div>
-                              </>
-                            )}
-
-                            {/* Reorder Sequence */}
-                            {question.questionType === "reorderSequence" && (
-                              <>
-                                <div>
-                                  <p
-                                    className={`text-xs font-semibold ${darkMode ? "text-red-400" : "text-red-600"} mb-2`}
-                                  >
-                                    Your Sequence:
-                                  </p>
-                                  <ol className="list-decimal list-inside space-y-1">
-                                    {userAnswers[question.id]?.map(
-                                      (step, i) => (
-                                        <li
-                                          key={i}
-                                          className={`text-xs ${darkMode ? "text-slate-300" : "text-slate-700"}`}
-                                        >
-                                          {step}
-                                        </li>
-                                      ),
-                                    )}
-                                  </ol>
-                                </div>
-                                <div>
-                                  <p
-                                    className={`text-xs font-semibold ${darkMode ? "text-green-400" : "text-green-600"} mb-2`}
-                                  >
-                                    Correct Sequence:
-                                  </p>
-                                  <ol className="list-decimal list-inside space-y-1">
-                                    {question.correctOrder.map((step, i) => (
-                                      <li
-                                        key={i}
-                                        className={`text-xs ${darkMode ? "text-slate-300" : "text-slate-700"}`}
-                                      >
-                                        {step}
-                                      </li>
-                                    ))}
-                                  </ol>
-                                </div>
-                              </>
-                            )}
-
-                            {/* Match Items */}
-                            {question.questionType === "matchItems" && (
-                              <>
-                                <div>
-                                  <p
-                                    className={`text-xs font-semibold ${darkMode ? "text-red-400" : "text-red-600"} mb-2`}
-                                  >
-                                    Your Matches:
-                                  </p>
-                                  <div className="space-y-1">
-                                    {question.pairs.map((pair, i) => (
-                                      <div
-                                        key={i}
-                                        className="flex items-center gap-2 text-xs"
-                                      >
-                                        <span
-                                          className={
-                                            darkMode
-                                              ? "text-slate-300"
-                                              : "text-slate-700"
-                                          }
-                                        >
-                                          {pair.left}
-                                        </span>
-                                        <ArrowRight className="w-3 h-3" />
-                                        <span
-                                          className={
-                                            darkMode
-                                              ? "text-slate-300"
-                                              : "text-slate-700"
-                                          }
-                                        >
-                                          {userAnswers[question.id]?.[
-                                            pair.left
-                                          ] || "Not matched"}
-                                        </span>
-                                      </div>
-                                    ))}
-                                  </div>
-                                </div>
-                                <div>
-                                  <p
-                                    className={`text-xs font-semibold ${darkMode ? "text-green-400" : "text-green-600"} mb-2`}
-                                  >
-                                    Correct Matches:
-                                  </p>
-                                  <div className="space-y-1">
-                                    {question.pairs.map((pair, i) => (
-                                      <div
-                                        key={i}
-                                        className="flex items-center gap-2 text-xs"
-                                      >
-                                        <span
-                                          className={
-                                            darkMode
-                                              ? "text-slate-300"
-                                              : "text-slate-700"
-                                          }
-                                        >
-                                          {pair.left}
-                                        </span>
-                                        <ArrowRight className="w-3 h-3" />
-                                        <span
-                                          className={
-                                            darkMode
-                                              ? "text-slate-300"
-                                              : "text-slate-700"
-                                          }
-                                        >
-                                          {pair.right}
-                                        </span>
-                                      </div>
-                                    ))}
-                                  </div>
-                                </div>
-                              </>
-                            )}
-
-                            {/* Explanation */}
-                            <div
-                              className={`pt-2 border-t ${darkMode ? "border-slate-700" : "border-slate-300"}`}
-                            >
-                              <p
-                                className={`text-xs font-semibold ${darkMode ? "text-blue-400" : "text-blue-600"} mb-1`}
-                              >
-                                Explanation:
-                              </p>
-                              <p
-                                className={`text-xs ${darkMode ? "text-slate-300" : "text-slate-700"}`}
-                              >
-                                {question.explanation}
-                              </p>
-                            </div>
+                            Weak Questions
+                          </div>
+                          <div
+                            className={`text-sm ${darkMode ? "text-orange-300" : "text-orange-700"}`}
+                          >
+                            Focus on problem areas
                           </div>
                         </div>
                       </div>
-                    );
-                  })}
-                {currentQuestions.filter((q) => {
-                  const answered = userAnswers[q.id] !== undefined;
-                  const isCorrect =
-                    answered && checkAnswer(q, userAnswers[q.id]);
-                  return answered && !isCorrect;
-                }).length === 0 && (
-                  <div
-                    className={`p-6 rounded-lg text-center ${darkMode ? "bg-green-900/30 border-2 border-green-600" : "bg-green-100 border-2 border-green-400"}`}
-                  >
-                    <CheckCircle2
-                      className={`w-12 h-12 mx-auto mb-3 ${darkMode ? "text-green-400" : "text-green-600"}`}
-                    />
-                    <p
-                      className={`text-lg font-semibold ${darkMode ? "text-green-400" : "text-green-700"}`}
-                    >
-                      Perfect Score! No incorrect answers to review.
-                    </p>
-                  </div>
+                      <div
+                        className={`text-sm font-medium ${darkMode ? "text-orange-300" : "text-orange-700"}`}
+                      >
+                        {
+                          Object.values(questionMastery).filter(
+                            (q) => q.incorrectCount >= 2,
+                          ).length
+                        }{" "}
+                        questions
+                      </div>
+                    </div>
+                  </button>
                 )}
-              </div>
 
-              {/* Action Buttons */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-6">
-                {/* Review Incorrect Answers Button - Only show if there are incorrect answers */}
-                {currentQuestions.filter((q) => {
-                  const answered = userAnswers[q.id] !== undefined;
-                  const isCorrect = answered && checkAnswer(q, userAnswers[q.id]);
-                  return answered && !isCorrect;
-                }).length > 0 && (
+                {/* Review Incorrect - Show questions answered incorrectly */}
+                {Object.values(questionMastery).filter(
+                  (q) => q.incorrectCount >= 1,
+                ).length > 0 && (
                   <button
                     onClick={() => {
-                      // Filter to only incorrect questions
-                      const incorrectQuestions = currentQuestions.filter((q) => {
-                        const answered = userAnswers[q.id] !== undefined;
-                        const isCorrect = answered && checkAnswer(q, userAnswers[q.id]);
-                        return answered && !isCorrect;
+                      // Get all questions that have been answered incorrectly at least once
+                      const allQs = getAllQuestions();
+                      const incorrectQs = allQs.filter((q) => {
+                        const mastery = questionMastery[q.id];
+                        return mastery && mastery.incorrectCount >= 1;
                       });
 
-                      // Set up review mode with only incorrect questions
-                      setCurrentQuestions(incorrectQuestions);
+                      if (incorrectQs.length < 10) {
+                        setQuestionCount(incorrectQs.length);
+                      }
+
+                      setCurrentQuestions(incorrectQs);
                       setCurrentQuestionIndex(0);
                       setUserAnswers({});
                       setShowExplanation(false);
                       setStudyMode("quiz");
                       setReviewIncorrectOnly(true);
                       setActiveTab("study");
+                      setShowStudySetup(false);
                     }}
-                    className="px-6 py-3 rounded-lg font-medium transition bg-red-600 hover:bg-red-700 text-white shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+                    className={`w-full ${darkMode ? "bg-red-500/20 hover:bg-red-500/30 border-2 border-red-500/50" : "bg-red-100 hover:bg-red-200 border-2 border-red-300"} rounded-2xl p-5 transition text-left hover:scale-[1.02]`}
                   >
-                    <XCircle className="w-5 h-5" />
-                    Review Incorrect ({currentQuestions.filter((q) => {
-                      const answered = userAnswers[q.id] !== undefined;
-                      const isCorrect = answered && checkAnswer(q, userAnswers[q.id]);
-                      return answered && !isCorrect;
-                    }).length})
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <div
+                          className={`${darkMode ? "bg-red-500/30" : "bg-red-500/20"} p-3 rounded-xl`}
+                        >
+                          <XCircle
+                            className={`w-7 h-7 ${darkMode ? "text-red-300" : "text-red-600"}`}
+                            strokeWidth={2.5}
+                          />
+                        </div>
+                        <div>
+                          <div
+                            className={`font-semibold text-lg ${darkMode ? "text-white" : "text-slate-900"}`}
+                          >
+                            Review Incorrect
+                          </div>
+                          <div
+                            className={`text-sm ${darkMode ? "text-red-300" : "text-red-700"}`}
+                          >
+                            Re-test questions you missed
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        className={`text-sm font-medium ${darkMode ? "text-red-300" : "text-red-700"}`}
+                      >
+                        {
+                          Object.values(questionMastery).filter(
+                            (q) => q.incorrectCount >= 1,
+                          ).length
+                        }{" "}
+                        questions
+                      </div>
+                    </div>
                   </button>
                 )}
-                <button
-                  onClick={() => {
-                    setActiveTab("home");
-                    setStudyMode("study");
-                    setUserAnswers({});
-                    setCurrentQuestionIndex(0);
-                    setShowExplanation(false);
-                    setReviewIncorrectOnly(false);
+
+                {/* Unknown Flashcards - Only show if there are unknown flashcards */}
+                {unknownFlashcards.length > 0 && (
+                  <button
+                    onClick={() => {
+                      if (unknownFlashcards.length < 10) {
+                        setQuestionCount(unknownFlashcards.length);
+                      }
+
+                      // Get flashcard questions directly from database
+                      const flashcardQuestions =
+                        questionDatabase.flashcard || [];
+                      const allFlashcards = flashcardQuestions.map((q) => ({
+                        ...q,
+                        questionType: "flashcard",
+                      }));
+
+                      // Filter to only unknown flashcards
+                      const unknownQs = allFlashcards.filter((q) =>
+                        unknownFlashcards.includes(q.id),
+                      );
+
+                      setCurrentQuestions(unknownQs);
+                      setCurrentQuestionIndex(0);
+                      setUserAnswers({});
+                      setShowExplanation(false);
+                      setStudyMode("flashcard");
+                      setActiveTab("flashcard");
+                      setShowStudySetup(false);
+                    }}
+                    className={`w-full ${darkMode ? "bg-purple-500/20 hover:bg-purple-500/30 border-2 border-purple-500/50" : "bg-purple-100 hover:bg-purple-200 border-2 border-purple-300"} rounded-2xl p-5 transition text-left hover:scale-[1.02]`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <div
+                          className={`${darkMode ? "bg-purple-500/30" : "bg-purple-500/20"} p-3 rounded-xl`}
+                        >
+                          <RotateCcw
+                            className={`w-7 h-7 ${darkMode ? "text-purple-300" : "text-purple-600"}`}
+                            strokeWidth={2.5}
+                          />
+                        </div>
+                        <div>
+                          <div
+                            className={`font-semibold text-lg ${darkMode ? "text-white" : "text-slate-900"}`}
+                          >
+                            Unknown Flashcards
+                          </div>
+                          <div
+                            className={`text-sm ${darkMode ? "text-purple-300" : "text-purple-700"}`}
+                          >
+                            Cards you marked as unknown
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        className={`text-sm font-medium ${darkMode ? "text-purple-300" : "text-purple-700"}`}
+                      >
+                        {unknownFlashcards.length} cards
+                      </div>
+                    </div>
+                  </button>
+                )}
+              </div>
+            </div>
+          ) : activeTab === "progress" ? (
+            <div className={`max-w-3xl mx-auto space-y-6`}>
+              {/* Overall Progress - Apple Style */}
+              <div
+                className={`${darkMode ? "bg-slate-800/50" : "bg-white/50"} backdrop-blur-xl rounded-3xl p-8 shadow-2xl text-center`}
+              >
+                <h2
+                  className={`text-4xl font-semibold mb-8 ${darkMode ? "text-white" : "text-slate-900"}`}
+                >
+                  Progress
+                </h2>
+
+                {/* Big Circle Progress */}
+                <div className="relative w-48 h-48 mx-auto mb-6">
+                  <svg className="transform -rotate-90 w-48 h-48">
+                    <circle
+                      cx="96"
+                      cy="96"
+                      r="88"
+                      stroke={darkMode ? "#334155" : "#e2e8f0"}
+                      strokeWidth="16"
+                      fill="none"
+                    />
+                    <circle
+                      cx="96"
+                      cy="96"
+                      r="88"
+                      stroke="url(#gradient)"
+                      strokeWidth="16"
+                      fill="none"
+                      strokeDasharray={`${2 * Math.PI * 88}`}
+                      strokeDashoffset={`${2 * Math.PI * 88 * (1 - (getAllQuestions().length > 0 ? Object.values(questionMastery).filter((q) => q.correctCount >= 3).length / getAllQuestions().length : 0))}`}
+                      strokeLinecap="round"
+                    />
+                    <defs>
+                      <linearGradient
+                        id="gradient"
+                        x1="0%"
+                        y1="0%"
+                        x2="100%"
+                        y2="100%"
+                      >
+                        <stop offset="0%" stopColor="#3b82f6" />
+                        <stop offset="100%" stopColor="#10b981" />
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div>
+                      <div
+                        className={`text-5xl font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
+                      >
+                        {getAllQuestions().length > 0
+                          ? Math.round(
+                              (Object.values(questionMastery).filter(
+                                (q) => q.correctCount >= 3,
+                              ).length /
+                                getAllQuestions().length) *
+                                100,
+                            )
+                          : 0}
+                        %
+                      </div>
+                      <div
+                        className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                      >
+                        Mastered
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  className={`grid grid-cols-3 gap-4 text-center ${darkMode ? "text-slate-300" : "text-slate-700"}`}
+                >
+                  <div>
+                    <div className="text-2xl font-bold text-green-500">
+                      {
+                        Object.values(questionMastery).filter(
+                          (q) => q.correctCount >= 3,
+                        ).length
+                      }
+                    </div>
+                    <div className="text-xs text-slate-400">Mastered</div>
+                  </div>
+                  <div>
+                    <div className="text-2xl font-bold text-blue-500">
+                      {
+                        Object.values(questionMastery).filter(
+                          (q) => q.correctCount >= 1 && q.correctCount < 3,
+                        ).length
+                      }
+                    </div>
+                    <div className="text-xs text-slate-400">Learning</div>
+                  </div>
+                  <div>
+                    <div className="text-2xl font-bold text-slate-500">
+                      {getAllQuestions().length -
+                        Object.values(questionMastery).filter(
+                          (q) => q.correctCount >= 1,
+                        ).length}
+                    </div>
+                    <div className="text-xs text-slate-400">New</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Categories Mastered - Compact */}
+              <div className="bg-slate-800/50 backdrop-blur-xl rounded-3xl p-6 shadow-2xl">
+                <h3 className="text-xl font-semibold mb-4 text-white">
+                  Categories Mastered
+                </h3>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                  {(() => {
+                    // Get ALL questions regardless of selectedQuestionTypes
+                    const allQs = [];
+                    [
+                      "multipleChoice",
+                      "trueFalse",
+                      "reorderSequence",
+                      "matchItems",
+                    ].forEach((type) => {
+                      const questions = questionDatabase[type] || [];
+                      questions.forEach((q) => {
+                        allQs.push({ ...q, questionType: type });
+                      });
+                    });
+
+                    const categoriesData = {};
+
+                    // Group questions by category
+                    allQs.forEach((q) => {
+                      if (!categoriesData[q.category]) {
+                        categoriesData[q.category] = { total: 0, learned: 0 };
+                      }
+                      categoriesData[q.category].total++;
+                      const mastery = questionMastery[q.id];
+                      if (mastery && mastery.correctCount >= 3) {
+                        categoriesData[q.category].learned++;
+                      }
+                    });
+
+                    return Object.entries(categoriesData)
+                      .sort((a, b) => a[0].localeCompare(b[0]))
+                      .map(([category, data]) => {
+                        const percentage = Math.round(
+                          (data.learned / data.total) * 100,
+                        );
+                        const isComplete = percentage === 100;
+
+                        return (
+                          <div
+                            key={category}
+                            className={`p-3 rounded-xl transition-all ${
+                              isComplete
+                                ? "bg-green-500/20 border border-green-500/50"
+                                : "bg-slate-700/50 border border-slate-600"
+                            }`}
+                          >
+                            <div className="flex items-center justify-between mb-1.5">
+                              <div className="text-sm font-medium text-white truncate pr-2">
+                                {category}
+                              </div>
+                              {isComplete && (
+                                <CheckCircle2 className="w-4 h-4 text-green-400 flex-shrink-0" />
+                              )}
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <div className="flex-1 h-1.5 rounded-full overflow-hidden bg-slate-600">
+                                <div
+                                  className={`h-full transition-all duration-500 ${
+                                    isComplete ? "bg-green-500" : "bg-blue-500"
+                                  }`}
+                                  style={{ width: `${percentage}%` }}
+                                />
+                              </div>
+                              <div className="text-xs font-medium w-10 text-right text-slate-300">
+                                {percentage}%
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      });
+                  })()}
+                </div>
+              </div>
+
+              {/* Key Stats - Simple Cards */}
+              {(performanceStats.overall.correct +
+                performanceStats.overall.incorrect >
+                0 ||
+                performanceStats.overall.bestStreak > 0) && (
+                <div className="grid grid-cols-2 gap-4">
+                  {performanceStats.overall.correct +
+                    performanceStats.overall.incorrect >
+                    0 && (
+                    <div
+                      className={`${darkMode ? "bg-slate-800/50" : "bg-white/50"} backdrop-blur-xl rounded-3xl p-6 shadow-2xl text-center`}
+                    >
+                      <div
+                        className={`text-4xl font-bold mb-2 ${darkMode ? "text-blue-400" : "text-blue-600"}`}
+                      >
+                        {Math.round(
+                          (performanceStats.overall.correct /
+                            (performanceStats.overall.correct +
+                              performanceStats.overall.incorrect)) *
+                            100,
+                        )}
+                        %
+                      </div>
+                      <div
+                        className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                      >
+                        Quiz Accuracy
+                      </div>
+                    </div>
+                  )}
+
+                  {performanceStats.overall.bestStreak > 0 && (
+                    <div
+                      className={`${darkMode ? "bg-slate-800/50" : "bg-white/50"} backdrop-blur-xl rounded-3xl p-6 shadow-2xl text-center`}
+                    >
+                      <div
+                        className={`text-4xl font-bold mb-2 ${darkMode ? "text-orange-400" : "text-orange-600"}`}
+                      >
+                        {performanceStats.overall.bestStreak}
+                      </div>
+                      <div
+                        className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                      >
+                        Best Streak
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          ) : activeTab === "studycomplete" ? (
+            <div className="max-w-4xl mx-auto">
+              {/* Study Session Complete */}
+              <div
+                className={`${darkMode ? "bg-slate-800" : "bg-white"} rounded-xl p-6 mb-6`}
+              >
+                <div className="text-center mb-8">
+                  <div className="inline-block p-4 rounded-full bg-green-500/20 mb-4">
+                    <CheckCircle2 className="w-16 h-16 text-green-500" />
+                  </div>
+                  <h2
+                    className={`text-3xl font-bold ${darkMode ? "text-white" : "text-slate-900"} mb-2`}
+                  >
+                    Study Session Complete! 🎉
+                  </h2>
+                  <p
+                    className={`text-lg ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                  >
+                    You&apos;ve reviewed all {currentQuestions?.length || 0}{" "}
+                    questions
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                  <div
+                    className={`${darkMode ? "bg-slate-700/50" : "bg-slate-50"} rounded-lg p-4 text-center`}
+                  >
+                    <BookOpen
+                      className={`w-8 h-8 mx-auto mb-2 ${darkMode ? "text-blue-400" : "text-blue-600"}`}
+                    />
+                    <p
+                      className={`text-2xl font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
+                    >
+                      {currentQuestions?.length || 0}
+                    </p>
+                    <p
+                      className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                    >
+                      Questions Studied
+                    </p>
+                  </div>
+
+                  <div
+                    className={`${darkMode ? "bg-slate-700/50" : "bg-slate-50"} rounded-lg p-4 text-center`}
+                  >
+                    <Target
+                      className={`w-8 h-8 mx-auto mb-2 ${darkMode ? "text-green-400" : "text-green-600"}`}
+                    />
+                    <p
+                      className={`text-2xl font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
+                    >
+                      {currentQuestions?.length > 0
+                        ? new Set(currentQuestions.map((q) => q.category)).size
+                        : 0}
+                    </p>
+                    <p
+                      className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                    >
+                      Topics Covered
+                    </p>
+                  </div>
+
+                  <div
+                    className={`${darkMode ? "bg-slate-700/50" : "bg-slate-50"} rounded-lg p-4 text-center`}
+                  >
+                    <Clock
+                      className={`w-8 h-8 mx-auto mb-2 ${darkMode ? "text-purple-400" : "text-purple-600"}`}
+                    />
+                    <p
+                      className={`text-2xl font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
+                    >
+                      Study
+                    </p>
+                    <p
+                      className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                    >
+                      Mode
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex gap-3 flex-wrap">
+                  <button
+                    onClick={() => {
+                      // If in learning path mode, return to learning path; otherwise go home
+                      setActiveTab(
+                        studyMode === "learningpath" ? "learningpath" : "home",
+                      );
+                      setStudyMode("study");
+                      setUserAnswers({});
+                      setCurrentQuestionIndex(0);
+                      setShowExplanation(false);
+                    }}
+                    className={`flex-1 px-6 py-3 rounded-lg font-medium transition ${
+                      darkMode
+                        ? "bg-slate-700 hover:bg-slate-600 text-white"
+                        : "bg-slate-300 hover:bg-slate-400 text-slate-900"
+                    }`}
+                  >
+                    {studyMode === "learningpath"
+                      ? "Back to Categories"
+                      : "Return to Main Menu"}
+                  </button>
+                  <button
+                    onClick={() => {
+                      setCurrentQuestionIndex(0);
+                      setShowExplanation(false);
+                      setUserAnswers({});
+                      setActiveTab("study");
+                    }}
+                    className="flex-1 px-6 py-3 rounded-lg font-medium transition bg-green-600 hover:bg-green-700 text-white"
+                  >
+                    Study Again
+                  </button>
+                </div>
+              </div>
+            </div>
+          ) : activeTab === "results" ? (
+            <div className="max-w-4xl mx-auto">
+              {/* Quiz Results */}
+              <div
+                className={`${darkMode ? "bg-slate-800" : "bg-white"} rounded-xl p-6 mb-6`}
+              >
+                <div className="mb-6">
+                  <h2
+                    className={`text-2xl font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
+                  >
+                    Quiz Results
+                  </h2>
+                </div>
+
+                {/* Score Summary */}
+                <div className="grid grid-cols-3 gap-4 mb-6">
+                  <div
+                    className={`p-4 rounded-lg ${darkMode ? "bg-green-900/30 border-2 border-green-600" : "bg-green-100 border-2 border-green-400"}`}
+                  >
+                    <div
+                      className={`text-3xl font-bold ${darkMode ? "text-green-400" : "text-green-700"}`}
+                    >
+                      {
+                        Object.keys(userAnswers).filter((id) => {
+                          const question = currentQuestions.find(
+                            (q) => q.id === id,
+                          );
+                          return (
+                            question && checkAnswer(question, userAnswers[id])
+                          );
+                        }).length
+                      }
+                    </div>
+                    <div
+                      className={`text-sm ${darkMode ? "text-green-300" : "text-green-600"}`}
+                    >
+                      Correct
+                    </div>
+                  </div>
+                  <div
+                    className={`p-4 rounded-lg ${darkMode ? "bg-red-900/30 border-2 border-red-600" : "bg-red-100 border-2 border-red-400"}`}
+                  >
+                    <div
+                      className={`text-3xl font-bold ${darkMode ? "text-red-400" : "text-red-700"}`}
+                    >
+                      {
+                        Object.keys(userAnswers).filter((id) => {
+                          const question = currentQuestions.find(
+                            (q) => q.id === id,
+                          );
+                          return (
+                            question && !checkAnswer(question, userAnswers[id])
+                          );
+                        }).length
+                      }
+                    </div>
+                    <div
+                      className={`text-sm ${darkMode ? "text-red-300" : "text-red-600"}`}
+                    >
+                      Incorrect
+                    </div>
+                  </div>
+                  <div
+                    className={`p-4 rounded-lg ${darkMode ? "bg-yellow-900/30 border-2 border-yellow-600" : "bg-yellow-100 border-2 border-yellow-400"}`}
+                  >
+                    <div
+                      className={`text-3xl font-bold ${darkMode ? "text-yellow-400" : "text-yellow-700"}`}
+                    >
+                      {currentQuestions.length -
+                        Object.keys(userAnswers).length}
+                    </div>
+                    <div
+                      className={`text-sm ${darkMode ? "text-yellow-300" : "text-yellow-600"}`}
+                    >
+                      Unanswered
+                    </div>
+                  </div>
+                </div>
+
+                {/* Question Review - Incorrect Answers Only */}
+                <div className="mb-4">
+                  <h3
+                    className={`text-lg font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
+                  >
+                    Incorrect Answers to Review:
+                  </h3>
+                </div>
+                <div className="space-y-3">
+                  {currentQuestions
+                    .map((question, index) => ({ question, index }))
+                    .filter(({ question }) => {
+                      const answered = userAnswers[question.id] !== undefined;
+                      const isCorrect =
+                        answered &&
+                        checkAnswer(question, userAnswers[question.id]);
+                      return answered && !isCorrect; // Only show incorrect answers
+                    })
+                    .map(({ question, index }) => {
+                      const answered = userAnswers[question.id] !== undefined;
+                      const isCorrect =
+                        answered &&
+                        checkAnswer(question, userAnswers[question.id]);
+
+                      return (
+                        <div
+                          key={question.id}
+                          className={`p-4 rounded-lg border-2 ${
+                            darkMode
+                              ? "bg-red-900/20 border-red-600"
+                              : "bg-red-50 border-red-400"
+                          }`}
+                        >
+                          <div className="mb-3">
+                            <div className="flex items-start justify-between gap-3 mb-2">
+                              <div className="flex items-start gap-3 flex-1">
+                                <span
+                                  className={`font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
+                                >
+                                  #{index + 1}
+                                </span>
+                                <div className="flex-1">
+                                  <p
+                                    className={`font-semibold mb-2 ${darkMode ? "text-white" : "text-slate-900"}`}
+                                  >
+                                    {question.question}
+                                  </p>
+                                </div>
+                              </div>
+                              <XCircle
+                                className={`w-5 h-5 flex-shrink-0 ${darkMode ? "text-red-400" : "text-red-600"}`}
+                              />
+                            </div>
+
+                            {/* Show answers */}
+                            <div
+                              className={`mt-3 p-3 rounded ${darkMode ? "bg-slate-800/50" : "bg-white/50"} space-y-2`}
+                            >
+                              {/* Multiple Choice or True/False */}
+                              {(question.questionType === "multipleChoice" ||
+                                question.questionType === "trueFalse") && (
+                                <>
+                                  <div>
+                                    <p
+                                      className={`text-xs font-semibold ${darkMode ? "text-red-400" : "text-red-600"} mb-1`}
+                                    >
+                                      Your Answer:
+                                    </p>
+                                    <p
+                                      className={`text-sm ${darkMode ? "text-slate-200" : "text-slate-800"}`}
+                                    >
+                                      {question.questionType ===
+                                      "multipleChoice"
+                                        ? question.options[
+                                            userAnswers[question.id]
+                                          ]
+                                        : userAnswers[question.id]
+                                          ? "True"
+                                          : "False"}
+                                    </p>
+                                  </div>
+                                  <div>
+                                    <p
+                                      className={`text-xs font-semibold ${darkMode ? "text-green-400" : "text-green-600"} mb-1`}
+                                    >
+                                      Correct Answer:
+                                    </p>
+                                    <p
+                                      className={`text-sm ${darkMode ? "text-slate-200" : "text-slate-800"}`}
+                                    >
+                                      {question.questionType ===
+                                      "multipleChoice"
+                                        ? question.options[
+                                            question.correctAnswer
+                                          ]
+                                        : question.correctAnswer
+                                          ? "True"
+                                          : "False"}
+                                    </p>
+                                  </div>
+                                </>
+                              )}
+
+                              {/* Reorder Sequence */}
+                              {question.questionType === "reorderSequence" && (
+                                <>
+                                  <div>
+                                    <p
+                                      className={`text-xs font-semibold ${darkMode ? "text-red-400" : "text-red-600"} mb-2`}
+                                    >
+                                      Your Sequence:
+                                    </p>
+                                    <ol className="list-decimal list-inside space-y-1">
+                                      {userAnswers[question.id]?.map(
+                                        (step, i) => (
+                                          <li
+                                            key={i}
+                                            className={`text-xs ${darkMode ? "text-slate-300" : "text-slate-700"}`}
+                                          >
+                                            {step}
+                                          </li>
+                                        ),
+                                      )}
+                                    </ol>
+                                  </div>
+                                  <div>
+                                    <p
+                                      className={`text-xs font-semibold ${darkMode ? "text-green-400" : "text-green-600"} mb-2`}
+                                    >
+                                      Correct Sequence:
+                                    </p>
+                                    <ol className="list-decimal list-inside space-y-1">
+                                      {question.correctOrder.map((step, i) => (
+                                        <li
+                                          key={i}
+                                          className={`text-xs ${darkMode ? "text-slate-300" : "text-slate-700"}`}
+                                        >
+                                          {step}
+                                        </li>
+                                      ))}
+                                    </ol>
+                                  </div>
+                                </>
+                              )}
+
+                              {/* Match Items */}
+                              {question.questionType === "matchItems" && (
+                                <>
+                                  <div>
+                                    <p
+                                      className={`text-xs font-semibold ${darkMode ? "text-red-400" : "text-red-600"} mb-2`}
+                                    >
+                                      Your Matches:
+                                    </p>
+                                    <div className="space-y-1">
+                                      {question.pairs.map((pair, i) => (
+                                        <div
+                                          key={i}
+                                          className="flex items-center gap-2 text-xs"
+                                        >
+                                          <span
+                                            className={
+                                              darkMode
+                                                ? "text-slate-300"
+                                                : "text-slate-700"
+                                            }
+                                          >
+                                            {pair.left}
+                                          </span>
+                                          <ArrowRight className="w-3 h-3" />
+                                          <span
+                                            className={
+                                              darkMode
+                                                ? "text-slate-300"
+                                                : "text-slate-700"
+                                            }
+                                          >
+                                            {userAnswers[question.id]?.[
+                                              pair.left
+                                            ] || "Not matched"}
+                                          </span>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                  <div>
+                                    <p
+                                      className={`text-xs font-semibold ${darkMode ? "text-green-400" : "text-green-600"} mb-2`}
+                                    >
+                                      Correct Matches:
+                                    </p>
+                                    <div className="space-y-1">
+                                      {question.pairs.map((pair, i) => (
+                                        <div
+                                          key={i}
+                                          className="flex items-center gap-2 text-xs"
+                                        >
+                                          <span
+                                            className={
+                                              darkMode
+                                                ? "text-slate-300"
+                                                : "text-slate-700"
+                                            }
+                                          >
+                                            {pair.left}
+                                          </span>
+                                          <ArrowRight className="w-3 h-3" />
+                                          <span
+                                            className={
+                                              darkMode
+                                                ? "text-slate-300"
+                                                : "text-slate-700"
+                                            }
+                                          >
+                                            {pair.right}
+                                          </span>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                </>
+                              )}
+
+                              {/* Explanation */}
+                              <div
+                                className={`pt-2 border-t ${darkMode ? "border-slate-700" : "border-slate-300"}`}
+                              >
+                                <p
+                                  className={`text-xs font-semibold ${darkMode ? "text-blue-400" : "text-blue-600"} mb-1`}
+                                >
+                                  Explanation:
+                                </p>
+                                <p
+                                  className={`text-xs ${darkMode ? "text-slate-300" : "text-slate-700"}`}
+                                >
+                                  {question.explanation}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  {currentQuestions.filter((q) => {
+                    const answered = userAnswers[q.id] !== undefined;
+                    const isCorrect =
+                      answered && checkAnswer(q, userAnswers[q.id]);
+                    return answered && !isCorrect;
+                  }).length === 0 && (
+                    <div
+                      className={`p-6 rounded-lg text-center ${darkMode ? "bg-green-900/30 border-2 border-green-600" : "bg-green-100 border-2 border-green-400"}`}
+                    >
+                      <CheckCircle2
+                        className={`w-12 h-12 mx-auto mb-3 ${darkMode ? "text-green-400" : "text-green-600"}`}
+                      />
+                      <p
+                        className={`text-lg font-semibold ${darkMode ? "text-green-400" : "text-green-700"}`}
+                      >
+                        Perfect Score! No incorrect answers to review.
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Action Buttons */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-6">
+                  {/* Review Incorrect Answers Button - Only show if there are incorrect answers */}
+                  {currentQuestions.filter((q) => {
+                    const answered = userAnswers[q.id] !== undefined;
+                    const isCorrect =
+                      answered && checkAnswer(q, userAnswers[q.id]);
+                    return answered && !isCorrect;
+                  }).length > 0 && (
+                    <button
+                      onClick={() => {
+                        // Filter to only incorrect questions
+                        const incorrectQuestions = currentQuestions.filter(
+                          (q) => {
+                            const answered = userAnswers[q.id] !== undefined;
+                            const isCorrect =
+                              answered && checkAnswer(q, userAnswers[q.id]);
+                            return answered && !isCorrect;
+                          },
+                        );
+
+                        // Set up review mode with only incorrect questions
+                        setCurrentQuestions(incorrectQuestions);
+                        setCurrentQuestionIndex(0);
+                        setUserAnswers({});
+                        setShowExplanation(false);
+                        setStudyMode("quiz");
+                        setReviewIncorrectOnly(true);
+                        setActiveTab("study");
+                      }}
+                      className="px-6 py-3 rounded-lg font-medium transition bg-red-600 hover:bg-red-700 text-white shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+                    >
+                      <XCircle className="w-5 h-5" />
+                      Review Incorrect (
+                      {
+                        currentQuestions.filter((q) => {
+                          const answered = userAnswers[q.id] !== undefined;
+                          const isCorrect =
+                            answered && checkAnswer(q, userAnswers[q.id]);
+                          return answered && !isCorrect;
+                        }).length
+                      }
+                      )
+                    </button>
+                  )}
+                  <button
+                    onClick={() => {
+                      setActiveTab("home");
+                      setStudyMode("study");
+                      setUserAnswers({});
+                      setCurrentQuestionIndex(0);
+                      setShowExplanation(false);
+                      setReviewIncorrectOnly(false);
+                    }}
+                    className={`px-6 py-3 rounded-lg font-medium transition ${
+                      darkMode
+                        ? "bg-slate-700 hover:bg-slate-600 text-white"
+                        : "bg-slate-300 hover:bg-slate-400 text-slate-900"
+                    }`}
+                  >
+                    Return to Main Menu
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowQuizSetup(true);
+                      setActiveTab("quizsetup");
+                      setReviewIncorrectOnly(false);
+                    }}
+                    className="px-6 py-3 rounded-lg font-medium transition bg-orange-600 hover:bg-orange-700 text-white"
+                  >
+                    Take Another Quiz
+                  </button>
+                </div>
+              </div>
+            </div>
+          ) : activeTab === "flashcard" ? (
+            <div className="max-w-4xl mx-auto">
+              {currentQuestions.length > 0 && currentQuestion ? (
+                <Flashcard
+                  question={currentQuestion}
+                  onNext={() => {
+                    if (currentQuestionIndex < currentQuestions.length - 1) {
+                      setCurrentQuestionIndex(currentQuestionIndex + 1);
+                    }
                   }}
+                  onPrevious={() => {
+                    if (currentQuestionIndex > 0) {
+                      setCurrentQuestionIndex(currentQuestionIndex - 1);
+                    }
+                  }}
+                  onRate={(quality) => {
+                    // Track "Don't Know" cards (quality 0-2)
+                    if (quality <= 2) {
+                      if (!unknownFlashcards.includes(currentQuestion.id)) {
+                        setUnknownFlashcards((prev) => [
+                          ...prev,
+                          currentQuestion.id,
+                        ]);
+                      }
+                    } else {
+                      // Remove from unknown if they now know it
+                      setUnknownFlashcards((prev) =>
+                        prev.filter((id) => id !== currentQuestion.id),
+                      );
+                    }
+
+                    // Update SM-2 SRS data based on quality rating
+                    setSrsData((prev) => {
+                      const existingCard = prev[currentQuestion.id];
+                      const updatedCard = calculateSM2(quality, existingCard);
+                      return {
+                        ...prev,
+                        [currentQuestion.id]: updatedCard,
+                      };
+                    });
+
+                    // Move to next card
+                    if (currentQuestionIndex < currentQuestions.length - 1) {
+                      setCurrentQuestionIndex(currentQuestionIndex + 1);
+                    } else {
+                      // Completed all flashcards
+                      setActiveTab("home");
+                    }
+                  }}
+                  currentIndex={currentQuestionIndex}
+                  totalCards={currentQuestions.length}
+                  darkMode={darkMode}
+                />
+              ) : (
+                <div
+                  className={`${darkMode ? "bg-slate-800" : "bg-white"} rounded-xl p-8 text-center`}
+                >
+                  <CheckCircle2
+                    className={`w-16 h-16 mx-auto mb-4 ${darkMode ? "text-green-400" : "text-green-600"}`}
+                  />
+                  <h2
+                    className={`text-2xl font-bold mb-2 ${darkMode ? "text-white" : "text-slate-900"}`}
+                  >
+                    All Cards Reviewed!
+                  </h2>
+                  <p
+                    className={`mb-6 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                  >
+                    You&apos;ve reviewed all flashcards due for today. Great
+                    work!
+                  </p>
+                  <button
+                    onClick={() => setActiveTab("home")}
+                    className="px-6 py-3 rounded-lg font-medium transition bg-purple-600 hover:bg-purple-700 text-white"
+                  >
+                    Return to Home
+                  </button>
+                </div>
+              )}
+
+              {/* Navigation buttons */}
+              <div className="mt-6 text-center">
+                <button
+                  onClick={() => setActiveTab("home")}
                   className={`px-6 py-3 rounded-lg font-medium transition ${
                     darkMode
                       ? "bg-slate-700 hover:bg-slate-600 text-white"
                       : "bg-slate-300 hover:bg-slate-400 text-slate-900"
                   }`}
                 >
-                  Return to Main Menu
-                </button>
-                <button
-                  onClick={() => {
-                    setShowQuizSetup(true);
-                    setActiveTab("quizsetup");
-                    setReviewIncorrectOnly(false);
-                  }}
-                  className="px-6 py-3 rounded-lg font-medium transition bg-orange-600 hover:bg-orange-700 text-white"
-                >
-                  Take Another Quiz
+                  ← Exit Flashcards
                 </button>
               </div>
             </div>
-          </div>
-        ) : activeTab === "flashcard" ? (
-          <div className="max-w-4xl mx-auto">
-            {currentQuestions.length > 0 && currentQuestion ? (
-              <Flashcard
-                question={currentQuestion}
-                onNext={() => {
-                  if (currentQuestionIndex < currentQuestions.length - 1) {
-                    setCurrentQuestionIndex(currentQuestionIndex + 1);
-                  }
-                }}
-                onPrevious={() => {
-                  if (currentQuestionIndex > 0) {
-                    setCurrentQuestionIndex(currentQuestionIndex - 1);
-                  }
-                }}
-                onRate={(quality) => {
-                  // Track "Don't Know" cards (quality 0-2)
-                  if (quality <= 2) {
-                    if (!unknownFlashcards.includes(currentQuestion.id)) {
-                      setUnknownFlashcards(prev => [...prev, currentQuestion.id]);
-                    }
-                  } else {
-                    // Remove from unknown if they now know it
-                    setUnknownFlashcards(prev => prev.filter(id => id !== currentQuestion.id));
-                  }
-
-                  // Update SM-2 SRS data based on quality rating
-                  setSrsData((prev) => {
-                    const existingCard = prev[currentQuestion.id];
-                    const updatedCard = calculateSM2(quality, existingCard);
-                    return {
-                      ...prev,
-                      [currentQuestion.id]: updatedCard,
-                    };
+          ) : activeTab === "cockpit" ? (
+            <CockpitReference darkMode={darkMode} />
+          ) : activeTab === "learningpath" ? (
+            <LearningPath
+              learningPath={learningPath}
+              allQuestions={(() => {
+                // Get ALL questions for learning path, ignoring selectedQuestionTypes
+                const all = [];
+                [
+                  "multipleChoice",
+                  "trueFalse",
+                  "reorderSequence",
+                  "matchItems",
+                  "flashcard",
+                ].forEach((type) => {
+                  const questions = questionDatabase[type] || [];
+                  questions.forEach((q) => {
+                    all.push({ ...q, questionType: type });
                   });
-
-                  // Move to next card
-                  if (currentQuestionIndex < currentQuestions.length - 1) {
-                    setCurrentQuestionIndex(currentQuestionIndex + 1);
-                  } else {
-                    // Completed all flashcards
-                    setActiveTab("home");
-                  }
-                }}
-                currentIndex={currentQuestionIndex}
-                totalCards={currentQuestions.length}
-                darkMode={darkMode}
-              />
-            ) : (
+                });
+                return all;
+              })()}
+              questionMastery={questionMastery}
+              onStartSection={startLearningPathSection}
+              getChapterProgress={getChapterProgress}
+              getSectionProgress={getSectionProgress}
+              shouldUnlockChapter={shouldUnlockChapter}
+              darkMode={darkMode}
+            />
+          ) : currentQuestions.length === 0 ? (
+            <div className="max-w-4xl mx-auto">
               <div
                 className={`${darkMode ? "bg-slate-800" : "bg-white"} rounded-xl p-8 text-center`}
               >
-                <CheckCircle2
-                  className={`w-16 h-16 mx-auto mb-4 ${darkMode ? "text-green-400" : "text-green-600"}`}
+                <AlertCircle
+                  className={`w-16 h-16 mx-auto mb-4 ${darkMode ? "text-yellow-400" : "text-yellow-600"}`}
                 />
                 <h2
                   className={`text-2xl font-bold mb-2 ${darkMode ? "text-white" : "text-slate-900"}`}
                 >
-                  All Cards Reviewed!
+                  No Questions Available
                 </h2>
                 <p
                   className={`mb-6 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
                 >
-                  You&apos;ve reviewed all flashcards due for today. Great work!
+                  Please select topics and question types to begin studying.
                 </p>
                 <button
                   onClick={() => setActiveTab("home")}
-                  className="px-6 py-3 rounded-lg font-medium transition bg-purple-600 hover:bg-purple-700 text-white"
+                  className={`px-6 py-3 rounded-lg font-medium transition ${
+                    darkMode
+                      ? "bg-slate-700 hover:bg-slate-600 text-white"
+                      : "bg-slate-300 hover:bg-slate-400 text-slate-900"
+                  }`}
                 >
-                  Return to Home
+                  ← Back to Home
                 </button>
               </div>
-            )}
-
-            {/* Navigation buttons */}
-            <div className="mt-6 text-center">
-              <button
-                onClick={() => setActiveTab("home")}
-                className={`px-6 py-3 rounded-lg font-medium transition ${
-                  darkMode
-                    ? "bg-slate-700 hover:bg-slate-600 text-white"
-                    : "bg-slate-300 hover:bg-slate-400 text-slate-900"
-                }`}
-              >
-                ← Exit Flashcards
-              </button>
             </div>
-          </div>
-        ) : activeTab === "cockpit" ? (
-          <CockpitReference darkMode={darkMode} />
-        ) : activeTab === "learningpath" ? (
-          <LearningPath
-            learningPath={learningPath}
-            allQuestions={(() => {
-              // Get ALL questions for learning path, ignoring selectedQuestionTypes
-              const all = [];
-              ["multipleChoice", "trueFalse", "reorderSequence", "matchItems", "flashcard"].forEach((type) => {
-                const questions = questionDatabase[type] || [];
-                questions.forEach((q) => {
-                  all.push({ ...q, questionType: type });
-                });
-              });
-              return all;
-            })()}
-            questionMastery={questionMastery}
-            onStartSection={startLearningPathSection}
-            getChapterProgress={getChapterProgress}
-            getSectionProgress={getSectionProgress}
-            shouldUnlockChapter={shouldUnlockChapter}
-            darkMode={darkMode}
-          />
-        ) : currentQuestions.length === 0 ? (
-          <div className="max-w-4xl mx-auto">
-            <div
-              className={`${darkMode ? "bg-slate-800" : "bg-white"} rounded-xl p-8 text-center`}
-            >
-              <AlertCircle
-                className={`w-16 h-16 mx-auto mb-4 ${darkMode ? "text-yellow-400" : "text-yellow-600"}`}
-              />
-              <h2
-                className={`text-2xl font-bold mb-2 ${darkMode ? "text-white" : "text-slate-900"}`}
-              >
-                No Questions Available
-              </h2>
-              <p
-                className={`mb-6 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
-              >
-                Please select topics and question types to begin studying.
-              </p>
-              <button
-                onClick={() => setActiveTab("home")}
-                className={`px-6 py-3 rounded-lg font-medium transition ${
-                  darkMode
-                    ? "bg-slate-700 hover:bg-slate-600 text-white"
-                    : "bg-slate-300 hover:bg-slate-400 text-slate-900"
-                }`}
-              >
-                ← Back to Home
-              </button>
-            </div>
-          </div>
-        ) : (
-          <div className="max-w-4xl mx-auto pb-6">
-            {/* Question Counter with Progress Bar */}
-            <div className="mb-3">
-              <div className="text-center mb-1">
-                <span
-                  className={`text-base font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
-                >
-                  Question {currentQuestionIndex + 1} of{" "}
-                  {currentQuestions.length}
-                </span>
-              </div>
-              {/* Progress Bar */}
-              <div
-                className={`w-full h-2 rounded-full overflow-hidden ${darkMode ? "bg-slate-800" : "bg-slate-200"}`}
-              >
-                <div
-                  className={`h-full transition-all duration-500 ease-out ${darkMode ? "bg-gradient-to-r from-blue-400 to-cyan-400 shadow-[0_0_8px_rgba(96,165,250,0.5)]" : "bg-gradient-to-r from-blue-500 to-blue-600"}`}
-                  style={{
-                    width: `${((currentQuestionIndex + 1) / currentQuestions.length) * 100}%`,
-                  }}
-                />
-              </div>
-            </div>
-
-            {/* Question Card */}
-            <div
-              key={currentQuestion?.id}
-              className={`${darkMode ? "bg-slate-800 border-slate-700" : "bg-white border-slate-300"} rounded-xl shadow-2xl p-4 md:p-5 border-2 question-enter`}
-            >
-              {currentQuestion && (
-                <>
-                  <div className="mb-2 flex items-center justify-between flex-wrap gap-1">
-                    <div className="flex items-center gap-1">
-                      {currentQuestion.difficulty === "critical" && (
-                        <span className="bg-red-600 text-white px-2 py-0.5 rounded-full text-xs font-bold">
-                          CRITICAL
-                        </span>
-                      )}
-                      {(() => {
-                        const mastery = questionMastery[currentQuestion.id];
-                        const correctCount = mastery?.correctCount || 0;
-                        const incorrectCount = mastery?.incorrectCount || 0;
-
-                        if (incorrectCount >= 2) {
-                          return (
-                            <span className="bg-orange-600 text-white px-2 py-0.5 rounded-full text-xs font-bold flex items-center gap-1">
-                              <XCircle className="w-3 h-3" />
-                              WEAK
-                            </span>
-                          );
-                        } else if (correctCount >= 3) {
-                          return (
-                            <span className="bg-green-600 text-white px-2 py-0.5 rounded-full text-xs font-bold flex items-center gap-1">
-                              <CheckCircle2 className="w-3 h-3" />
-                              MASTERED
-                            </span>
-                          );
-                        } else if (correctCount >= 1) {
-                          return (
-                            <span className="bg-blue-600 text-white px-2 py-0.5 rounded-full text-xs font-bold flex items-center gap-1">
-                              <TrendingUp className="w-3 h-3" />
-                              LEARNING
-                            </span>
-                          );
-                        } else {
-                          return (
-                            <span className="bg-slate-600 text-white px-2 py-0.5 rounded-full text-xs font-bold">
-                              NEW
-                            </span>
-                          );
-                        }
-                      })()}
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={toggleFlag}
-                        className={`px-2 py-0.5 rounded-lg text-xs font-medium transition ${
-                          flaggedQuestions.includes(currentQuestion.id)
-                            ? "bg-yellow-600 text-white"
-                            : darkMode
-                              ? "bg-slate-700 text-slate-300 hover:bg-slate-600"
-                              : "bg-slate-200 text-slate-700 hover:bg-slate-300"
-                        }`}
-                      >
-                        {flaggedQuestions.includes(currentQuestion.id) ? "⭐" : "☆"}
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Mastery Progress Bar */}
-                  {(() => {
-                    const mastery = questionMastery[currentQuestion.id];
-                    const correctCount = mastery?.correctCount || 0;
-                    const incorrectCount = mastery?.incorrectCount || 0;
-                    const totalAttempts = correctCount + incorrectCount;
-
-                    if (totalAttempts > 0) {
-                      const masteryProgress = Math.min((correctCount / 3) * 100, 100); // 3 correct = 100%
-                      const isWeak = incorrectCount >= 2;
-                      const isMastered = correctCount >= 3;
-
-                      return (
-                        <div className="mb-3">
-                          <div className="flex items-center justify-between text-xs mb-1">
-                            <span className={darkMode ? "text-slate-400" : "text-slate-600"}>
-                              Mastery Progress
-                            </span>
-                            <span className={`font-semibold ${
-                              isMastered
-                                ? "text-green-400"
-                                : isWeak
-                                  ? "text-orange-400"
-                                  : "text-blue-400"
-                            }`}>
-                              {correctCount}/3 correct
-                            </span>
-                          </div>
-                          <div className={`w-full h-2 rounded-full overflow-hidden ${darkMode ? "bg-slate-700" : "bg-slate-200"}`}>
-                            <div
-                              className={`h-full transition-all duration-500 ${
-                                isMastered
-                                  ? "bg-gradient-to-r from-green-500 to-emerald-500"
-                                  : isWeak
-                                    ? "bg-gradient-to-r from-orange-500 to-red-500"
-                                    : "bg-gradient-to-r from-blue-500 to-cyan-500"
-                              }`}
-                              style={{ width: `${masteryProgress}%` }}
-                            />
-                          </div>
-                        </div>
-                      );
-                    }
-                    return null;
-                  })()}
-                </>
-              )}
-
-              {renderQuestion()}
-            </div>
-
-            {/* Keyboard Hints - Subtle, only on desktop */}
-            {currentQuestion && (
-              <div className="hidden md:flex justify-center mt-2 mb-2">
-                <div
-                  className={`flex items-center gap-3 px-4 py-2 rounded-lg text-xs ${darkMode ? "bg-slate-700/50 text-slate-400" : "bg-slate-100 text-slate-600"} transition-opacity duration-300`}
-                >
-                  <span className="flex items-center gap-1">
-                    <kbd
-                      className={`px-2 py-1 rounded ${darkMode ? "bg-slate-600" : "bg-white"} font-mono`}
-                    >
-                      ←
-                    </kbd>
-                    Previous
+          ) : (
+            <div className="max-w-4xl mx-auto pb-6">
+              {/* Question Counter with Progress Bar */}
+              <div className="mb-3">
+                <div className="text-center mb-1">
+                  <span
+                    className={`text-base font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
+                  >
+                    Question {currentQuestionIndex + 1} of{" "}
+                    {currentQuestions.length}
                   </span>
-                  <span className="flex items-center gap-1">
-                    <kbd
-                      className={`px-2 py-1 rounded ${darkMode ? "bg-slate-600" : "bg-white"} font-mono`}
-                    >
-                      →
-                    </kbd>
-                    Next
-                  </span>
-                  {currentQuestion.questionType === "multipleChoice" && (
-                    <span className="flex items-center gap-1">
-                      <kbd
-                        className={`px-2 py-1 rounded ${darkMode ? "bg-slate-600" : "bg-white"} font-mono`}
-                      >
-                        1-4
-                      </kbd>
-                      Select
-                    </span>
-                  )}
-                  {currentQuestion.questionType === "trueFalse" && (
-                    <span className="flex items-center gap-1">
-                      <kbd
-                        className={`px-2 py-1 rounded ${darkMode ? "bg-slate-600" : "bg-white"} font-mono`}
-                      >
-                        T/F
-                      </kbd>
-                      Answer
-                    </span>
-                  )}
+                </div>
+                {/* Progress Bar */}
+                <div
+                  className={`w-full h-2 rounded-full overflow-hidden ${darkMode ? "bg-slate-800" : "bg-slate-200"}`}
+                >
+                  <div
+                    className={`h-full transition-all duration-500 ease-out ${darkMode ? "bg-gradient-to-r from-blue-400 to-cyan-400 shadow-[0_0_8px_rgba(96,165,250,0.5)]" : "bg-gradient-to-r from-blue-500 to-blue-600"}`}
+                    style={{
+                      width: `${((currentQuestionIndex + 1) / currentQuestions.length) * 100}%`,
+                    }}
+                  />
                 </div>
               </div>
-            )}
 
-            {/* Navigation - Fixed at Bottom */}
-            <div
-              className={`fixed bottom-0 left-0 right-0 ${darkMode ? "bg-slate-900/95" : "bg-white/95"} backdrop-blur-sm border-t ${darkMode ? "border-slate-700" : "border-slate-300"} p-2 shadow-2xl z-10`}
-            >
-              <div className="max-w-4xl mx-auto flex justify-between items-center gap-2">
-                {viewingSingleQuestion ? (
-                  <button
-                    onClick={() => {
-                      setActiveTab("results");
-                      setViewingSingleQuestion(false);
-                    }}
-                    className={`flex-1 px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2 text-sm touch-manipulation ${
-                      darkMode
-                        ? "bg-blue-600 hover:bg-blue-700 text-white active:scale-95"
-                        : "bg-blue-500 hover:bg-blue-600 text-white active:scale-95"
-                    }`}
-                  >
-                    <ChevronRight className="w-4 h-4 rotate-180" />
-                    Back to Review
-                  </button>
-                ) : (
+              {/* Question Card */}
+              <div
+                key={currentQuestion?.id}
+                className={`${darkMode ? "bg-slate-800 border-slate-700" : "bg-white border-slate-300"} rounded-xl shadow-2xl p-4 md:p-5 border-2 question-enter`}
+              >
+                {currentQuestion && (
                   <>
+                    <div className="mb-2 flex items-center justify-between flex-wrap gap-1">
+                      <div className="flex items-center gap-1">
+                        {currentQuestion.difficulty === "critical" && (
+                          <span className="bg-red-600 text-white px-2 py-0.5 rounded-full text-xs font-bold">
+                            CRITICAL
+                          </span>
+                        )}
+                        {(() => {
+                          const mastery = questionMastery[currentQuestion.id];
+                          const correctCount = mastery?.correctCount || 0;
+                          const incorrectCount = mastery?.incorrectCount || 0;
+
+                          if (incorrectCount >= 2) {
+                            return (
+                              <span className="bg-orange-600 text-white px-2 py-0.5 rounded-full text-xs font-bold flex items-center gap-1">
+                                <XCircle className="w-3 h-3" />
+                                WEAK
+                              </span>
+                            );
+                          } else if (correctCount >= 3) {
+                            return (
+                              <span className="bg-green-600 text-white px-2 py-0.5 rounded-full text-xs font-bold flex items-center gap-1">
+                                <CheckCircle2 className="w-3 h-3" />
+                                MASTERED
+                              </span>
+                            );
+                          } else if (correctCount >= 1) {
+                            return (
+                              <span className="bg-blue-600 text-white px-2 py-0.5 rounded-full text-xs font-bold flex items-center gap-1">
+                                <TrendingUp className="w-3 h-3" />
+                                LEARNING
+                              </span>
+                            );
+                          } else {
+                            return null;
+                          }
+                        })()}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={toggleFlag}
+                          className={`px-2 py-0.5 rounded-lg text-xs font-medium transition ${
+                            flaggedQuestions.includes(currentQuestion.id)
+                              ? "bg-yellow-600 text-white"
+                              : darkMode
+                                ? "bg-slate-700 text-slate-300 hover:bg-slate-600"
+                                : "bg-slate-200 text-slate-700 hover:bg-slate-300"
+                          }`}
+                        >
+                          {flaggedQuestions.includes(currentQuestion.id)
+                            ? "⭐"
+                            : "☆"}
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Mastery Progress Bar */}
+                    {(() => {
+                      const mastery = questionMastery[currentQuestion.id];
+                      const correctCount = mastery?.correctCount || 0;
+                      const incorrectCount = mastery?.incorrectCount || 0;
+                      const totalAttempts = correctCount + incorrectCount;
+
+                      if (totalAttempts > 0) {
+                        const masteryProgress = Math.min(
+                          (correctCount / 3) * 100,
+                          100,
+                        ); // 3 correct = 100%
+                        const isWeak = incorrectCount >= 2;
+                        const isMastered = correctCount >= 3;
+
+                        return (
+                          <div className="mb-3">
+                            <div className="flex items-center justify-between text-xs mb-1">
+                              <span
+                                className={
+                                  darkMode ? "text-slate-400" : "text-slate-600"
+                                }
+                              >
+                                Mastery Progress
+                              </span>
+                              <span
+                                className={`font-semibold ${
+                                  isMastered
+                                    ? "text-green-400"
+                                    : isWeak
+                                      ? "text-orange-400"
+                                      : "text-blue-400"
+                                }`}
+                              >
+                                {correctCount}/3 correct
+                              </span>
+                            </div>
+                            <div
+                              className={`w-full h-2 rounded-full overflow-hidden ${darkMode ? "bg-slate-700" : "bg-slate-200"}`}
+                            >
+                              <div
+                                className={`h-full transition-all duration-500 ${
+                                  isMastered
+                                    ? "bg-gradient-to-r from-green-500 to-emerald-500"
+                                    : isWeak
+                                      ? "bg-gradient-to-r from-orange-500 to-red-500"
+                                      : "bg-gradient-to-r from-blue-500 to-cyan-500"
+                                }`}
+                                style={{ width: `${masteryProgress}%` }}
+                              />
+                            </div>
+                          </div>
+                        );
+                      }
+                      return null;
+                    })()}
+                  </>
+                )}
+
+                {renderQuestion()}
+              </div>
+
+              {/* Keyboard Hints - Subtle, only on desktop */}
+              {currentQuestion && (
+                <div className="hidden md:flex justify-center mt-2 mb-2">
+                  <div
+                    className={`flex items-center gap-3 px-4 py-2 rounded-lg text-xs ${darkMode ? "bg-slate-700/50 text-slate-400" : "bg-slate-100 text-slate-600"} transition-opacity duration-300`}
+                  >
+                    <span className="flex items-center gap-1">
+                      <kbd
+                        className={`px-2 py-1 rounded ${darkMode ? "bg-slate-600" : "bg-white"} font-mono`}
+                      >
+                        ←
+                      </kbd>
+                      Previous
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <kbd
+                        className={`px-2 py-1 rounded ${darkMode ? "bg-slate-600" : "bg-white"} font-mono`}
+                      >
+                        →
+                      </kbd>
+                      Next
+                    </span>
+                    {currentQuestion.questionType === "multipleChoice" && (
+                      <span className="flex items-center gap-1">
+                        <kbd
+                          className={`px-2 py-1 rounded ${darkMode ? "bg-slate-600" : "bg-white"} font-mono`}
+                        >
+                          1-4
+                        </kbd>
+                        Select
+                      </span>
+                    )}
+                    {currentQuestion.questionType === "trueFalse" && (
+                      <span className="flex items-center gap-1">
+                        <kbd
+                          className={`px-2 py-1 rounded ${darkMode ? "bg-slate-600" : "bg-white"} font-mono`}
+                        >
+                          T/F
+                        </kbd>
+                        Answer
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Navigation - Fixed at Bottom */}
+              <div
+                className={`fixed bottom-0 left-0 right-0 ${darkMode ? "bg-slate-900/95" : "bg-white/95"} backdrop-blur-sm border-t ${darkMode ? "border-slate-700" : "border-slate-300"} p-2 shadow-2xl z-10`}
+              >
+                <div className="max-w-4xl mx-auto flex justify-between items-center gap-2">
+                  {viewingSingleQuestion ? (
                     <button
-                      onClick={handlePrevious}
-                      disabled={currentQuestionIndex === 0}
-                      className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 text-sm touch-manipulation ${
-                        currentQuestionIndex === 0
-                          ? darkMode
-                            ? "bg-slate-800 text-slate-600 cursor-not-allowed"
-                            : "bg-slate-200 text-slate-400 cursor-not-allowed"
-                          : darkMode
-                            ? "bg-slate-700 hover:bg-slate-600 text-white active:scale-95"
-                            : "bg-white hover:bg-slate-100 text-slate-900 active:scale-95"
+                      onClick={() => {
+                        setActiveTab("results");
+                        setViewingSingleQuestion(false);
+                      }}
+                      className={`flex-1 px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2 text-sm touch-manipulation ${
+                        darkMode
+                          ? "bg-blue-600 hover:bg-blue-700 text-white active:scale-95"
+                          : "bg-blue-500 hover:bg-blue-600 text-white active:scale-95"
                       }`}
                     >
                       <ChevronRight className="w-4 h-4 rotate-180" />
-                      <span className="hidden sm:inline text-sm">Previous</span>
+                      Back to Review
                     </button>
-
-                    {/* Submit button for reorder sequence - ALWAYS visible */}
-                    {currentQuestion?.questionType === "reorderSequence" &&
-                      !showExplanation && (
-                        <button
-                          onClick={() => {
-                            setShowExplanation(true);
-                            const answer = userAnswers[currentQuestion.id];
-                            if (answer) {
-                              const isCorrect = checkAnswer(
-                                currentQuestion,
-                                answer,
-                              );
-                              updatePerformance(currentQuestion, isCorrect);
-                            } else {
-                              // If no answer saved yet, mark as incorrect in quiz mode
-                              if (studyMode === "quiz") {
-                                updatePerformance(currentQuestion, false);
-                              }
-                            }
-                          }}
-                          className="bg-green-600 hover:bg-green-700 active:scale-95 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 text-sm touch-manipulation"
-                        >
-                          Submit
-                        </button>
-                      )}
-
-                    {/* Submit Answer for match items in quiz mode if not answered */}
-                    {studyMode === "quiz" &&
-                      !showExplanation &&
-                      currentQuestion?.questionType === "matchItems" &&
-                      !userAnswers[currentQuestion?.id] && (
-                        <button
-                          onClick={() => {
-                            setShowExplanation(true);
-                            updatePerformance(currentQuestion, false);
-                          }}
-                          className="bg-green-600 hover:bg-green-700 active:scale-95 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 text-sm touch-manipulation"
-                        >
-                          Submit
-                        </button>
-                      )}
-
-                    {currentQuestionIndex === currentQuestions.length - 1 &&
-                    studyMode === "quiz" &&
-                    showExplanation ? (
+                  ) : (
+                    <>
                       <button
-                        onClick={() => setActiveTab("results")}
-                        className="px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-1 bg-orange-600 hover:bg-orange-700 active:scale-95 text-white text-sm touch-manipulation"
-                      >
-                        <span className="hidden sm:inline">Finish</span>
-                        <CheckCircle2 className="w-4 h-4" />
-                      </button>
-                    ) : currentQuestionIndex === currentQuestions.length - 1 &&
-                      studyMode !== "quiz" ? (
-                      <button
-                        onClick={() => setActiveTab("studycomplete")}
-                        className="px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-1 bg-green-600 hover:bg-green-700 active:scale-95 text-white text-sm touch-manipulation"
-                      >
-                        <span className="hidden sm:inline">Finish</span>
-                        <CheckCircle2 className="w-4 h-4" />
-                      </button>
-                    ) : (
-                      <button
-                        onClick={handleNext}
+                        onClick={handlePrevious}
+                        disabled={currentQuestionIndex === 0}
                         className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 text-sm touch-manipulation ${
-                          darkMode
-                            ? "bg-slate-700 hover:bg-slate-600 text-white active:scale-95"
-                            : "bg-white hover:bg-slate-100 text-slate-900 active:scale-95"
+                          currentQuestionIndex === 0
+                            ? darkMode
+                              ? "bg-slate-800 text-slate-600 cursor-not-allowed"
+                              : "bg-slate-200 text-slate-400 cursor-not-allowed"
+                            : darkMode
+                              ? "bg-slate-700 hover:bg-slate-600 text-white active:scale-95"
+                              : "bg-white hover:bg-slate-100 text-slate-900 active:scale-95"
                         }`}
                       >
-                        <span className="hidden sm:inline text-sm">Next</span>
-                        <ChevronRight className="w-4 h-4" />
+                        <ChevronRight className="w-4 h-4 rotate-180" />
+                        <span className="hidden sm:inline text-sm">
+                          Previous
+                        </span>
                       </button>
-                    )}
-                  </>
-                )}
+
+                      {/* Submit button for reorder sequence - ALWAYS visible */}
+                      {currentQuestion?.questionType === "reorderSequence" &&
+                        !showExplanation && (
+                          <button
+                            onClick={() => {
+                              setShowExplanation(true);
+                              const answer = userAnswers[currentQuestion.id];
+                              if (answer) {
+                                const isCorrect = checkAnswer(
+                                  currentQuestion,
+                                  answer,
+                                );
+                                updatePerformance(currentQuestion, isCorrect);
+                              } else {
+                                // If no answer saved yet, mark as incorrect in quiz mode
+                                if (studyMode === "quiz") {
+                                  updatePerformance(currentQuestion, false);
+                                }
+                              }
+                            }}
+                            className="bg-green-600 hover:bg-green-700 active:scale-95 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 text-sm touch-manipulation"
+                          >
+                            Submit
+                          </button>
+                        )}
+
+                      {/* Submit Answer for match items in quiz mode if not answered */}
+                      {studyMode === "quiz" &&
+                        !showExplanation &&
+                        currentQuestion?.questionType === "matchItems" &&
+                        !userAnswers[currentQuestion?.id] && (
+                          <button
+                            onClick={() => {
+                              setShowExplanation(true);
+                              updatePerformance(currentQuestion, false);
+                            }}
+                            className="bg-green-600 hover:bg-green-700 active:scale-95 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 text-sm touch-manipulation"
+                          >
+                            Submit
+                          </button>
+                        )}
+
+                      {currentQuestionIndex === currentQuestions.length - 1 &&
+                      studyMode === "quiz" &&
+                      showExplanation ? (
+                        <button
+                          onClick={() => setActiveTab("results")}
+                          className="px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-1 bg-orange-600 hover:bg-orange-700 active:scale-95 text-white text-sm touch-manipulation"
+                        >
+                          <span className="hidden sm:inline">Finish</span>
+                          <CheckCircle2 className="w-4 h-4" />
+                        </button>
+                      ) : currentQuestionIndex ===
+                          currentQuestions.length - 1 &&
+                        studyMode !== "quiz" ? (
+                        <button
+                          onClick={() => setActiveTab("studycomplete")}
+                          className="px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-1 bg-green-600 hover:bg-green-700 active:scale-95 text-white text-sm touch-manipulation"
+                        >
+                          <span className="hidden sm:inline">Finish</span>
+                          <CheckCircle2 className="w-4 h-4" />
+                        </button>
+                      ) : (
+                        <button
+                          onClick={handleNext}
+                          className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 text-sm touch-manipulation ${
+                            darkMode
+                              ? "bg-slate-700 hover:bg-slate-600 text-white active:scale-95"
+                              : "bg-white hover:bg-slate-100 text-slate-900 active:scale-95"
+                          }`}
+                        >
+                          <span className="hidden sm:inline text-sm">Next</span>
+                          <ChevronRight className="w-4 h-4" />
+                        </button>
+                      )}
+                    </>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
         </div>
       </main>
     </div>
