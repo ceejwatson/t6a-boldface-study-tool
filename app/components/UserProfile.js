@@ -1,0 +1,106 @@
+"use client";
+
+import { useState } from "react";
+import { supabase } from "../lib/supabase";
+import {
+  User,
+  LogOut,
+  RefreshCw,
+  CheckCircle,
+  XCircle,
+  Loader2,
+} from "lucide-react";
+import { syncProgress } from "../lib/syncService";
+
+export default function UserProfile({ user, onLogout }) {
+  const [syncing, setSyncing] = useState(false);
+  const [syncStatus, setSyncStatus] = useState(null);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    if (onLogout) {
+      onLogout();
+    }
+  };
+
+  const handleManualSync = async () => {
+    setSyncing(true);
+    setSyncStatus(null);
+
+    try {
+      const result = await syncProgress(user.id);
+      if (result.success) {
+        setSyncStatus({
+          type: "success",
+          message: "Progress synced successfully!",
+        });
+      } else {
+        setSyncStatus({
+          type: "error",
+          message: `Sync failed: ${result.error}`,
+        });
+      }
+    } catch (error) {
+      setSyncStatus({ type: "error", message: `Sync error: ${error.message}` });
+    } finally {
+      setSyncing(false);
+      // Clear status after 3 seconds
+      setTimeout(() => setSyncStatus(null), 3000);
+    }
+  };
+
+  return (
+    <div className="bg-gray-800/50 rounded-lg border border-gray-700 p-3">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-lg">
+            <User className="text-white" size={18} />
+          </div>
+          <div>
+            <p className="font-medium text-gray-100 text-sm">{user.email}</p>
+            <p className="text-xs text-gray-400">Cloud sync enabled</p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2">
+          {/* Manual Sync Button */}
+          <button
+            onClick={handleManualSync}
+            disabled={syncing}
+            className="p-2 text-blue-400 hover:bg-gray-700 rounded-lg transition-colors disabled:opacity-50"
+            title="Sync now"
+          >
+            <RefreshCw size={16} className={syncing ? "animate-spin" : ""} />
+          </button>
+
+          {/* Logout Button */}
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-2 px-3 py-1.5 text-red-400 hover:bg-gray-700 rounded-lg transition-colors text-sm"
+          >
+            <LogOut size={16} />
+            <span className="font-medium">Logout</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Sync Status */}
+      {syncStatus && (
+        <div
+          className={`mt-2 p-2 rounded-lg flex items-center gap-2 text-xs ${
+            syncStatus.type === "success"
+              ? "bg-green-900/30 text-green-400 border border-green-800"
+              : "bg-red-900/30 text-red-400 border border-red-800"
+          }`}
+        >
+          {syncStatus.type === "success" ? (
+            <CheckCircle size={14} />
+          ) : (
+            <XCircle size={14} />
+          )}
+          <span>{syncStatus.message}</span>
+        </div>
+      )}
+    </div>
+  );
+}
