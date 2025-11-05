@@ -856,6 +856,7 @@ export default function T6AEnhancedStudyTool() {
       darkMode: darkMode,
       showCorrectness: studyMode === "quiz" || studyMode === "learningpath", // Show green/red in quiz and learning path modes
       fontSize: fontSize,
+      compact: studyMode === "study", // Compact layout for review mode
     };
 
     switch (currentQuestion.questionType) {
@@ -2816,7 +2817,7 @@ export default function T6AEnhancedStudyTool() {
               {/* Question Card */}
               <div
                 key={currentQuestion?.id}
-                className={`${darkMode ? "bg-slate-800 border-slate-700" : "bg-white border-slate-300"} rounded-xl shadow-2xl p-4 md:p-5 border-2 question-enter`}
+                className={`${darkMode ? "bg-slate-800 border-slate-700" : "bg-white border-slate-300"} rounded-xl shadow-2xl ${studyMode === "study" ? "p-3 md:p-4" : "p-4 md:p-5"} border-2 question-enter`}
               >
                 {currentQuestion && (
                   <>
@@ -2874,61 +2875,64 @@ export default function T6AEnhancedStudyTool() {
                     </div>
 
                     {/* Mastery Progress Bar */}
-                    {(() => {
-                      const mastery = questionMastery[currentQuestion.id];
-                      const correctCount = mastery?.correctCount || 0;
-                      const incorrectCount = mastery?.incorrectCount || 0;
-                      const totalAttempts = correctCount + incorrectCount;
+                    {studyMode !== "study" &&
+                      (() => {
+                        const mastery = questionMastery[currentQuestion.id];
+                        const correctCount = mastery?.correctCount || 0;
+                        const incorrectCount = mastery?.incorrectCount || 0;
+                        const totalAttempts = correctCount + incorrectCount;
 
-                      if (totalAttempts > 0) {
-                        const masteryProgress = Math.min(
-                          (correctCount / 3) * 100,
-                          100,
-                        ); // 3 correct = 100%
-                        const isWeak = incorrectCount >= 2;
-                        const isMastered = correctCount >= 3;
+                        if (totalAttempts > 0) {
+                          const masteryProgress = Math.min(
+                            (correctCount / 3) * 100,
+                            100,
+                          ); // 3 correct = 100%
+                          const isWeak = incorrectCount >= 2;
+                          const isMastered = correctCount >= 3;
 
-                        return (
-                          <div className="mb-3">
-                            <div className="flex items-center justify-between text-xs mb-1">
-                              <span
-                                className={
-                                  darkMode ? "text-slate-400" : "text-slate-600"
-                                }
-                              >
-                                Mastery Progress
-                              </span>
-                              <span
-                                className={`font-semibold ${
-                                  isMastered
-                                    ? "text-green-400"
-                                    : isWeak
-                                      ? "text-orange-400"
-                                      : "text-blue-400"
-                                }`}
-                              >
-                                {correctCount}/3 correct
-                              </span>
-                            </div>
-                            <div
-                              className={`w-full h-2 rounded-full overflow-hidden ${darkMode ? "bg-slate-700" : "bg-slate-200"}`}
-                            >
+                          return (
+                            <div className="mb-3">
+                              <div className="flex items-center justify-between text-xs mb-1">
+                                <span
+                                  className={
+                                    darkMode
+                                      ? "text-slate-400"
+                                      : "text-slate-600"
+                                  }
+                                >
+                                  Mastery Progress
+                                </span>
+                                <span
+                                  className={`font-semibold ${
+                                    isMastered
+                                      ? "text-green-400"
+                                      : isWeak
+                                        ? "text-orange-400"
+                                        : "text-blue-400"
+                                  }`}
+                                >
+                                  {correctCount}/3 correct
+                                </span>
+                              </div>
                               <div
-                                className={`h-full transition-all duration-500 ${
-                                  isMastered
-                                    ? "bg-gradient-to-r from-green-500 to-emerald-500"
-                                    : isWeak
-                                      ? "bg-gradient-to-r from-orange-500 to-red-500"
-                                      : "bg-gradient-to-r from-blue-500 to-cyan-500"
-                                }`}
-                                style={{ width: `${masteryProgress}%` }}
-                              />
+                                className={`w-full h-2 rounded-full overflow-hidden ${darkMode ? "bg-slate-700" : "bg-slate-200"}`}
+                              >
+                                <div
+                                  className={`h-full transition-all duration-500 ${
+                                    isMastered
+                                      ? "bg-gradient-to-r from-green-500 to-emerald-500"
+                                      : isWeak
+                                        ? "bg-gradient-to-r from-orange-500 to-red-500"
+                                        : "bg-gradient-to-r from-blue-500 to-cyan-500"
+                                  }`}
+                                  style={{ width: `${masteryProgress}%` }}
+                                />
+                              </div>
                             </div>
-                          </div>
-                        );
-                      }
-                      return null;
-                    })()}
+                          );
+                        }
+                        return null;
+                      })()}
                   </>
                 )}
 

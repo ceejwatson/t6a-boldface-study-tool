@@ -12,6 +12,7 @@ export default function MultipleChoice({
   darkMode = true,
   showCorrectness = true,
   fontSize = "medium",
+  compact = false,
 }) {
   // Randomize answer order - memoized so it doesn't change during component lifecycle
   const shuffledOptions = useMemo(() => {
@@ -97,14 +98,14 @@ export default function MultipleChoice({
   };
 
   return (
-    <div className="space-y-2">
+    <div className={compact ? "space-y-1" : "space-y-2"}>
       <h3
-        className={`${getQuestionFontSize()} font-semibold mb-3 ${darkMode ? "text-white" : "text-slate-900"}`}
+        className={`${getQuestionFontSize()} font-semibold ${compact ? "mb-2" : "mb-3"} ${darkMode ? "text-white" : "text-slate-900"}`}
       >
         {question.question}
       </h3>
 
-      <div className="space-y-2">
+      <div className={compact ? "space-y-1.5" : "space-y-2"}>
         {shuffledOptions.map(({ option, originalIndex }, displayIndex) => (
           <button
             key={displayIndex}
@@ -122,7 +123,7 @@ export default function MultipleChoice({
 
       {showExplanation && showCorrectness && (
         <div
-          className={`mt-3 p-3 rounded-lg ${
+          className={`${compact ? "mt-2 p-2" : "mt-3 p-3"} rounded-lg ${
             userAnswer === question.correctAnswer
               ? "bg-green-900/30 border-2 border-green-600"
               : "bg-red-900/30 border-2 border-red-600"

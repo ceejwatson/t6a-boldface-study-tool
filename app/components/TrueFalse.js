@@ -12,6 +12,7 @@ export default function TrueFalse({
   darkMode = true,
   showCorrectness = true,
   fontSize = "medium",
+  compact = false,
 }) {
   // Randomize True/False order - memoized so it doesn't change during component lifecycle
   const buttonOrder = useMemo(() => {
@@ -96,14 +97,16 @@ export default function TrueFalse({
   };
 
   return (
-    <div className="space-y-6">
+    <div className={compact ? "space-y-3" : "space-y-6"}>
       <h3
-        className={`${getQuestionFontSize()} font-semibold mb-4 ${darkMode ? "text-white" : "text-slate-900"}`}
+        className={`${getQuestionFontSize()} font-semibold ${compact ? "mb-2" : "mb-4"} ${darkMode ? "text-white" : "text-slate-900"}`}
       >
         True or False: {question.question}
       </h3>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div
+        className={`grid grid-cols-1 sm:grid-cols-2 ${compact ? "gap-2" : "gap-3"}`}
+      >
         {buttonOrder.map((value, index) => (
           <button
             key={index}
@@ -123,7 +126,7 @@ export default function TrueFalse({
 
       {showExplanation && showCorrectness && (
         <div
-          className={`mt-3 p-3 rounded-lg ${
+          className={`${compact ? "mt-2 p-2" : "mt-3 p-3"} rounded-lg ${
             userAnswer === question.correctAnswer
               ? "bg-green-900/30 border-2 border-green-600"
               : "bg-red-900/30 border-2 border-red-600"
