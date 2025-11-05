@@ -294,16 +294,27 @@ export default function MatchItems({
           style={{ zIndex: 0 }}
         >
           {lines.map((line, idx) => (
-            <line
-              key={idx}
-              x1={line.x1}
-              y1={line.y1}
-              x2={line.x2}
-              y2={line.y2}
-              stroke={line.color}
-              strokeWidth="2"
-              strokeDasharray="5,5"
-            />
+            <g key={idx}>
+              {/* Glow effect for better visibility */}
+              <line
+                x1={line.x1}
+                y1={line.y1}
+                x2={line.x2}
+                y2={line.y2}
+                stroke={line.color}
+                strokeWidth="6"
+                opacity="0.3"
+              />
+              {/* Main line - solid, thicker */}
+              <line
+                x1={line.x1}
+                y1={line.y1}
+                x2={line.x2}
+                y2={line.y2}
+                stroke={line.color}
+                strokeWidth="3"
+              />
+            </g>
           ))}
         </svg>
         {/* Left Column */}
@@ -325,8 +336,15 @@ export default function MatchItems({
                       : "cursor-pointer active:scale-95"
                   }`}
                 >
-                  <div className="flex items-center justify-between">
-                    <span className={getFontSizeClass()}>{item.text}</span>
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <span
+                        className={`flex-shrink-0 w-6 h-6 rounded-full ${darkMode ? "bg-blue-600" : "bg-blue-500"} text-white text-xs flex items-center justify-center font-bold`}
+                      >
+                        {item.index + 1}
+                      </span>
+                      <span className={getFontSizeClass()}>{item.text}</span>
+                    </div>
                     {showExplanation &&
                       showCorrectness &&
                       matches[item.index] !== undefined &&
@@ -380,7 +398,14 @@ export default function MatchItems({
                   : "cursor-pointer active:scale-95"
               }`}
             >
-              <span className={getFontSizeClass()}>{item.text}</span>
+              <div className="flex items-center gap-2">
+                <span
+                  className={`flex-shrink-0 w-6 h-6 rounded-full ${darkMode ? "bg-slate-600" : "bg-slate-400"} text-white text-xs flex items-center justify-center font-bold`}
+                >
+                  {item.index + 1}
+                </span>
+                <span className={getFontSizeClass()}>{item.text}</span>
+              </div>
             </button>
           ))}
         </div>
@@ -429,7 +454,10 @@ export default function MatchItems({
               </p>
               <div className="space-y-0.5">
                 {question.pairs.map((pair, i) => (
-                  <div key={i} className={`flex items-center gap-2 ${getFontSizeClass()}`}>
+                  <div
+                    key={i}
+                    className={`flex items-center gap-2 ${getFontSizeClass()}`}
+                  >
                     <span
                       className={darkMode ? "text-white" : "text-slate-800"}
                     >
@@ -464,7 +492,9 @@ export default function MatchItems({
               Explanation
             </span>
           </div>
-          <p className={`mt-2 ${getFontSizeClass()} ${darkMode ? "text-white" : "text-slate-800"}`}>
+          <p
+            className={`mt-2 ${getFontSizeClass()} ${darkMode ? "text-white" : "text-slate-800"}`}
+          >
             {question.explanation}
           </p>
 
@@ -479,7 +509,10 @@ export default function MatchItems({
             </p>
             <div className="space-y-1">
               {question.pairs.map((pair, i) => (
-                <div key={i} className={`flex items-center gap-2 ${getFontSizeClass()}`}>
+                <div
+                  key={i}
+                  className={`flex items-center gap-2 ${getFontSizeClass()}`}
+                >
                   <span className={darkMode ? "text-white" : "text-slate-900"}>
                     {pair.left}
                   </span>
