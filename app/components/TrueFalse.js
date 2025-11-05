@@ -206,7 +206,7 @@ export default function TrueFalse({
           {onRate && (
             <div className={`${compact ? "mt-2" : "mt-3"}`}>
               <div
-                className={`text-center mb-2 text-xs ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                className={`text-center mb-2 text-sm font-bold ${darkMode ? "text-slate-300" : "text-slate-700"}`}
               >
                 Did you know this?
               </div>
