@@ -2706,36 +2706,37 @@ export default function T6AEnhancedStudyTool() {
                             CRITICAL
                           </span>
                         )}
-                        {(() => {
-                          const mastery = questionMastery[currentQuestion.id];
-                          const correctCount = mastery?.correctCount || 0;
-                          const incorrectCount = mastery?.incorrectCount || 0;
+                        {showExplanation &&
+                          (() => {
+                            const mastery = questionMastery[currentQuestion.id];
+                            const correctCount = mastery?.correctCount || 0;
+                            const incorrectCount = mastery?.incorrectCount || 0;
 
-                          if (incorrectCount >= 2) {
-                            return (
-                              <span className="bg-orange-600 text-white px-2 py-0.5 rounded-full text-xs font-bold flex items-center gap-1">
-                                <XCircle className="w-3 h-3" />
-                                WEAK
-                              </span>
-                            );
-                          } else if (correctCount >= 3) {
-                            return (
-                              <span className="bg-green-600 text-white px-2 py-0.5 rounded-full text-xs font-bold flex items-center gap-1">
-                                <CheckCircle2 className="w-3 h-3" />
-                                MASTERED
-                              </span>
-                            );
-                          } else if (correctCount >= 1) {
-                            return (
-                              <span className="bg-blue-600 text-white px-2 py-0.5 rounded-full text-xs font-bold flex items-center gap-1">
-                                <TrendingUp className="w-3 h-3" />
-                                LEARNING
-                              </span>
-                            );
-                          } else {
-                            return null;
-                          }
-                        })()}
+                            if (incorrectCount >= 2) {
+                              return (
+                                <span className="bg-orange-600 text-white px-2 py-0.5 rounded-full text-xs font-bold flex items-center gap-1">
+                                  <XCircle className="w-3 h-3" />
+                                  WEAK
+                                </span>
+                              );
+                            } else if (correctCount >= 3) {
+                              return (
+                                <span className="bg-green-600 text-white px-2 py-0.5 rounded-full text-xs font-bold flex items-center gap-1">
+                                  <CheckCircle2 className="w-3 h-3" />
+                                  MASTERED
+                                </span>
+                              );
+                            } else if (correctCount >= 1) {
+                              return (
+                                <span className="bg-blue-600 text-white px-2 py-0.5 rounded-full text-xs font-bold flex items-center gap-1">
+                                  <TrendingUp className="w-3 h-3" />
+                                  LEARNING
+                                </span>
+                              );
+                            } else {
+                              return null;
+                            }
+                          })()}
                       </div>
                       <div className="flex items-center gap-2">
                         <button
