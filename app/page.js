@@ -22,6 +22,7 @@ import {
   ExternalLink,
   Clock,
   ArrowRight,
+  Gauge,
 } from "lucide-react";
 
 import MultipleChoice from "./components/MultipleChoice";
@@ -1201,13 +1202,13 @@ export default function T6AEnhancedStudyTool() {
                   onClick={() => {
                     setActiveTab("cockpit");
                   }}
-                  className={`group ${darkMode ? "bg-gradient-to-br from-red-500/20 to-red-600/10 hover:from-red-500/30 hover:to-red-600/20 border border-red-500/30" : "bg-gradient-to-br from-red-500 to-red-600"} backdrop-blur-xl rounded-2xl p-4 sm:p-6 transition-all duration-300 flex flex-col items-center justify-center shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 touch-manipulation`}
+                  className={`group ${darkMode ? "bg-gradient-to-br from-teal-500/20 to-teal-600/10 hover:from-teal-500/30 hover:to-teal-600/20 border border-teal-500/30" : "bg-gradient-to-br from-teal-500 to-teal-600"} backdrop-blur-xl rounded-2xl p-4 sm:p-6 transition-all duration-300 flex flex-col items-center justify-center shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 touch-manipulation`}
                 >
                   <div
-                    className={`${darkMode ? "bg-red-500/40" : "bg-white/30"} p-3 sm:p-5 rounded-2xl mb-2 sm:mb-3 group-hover:scale-110 transition-transform shadow-lg`}
+                    className={`${darkMode ? "bg-teal-500/40" : "bg-white/30"} p-3 sm:p-5 rounded-2xl mb-2 sm:mb-3 group-hover:scale-110 transition-transform shadow-lg`}
                   >
-                    <FileText
-                      className={`w-8 h-8 sm:w-10 sm:h-10 ${darkMode ? "text-red-200" : "text-white"}`}
+                    <Gauge
+                      className={`w-8 h-8 sm:w-10 sm:h-10 ${darkMode ? "text-teal-200" : "text-white"}`}
                       strokeWidth={2.5}
                     />
                   </div>
