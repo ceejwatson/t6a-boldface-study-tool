@@ -329,7 +329,7 @@ export default function MatchItems({
                     (disabled && showCorrectness) ||
                     isItemMatched(item.index, "left")
                   }
-                  className={`w-full p-2 min-h-[40px] rounded-lg border-2 transition-all duration-200 text-left touch-manipulation ${getLeftItemStyle(item.index)} ${
+                  className={`w-full px-2 py-2 min-h-[40px] rounded-lg border-2 transition-all duration-200 text-left touch-manipulation ${getLeftItemStyle(item.index)} ${
                     (disabled && showCorrectness) ||
                     isItemMatched(item.index, "left")
                       ? "cursor-default"
@@ -391,7 +391,7 @@ export default function MatchItems({
                 (disabled && showCorrectness) ||
                 isItemMatched(item.index, "right")
               }
-              className={`w-full p-2 min-h-[40px] rounded-lg border-2 transition-all duration-200 text-left touch-manipulation ${getRightItemStyle(item.index)} ${
+              className={`w-full px-2 py-2 min-h-[40px] rounded-lg border-2 transition-all duration-200 text-left touch-manipulation ${getRightItemStyle(item.index)} ${
                 (disabled && showCorrectness) ||
                 isItemMatched(item.index, "right")
                   ? "cursor-default"
