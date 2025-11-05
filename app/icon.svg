@@ -1,10 +1,15 @@
-<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-  <rect width="512" height="512" rx="128" fill="url(#gradient)"/>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <!-- Blue gradient background -->
   <defs>
     <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
       <stop offset="100%" style="stop-color:#2563eb;stop-opacity:1" />
     </linearGradient>
   </defs>
-  <text x="50%" y="50%" dominant-baseline="central" text-anchor="middle" fill="white" font-family="system-ui, -apple-system, sans-serif" font-size="240" font-weight="700">T6</text>
+
+  <!-- Rounded rectangle background -->
+  <rect width="512" height="512" rx="128" fill="url(#gradient)"/>
+
+  <!-- T6 aircraft image -->
+  <image href="/t6atransparent.png" x="64" y="128" width="384" height="256" preserveAspectRatio="xMidYMid meet"/>
 </svg>
