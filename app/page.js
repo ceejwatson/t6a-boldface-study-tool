@@ -2792,8 +2792,10 @@ export default function T6AEnhancedStudyTool() {
           ) : (
             <div className="max-w-4xl mx-auto pb-6">
               {/* Question Counter with Progress Bar */}
-              <div className="mb-3">
-                <div className="text-center mb-1">
+              <div className={studyMode === "study" ? "mb-2" : "mb-3"}>
+                <div
+                  className={`text-center ${studyMode === "study" ? "mb-0.5" : "mb-1"}`}
+                >
                   <span
                     className={`text-base font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
                   >
@@ -2817,11 +2819,13 @@ export default function T6AEnhancedStudyTool() {
               {/* Question Card */}
               <div
                 key={currentQuestion?.id}
-                className={`${darkMode ? "bg-slate-800 border-slate-700" : "bg-white border-slate-300"} rounded-xl shadow-2xl ${studyMode === "study" ? "p-3 md:p-4" : "p-4 md:p-5"} border-2 question-enter`}
+                className={`${darkMode ? "bg-slate-800 border-slate-700" : "bg-white border-slate-300"} rounded-xl shadow-2xl ${studyMode === "study" ? "p-2 md:p-3" : "p-4 md:p-5"} border-2 question-enter`}
               >
                 {currentQuestion && (
                   <>
-                    <div className="mb-2 flex items-center justify-between flex-wrap gap-1">
+                    <div
+                      className={`${studyMode === "study" ? "mb-1" : "mb-2"} flex items-center justify-between flex-wrap gap-1`}
+                    >
                       <div className="flex items-center gap-1">
                         {showExplanation &&
                           studyMode !== "study" &&

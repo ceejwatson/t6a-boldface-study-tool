@@ -97,9 +97,9 @@ export default function TrueFalse({
   };
 
   return (
-    <div className={compact ? "space-y-3" : "space-y-6"}>
+    <div className={compact ? "space-y-2" : "space-y-6"}>
       <h3
-        className={`${getQuestionFontSize()} font-semibold ${compact ? "mb-2" : "mb-4"} ${darkMode ? "text-white" : "text-slate-900"}`}
+        className={`${getQuestionFontSize()} font-semibold ${compact ? "mb-1" : "mb-4"} ${darkMode ? "text-white" : "text-slate-900"}`}
       >
         True or False: {question.question}
       </h3>
@@ -126,7 +126,7 @@ export default function TrueFalse({
 
       {showExplanation && showCorrectness && (
         <div
-          className={`${compact ? "mt-2 p-2" : "mt-3 p-3"} rounded-lg ${
+          className={`${compact ? "mt-1.5 p-2" : "mt-3 p-3"} rounded-lg ${
             userAnswer === question.correctAnswer
               ? "bg-green-900/30 border-2 border-green-600"
               : "bg-red-900/30 border-2 border-red-600"
