@@ -1,51 +1,13 @@
 "use client";
 
-import { useState } from "react";
 import { supabase } from "../lib/supabase";
-import {
-  User,
-  LogOut,
-  RefreshCw,
-  CheckCircle,
-  XCircle,
-  Loader2,
-} from "lucide-react";
-import { syncProgress } from "../lib/syncService";
+import { User, LogOut } from "lucide-react";
 
 export default function UserProfile({ user, onLogout }) {
-  const [syncing, setSyncing] = useState(false);
-  const [syncStatus, setSyncStatus] = useState(null);
-
   const handleLogout = async () => {
     await supabase.auth.signOut();
     if (onLogout) {
       onLogout();
-    }
-  };
-
-  const handleManualSync = async () => {
-    setSyncing(true);
-    setSyncStatus(null);
-
-    try {
-      const result = await syncProgress(user.id);
-      if (result.success) {
-        setSyncStatus({
-          type: "success",
-          message: "Progress synced successfully!",
-        });
-      } else {
-        setSyncStatus({
-          type: "error",
-          message: `Sync failed: ${result.error}`,
-        });
-      }
-    } catch (error) {
-      setSyncStatus({ type: "error", message: `Sync error: ${error.message}` });
-    } finally {
-      setSyncing(false);
-      // Clear status after 3 seconds
-      setTimeout(() => setSyncStatus(null), 3000);
     }
   };
 
@@ -62,18 +24,6 @@ export default function UserProfile({ user, onLogout }) {
         </div>
 
         <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
-          {/* Manual Sync Button - Only show for logged in users */}
-          {!user.isGuest && (
-            <button
-              onClick={handleManualSync}
-              disabled={syncing}
-              className="p-1.5 sm:p-2 text-blue-400 hover:bg-gray-700 rounded-lg transition-colors disabled:opacity-50"
-              title="Sync now"
-            >
-              <RefreshCw size={14} className={syncing ? "animate-spin" : ""} />
-            </button>
-          )}
-
           {/* Logout Button */}
           <button
             onClick={handleLogout}
@@ -86,24 +36,6 @@ export default function UserProfile({ user, onLogout }) {
           </button>
         </div>
       </div>
-
-      {/* Sync Status */}
-      {syncStatus && (
-        <div
-          className={`mt-2 p-2 rounded-lg flex items-center gap-2 text-xs ${
-            syncStatus.type === "success"
-              ? "bg-green-900/30 text-green-400 border border-green-800"
-              : "bg-red-900/30 text-red-400 border border-red-800"
-          }`}
-        >
-          {syncStatus.type === "success" ? (
-            <CheckCircle size={14} />
-          ) : (
-            <XCircle size={14} />
-          )}
-          <span>{syncStatus.message}</span>
-        </div>
-      )}
     </div>
   );
 }
