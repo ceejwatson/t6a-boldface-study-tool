@@ -336,14 +336,16 @@ export default function MatchItems({
                       : "cursor-pointer active:scale-95"
                   }`}
                 >
-                  <div className="flex items-center justify-between gap-2">
-                    <div className="flex items-center gap-2">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex items-start gap-2 flex-1 min-w-0">
                       <span
-                        className={`flex-shrink-0 w-6 h-6 rounded-full ${darkMode ? "bg-blue-600" : "bg-blue-500"} text-white text-xs flex items-center justify-center font-bold`}
+                        className={`flex-shrink-0 w-6 h-6 rounded-full ${darkMode ? "bg-blue-600" : "bg-blue-500"} text-white text-xs flex items-center justify-center font-bold mt-0.5`}
                       >
                         {item.index + 1}
                       </span>
-                      <span className={getFontSizeClass()}>{item.text}</span>
+                      <span className={`${getFontSizeClass()} break-words`}>
+                        {item.text}
+                      </span>
                     </div>
                     {showExplanation &&
                       showCorrectness &&
@@ -398,13 +400,15 @@ export default function MatchItems({
                   : "cursor-pointer active:scale-95"
               }`}
             >
-              <div className="flex items-center gap-2">
+              <div className="flex items-start gap-2 flex-1 min-w-0">
                 <span
-                  className={`flex-shrink-0 w-6 h-6 rounded-full ${darkMode ? "bg-slate-600" : "bg-slate-400"} text-white text-xs flex items-center justify-center font-bold`}
+                  className={`flex-shrink-0 w-6 h-6 rounded-full ${darkMode ? "bg-slate-600" : "bg-slate-400"} text-white text-xs flex items-center justify-center font-bold mt-0.5`}
                 >
                   {item.index + 1}
                 </span>
-                <span className={getFontSizeClass()}>{item.text}</span>
+                <span className={`${getFontSizeClass()} break-words`}>
+                  {item.text}
+                </span>
               </div>
             </button>
           ))}
