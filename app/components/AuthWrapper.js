@@ -83,6 +83,16 @@ export default function AuthWrapper({ children }) {
     setUser(null);
   };
 
+  const handleAuthSuccess = (user) => {
+    // Handle both guest mode and regular login
+    if (user?.isGuest) {
+      // Guest mode - set a mock user object
+      setUser({ email: "Guest", isGuest: true });
+    } else {
+      setUser(user);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-900">
@@ -99,7 +109,7 @@ export default function AuthWrapper({ children }) {
 
   // If not logged in, show auth screen
   if (!user) {
-    return <Auth onAuthSuccess={(user) => setUser(user)} />;
+    return <Auth onAuthSuccess={handleAuthSuccess} />;
   }
 
   // User is logged in - show app with user profile

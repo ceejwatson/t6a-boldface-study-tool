@@ -62,15 +62,17 @@ export default function UserProfile({ user, onLogout }) {
         </div>
 
         <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
-          {/* Manual Sync Button */}
-          <button
-            onClick={handleManualSync}
-            disabled={syncing}
-            className="p-1.5 sm:p-2 text-blue-400 hover:bg-gray-700 rounded-lg transition-colors disabled:opacity-50"
-            title="Sync now"
-          >
-            <RefreshCw size={14} className={syncing ? "animate-spin" : ""} />
-          </button>
+          {/* Manual Sync Button - Only show for logged in users */}
+          {!user.isGuest && (
+            <button
+              onClick={handleManualSync}
+              disabled={syncing}
+              className="p-1.5 sm:p-2 text-blue-400 hover:bg-gray-700 rounded-lg transition-colors disabled:opacity-50"
+              title="Sync now"
+            >
+              <RefreshCw size={14} className={syncing ? "animate-spin" : ""} />
+            </button>
+          )}
 
           {/* Logout Button */}
           <button
@@ -79,7 +81,7 @@ export default function UserProfile({ user, onLogout }) {
           >
             <LogOut size={14} />
             <span className="font-medium text-xs sm:text-sm hidden xs:inline">
-              Logout
+              {user.isGuest ? "Exit" : "Logout"}
             </span>
           </button>
         </div>

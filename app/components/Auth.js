@@ -71,15 +71,17 @@ export default function Auth({ onAuthSuccess }) {
       {/* Blurred Background Preview - Shows the app in background */}
       <div className="absolute inset-0 bg-gray-900">
         {/* Simulated app background with gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-gray-900 to-purple-900/20" />
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/30 via-gray-900 to-purple-900/30" />
 
         {/* Decorative elements to make it look like content behind */}
-        <div className="absolute top-20 left-10 w-64 h-32 bg-blue-500/10 rounded-lg blur-xl" />
-        <div className="absolute bottom-40 right-20 w-80 h-40 bg-purple-500/10 rounded-lg blur-xl" />
-        <div className="absolute top-1/2 left-1/3 w-96 h-48 bg-indigo-500/10 rounded-lg blur-2xl" />
+        <div className="absolute top-20 left-10 w-64 h-32 bg-blue-500/20 rounded-lg blur-xl" />
+        <div className="absolute bottom-40 right-20 w-80 h-40 bg-purple-500/20 rounded-lg blur-xl" />
+        <div className="absolute top-1/2 left-1/3 w-96 h-48 bg-indigo-500/20 rounded-lg blur-2xl" />
+        <div className="absolute top-1/4 right-1/4 w-72 h-36 bg-pink-500/15 rounded-lg blur-2xl" />
+        <div className="absolute bottom-1/4 left-1/4 w-64 h-40 bg-cyan-500/15 rounded-lg blur-2xl" />
 
-        {/* Strong blur overlay */}
-        <div className="absolute inset-0 backdrop-blur-3xl bg-gray-900/60" />
+        {/* Medium blur overlay - more visible background */}
+        <div className="absolute inset-0 backdrop-blur-xl bg-gray-900/40" />
       </div>
 
       {/* Auth Content */}
@@ -272,9 +274,20 @@ export default function Auth({ onAuthSuccess }) {
             </div>
           </div>
 
+          {/* Guest Mode Button */}
+          <div className="mt-4">
+            <button
+              onClick={() => onAuthSuccess({ isGuest: true })}
+              className="w-full py-3 px-4 bg-white/5 hover:bg-white/10 backdrop-blur-xl border border-white/10 text-gray-300 font-medium rounded-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+            >
+              Continue as Guest
+            </button>
+          </div>
+
           {/* Privacy Note */}
-          <div className="mt-6 text-center text-xs text-gray-500">
-            <p>Your progress syncs securely across all devices</p>
+          <div className="mt-4 text-center text-xs text-gray-500">
+            <p>Guest mode: Progress saved locally only</p>
+            <p className="mt-1">Sign in to sync across devices</p>
           </div>
         </div>
       </div>
