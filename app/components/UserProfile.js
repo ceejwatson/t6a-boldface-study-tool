@@ -50,35 +50,37 @@ export default function UserProfile({ user, onLogout }) {
   };
 
   return (
-    <div className="bg-gray-800/50 rounded-lg border border-gray-700 p-3">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-lg">
-            <User className="text-white" size={18} />
+    <div className="bg-gray-800/50 border-b border-gray-700 px-3 py-2 sm:px-4 sm:py-2.5">
+      <div className="flex items-center justify-between max-w-7xl mx-auto">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+          <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+            <User className="text-white" size={14} />
           </div>
-          <div>
-            <p className="font-medium text-gray-100 text-sm">{user.email}</p>
-          </div>
+          <p className="font-medium text-gray-100 text-xs sm:text-sm truncate">
+            {user.email}
+          </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
           {/* Manual Sync Button */}
           <button
             onClick={handleManualSync}
             disabled={syncing}
-            className="p-2 text-blue-400 hover:bg-gray-700 rounded-lg transition-colors disabled:opacity-50"
+            className="p-1.5 sm:p-2 text-blue-400 hover:bg-gray-700 rounded-lg transition-colors disabled:opacity-50"
             title="Sync now"
           >
-            <RefreshCw size={16} className={syncing ? "animate-spin" : ""} />
+            <RefreshCw size={14} className={syncing ? "animate-spin" : ""} />
           </button>
 
           {/* Logout Button */}
           <button
             onClick={handleLogout}
-            className="flex items-center gap-2 px-3 py-1.5 text-red-400 hover:bg-gray-700 rounded-lg transition-colors text-sm"
+            className="flex items-center gap-1.5 px-2 py-1 sm:px-3 sm:py-1.5 text-red-400 hover:bg-gray-700 rounded-lg transition-colors"
           >
-            <LogOut size={16} />
-            <span className="font-medium">Logout</span>
+            <LogOut size={14} />
+            <span className="font-medium text-xs sm:text-sm hidden xs:inline">
+              Logout
+            </span>
           </button>
         </div>
       </div>
