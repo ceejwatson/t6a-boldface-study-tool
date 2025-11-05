@@ -318,7 +318,7 @@ export default function MatchItems({
           ))}
         </svg>
         {/* Left Column */}
-        <div className="space-y-2 relative" style={{ zIndex: 1 }}>
+        <div className="space-y-1.5 relative" style={{ zIndex: 1 }}>
           {leftItems.map((item) => (
             <div key={`left-${item.index}`} className="space-y-1">
               <div className="relative">
@@ -329,7 +329,7 @@ export default function MatchItems({
                     (disabled && showCorrectness) ||
                     isItemMatched(item.index, "left")
                   }
-                  className={`w-full px-2 py-2 min-h-[40px] rounded-lg border-2 transition-all duration-200 text-left touch-manipulation ${getLeftItemStyle(item.index)} ${
+                  className={`w-full px-2 py-1.5 rounded-lg border-2 transition-all duration-200 text-left touch-manipulation ${getLeftItemStyle(item.index)} ${
                     (disabled && showCorrectness) ||
                     isItemMatched(item.index, "left")
                       ? "cursor-default"
@@ -383,7 +383,7 @@ export default function MatchItems({
         </div>
 
         {/* Right Column */}
-        <div className="space-y-2 relative" style={{ zIndex: 1 }}>
+        <div className="space-y-1.5 relative" style={{ zIndex: 1 }}>
           {rightItems.map((item) => (
             <button
               key={`right-${item.index}`}
@@ -393,7 +393,7 @@ export default function MatchItems({
                 (disabled && showCorrectness) ||
                 isItemMatched(item.index, "right")
               }
-              className={`w-full px-2 py-2 min-h-[40px] rounded-lg border-2 transition-all duration-200 text-left touch-manipulation ${getRightItemStyle(item.index)} ${
+              className={`w-full px-2 py-1.5 rounded-lg border-2 transition-all duration-200 text-left touch-manipulation ${getRightItemStyle(item.index)} ${
                 (disabled && showCorrectness) ||
                 isItemMatched(item.index, "right")
                   ? "cursor-default"
