@@ -286,7 +286,7 @@ export default function MatchItems({
 
       <div
         ref={containerRef}
-        className="relative grid grid-cols-2 gap-8 md:gap-12"
+        className="relative grid grid-cols-2 gap-16 md:gap-24 max-w-4xl mx-auto"
       >
         {/* SVG overlay for lines */}
         <svg
@@ -304,8 +304,9 @@ export default function MatchItems({
                 stroke={line.color}
                 strokeWidth="6"
                 opacity="0.3"
+                strokeLinecap="round"
               />
-              {/* Main line - solid, thicker */}
+              {/* Main line - solid, thicker, rounded */}
               <line
                 x1={line.x1}
                 y1={line.y1}
@@ -313,6 +314,7 @@ export default function MatchItems({
                 y2={line.y2}
                 stroke={line.color}
                 strokeWidth="3"
+                strokeLinecap="round"
               />
             </g>
           ))}
