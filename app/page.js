@@ -461,6 +461,26 @@ export default function T6AEnhancedStudyTool() {
       if (studyMode !== "limitations") {
         const isCorrect = checkAnswer(currentQuestion, answer);
         updatePerformance(currentQuestion, isCorrect);
+
+        // In review mode, if answered correctly, remove from review lists
+        if (studyMode === "study" && isCorrect) {
+          // Remove from questionMastery incorrect count (set to 0)
+          setQuestionMastery((prev) => {
+            const updated = { ...prev };
+            if (updated[currentQuestion.id]) {
+              updated[currentQuestion.id] = {
+                ...updated[currentQuestion.id],
+                incorrectCount: 0,
+              };
+            }
+            return updated;
+          });
+
+          // Remove from unknownFlashcards
+          setUnknownFlashcards((prev) =>
+            prev.filter((id) => id !== currentQuestion.id),
+          );
+        }
       }
       return;
     }
@@ -476,6 +496,24 @@ export default function T6AEnhancedStudyTool() {
         setShowExplanation(true);
         const isCorrect = checkAnswer(currentQuestion, answer);
         updatePerformance(currentQuestion, isCorrect);
+
+        // In review mode, if answered correctly, remove from review lists
+        if (studyMode === "study" && isCorrect) {
+          setQuestionMastery((prev) => {
+            const updated = { ...prev };
+            if (updated[currentQuestion.id]) {
+              updated[currentQuestion.id] = {
+                ...updated[currentQuestion.id],
+                incorrectCount: 0,
+              };
+            }
+            return updated;
+          });
+
+          setUnknownFlashcards((prev) =>
+            prev.filter((id) => id !== currentQuestion.id),
+          );
+        }
       }
     }
   };
@@ -648,6 +686,25 @@ export default function T6AEnhancedStudyTool() {
           setShowExplanation(true);
           const isCorrect = checkAnswer(currentQuestion, answer);
           updatePerformance(currentQuestion, isCorrect);
+
+          // In review mode, if answered correctly, remove from review lists
+          if (studyMode === "study" && isCorrect) {
+            setQuestionMastery((prev) => {
+              const updated = { ...prev };
+              if (updated[currentQuestion.id]) {
+                updated[currentQuestion.id] = {
+                  ...updated[currentQuestion.id],
+                  incorrectCount: 0,
+                };
+              }
+              return updated;
+            });
+
+            setUnknownFlashcards((prev) =>
+              prev.filter((id) => id !== currentQuestion.id),
+            );
+          }
+
           return; // Don't move to next yet, let user see the result
         }
       }
@@ -2720,6 +2777,7 @@ export default function T6AEnhancedStudyTool() {
                     <div className="mb-2 flex items-center justify-between flex-wrap gap-1">
                       <div className="flex items-center gap-1">
                         {showExplanation &&
+                          studyMode !== "study" &&
                           (() => {
                             const mastery = questionMastery[currentQuestion.id];
                             const correctCount = mastery?.correctCount || 0;
