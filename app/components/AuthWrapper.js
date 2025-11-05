@@ -49,9 +49,9 @@ export default function AuthWrapper({ children }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  // Setup auto-sync when user is logged in
+  // Setup auto-sync when user is logged in (not for guests)
   useEffect(() => {
-    if (user) {
+    if (user && !user.isGuest && user.id) {
       const cleanup = setupAutoSync(user.id);
       return cleanup;
     }
