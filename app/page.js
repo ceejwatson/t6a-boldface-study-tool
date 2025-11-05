@@ -966,11 +966,11 @@ export default function T6AEnhancedStudyTool() {
                     <div className="flex items-center gap-2 px-3 py-2">
                       {studyMode === "study" && (
                         <>
-                          <XCircle className="w-4 h-4 text-red-400" />
+                          <RotateCcw className="w-4 h-4 text-red-400" />
                           <span
                             className={`font-medium ${darkMode ? "text-white" : "text-slate-900"}`}
                           >
-                            Review Incorrect
+                            Review
                           </span>
                         </>
                       )}
@@ -1086,47 +1086,6 @@ export default function T6AEnhancedStudyTool() {
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6 max-w-2xl mx-auto">
                 <button
                   onClick={() => {
-                    // Get all questions with incorrect answers
-                    const incorrectQuestions = getAllQuestions().filter((q) => {
-                      const mastery = questionMastery[q.id];
-                      return mastery && mastery.incorrectCount >= 1;
-                    });
-
-                    if (incorrectQuestions.length === 0) {
-                      alert(
-                        "No incorrect questions to review yet. Try taking a quiz first!",
-                      );
-                      return;
-                    }
-
-                    // Set up study mode with incorrect questions only
-                    setCurrentQuestions(incorrectQuestions);
-                    setCurrentQuestionIndex(0);
-                    setUserAnswers({});
-                    setShowExplanation(false);
-                    setStudyMode("study");
-                    setReviewIncorrectOnly(true);
-                    setActiveTab("study");
-                  }}
-                  className={`group ${darkMode ? "bg-gradient-to-br from-red-500/20 to-red-600/10 hover:from-red-500/30 hover:to-red-600/20 border border-red-500/30" : "bg-gradient-to-br from-red-500 to-red-600"} backdrop-blur-xl rounded-2xl p-4 sm:p-6 transition-all duration-300 flex flex-col items-center justify-center shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 touch-manipulation`}
-                >
-                  <div
-                    className={`${darkMode ? "bg-red-500/40" : "bg-white/30"} p-3 sm:p-5 rounded-2xl mb-2 sm:mb-3 group-hover:scale-110 transition-transform shadow-lg`}
-                  >
-                    <XCircle
-                      className={`w-8 h-8 sm:w-10 sm:h-10 ${darkMode ? "text-red-200" : "text-white"}`}
-                      strokeWidth={2.5}
-                    />
-                  </div>
-                  <h3
-                    className={`text-base sm:text-lg font-semibold ${darkMode ? "text-white" : "text-white"}`}
-                  >
-                    Review Incorrect
-                  </h3>
-                </button>
-
-                <button
-                  onClick={() => {
                     // Auto-select all topics for quiz mode
                     const allCategories = [
                       ...new Set(getAllQuestions().map((q) => q.category)),
@@ -1150,6 +1109,61 @@ export default function T6AEnhancedStudyTool() {
                     className={`text-base sm:text-lg font-semibold ${darkMode ? "text-white" : "text-white"}`}
                   >
                     Quiz
+                  </h3>
+                </button>
+
+                <button
+                  onClick={() => {
+                    // Get all questions with incorrect answers
+                    const incorrectQuestions = getAllQuestions().filter((q) => {
+                      const mastery = questionMastery[q.id];
+                      return mastery && mastery.incorrectCount >= 1;
+                    });
+
+                    // Get all "Don't Know" flashcards
+                    const dontKnowQuestions = getAllQuestions().filter((q) =>
+                      unknownFlashcards.includes(q.id),
+                    );
+
+                    // Combine and deduplicate
+                    const reviewQuestionsSet = new Set([
+                      ...incorrectQuestions.map((q) => q.id),
+                      ...dontKnowQuestions.map((q) => q.id),
+                    ]);
+                    const reviewQuestions = getAllQuestions().filter((q) =>
+                      reviewQuestionsSet.has(q.id),
+                    );
+
+                    if (reviewQuestions.length === 0) {
+                      alert(
+                        "No questions to review yet. Try taking a quiz or marking flashcards as 'Don't Know'!",
+                      );
+                      return;
+                    }
+
+                    // Set up study mode with review questions
+                    setCurrentQuestions(reviewQuestions);
+                    setCurrentQuestionIndex(0);
+                    setUserAnswers({});
+                    setShowExplanation(false);
+                    setStudyMode("study");
+                    setReviewIncorrectOnly(true);
+                    setActiveTab("study");
+                  }}
+                  className={`group ${darkMode ? "bg-gradient-to-br from-red-500/20 to-red-600/10 hover:from-red-500/30 hover:to-red-600/20 border border-red-500/30" : "bg-gradient-to-br from-red-500 to-red-600"} backdrop-blur-xl rounded-2xl p-4 sm:p-6 transition-all duration-300 flex flex-col items-center justify-center shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 touch-manipulation`}
+                >
+                  <div
+                    className={`${darkMode ? "bg-red-500/40" : "bg-white/30"} p-3 sm:p-5 rounded-2xl mb-2 sm:mb-3 group-hover:scale-110 transition-transform shadow-lg`}
+                  >
+                    <RotateCcw
+                      className={`w-8 h-8 sm:w-10 sm:h-10 ${darkMode ? "text-red-200" : "text-white"}`}
+                      strokeWidth={2.5}
+                    />
+                  </div>
+                  <h3
+                    className={`text-base sm:text-lg font-semibold ${darkMode ? "text-white" : "text-white"}`}
+                  >
+                    Review
                   </h3>
                 </button>
 
