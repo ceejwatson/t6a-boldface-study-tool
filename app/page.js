@@ -2701,11 +2701,6 @@ export default function T6AEnhancedStudyTool() {
                   <>
                     <div className="mb-2 flex items-center justify-between flex-wrap gap-1">
                       <div className="flex items-center gap-1">
-                        {currentQuestion.difficulty === "critical" && (
-                          <span className="bg-red-600 text-white px-2 py-0.5 rounded-full text-xs font-bold">
-                            CRITICAL
-                          </span>
-                        )}
                         {showExplanation &&
                           (() => {
                             const mastery = questionMastery[currentQuestion.id];
