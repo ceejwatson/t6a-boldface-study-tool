@@ -1,10 +1,15 @@
 "use client";
 
-import { useState } from "react";
-import { FileText, Gauge, Maximize2 } from "lucide-react";
+import { useState, useRef } from "react";
+import { FileText, ChevronDown, GripHorizontal, Maximize2 } from "lucide-react";
 
 export default function CockpitReference({ darkMode = true }) {
-  const [selectedProcedure, setSelectedProcedure] = useState(null);
+  const [selectedProcedure, setSelectedProcedure] =
+    useState("emergency-shutdown");
+  const [topPanelHeight, setTopPanelHeight] = useState(800);
+  const [isDragging, setIsDragging] = useState(false);
+  const dragStartY = useRef(0);
+  const dragStartHeight = useRef(0);
 
   const boldfaceProcedures = [
     {
@@ -197,232 +202,251 @@ export default function CockpitReference({ darkMode = true }) {
     },
   ];
 
-  const categories = [...new Set(boldfaceProcedures.map((p) => p.category))];
+  const selectedProc = boldfaceProcedures.find(
+    (p) => p.id === selectedProcedure,
+  );
+
+  const handleMouseDown = (e) => {
+    e.preventDefault();
+    setIsDragging(true);
+    dragStartY.current = e.clientY;
+    dragStartHeight.current = topPanelHeight;
+    document.body.style.cursor = "ns-resize";
+    document.body.style.userSelect = "none";
+  };
+
+  const handleMouseMove = (e) => {
+    if (!isDragging) return;
+    const deltaY = e.clientY - dragStartY.current;
+    const newHeight = dragStartHeight.current + deltaY;
+    const constrainedHeight = Math.min(Math.max(newHeight, 300), 1400);
+    setTopPanelHeight(constrainedHeight);
+  };
+
+  const handleMouseUp = () => {
+    if (isDragging) {
+      setIsDragging(false);
+      document.body.style.cursor = "";
+      document.body.style.userSelect = "";
+    }
+  };
+
+  const handleTouchStart = (e) => {
+    const touch = e.touches[0];
+    setIsDragging(true);
+    dragStartY.current = touch.clientY;
+    dragStartHeight.current = topPanelHeight;
+  };
+
+  const handleTouchMove = (e) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const touch = e.touches[0];
+    const deltaY = touch.clientY - dragStartY.current;
+    const newHeight = dragStartHeight.current + deltaY;
+    const constrainedHeight = Math.min(Math.max(newHeight, 300), 1400);
+    setTopPanelHeight(constrainedHeight);
+  };
+
+  const handleTouchEnd = () => {
+    setIsDragging(false);
+  };
 
   return (
-    <div className="px-3 py-3 max-w-7xl mx-auto">
-      {/* Header */}
+    <div
+      className="flex flex-col lg:flex-row gap-4 px-3 py-3"
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+      onMouseLeave={handleMouseUp}
+    >
+      {/* Left Sidebar - Procedure Selector */}
       <div
-        className={`${darkMode ? "bg-gradient-to-br from-teal-500/20 to-teal-600/10 border border-teal-500/30" : "bg-white"} backdrop-blur-xl rounded-2xl p-6 mb-6 shadow-xl`}
+        className={`w-full lg:w-80 flex-shrink-0 ${darkMode ? "bg-slate-800/50 border border-slate-700/50" : "bg-white"} backdrop-blur-xl rounded-xl p-4 shadow-xl lg:sticky lg:top-3 lg:h-fit lg:max-h-[calc(100vh-100px)] overflow-y-auto`}
       >
-        <div className="flex items-center gap-4 mb-3">
-          <div className="p-3 bg-teal-500/40 rounded-xl">
-            <Gauge className="w-8 h-8 text-teal-200" />
-          </div>
-          <div>
-            <h2
-              className={`text-2xl font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
+        {/* Header */}
+        <div className="mb-4">
+          <h3
+            className={`text-lg font-bold mb-1 ${darkMode ? "text-white" : "text-slate-900"}`}
+          >
+            BOLDFACE Procedures
+          </h3>
+          <p
+            className={`text-xs ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+          >
+            Select a procedure to view steps
+          </p>
+        </div>
+
+        {/* Procedure Dropdown */}
+        <div className="mb-4">
+          <div className="relative">
+            <select
+              value={selectedProcedure}
+              onChange={(e) => setSelectedProcedure(e.target.value)}
+              className={`w-full p-3 pr-10 rounded-lg font-bold text-sm appearance-none cursor-pointer ${
+                darkMode
+                  ? "bg-red-600 text-white border-2 border-red-500"
+                  : "bg-red-500 text-white border-2 border-red-400"
+              } focus:outline-none focus:ring-2 focus:ring-red-400 shadow-lg`}
             >
-              Cockpit Reference
-            </h2>
-            <p
-              className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
-            >
-              Quick access to BOLDFACE procedures and cockpit diagrams
-            </p>
+              {boldfaceProcedures.map((procedure) => (
+                <option key={procedure.id} value={procedure.id}>
+                  {procedure.title}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white pointer-events-none" />
           </div>
         </div>
+
+        {/* Selected Procedure Details */}
+        {selectedProc && (
+          <div>
+            <div
+              className={`text-xs font-bold mb-3 px-2 py-1 rounded inline-block ${
+                darkMode
+                  ? "bg-slate-700 text-slate-300"
+                  : "bg-slate-200 text-slate-700"
+              }`}
+            >
+              {selectedProc.category} • {selectedProc.steps.length} Steps
+            </div>
+
+            <div className="space-y-2">
+              {selectedProc.steps.map((item, index) => (
+                <div
+                  key={index}
+                  className={`p-3 rounded-lg ${darkMode ? "bg-slate-900/60 border border-slate-700/50" : "bg-slate-50 border border-slate-200"}`}
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center font-bold text-sm bg-red-600 text-white shadow-md">
+                      {index + 1}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div
+                        className={`font-bold text-sm mb-1 ${darkMode ? "text-white" : "text-slate-900"}`}
+                      >
+                        {item.step}
+                      </div>
+                      <div
+                        className={`text-xs font-bold mb-2 ${darkMode ? "text-red-400" : "text-red-600"}`}
+                      >
+                        → {item.action}
+                      </div>
+                      <div
+                        className={`text-xs leading-relaxed ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                      >
+                        📍 {item.location}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* PDF Reference Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
-        {/* Instrument Panel */}
+      {/* Right Side - Cockpit Panel PDFs */}
+      <div className="flex-1 flex flex-col gap-0 min-w-0">
+        {/* Instrument Panel - Top */}
         <div
-          className={`${darkMode ? "bg-slate-800/50 border border-slate-700/50" : "bg-white"} backdrop-blur-xl rounded-xl p-4 shadow-lg`}
+          className={`${darkMode ? "bg-slate-800/50 border border-slate-700/50" : "bg-white"} backdrop-blur-xl rounded-t-xl shadow-xl overflow-hidden relative ${!isDragging ? "transition-all duration-150" : ""}`}
+          style={{
+            height: window.innerWidth >= 1024 ? `${topPanelHeight}px` : "400px",
+            minHeight: "300px",
+          }}
         >
-          <h3
-            className={`text-lg font-bold mb-3 flex items-center gap-2 ${darkMode ? "text-white" : "text-slate-900"}`}
-          >
-            <FileText className="w-5 h-5 text-blue-400" />
-            Instrument Panel
-          </h3>
-          <div className="relative bg-slate-900 rounded-lg overflow-hidden h-64 mb-3">
+          <div className="absolute top-0 left-0 right-0 z-10 p-3 bg-gradient-to-b from-slate-900/90 to-transparent">
+            <div className="flex items-center justify-between">
+              <h3 className="text-white font-bold text-sm flex items-center gap-2">
+                <FileText className="w-4 h-4 text-blue-400" />
+                Instrument Panel
+              </h3>
+              <a
+                href="/CockpitInstrtFrt_V300.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-bold ${
+                  darkMode
+                    ? "bg-blue-600 hover:bg-blue-700 text-white"
+                    : "bg-blue-500 hover:bg-blue-600 text-white"
+                } transition shadow-lg active:scale-95`}
+              >
+                <Maximize2 className="w-3 h-3" />
+                <span>Open Full View</span>
+              </a>
+            </div>
+          </div>
+          <div className="w-full h-full bg-slate-900">
             <iframe
               src="/CockpitInstrtFrt_V300.pdf#view=FitH&zoom=page-width"
               className="w-full h-full"
               title="Instrument Panel Reference"
             />
           </div>
-          <a
-            href="/CockpitInstrtFrt_V300.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-sm font-bold ${
-              darkMode
-                ? "bg-blue-600 hover:bg-blue-700 text-white"
-                : "bg-blue-500 hover:bg-blue-600 text-white"
-            } transition shadow-lg hover:shadow-xl active:scale-95`}
-          >
-            <Maximize2 className="w-4 h-4" />
-            <span>Open Full View</span>
-          </a>
         </div>
 
-        {/* Side Panels */}
+        {/* Resizable Divider */}
         <div
-          className={`${darkMode ? "bg-slate-800/50 border border-slate-700/50" : "bg-white"} backdrop-blur-xl rounded-xl p-4 shadow-lg`}
+          className={`hidden lg:flex h-10 cursor-ns-resize group relative items-center justify-center select-none ${
+            isDragging
+              ? "bg-teal-500 shadow-lg"
+              : darkMode
+                ? "bg-slate-700/80 hover:bg-teal-600 hover:shadow-md"
+                : "bg-slate-300 hover:bg-teal-500 hover:shadow-md"
+          } transition-all duration-200`}
+          onMouseDown={handleMouseDown}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
         >
-          <h3
-            className={`text-lg font-bold mb-3 flex items-center gap-2 ${darkMode ? "text-white" : "text-slate-900"}`}
-          >
-            <FileText className="w-5 h-5 text-teal-400" />
-            Side Panels
-          </h3>
-          <div className="relative bg-slate-900 rounded-lg overflow-hidden h-64 mb-3">
+          <div className="flex flex-col gap-0.5 items-center">
+            <GripHorizontal
+              className={`w-6 h-6 ${isDragging ? "text-white animate-pulse" : "text-slate-400 group-hover:text-white"} transition-colors`}
+            />
+            <div
+              className={`text-xs font-bold ${isDragging ? "text-white" : "text-slate-400 group-hover:text-white opacity-0 group-hover:opacity-100"} transition-all`}
+            >
+              Drag to resize
+            </div>
+          </div>
+        </div>
+
+        {/* Side Panels - Bottom */}
+        <div
+          className={`flex-1 ${darkMode ? "bg-slate-800/50 border border-slate-700/50" : "bg-white"} backdrop-blur-xl rounded-b-xl shadow-xl overflow-hidden relative`}
+          style={{ minHeight: window.innerWidth >= 1024 ? "600px" : "400px" }}
+        >
+          <div className="absolute top-0 left-0 right-0 z-10 p-3 bg-gradient-to-b from-slate-900/90 to-transparent">
+            <div className="flex items-center justify-between">
+              <h3 className="text-white font-bold text-sm flex items-center gap-2">
+                <FileText className="w-4 h-4 text-teal-400" />
+                Side Panels
+              </h3>
+              <a
+                href="/SidePanelsFront_V300.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-bold ${
+                  darkMode
+                    ? "bg-teal-600 hover:bg-teal-700 text-white"
+                    : "bg-teal-500 hover:bg-teal-600 text-white"
+                } transition shadow-lg active:scale-95`}
+              >
+                <Maximize2 className="w-3 h-3" />
+                <span>Open Full View</span>
+              </a>
+            </div>
+          </div>
+          <div className="w-full h-full bg-slate-900">
             <iframe
               src="/SidePanelsFront_V300.pdf#view=FitH&zoom=page-width"
               className="w-full h-full"
               title="Side Panels Reference"
             />
           </div>
-          <a
-            href="/SidePanelsFront_V300.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-sm font-bold ${
-              darkMode
-                ? "bg-teal-600 hover:bg-teal-700 text-white"
-                : "bg-teal-500 hover:bg-teal-600 text-white"
-            } transition shadow-lg hover:shadow-xl active:scale-95`}
-          >
-            <Maximize2 className="w-4 h-4" />
-            <span>Open Full View</span>
-          </a>
         </div>
-      </div>
-
-      {/* BOLDFACE Procedures Section */}
-      <div
-        className={`${darkMode ? "bg-slate-800/50 border border-slate-700/50" : "bg-white"} backdrop-blur-xl rounded-xl p-6 shadow-xl`}
-      >
-        <h3
-          className={`text-xl font-bold mb-4 ${darkMode ? "text-white" : "text-slate-900"}`}
-        >
-          BOLDFACE Procedures
-        </h3>
-
-        {/* Procedures Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
-          {boldfaceProcedures.map((procedure) => (
-            <button
-              key={procedure.id}
-              onClick={() =>
-                setSelectedProcedure(
-                  selectedProcedure === procedure.id ? null : procedure.id,
-                )
-              }
-              className={`text-left p-4 rounded-lg transition-all ${
-                selectedProcedure === procedure.id
-                  ? darkMode
-                    ? "bg-red-600 border-2 border-red-500 shadow-lg shadow-red-500/20"
-                    : "bg-red-500 border-2 border-red-400 shadow-lg"
-                  : darkMode
-                    ? "bg-slate-700/70 hover:bg-slate-700 border-2 border-slate-600/50"
-                    : "bg-slate-100 hover:bg-slate-200 border-2 border-slate-200"
-              }`}
-            >
-              <div className="flex items-start justify-between gap-2">
-                <div className="flex-1">
-                  <div
-                    className={`text-xs font-bold mb-1 ${
-                      selectedProcedure === procedure.id
-                        ? "text-red-200"
-                        : darkMode
-                          ? "text-slate-400"
-                          : "text-slate-600"
-                    }`}
-                  >
-                    {procedure.category}
-                  </div>
-                  <div
-                    className={`font-bold text-sm ${
-                      selectedProcedure === procedure.id
-                        ? "text-white"
-                        : darkMode
-                          ? "text-white"
-                          : "text-slate-900"
-                    }`}
-                  >
-                    {procedure.title}
-                  </div>
-                </div>
-                <div
-                  className={`flex-shrink-0 px-2 py-1 rounded text-xs font-bold ${
-                    selectedProcedure === procedure.id
-                      ? "bg-white/20 text-white"
-                      : darkMode
-                        ? "bg-slate-600 text-slate-300"
-                        : "bg-slate-300 text-slate-700"
-                  }`}
-                >
-                  {procedure.steps.length} steps
-                </div>
-              </div>
-            </button>
-          ))}
-        </div>
-
-        {/* Selected Procedure Details */}
-        {selectedProcedure && (
-          <div
-            className={`${darkMode ? "bg-slate-900/50 border border-red-500/30" : "bg-red-50 border border-red-200"} rounded-xl p-6 mt-4`}
-          >
-            <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 bg-red-600 rounded-lg">
-                <FileText className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <div
-                  className={`text-sm font-bold ${darkMode ? "text-red-400" : "text-red-600"}`}
-                >
-                  {
-                    boldfaceProcedures.find((p) => p.id === selectedProcedure)
-                      ?.category
-                  }
-                </div>
-                <h4
-                  className={`text-lg font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
-                >
-                  {
-                    boldfaceProcedures.find((p) => p.id === selectedProcedure)
-                      ?.title
-                  }
-                </h4>
-              </div>
-            </div>
-
-            <div className="space-y-3">
-              {boldfaceProcedures
-                .find((p) => p.id === selectedProcedure)
-                ?.steps.map((item, index) => (
-                  <div
-                    key={index}
-                    className={`p-4 rounded-lg ${darkMode ? "bg-slate-800/80" : "bg-white"}`}
-                  >
-                    <div className="flex items-start gap-3">
-                      <div className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm bg-red-600 text-white shadow-lg">
-                        {index + 1}
-                      </div>
-                      <div className="flex-1">
-                        <div
-                          className={`font-bold mb-2 ${darkMode ? "text-white" : "text-slate-900"}`}
-                        >
-                          {item.step} <span className="text-red-400">→</span>{" "}
-                          <span className="text-red-400">{item.action}</span>
-                        </div>
-                        <div
-                          className={`text-xs leading-relaxed flex items-start gap-1 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
-                        >
-                          <span className="text-base">📍</span>
-                          <span>{item.location}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
