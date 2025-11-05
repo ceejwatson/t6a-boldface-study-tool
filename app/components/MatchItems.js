@@ -286,7 +286,7 @@ export default function MatchItems({
 
       <div
         ref={containerRef}
-        className="relative grid grid-cols-2 gap-2 md:gap-4"
+        className="relative grid grid-cols-2 gap-8 md:gap-12"
       >
         {/* SVG overlay for lines */}
         <svg
