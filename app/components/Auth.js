@@ -89,8 +89,8 @@ export default function Auth({ onAuthSuccess }) {
         <div className="w-full max-w-md">
           {/* Logo/Title */}
           <div className="text-center mb-8 animate-fade-in">
-            <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-3xl mb-6 shadow-2xl shadow-blue-500/50">
-              <span className="text-3xl font-bold text-white">T6</span>
+            <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-blue-500 to-blue-600 rounded-3xl mb-6 shadow-2xl shadow-blue-500/50">
+              <span className="text-3xl font-bold text-white">T-6A</span>
             </div>
             <h1 className="text-4xl font-bold text-white mb-2 tracking-tight">
               T-6A Boldface
