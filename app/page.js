@@ -443,6 +443,22 @@ export default function T6AEnhancedStudyTool() {
     userAnswers,
   ]);
 
+  const handleReviewRate = (quality) => {
+    // quality: 0 = "Don't Know", 5 = "Know It"
+    // If rated 5 (Know It), remove from review lists
+    if (quality === 5) {
+      setReviewSessionCorrect((prev) => {
+        if (!prev.includes(currentQuestion.id)) {
+          return [...prev, currentQuestion.id];
+        }
+        return prev;
+      });
+    }
+
+    // Move to next question
+    handleNext();
+  };
+
   const handleAnswer = (answer) => {
     // In quiz mode, prevent re-answering once explanation is shown
     if (studyMode === "quiz" && showExplanation) {
@@ -854,9 +870,10 @@ export default function T6AEnhancedStudyTool() {
       userAnswer: userAnswers[currentQuestion.id],
       disabled: showExplanation, // Disable after answer is shown in both modes
       darkMode: darkMode,
-      showCorrectness: true, // Always show green/red feedback so users know if they're correct
+      showCorrectness: studyMode !== "study", // Show green/red in quiz, but not in review mode
       fontSize: fontSize,
       compact: studyMode === "study", // Compact layout for review mode
+      onRate: studyMode === "study" ? handleReviewRate : undefined, // Rating system for review mode
     };
 
     switch (currentQuestion.questionType) {

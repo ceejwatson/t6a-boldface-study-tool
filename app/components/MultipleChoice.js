@@ -13,6 +13,7 @@ export default function MultipleChoice({
   showCorrectness = true,
   fontSize = "medium",
   compact = false,
+  onRate,
 }) {
   // Randomize answer order - memoized so it doesn't change during component lifecycle
   const shuffledOptions = useMemo(() => {
@@ -197,6 +198,41 @@ export default function MultipleChoice({
               {question.options[question.correctAnswer]}
             </p>
           </div>
+
+          {/* Rating buttons for Review mode */}
+          {onRate && (
+            <div className={`${compact ? "mt-2" : "mt-3"}`}>
+              <div
+                className={`text-center mb-2 text-xs ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+              >
+                Did you know this?
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  onClick={() => onRate(0)}
+                  className={`p-2 rounded-lg border-2 transition active:scale-95 ${
+                    darkMode
+                      ? "bg-red-900/20 border-red-600 hover:bg-red-900/40 text-red-400"
+                      : "bg-red-50 border-red-400 hover:bg-red-100 text-red-700"
+                  }`}
+                >
+                  <div className="font-bold text-sm">Don&apos;t Know</div>
+                  <div className="text-xs opacity-75">Review again</div>
+                </button>
+                <button
+                  onClick={() => onRate(5)}
+                  className={`p-2 rounded-lg border-2 transition active:scale-95 ${
+                    darkMode
+                      ? "bg-green-900/20 border-green-600 hover:bg-green-900/40 text-green-400"
+                      : "bg-green-50 border-green-400 hover:bg-green-100 text-green-700"
+                  }`}
+                >
+                  <div className="font-bold text-sm">Know It</div>
+                  <div className="text-xs opacity-75">Removed ✓</div>
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
