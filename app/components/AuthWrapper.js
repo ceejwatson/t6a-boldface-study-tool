@@ -104,7 +104,7 @@ export default function AuthWrapper({ children }) {
 
   // User is logged in - show app with user profile
   return (
-    <div>
+    <div className="animate-fade-in">
       {/* Sync Status Indicator - Fixed position */}
       {syncStatus !== "idle" && (
         <div className="fixed top-4 right-4 z-50">
