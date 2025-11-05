@@ -1,339 +1,428 @@
 "use client";
 
-import { useState, useRef } from "react";
-import { FileText, ChevronDown, GripHorizontal, ChevronLeft, ChevronRight } from "lucide-react";
+import { useState } from "react";
+import { FileText, Gauge, Maximize2 } from "lucide-react";
 
 export default function CockpitReference({ darkMode = true }) {
-  const [selectedProcedure, setSelectedProcedure] = useState("emergency-shutdown");
-  const [topPanelHeight, setTopPanelHeight] = useState(1000); // Height in pixels for top panel
-  const [isDragging, setIsDragging] = useState(false);
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-  const dragStartY = useRef(0);
-  const dragStartHeight = useRef(0);
+  const [selectedProcedure, setSelectedProcedure] = useState(null);
 
   const boldfaceProcedures = [
     {
       id: "emergency-shutdown",
-      title: "Emergency Engine Shutdown on the Ground",
-      panel: "side",
+      title: "Emergency Engine Shutdown on Ground",
+      category: "Engine",
       steps: [
-        { step: "PCL - OFF", location: "Left side panel, throttle quadrant" },
-        { step: "FIREWALL SHUTOFF HANDLE - PULL", location: "Left side panel, below glare shield" },
+        {
+          step: "PCL",
+          action: "OFF",
+          location: "Left side panel, throttle quadrant",
+        },
+        {
+          step: "FIREWALL SHUTOFF HANDLE",
+          action: "PULL",
+          location: "Left side panel, below glare shield",
+        },
       ],
     },
     {
       id: "fire-in-flight",
-      title: "Fire In Flight (if fire confirmed)",
-      panel: "side",
+      title: "Fire In Flight (if confirmed)",
+      category: "Fire",
       steps: [
-        { step: "PCL - OFF", location: "Left side panel, throttle quadrant" },
-        { step: "FIREWALL SHUTOFF HANDLE - PULL", location: "Left side panel, below glare shield" },
-        { step: "OBOGS SUPPLY LEVER - OFF (BOTH)", location: "Right side panel, oxygen controls" },
-        { step: "DESCENT BELOW 10,000 FEET MSL - INITIATE", location: "Instrument panel, altimeter" },
-        { step: "EMER LDG GR HANDLE - PULL (AS REQUIRED)", location: "Right side panel, emergency landing gear handle" },
+        {
+          step: "PCL",
+          action: "OFF",
+          location: "Left side panel, throttle quadrant",
+        },
+        {
+          step: "FIREWALL SHUTOFF HANDLE",
+          action: "PULL",
+          location: "Left side panel, below glare shield",
+        },
+        {
+          step: "OBOGS SUPPLY LEVER",
+          action: "OFF (BOTH)",
+          location: "Right side panel, oxygen controls",
+        },
+        {
+          step: "DESCENT BELOW 10,000 FEET MSL",
+          action: "INITIATE",
+          location: "Instrument panel, altimeter",
+        },
+        {
+          step: "EMER LDG GR HANDLE",
+          action: "PULL (AS REQUIRED)",
+          location: "Right side panel, emergency landing gear handle",
+        },
       ],
     },
     {
       id: "obogs-failure",
       title: "OBOGS Failure / Physiological Symptoms",
-      panel: "side",
+      category: "Oxygen",
       steps: [
-        { step: "OBOGS SUPPLY LEVER - OFF (BOTH)", location: "Right side panel, oxygen controls" },
-        { step: "BOS PUSH MAN - PRESS ON", location: "Right side panel, oxygen controls" },
-        { step: "GREEN RING - PULL (AS REQUIRED)", location: "Right side panel, oxygen controls" },
-        { step: "DESCENT BELOW 10,000 FEET MSL - INITIATE", location: "Instrument panel, altimeter" },
-        { step: "ALTITUDE - CHECK", location: "Instrument panel, altimeter" },
+        {
+          step: "OBOGS SUPPLY LEVER",
+          action: "OFF (BOTH)",
+          location: "Right side panel, oxygen controls",
+        },
+        {
+          step: "BOS PUSH MAN",
+          action: "PRESS ON",
+          location: "Right side panel, oxygen controls",
+        },
+        {
+          step: "GREEN RING",
+          action: "PULL (AS REQUIRED)",
+          location: "Right side panel, oxygen controls",
+        },
+        {
+          step: "DESCENT BELOW 10,000 FEET MSL",
+          action: "INITIATE",
+          location: "Instrument panel, altimeter",
+        },
+        {
+          step: "ALTITUDE",
+          action: "CHECK",
+          location: "Instrument panel, altimeter",
+        },
       ],
     },
     {
       id: "spin-recovery",
-      title: "Inadvertent Departure From Controlled Flight (Spin Recovery)",
-      panel: "side",
+      title: "Spin Recovery",
+      category: "Flight Control",
       steps: [
-        { step: "PCL - IDLE", location: "Left side panel, throttle quadrant" },
-        { step: "CONTROLS - NEUTRAL", location: "Control stick and rudder pedals" },
-        { step: "AIRSPEED - 110 KNOTS (MINIMUM)", location: "Instrument panel, airspeed indicator" },
-        { step: "PCL - OFF", location: "Left side panel, throttle quadrant (if spin continues)" },
+        {
+          step: "PCL",
+          action: "IDLE",
+          location: "Left side panel, throttle quadrant",
+        },
+        {
+          step: "CONTROLS",
+          action: "NEUTRAL",
+          location: "Control stick and rudder pedals",
+        },
+        {
+          step: "AIRSPEED",
+          action: "110 KNOTS (MIN)",
+          location: "Instrument panel, airspeed indicator",
+        },
+        {
+          step: "PCL",
+          action: "OFF (if spin continues)",
+          location: "Left side panel, throttle quadrant",
+        },
       ],
     },
     {
       id: "engine-failure-airstart",
-      title: "Engine Failure During Flight - Immediate Airstart (PMU NORM)",
-      panel: "side",
+      title: "Engine Failure - Immediate Airstart",
+      category: "Engine",
       steps: [
-        { step: "PCL - MID RANGE", location: "Left side panel, throttle quadrant" },
-        { step: "PMU SWITCH - OFF", location: "Left side panel, engine controls" },
+        {
+          step: "PCL",
+          action: "MID RANGE",
+          location: "Left side panel, throttle quadrant",
+        },
+        {
+          step: "PMU SWITCH",
+          action: "OFF",
+          location: "Left side panel, engine controls",
+        },
       ],
     },
     {
       id: "uncommanded-power",
-      title: "Uncommanded Power Changes / Loss of Power / Uncommanded Propeller Feather",
-      panel: "side",
+      title: "Uncommanded Power Changes",
+      category: "Engine",
       steps: [
-        { step: "PCL - AS REQUIRED", location: "Left side panel, throttle quadrant" },
-        { step: "PMU SWITCH - OFF", location: "Left side panel, engine controls" },
+        {
+          step: "PCL",
+          action: "AS REQUIRED",
+          location: "Left side panel, throttle quadrant",
+        },
+        {
+          step: "PMU SWITCH",
+          action: "OFF",
+          location: "Left side panel, engine controls",
+        },
       ],
     },
     {
       id: "engine-failure-takeoff",
-      title: "Engine Failure Immediately After Takeoff (Sufficient Runway Remaining)",
-      panel: "side",
+      title: "Engine Failure After Takeoff",
+      category: "Engine",
       steps: [
-        { step: "PCL - IDLE", location: "Left side panel, throttle quadrant" },
-        { step: "BRAKES - AS REQUIRED", location: "Rudder pedals, top of pedals" },
+        {
+          step: "PCL",
+          action: "IDLE",
+          location: "Left side panel, throttle quadrant",
+        },
+        {
+          step: "BRAKES",
+          action: "AS REQUIRED",
+          location: "Rudder pedals, top of pedals",
+        },
       ],
     },
     {
       id: "abort-takeoff",
       title: "Abort Takeoff",
-      panel: "side",
+      category: "Takeoff/Landing",
       steps: [
-        { step: "PCL - IDLE", location: "Left side panel, throttle quadrant" },
-        { step: "BRAKES - AS REQUIRED", location: "Rudder pedals, top of pedals" },
+        {
+          step: "PCL",
+          action: "IDLE",
+          location: "Left side panel, throttle quadrant",
+        },
+        {
+          step: "BRAKES",
+          action: "AS REQUIRED",
+          location: "Rudder pedals, top of pedals",
+        },
       ],
     },
     {
       id: "ejection",
       title: "Ejection",
-      panel: "both",
+      category: "Emergency",
       steps: [
-        { step: "EJECTION HANDLE - PULL", location: "Between legs, yellow and black striped handles" },
+        {
+          step: "EJECTION HANDLE",
+          action: "PULL",
+          location: "Between legs, yellow and black striped handles",
+        },
       ],
     },
   ];
 
-  const selectedProc = boldfaceProcedures.find(p => p.id === selectedProcedure);
-
-  const handleMouseDown = (e) => {
-    e.preventDefault();
-    setIsDragging(true);
-    dragStartY.current = e.clientY;
-    dragStartHeight.current = topPanelHeight;
-    document.body.style.cursor = 'ns-resize';
-    document.body.style.userSelect = 'none';
-  };
-
-  const handleMouseMove = (e) => {
-    if (!isDragging) return;
-
-    const deltaY = e.clientY - dragStartY.current;
-    const newHeight = dragStartHeight.current + deltaY;
-
-    // Constrain between 300px and 1600px
-    const constrainedHeight = Math.min(Math.max(newHeight, 300), 1600);
-    setTopPanelHeight(constrainedHeight);
-  };
-
-  const handleMouseUp = () => {
-    if (isDragging) {
-      setIsDragging(false);
-      document.body.style.cursor = '';
-      document.body.style.userSelect = '';
-    }
-  };
-
-  const handleTouchStart = (e) => {
-    const touch = e.touches[0];
-    setIsDragging(true);
-    dragStartY.current = touch.clientY;
-    dragStartHeight.current = topPanelHeight;
-  };
-
-  const handleTouchMove = (e) => {
-    if (!isDragging) return;
-    e.preventDefault();
-
-    const touch = e.touches[0];
-    const deltaY = touch.clientY - dragStartY.current;
-    const newHeight = dragStartHeight.current + deltaY;
-
-    // Constrain between 300px and 1600px
-    const constrainedHeight = Math.min(Math.max(newHeight, 300), 1600);
-    setTopPanelHeight(constrainedHeight);
-  };
-
-  const handleTouchEnd = () => {
-    setIsDragging(false);
-  };
+  const categories = [...new Set(boldfaceProcedures.map((p) => p.category))];
 
   return (
-    <div
-      className="flex flex-col lg:flex-row gap-3 px-3 py-3"
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseUp}
-    >
-      {/* Left Side - Procedure Selector (Full width on mobile, collapsible sidebar on desktop) */}
-      <div className={`w-full transition-all duration-300 ${isSidebarCollapsed ? 'lg:w-12' : 'lg:w-72'} lg:flex-shrink-0 lg:sticky lg:top-3 lg:h-[calc(100vh-100px)] ${darkMode ? "bg-slate-800/50" : "bg-white/50"} backdrop-blur-xl rounded-xl ${isSidebarCollapsed ? 'lg:p-2' : 'p-3 sm:p-4'} shadow-xl flex flex-col overflow-y-auto relative`}>
-
-        {/* Collapse/Expand Button (Desktop only) */}
-        <button
-          onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-          className={`hidden lg:block absolute top-3 right-3 p-2 rounded-lg transition-all z-10 ${
-            darkMode ? 'bg-slate-700 hover:bg-slate-600 text-white' : 'bg-slate-200 hover:bg-slate-300 text-slate-900'
-          }`}
-          title={isSidebarCollapsed ? 'Expand' : 'Collapse'}
-        >
-          {isSidebarCollapsed ? (
-            <ChevronRight className="w-4 h-4" />
-          ) : (
-            <ChevronLeft className="w-4 h-4" />
-          )}
-        </button>
-
-        {/* Content (Hidden when collapsed) */}
-        {!isSidebarCollapsed && (
-          <>
-        {/* Dropdown Selector */}
-        <div className="mb-4">
-          <label className={`text-sm font-bold mb-2 block ${darkMode ? "text-slate-300" : "text-slate-700"}`}>
-            BOLDFACE Procedure
-          </label>
-          <div className="relative">
-            <select
-              value={selectedProcedure}
-              onChange={(e) => setSelectedProcedure(e.target.value)}
-              className={`w-full p-3 pr-10 rounded-lg font-medium text-sm appearance-none cursor-pointer ${
-                darkMode
-                  ? "bg-red-600 text-white border-2 border-red-500"
-                  : "bg-red-500 text-white border-2 border-red-400"
-              } focus:outline-none focus:ring-2 focus:ring-red-400`}
+    <div className="px-3 py-3 max-w-7xl mx-auto">
+      {/* Header */}
+      <div
+        className={`${darkMode ? "bg-gradient-to-br from-teal-500/20 to-teal-600/10 border border-teal-500/30" : "bg-white"} backdrop-blur-xl rounded-2xl p-6 mb-6 shadow-xl`}
+      >
+        <div className="flex items-center gap-4 mb-3">
+          <div className="p-3 bg-teal-500/40 rounded-xl">
+            <Gauge className="w-8 h-8 text-teal-200" />
+          </div>
+          <div>
+            <h2
+              className={`text-2xl font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
             >
-              {boldfaceProcedures.map((procedure) => (
-                <option key={procedure.id} value={procedure.id}>
-                  {procedure.title}
-                </option>
-              ))}
-            </select>
-            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white pointer-events-none" />
+              Cockpit Reference
+            </h2>
+            <p
+              className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+            >
+              Quick access to BOLDFACE procedures and cockpit diagrams
+            </p>
           </div>
         </div>
-
-        {/* Selected Procedure Steps */}
-        {selectedProc && (
-          <div className="flex-1">
-            <h4 className={`text-sm font-bold mb-3 ${darkMode ? "text-slate-300" : "text-slate-700"}`}>
-              Procedure Steps:
-            </h4>
-            <div className="space-y-2">
-              {selectedProc.steps.map((item, index) => (
-                <div
-                  key={index}
-                  className={`p-3 rounded-lg ${darkMode ? "bg-slate-700/70" : "bg-slate-100"}`}
-                >
-                  <div className="flex items-start gap-2">
-                    <div className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center font-bold text-sm ${
-                      darkMode ? "bg-blue-600 text-white" : "bg-blue-500 text-white"
-                    }`}>
-                      {index + 1}
-                    </div>
-                    <div className="flex-1">
-                      <div className={`font-bold text-sm mb-1 ${darkMode ? "text-white" : "text-slate-900"}`}>
-                        {item.step}
-                      </div>
-                      <div className={`text-xs leading-relaxed ${darkMode ? "text-slate-400" : "text-slate-600"}`}>
-                        📍 {item.location}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-        </>
-        )}
       </div>
 
-      {/* Right Side - Cockpit Panels (Stacked on mobile, resizable on desktop) */}
-      <div className="flex-1 flex flex-col gap-3 lg:gap-0">
-        {/* Instrument Panel - Top */}
+      {/* PDF Reference Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+        {/* Instrument Panel */}
         <div
-          className={`${darkMode ? "bg-slate-800/50" : "bg-white/50"} backdrop-blur-xl rounded-xl lg:rounded-t-2xl lg:rounded-b-none shadow-xl overflow-auto relative touch-pan-x touch-pan-y touch-pinch-zoom ${!isDragging ? 'transition-all duration-150' : ''}`}
-          style={{ height: window.innerWidth >= 1024 ? `${topPanelHeight}px` : '400px', minHeight: '300px' }}
+          className={`${darkMode ? "bg-slate-800/50 border border-slate-700/50" : "bg-white"} backdrop-blur-xl rounded-xl p-4 shadow-lg`}
         >
-          <div className="w-full h-full bg-slate-900 relative">
+          <h3
+            className={`text-lg font-bold mb-3 flex items-center gap-2 ${darkMode ? "text-white" : "text-slate-900"}`}
+          >
+            <FileText className="w-5 h-5 text-blue-400" />
+            Instrument Panel
+          </h3>
+          <div className="relative bg-slate-900 rounded-lg overflow-hidden h-64 mb-3">
             <iframe
               src="/CockpitInstrtFrt_V300.pdf#view=FitH&zoom=page-width"
               className="w-full h-full"
               title="Instrument Panel Reference"
-              style={{ touchAction: 'pan-x pan-y pinch-zoom' }}
             />
           </div>
-          <div className="absolute top-2 right-2 flex flex-col gap-2 z-10">
-            <a
-              href="/CockpitInstrtFrt_V300.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`inline-flex items-center gap-2 px-4 py-3 rounded-lg text-sm font-bold ${
-                darkMode ? "bg-blue-600 hover:bg-blue-700 text-white" : "bg-blue-500 hover:bg-blue-600 text-white"
-              } transition shadow-xl touch-manipulation active:scale-95`}
-            >
-              <FileText className="w-5 h-5" />
-              <span>Open to Zoom</span>
-            </a>
-            <div className={`lg:hidden text-xs text-center px-2 py-1 rounded ${
-              darkMode ? "bg-slate-900/80 text-slate-300" : "bg-white/80 text-slate-700"
-            } backdrop-blur-sm`}>
-              Tap to zoom
-            </div>
-          </div>
+          <a
+            href="/CockpitInstrtFrt_V300.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-sm font-bold ${
+              darkMode
+                ? "bg-blue-600 hover:bg-blue-700 text-white"
+                : "bg-blue-500 hover:bg-blue-600 text-white"
+            } transition shadow-lg hover:shadow-xl active:scale-95`}
+          >
+            <Maximize2 className="w-4 h-4" />
+            <span>Open Full View</span>
+          </a>
         </div>
 
-        {/* Resizable Divider (Desktop and Tablet) */}
+        {/* Side Panels */}
         <div
-          className={`hidden sm:flex h-8 cursor-ns-resize group relative items-center justify-center select-none ${
-            isDragging
-              ? "bg-blue-500 shadow-lg scale-y-150"
-              : darkMode
-                ? "bg-slate-700 hover:bg-blue-600 hover:shadow-md"
-                : "bg-slate-300 hover:bg-blue-500 hover:shadow-md"
-          } transition-all duration-200`}
-          onMouseDown={handleMouseDown}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
+          className={`${darkMode ? "bg-slate-800/50 border border-slate-700/50" : "bg-white"} backdrop-blur-xl rounded-xl p-4 shadow-lg`}
         >
-          <div className="flex flex-col gap-0.5 items-center">
-            <GripHorizontal className={`w-6 h-6 ${isDragging ? "text-white animate-pulse" : "text-slate-500 group-hover:text-white"} transition-colors`} />
-            <div className={`text-xs font-medium ${isDragging ? "text-white" : "text-slate-500 group-hover:text-white opacity-0 group-hover:opacity-100"} transition-all`}>
-              Drag to resize
-            </div>
-          </div>
-        </div>
-
-        {/* Side Panel - Bottom */}
-        <div
-          className={`flex-1 ${darkMode ? "bg-slate-800/50" : "bg-white/50"} backdrop-blur-xl rounded-xl lg:rounded-t-none lg:rounded-b-2xl shadow-xl overflow-auto relative touch-pan-x touch-pan-y touch-pinch-zoom`}
-          style={{ height: window.innerWidth >= 1024 ? 'auto' : '400px', minHeight: window.innerWidth >= 1024 ? '1000px' : '300px' }}
-        >
-          <div className="w-full h-full bg-slate-900 relative">
+          <h3
+            className={`text-lg font-bold mb-3 flex items-center gap-2 ${darkMode ? "text-white" : "text-slate-900"}`}
+          >
+            <FileText className="w-5 h-5 text-teal-400" />
+            Side Panels
+          </h3>
+          <div className="relative bg-slate-900 rounded-lg overflow-hidden h-64 mb-3">
             <iframe
               src="/SidePanelsFront_V300.pdf#view=FitH&zoom=page-width"
               className="w-full h-full"
               title="Side Panels Reference"
-              style={{ touchAction: 'pan-x pan-y pinch-zoom' }}
             />
           </div>
-          <div className="absolute top-2 right-2 flex flex-col gap-2 z-10">
-            <a
-              href="/SidePanelsFront_V300.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`inline-flex items-center gap-2 px-4 py-3 rounded-lg text-sm font-bold ${
-                darkMode ? "bg-blue-600 hover:bg-blue-700 text-white" : "bg-blue-500 hover:bg-blue-600 text-white"
-              } transition shadow-xl touch-manipulation active:scale-95`}
+          <a
+            href="/SidePanelsFront_V300.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-sm font-bold ${
+              darkMode
+                ? "bg-teal-600 hover:bg-teal-700 text-white"
+                : "bg-teal-500 hover:bg-teal-600 text-white"
+            } transition shadow-lg hover:shadow-xl active:scale-95`}
+          >
+            <Maximize2 className="w-4 h-4" />
+            <span>Open Full View</span>
+          </a>
+        </div>
+      </div>
+
+      {/* BOLDFACE Procedures Section */}
+      <div
+        className={`${darkMode ? "bg-slate-800/50 border border-slate-700/50" : "bg-white"} backdrop-blur-xl rounded-xl p-6 shadow-xl`}
+      >
+        <h3
+          className={`text-xl font-bold mb-4 ${darkMode ? "text-white" : "text-slate-900"}`}
+        >
+          BOLDFACE Procedures
+        </h3>
+
+        {/* Procedures Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
+          {boldfaceProcedures.map((procedure) => (
+            <button
+              key={procedure.id}
+              onClick={() =>
+                setSelectedProcedure(
+                  selectedProcedure === procedure.id ? null : procedure.id,
+                )
+              }
+              className={`text-left p-4 rounded-lg transition-all ${
+                selectedProcedure === procedure.id
+                  ? darkMode
+                    ? "bg-red-600 border-2 border-red-500 shadow-lg shadow-red-500/20"
+                    : "bg-red-500 border-2 border-red-400 shadow-lg"
+                  : darkMode
+                    ? "bg-slate-700/70 hover:bg-slate-700 border-2 border-slate-600/50"
+                    : "bg-slate-100 hover:bg-slate-200 border-2 border-slate-200"
+              }`}
             >
-              <FileText className="w-5 h-5" />
-              <span>Open to Zoom</span>
-            </a>
-            <div className={`lg:hidden text-xs text-center px-2 py-1 rounded ${
-              darkMode ? "bg-slate-900/80 text-slate-300" : "bg-white/80 text-slate-700"
-            } backdrop-blur-sm`}>
-              Tap to zoom
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex-1">
+                  <div
+                    className={`text-xs font-bold mb-1 ${
+                      selectedProcedure === procedure.id
+                        ? "text-red-200"
+                        : darkMode
+                          ? "text-slate-400"
+                          : "text-slate-600"
+                    }`}
+                  >
+                    {procedure.category}
+                  </div>
+                  <div
+                    className={`font-bold text-sm ${
+                      selectedProcedure === procedure.id
+                        ? "text-white"
+                        : darkMode
+                          ? "text-white"
+                          : "text-slate-900"
+                    }`}
+                  >
+                    {procedure.title}
+                  </div>
+                </div>
+                <div
+                  className={`flex-shrink-0 px-2 py-1 rounded text-xs font-bold ${
+                    selectedProcedure === procedure.id
+                      ? "bg-white/20 text-white"
+                      : darkMode
+                        ? "bg-slate-600 text-slate-300"
+                        : "bg-slate-300 text-slate-700"
+                  }`}
+                >
+                  {procedure.steps.length} steps
+                </div>
+              </div>
+            </button>
+          ))}
+        </div>
+
+        {/* Selected Procedure Details */}
+        {selectedProcedure && (
+          <div
+            className={`${darkMode ? "bg-slate-900/50 border border-red-500/30" : "bg-red-50 border border-red-200"} rounded-xl p-6 mt-4`}
+          >
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2 bg-red-600 rounded-lg">
+                <FileText className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <div
+                  className={`text-sm font-bold ${darkMode ? "text-red-400" : "text-red-600"}`}
+                >
+                  {
+                    boldfaceProcedures.find((p) => p.id === selectedProcedure)
+                      ?.category
+                  }
+                </div>
+                <h4
+                  className={`text-lg font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
+                >
+                  {
+                    boldfaceProcedures.find((p) => p.id === selectedProcedure)
+                      ?.title
+                  }
+                </h4>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              {boldfaceProcedures
+                .find((p) => p.id === selectedProcedure)
+                ?.steps.map((item, index) => (
+                  <div
+                    key={index}
+                    className={`p-4 rounded-lg ${darkMode ? "bg-slate-800/80" : "bg-white"}`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm bg-red-600 text-white shadow-lg">
+                        {index + 1}
+                      </div>
+                      <div className="flex-1">
+                        <div
+                          className={`font-bold mb-2 ${darkMode ? "text-white" : "text-slate-900"}`}
+                        >
+                          {item.step} <span className="text-red-400">→</span>{" "}
+                          <span className="text-red-400">{item.action}</span>
+                        </div>
+                        <div
+                          className={`text-xs leading-relaxed flex items-start gap-1 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                        >
+                          <span className="text-base">📍</span>
+                          <span>{item.location}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
             </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
