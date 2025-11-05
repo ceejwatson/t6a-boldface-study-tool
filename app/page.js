@@ -854,7 +854,7 @@ export default function T6AEnhancedStudyTool() {
       userAnswer: userAnswers[currentQuestion.id],
       disabled: showExplanation, // Disable after answer is shown in both modes
       darkMode: darkMode,
-      showCorrectness: studyMode === "quiz" || studyMode === "learningpath", // Show green/red in quiz and learning path modes
+      showCorrectness: true, // Always show green/red feedback so users know if they're correct
       fontSize: fontSize,
       compact: studyMode === "study", // Compact layout for review mode
     };
