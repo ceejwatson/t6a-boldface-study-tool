@@ -99,33 +99,55 @@ export default function AuthWrapper({ children }) {
   };
 
   // Manual sync trigger for immediate syncing after actions
-  const triggerSync = async () => {
-    if (!user || user.isGuest || !user.id || syncing) {
-      console.log("⏭️ [SYNC] Skipping sync - guest mode or already syncing");
-      return;
-    }
+  // Uses debouncing to batch rapid actions within 2 seconds
+  const triggerSync = (() => {
+    let timeoutId = null;
 
-    console.log("🚀 [SYNC] Manual sync triggered by user action");
-    setSyncing(true);
-    setSyncStatus("syncing");
-
-    try {
-      const result = await syncProgress(user.id);
-      if (result.success) {
-        setSyncStatus("synced");
-        setTimeout(() => setSyncStatus("idle"), 1500);
-      } else {
-        setSyncStatus("error");
-        setTimeout(() => setSyncStatus("idle"), 2000);
+    return () => {
+      if (!user || user.isGuest || !user.id) {
+        console.log("⏭️ [SYNC] Skipping sync - guest mode");
+        return;
       }
-    } catch (error) {
-      console.error("❌ [SYNC] Manual sync failed:", error);
-      setSyncStatus("error");
-      setTimeout(() => setSyncStatus("idle"), 2000);
-    } finally {
-      setSyncing(false);
-    }
-  };
+
+      // Clear previous timeout if exists
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+
+      // Debounce: wait 2 seconds after last action before syncing
+      timeoutId = setTimeout(async () => {
+        if (syncing) {
+          console.log("⏭️ [SYNC] Already syncing, skipping");
+          return;
+        }
+
+        console.log("🚀 [SYNC] Manual sync triggered by user action");
+        setSyncing(true);
+        setSyncStatus("syncing");
+
+        try {
+          const result = await syncProgress(user.id);
+          if (result.success) {
+            setSyncStatus("synced");
+            setTimeout(() => setSyncStatus("idle"), 1500);
+          } else {
+            setSyncStatus("error");
+            setTimeout(() => setSyncStatus("idle"), 2000);
+          }
+        } catch (error) {
+          console.error("❌ [SYNC] Manual sync failed:", error);
+          setSyncStatus("error");
+          setTimeout(() => setSyncStatus("idle"), 2000);
+        } finally {
+          setSyncing(false);
+        }
+      }, 2000); // Wait 2 seconds after last action
+
+      console.log(
+        "⏱️ [SYNC] Sync queued - will sync in 2 seconds if no more actions",
+      );
+    };
+  })();
 
   const handleLogout = () => {
     setUser(null);
