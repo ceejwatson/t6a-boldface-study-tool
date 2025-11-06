@@ -2974,17 +2974,29 @@ export default function T6AEnhancedStudyTool() {
                       <div className="flex items-center gap-2">
                         <button
                           onClick={toggleFlag}
-                          className={`px-2 py-0.5 rounded-lg text-xs font-medium transition ${
+                          className={`min-w-[44px] min-h-[44px] px-3 py-2 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2 touch-manipulation shadow-sm ${
                             flaggedQuestions.includes(currentQuestion.id)
-                              ? "bg-yellow-600 text-white"
+                              ? "bg-yellow-500 hover:bg-yellow-600 text-white scale-110"
                               : darkMode
-                                ? "bg-slate-700 text-slate-300 hover:bg-slate-600"
+                                ? "bg-slate-700 text-slate-300 hover:bg-slate-600 hover:text-yellow-400"
                                 : "bg-slate-200 text-slate-700 hover:bg-slate-300"
                           }`}
+                          title={
+                            flaggedQuestions.includes(currentQuestion.id)
+                              ? "Unflag question"
+                              : "Flag for review"
+                          }
                         >
-                          {flaggedQuestions.includes(currentQuestion.id)
-                            ? "⭐"
-                            : "☆"}
+                          <span className="text-xl">
+                            {flaggedQuestions.includes(currentQuestion.id)
+                              ? "⭐"
+                              : "☆"}
+                          </span>
+                          <span className="hidden sm:inline text-sm">
+                            {flaggedQuestions.includes(currentQuestion.id)
+                              ? "Flagged"
+                              : "Flag"}
+                          </span>
                         </button>
                       </div>
                     </div>
