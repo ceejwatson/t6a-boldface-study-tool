@@ -985,44 +985,44 @@ export default function T6AEnhancedStudyTool() {
 
   return (
     <div
-      className={`h-screen overflow-hidden flex flex-col ${darkMode ? "bg-slate-700" : "bg-slate-100"}`}
+      className={`min-h-screen flex flex-col ${darkMode ? "bg-slate-700" : "bg-slate-100"}`}
     >
       {/* Header */}
       <header
         className={`${darkMode ? "bg-slate-900/95 border-blue-700/50" : "bg-white/95 border-blue-300/50"} backdrop-blur border-b z-20 shadow-xl flex-shrink-0`}
       >
-        <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-4">
+        <div className="container mx-auto px-2 sm:px-4 py-1.5 sm:py-3">
           <div className="flex items-center justify-between flex-wrap gap-2 sm:gap-4">
             <div className="flex items-center gap-2 sm:gap-3">
-              <div className="bg-blue-600 p-1.5 sm:p-2 rounded-lg">
-                <BookOpen className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
+              <div className="bg-blue-600 p-1 sm:p-2 rounded-lg">
+                <BookOpen className="w-5 h-5 sm:w-8 sm:h-8 text-white" />
               </div>
               <div>
                 <h1
-                  className={`text-lg sm:text-xl md:text-2xl font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
+                  className={`text-base sm:text-xl md:text-2xl font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
                 >
                   T-6A Texan II
                 </h1>
                 <p
-                  className={`text-xs sm:text-sm ${darkMode ? "text-blue-300" : "text-blue-600"}`}
+                  className={`text-xs sm:text-sm ${darkMode ? "text-blue-300" : "text-blue-600"} hidden sm:block`}
                 >
                   Enhanced Study Tool
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center gap-2 sm:gap-4">
+            <div className="flex items-center gap-1.5 sm:gap-4">
               {/* Font Size Selector - Mobile Optimized */}
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 sm:gap-2">
                 <span
                   className={`text-xs ${darkMode ? "text-slate-400" : "text-slate-600"} hidden sm:inline`}
                 >
                   Text:
                 </span>
-                <div className="flex items-center gap-1 bg-slate-800/50 p-1 rounded-lg">
+                <div className="flex items-center gap-0.5 sm:gap-1 bg-slate-800/50 p-0.5 sm:p-1 rounded-lg">
                   <button
                     onClick={() => setFontSize("small")}
-                    className={`min-w-[36px] min-h-[36px] px-2 py-1 rounded text-xs font-medium transition touch-manipulation ${
+                    className={`min-w-[32px] min-h-[32px] sm:min-w-[36px] sm:min-h-[36px] px-1.5 sm:px-2 py-1 rounded text-xs font-medium transition touch-manipulation ${
                       fontSize === "small"
                         ? "bg-blue-600 text-white"
                         : "text-slate-400 hover:text-white hover:bg-slate-700"
@@ -1033,7 +1033,7 @@ export default function T6AEnhancedStudyTool() {
                   </button>
                   <button
                     onClick={() => setFontSize("medium")}
-                    className={`min-w-[36px] min-h-[36px] px-2 py-1 rounded text-sm font-medium transition touch-manipulation ${
+                    className={`min-w-[32px] min-h-[32px] sm:min-w-[36px] sm:min-h-[36px] px-1.5 sm:px-2 py-1 rounded text-sm font-medium transition touch-manipulation ${
                       fontSize === "medium"
                         ? "bg-blue-600 text-white"
                         : "text-slate-400 hover:text-white hover:bg-slate-700"
@@ -1044,7 +1044,7 @@ export default function T6AEnhancedStudyTool() {
                   </button>
                   <button
                     onClick={() => setFontSize("large")}
-                    className={`min-w-[36px] min-h-[36px] px-2 py-1 rounded text-base font-medium transition touch-manipulation ${
+                    className={`min-w-[32px] min-h-[32px] sm:min-w-[36px] sm:min-h-[36px] px-1.5 sm:px-2 py-1 rounded text-base font-medium transition touch-manipulation ${
                       fontSize === "large"
                         ? "bg-blue-600 text-white"
                         : "text-slate-400 hover:text-white hover:bg-slate-700"
@@ -1055,7 +1055,7 @@ export default function T6AEnhancedStudyTool() {
                   </button>
                   <button
                     onClick={() => setFontSize("xlarge")}
-                    className={`min-w-[36px] min-h-[36px] px-2 py-1 rounded text-lg font-medium transition touch-manipulation ${
+                    className={`min-w-[32px] min-h-[32px] sm:min-w-[36px] sm:min-h-[36px] px-1.5 sm:px-2 py-1 rounded text-lg font-medium transition touch-manipulation ${
                       fontSize === "xlarge"
                         ? "bg-blue-600 text-white"
                         : "text-slate-400 hover:text-white hover:bg-slate-700"
@@ -1072,19 +1072,19 @@ export default function T6AEnhancedStudyTool() {
                 href="https://www.sheppard.af.mil/Portals/65/T-6A%20Boldface%20Ops%20Limits%2C%201%20Jun%202023%20%28Filled%29.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-all touch-manipulation ${
+                className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1 sm:py-2 rounded-lg transition-all touch-manipulation min-h-[32px] sm:min-h-[40px] ${
                   darkMode
                     ? "bg-blue-600 hover:bg-blue-700 text-white"
                     : "bg-blue-500 hover:bg-blue-600 text-white"
                 }`}
                 title="Official T-6A BOLDFACE Emergency Procedures and Operating Limitations PDF"
               >
-                <FileText className="w-4 h-4 sm:w-5 sm:h-5" />
+                <FileText className="w-3.5 h-3.5 sm:w-5 sm:h-5" />
                 <span className="hidden md:inline font-medium text-sm">
                   T-6A BOLDFACE Reference
                 </span>
                 <span className="md:hidden font-medium text-xs">PDF</span>
-                <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
+                <ExternalLink className="w-2.5 h-2.5 sm:w-4 sm:h-4" />
               </a>
             </div>
           </div>
@@ -1095,10 +1095,10 @@ export default function T6AEnhancedStudyTool() {
         className="flex-1 overflow-y-auto overscroll-none"
         style={{ WebkitOverflowScrolling: "touch", overscrollBehavior: "none" }}
       >
-        <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-8">
+        <div className="container mx-auto px-3 sm:px-4 py-1.5 sm:py-2">
           {/* Simplified Navigation Bar - Only show when not on home screen */}
           {activeTab !== "home" && (
-            <div className="mb-4 sm:mb-6">
+            <div className="mb-2 sm:mb-3">
               <div
                 className={`flex items-center justify-between gap-2 sm:gap-3 p-2 sm:p-3 rounded-xl ${darkMode ? "bg-slate-800/50" : "bg-white/50"} backdrop-blur-sm border ${darkMode ? "border-slate-700" : "border-slate-200"}`}
               >
@@ -2901,14 +2901,12 @@ export default function T6AEnhancedStudyTool() {
               </div>
             </div>
           ) : (
-            <div className="max-w-4xl mx-auto pb-6">
+            <div className="max-w-4xl mx-auto pb-20">
               {/* Question Counter with Progress Bar */}
-              <div className={studyMode === "study" ? "mb-2" : "mb-3"}>
-                <div
-                  className={`text-center ${studyMode === "study" ? "mb-0.5" : "mb-1"}`}
-                >
+              <div className="mb-2">
+                <div className="text-center mb-1">
                   <span
-                    className={`text-base font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
+                    className={`text-sm font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
                   >
                     Question {currentQuestionIndex + 1} of{" "}
                     {currentQuestions.length}
@@ -2916,7 +2914,7 @@ export default function T6AEnhancedStudyTool() {
                 </div>
                 {/* Progress Bar */}
                 <div
-                  className={`w-full h-2 rounded-full overflow-hidden ${darkMode ? "bg-slate-800" : "bg-slate-200"}`}
+                  className={`w-full h-1.5 rounded-full overflow-hidden ${darkMode ? "bg-slate-800" : "bg-slate-200"}`}
                 >
                   <div
                     className={`h-full transition-all duration-500 ease-out ${darkMode ? "bg-gradient-to-r from-blue-400 to-cyan-400 shadow-[0_0_8px_rgba(96,165,250,0.5)]" : "bg-gradient-to-r from-blue-500 to-blue-600"}`}
@@ -2930,13 +2928,11 @@ export default function T6AEnhancedStudyTool() {
               {/* Question Card */}
               <div
                 key={currentQuestion?.id}
-                className={`${darkMode ? "bg-slate-800 border-slate-700" : "bg-white border-slate-300"} rounded-xl shadow-2xl ${studyMode === "study" ? "p-2 md:p-3" : "p-4 md:p-5"} border-2 question-enter`}
+                className={`${darkMode ? "bg-slate-800 border-slate-700" : "bg-white border-slate-300"} rounded-xl shadow-2xl ${studyMode === "study" ? "p-2 md:p-3" : "p-3 md:p-4"} border-2 question-enter`}
               >
                 {currentQuestion && (
                   <>
-                    <div
-                      className={`${studyMode === "study" ? "mb-1" : "mb-2"} flex items-center justify-between flex-wrap gap-1`}
-                    >
+                    <div className="mb-2 flex items-center justify-between flex-wrap gap-1">
                       <div className="flex items-center gap-1">
                         {showExplanation &&
                           studyMode !== "study" &&
@@ -3018,8 +3014,8 @@ export default function T6AEnhancedStudyTool() {
                           const isMastered = correctCount >= 3;
 
                           return (
-                            <div className="mb-3">
-                              <div className="flex items-center justify-between text-xs mb-1">
+                            <div className="mb-2">
+                              <div className="flex items-center justify-between text-xs mb-0.5">
                                 <span
                                   className={
                                     darkMode
@@ -3114,9 +3110,9 @@ export default function T6AEnhancedStudyTool() {
 
               {/* Navigation - Fixed at Bottom - Mobile Optimized */}
               <div
-                className={`fixed bottom-0 left-0 right-0 ${darkMode ? "bg-slate-900/95" : "bg-white/95"} backdrop-blur-sm border-t ${darkMode ? "border-slate-700" : "border-slate-300"} p-3 sm:p-4 shadow-2xl z-10 safe-area-bottom`}
+                className={`fixed bottom-0 left-0 right-0 ${darkMode ? "bg-slate-900/95" : "bg-white/95"} backdrop-blur-sm border-t ${darkMode ? "border-slate-700" : "border-slate-300"} p-1.5 sm:p-3 shadow-2xl z-10 safe-area-bottom`}
               >
-                <div className="max-w-4xl mx-auto flex justify-between items-center gap-3">
+                <div className="max-w-4xl mx-auto flex justify-between items-center gap-2">
                   {viewingSingleQuestion ? (
                     <button
                       onClick={() => {
@@ -3137,7 +3133,7 @@ export default function T6AEnhancedStudyTool() {
                       <button
                         onClick={handlePrevious}
                         disabled={currentQuestionIndex === 0}
-                        className={`min-h-[48px] px-5 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2 text-base touch-manipulation shadow-sm ${
+                        className={`min-h-[44px] px-4 py-2.5 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2 text-sm touch-manipulation shadow-sm ${
                           currentQuestionIndex === 0
                             ? darkMode
                               ? "bg-slate-800 text-slate-600 cursor-not-allowed"
@@ -3147,7 +3143,7 @@ export default function T6AEnhancedStudyTool() {
                               : "bg-white hover:bg-slate-100 text-slate-900 active:scale-95"
                         }`}
                       >
-                        <ChevronRight className="w-5 h-5 rotate-180" />
+                        <ChevronRight className="w-4 h-4 rotate-180" />
                         <span className="hidden sm:inline">Previous</span>
                       </button>
 
@@ -3171,7 +3167,7 @@ export default function T6AEnhancedStudyTool() {
                                 }
                               }
                             }}
-                            className="min-h-[48px] bg-green-600 hover:bg-green-700 active:scale-95 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 text-base touch-manipulation shadow-sm"
+                            className="min-h-[44px] bg-green-600 hover:bg-green-700 active:scale-95 text-white px-5 py-2.5 rounded-xl font-semibold transition-all duration-200 text-sm touch-manipulation shadow-sm"
                           >
                             Submit
                           </button>
@@ -3187,7 +3183,7 @@ export default function T6AEnhancedStudyTool() {
                               setShowExplanation(true);
                               updatePerformance(currentQuestion, false);
                             }}
-                            className="min-h-[48px] bg-green-600 hover:bg-green-700 active:scale-95 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 text-base touch-manipulation shadow-sm"
+                            className="min-h-[44px] bg-green-600 hover:bg-green-700 active:scale-95 text-white px-5 py-2.5 rounded-xl font-semibold transition-all duration-200 text-sm touch-manipulation shadow-sm"
                           >
                             Submit
                           </button>
@@ -3198,7 +3194,7 @@ export default function T6AEnhancedStudyTool() {
                       showExplanation ? (
                         <button
                           onClick={() => setActiveTab("results")}
-                          className="min-h-[48px] px-6 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2 bg-orange-600 hover:bg-orange-700 active:scale-95 text-white text-base touch-manipulation shadow-sm"
+                          className="min-h-[44px] px-5 py-2.5 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2 bg-orange-600 hover:bg-orange-700 active:scale-95 text-white text-sm touch-manipulation shadow-sm"
                         >
                           <span className="hidden sm:inline">Finish</span>
                           <CheckCircle2 className="w-5 h-5" />
@@ -3216,14 +3212,14 @@ export default function T6AEnhancedStudyTool() {
                       ) : (
                         <button
                           onClick={handleNext}
-                          className={`min-h-[48px] px-5 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2 text-base touch-manipulation shadow-sm ${
+                          className={`min-h-[44px] px-4 py-2.5 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2 text-sm touch-manipulation shadow-sm ${
                             darkMode
                               ? "bg-slate-700 hover:bg-slate-600 text-white active:scale-95"
                               : "bg-white hover:bg-slate-100 text-slate-900 active:scale-95"
                           }`}
                         >
                           <span className="hidden sm:inline">Next</span>
-                          <ChevronRight className="w-5 h-5" />
+                          <ChevronRight className="w-4 h-4" />
                         </button>
                       )}
                     </>

@@ -6,6 +6,7 @@ import {
   syncProgress,
   setupAutoSync,
   clearLocalProgress,
+  markPendingChanges,
 } from "../lib/syncService";
 import Auth from "./Auth";
 import UserProfile from "./UserProfile";
@@ -108,6 +109,9 @@ export default function AuthWrapper({ children }) {
         console.log("⏭️ [SYNC] Skipping sync - guest mode");
         return;
       }
+
+      // Mark that we have pending changes immediately
+      markPendingChanges();
 
       // Clear previous timeout if exists
       if (timeoutId) {

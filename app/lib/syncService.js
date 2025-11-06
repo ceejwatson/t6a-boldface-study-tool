@@ -9,6 +9,7 @@ const STORAGE_KEYS = {
   MASTERY: "t6a-mastery",
   UNKNOWN_FLASHCARDS: "t6a-unknown-flashcards",
   FONT_SIZE: "t6a-font-size",
+  PENDING_CHANGES: "t6a-pending-changes",
 };
 
 /**
@@ -53,9 +54,48 @@ export function getLocalProgress() {
 }
 
 /**
+ * Mark that local changes are pending (not yet synced to Supabase)
+ */
+export function markPendingChanges() {
+  if (typeof window !== "undefined" && localStorage) {
+    localStorage.setItem(STORAGE_KEYS.PENDING_CHANGES, Date.now().toString());
+    console.log("⏳ [SYNC] Marked pending local changes");
+  }
+}
+
+/**
+ * Clear pending changes flag (called after successful push to Supabase)
+ */
+export function clearPendingChanges() {
+  if (typeof window !== "undefined" && localStorage) {
+    localStorage.removeItem(STORAGE_KEYS.PENDING_CHANGES);
+    console.log("✅ [SYNC] Cleared pending changes flag");
+  }
+}
+
+/**
+ * Check if there are pending local changes
+ */
+export function hasPendingChanges() {
+  if (typeof window !== "undefined" && localStorage) {
+    const pendingTime = localStorage.getItem(STORAGE_KEYS.PENDING_CHANGES);
+    if (pendingTime) {
+      const elapsed = Date.now() - parseInt(pendingTime);
+      // Consider changes pending if less than 5 seconds old
+      const isPending = elapsed < 5000;
+      if (isPending) {
+        console.log(`⏳ [SYNC] Pending changes detected (${elapsed}ms old)`);
+      }
+      return isPending;
+    }
+  }
+  return false;
+}
+
+/**
  * Save progress data to localStorage
  */
-export function saveLocalProgress(progress) {
+export function saveLocalProgress(progress, fromRemote = false) {
   try {
     console.log("💾 [SYNC] Saving to localStorage:", {
       performance:
@@ -66,6 +106,7 @@ export function saveLocalProgress(progress) {
       sessions: progress.sessionHistory?.length || 0,
       mastery: Object.keys(progress.masteryData || {}).length,
       unknown: progress.unknownFlashcards?.length || 0,
+      fromRemote,
     });
 
     if (progress.performance) {
@@ -104,6 +145,12 @@ export function saveLocalProgress(progress) {
     if (progress.fontSize) {
       localStorage.setItem(STORAGE_KEYS.FONT_SIZE, progress.fontSize);
     }
+
+    // If this is a local change (not from remote), mark as pending
+    if (!fromRemote) {
+      markPendingChanges();
+    }
+
     console.log("✅ [SYNC] Saved to localStorage successfully");
     return true;
   } catch (error) {
@@ -203,6 +250,9 @@ export async function pushProgress(userId, progress) {
       console.error("❌ [SYNC] Supabase push error:", error);
       throw error;
     }
+
+    // Clear pending changes flag after successful push
+    clearPendingChanges();
 
     console.log("✅ [SYNC] Pushed to Supabase successfully");
     return data;
@@ -412,6 +462,14 @@ export function setupAutoSync(userId) {
   // Poll for remote changes every 5 seconds (for multi-device sync)
   const pollForChanges = async () => {
     try {
+      // Skip polling if there are pending local changes
+      if (hasPendingChanges()) {
+        console.log(
+          "⏸️ [SYNC] Skipping poll - pending local changes not yet pushed",
+        );
+        return;
+      }
+
       const remoteProgress = await pullProgress(userId);
       if (!remoteProgress) return;
 
@@ -432,8 +490,8 @@ export function setupAutoSync(userId) {
           // Merge remote changes with local
           const mergedProgress = mergeProgress(localProgress, remoteProgress);
 
-          // Save merged data locally
-          saveLocalProgress(mergedProgress);
+          // Save merged data locally (mark as from remote to avoid setting pending flag)
+          saveLocalProgress(mergedProgress, true);
 
           // Update timestamp
           localStorage.setItem(
