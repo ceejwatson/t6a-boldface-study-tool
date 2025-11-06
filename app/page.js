@@ -483,9 +483,32 @@ export default function T6AEnhancedStudyTool() {
         }
         return prev;
       });
+
+      // Remove from unknownFlashcards if it was there
+      setUnknownFlashcards((prev) =>
+        prev.filter((id) => id !== currentQuestion.id),
+      );
+
+      // Remove from current review session
+      setCurrentQuestions((prev) => {
+        const filtered = prev.filter((q) => q.id !== currentQuestion.id);
+
+        // If this was the last question, finish the session
+        if (filtered.length === 0) {
+          setActiveTab("studycomplete");
+          return prev;
+        }
+
+        // Stay on same index (which will now show the next question)
+        // Don't call handleNext since we're already removing and repositioning
+        return filtered;
+      });
+
+      // Don't call handleNext - we already handled navigation by removing the question
+      return;
     }
 
-    // Move to next question
+    // For "Don't Know", just move to next question
     handleNext();
   };
 
@@ -825,11 +848,35 @@ export default function T6AEnhancedStudyTool() {
   const toggleFlag = () => {
     if (!currentQuestion) return;
 
-    if (flaggedQuestions.includes(currentQuestion.id)) {
+    const wasFlaged = flaggedQuestions.includes(currentQuestion.id);
+
+    if (wasFlaged) {
+      // Unflagging - remove from flagged list
       setFlaggedQuestions((prev) =>
         prev.filter((id) => id !== currentQuestion.id),
       );
+
+      // If in flagged review mode, remove this question from current session
+      if (studyMode === "flagged" || reviewIncorrectOnly) {
+        setCurrentQuestions((prev) => {
+          const filtered = prev.filter((q) => q.id !== currentQuestion.id);
+
+          // If this was the last question, go back to home
+          if (filtered.length === 0) {
+            setActiveTab("home");
+            return prev;
+          }
+
+          // Adjust current index if needed
+          if (currentQuestionIndex >= filtered.length) {
+            setCurrentQuestionIndex(filtered.length - 1);
+          }
+
+          return filtered;
+        });
+      }
     } else {
+      // Flagging - add to flagged list
       setFlaggedQuestions((prev) => [...prev, currentQuestion.id]);
     }
 
