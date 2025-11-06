@@ -365,7 +365,9 @@ export default function MatchItems({
               </div>
 
               {matches[item.index] !== undefined && (
-                <div className="flex items-center gap-1 text-xs text-slate-400 ml-2">
+                <div
+                  className={`flex items-center gap-1 text-xs ml-2 ${darkMode ? "text-slate-300" : "text-slate-600"}`}
+                >
                   <ArrowRight className="w-3 h-3" />
                   <span>
                     {
@@ -460,7 +462,7 @@ export default function MatchItems({
                       {pair.left}
                     </span>
                     <ArrowRight
-                      className={`w-3 h-3 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                      className={`w-3 h-3 ${darkMode ? "text-slate-300" : "text-slate-600"}`}
                     />
                     <span
                       className={darkMode ? "text-white" : "text-slate-800"}
@@ -513,7 +515,7 @@ export default function MatchItems({
                     {pair.left}
                   </span>
                   <ArrowRight
-                    className={`w-4 h-4 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                    className={`w-4 h-4 ${darkMode ? "text-slate-300" : "text-slate-600"}`}
                   />
                   <span className={darkMode ? "text-white" : "text-slate-900"}>
                     {pair.right}
