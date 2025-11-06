@@ -965,7 +965,7 @@ export default function T6AEnhancedStudyTool() {
             </div>
 
             <div className="flex items-center gap-2 sm:gap-4">
-              {/* Font Size Selector */}
+              {/* Font Size Selector - Mobile Optimized */}
               <div className="flex items-center gap-2">
                 <span
                   className={`text-xs ${darkMode ? "text-slate-400" : "text-slate-600"} hidden sm:inline`}
@@ -975,7 +975,7 @@ export default function T6AEnhancedStudyTool() {
                 <div className="flex items-center gap-1 bg-slate-800/50 p-1 rounded-lg">
                   <button
                     onClick={() => setFontSize("small")}
-                    className={`px-2 py-1 rounded text-xs font-medium transition ${
+                    className={`min-w-[36px] min-h-[36px] px-2 py-1 rounded text-xs font-medium transition touch-manipulation ${
                       fontSize === "small"
                         ? "bg-blue-600 text-white"
                         : "text-slate-400 hover:text-white hover:bg-slate-700"
@@ -986,7 +986,7 @@ export default function T6AEnhancedStudyTool() {
                   </button>
                   <button
                     onClick={() => setFontSize("medium")}
-                    className={`px-2 py-1 rounded text-sm font-medium transition ${
+                    className={`min-w-[36px] min-h-[36px] px-2 py-1 rounded text-sm font-medium transition touch-manipulation ${
                       fontSize === "medium"
                         ? "bg-blue-600 text-white"
                         : "text-slate-400 hover:text-white hover:bg-slate-700"
@@ -997,7 +997,7 @@ export default function T6AEnhancedStudyTool() {
                   </button>
                   <button
                     onClick={() => setFontSize("large")}
-                    className={`px-2 py-1 rounded text-base font-medium transition ${
+                    className={`min-w-[36px] min-h-[36px] px-2 py-1 rounded text-base font-medium transition touch-manipulation ${
                       fontSize === "large"
                         ? "bg-blue-600 text-white"
                         : "text-slate-400 hover:text-white hover:bg-slate-700"
@@ -1008,7 +1008,7 @@ export default function T6AEnhancedStudyTool() {
                   </button>
                   <button
                     onClick={() => setFontSize("xlarge")}
-                    className={`px-2 py-1 rounded text-lg font-medium transition ${
+                    className={`min-w-[36px] min-h-[36px] px-2 py-1 rounded text-lg font-medium transition touch-manipulation ${
                       fontSize === "xlarge"
                         ? "bg-blue-600 text-white"
                         : "text-slate-400 hover:text-white hover:bg-slate-700"
@@ -3050,11 +3050,11 @@ export default function T6AEnhancedStudyTool() {
                 </div>
               )}
 
-              {/* Navigation - Fixed at Bottom */}
+              {/* Navigation - Fixed at Bottom - Mobile Optimized */}
               <div
-                className={`fixed bottom-0 left-0 right-0 ${darkMode ? "bg-slate-900/95" : "bg-white/95"} backdrop-blur-sm border-t ${darkMode ? "border-slate-700" : "border-slate-300"} p-2 shadow-2xl z-10`}
+                className={`fixed bottom-0 left-0 right-0 ${darkMode ? "bg-slate-900/95" : "bg-white/95"} backdrop-blur-sm border-t ${darkMode ? "border-slate-700" : "border-slate-300"} p-3 sm:p-4 shadow-2xl z-10 safe-area-bottom`}
               >
-                <div className="max-w-4xl mx-auto flex justify-between items-center gap-2">
+                <div className="max-w-4xl mx-auto flex justify-between items-center gap-3">
                   {viewingSingleQuestion ? (
                     <button
                       onClick={() => {
@@ -3075,7 +3075,7 @@ export default function T6AEnhancedStudyTool() {
                       <button
                         onClick={handlePrevious}
                         disabled={currentQuestionIndex === 0}
-                        className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 text-sm touch-manipulation ${
+                        className={`min-h-[48px] px-5 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2 text-base touch-manipulation shadow-sm ${
                           currentQuestionIndex === 0
                             ? darkMode
                               ? "bg-slate-800 text-slate-600 cursor-not-allowed"
@@ -3085,10 +3085,8 @@ export default function T6AEnhancedStudyTool() {
                               : "bg-white hover:bg-slate-100 text-slate-900 active:scale-95"
                         }`}
                       >
-                        <ChevronRight className="w-4 h-4 rotate-180" />
-                        <span className="hidden sm:inline text-sm">
-                          Previous
-                        </span>
+                        <ChevronRight className="w-5 h-5 rotate-180" />
+                        <span className="hidden sm:inline">Previous</span>
                       </button>
 
                       {/* Submit button for reorder sequence - ALWAYS visible */}
@@ -3111,7 +3109,7 @@ export default function T6AEnhancedStudyTool() {
                                 }
                               }
                             }}
-                            className="bg-green-600 hover:bg-green-700 active:scale-95 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 text-sm touch-manipulation"
+                            className="min-h-[48px] bg-green-600 hover:bg-green-700 active:scale-95 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 text-base touch-manipulation shadow-sm"
                           >
                             Submit
                           </button>
@@ -3127,7 +3125,7 @@ export default function T6AEnhancedStudyTool() {
                               setShowExplanation(true);
                               updatePerformance(currentQuestion, false);
                             }}
-                            className="bg-green-600 hover:bg-green-700 active:scale-95 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 text-sm touch-manipulation"
+                            className="min-h-[48px] bg-green-600 hover:bg-green-700 active:scale-95 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 text-base touch-manipulation shadow-sm"
                           >
                             Submit
                           </button>
@@ -3138,32 +3136,32 @@ export default function T6AEnhancedStudyTool() {
                       showExplanation ? (
                         <button
                           onClick={() => setActiveTab("results")}
-                          className="px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-1 bg-orange-600 hover:bg-orange-700 active:scale-95 text-white text-sm touch-manipulation"
+                          className="min-h-[48px] px-6 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2 bg-orange-600 hover:bg-orange-700 active:scale-95 text-white text-base touch-manipulation shadow-sm"
                         >
                           <span className="hidden sm:inline">Finish</span>
-                          <CheckCircle2 className="w-4 h-4" />
+                          <CheckCircle2 className="w-5 h-5" />
                         </button>
                       ) : currentQuestionIndex ===
                           currentQuestions.length - 1 &&
                         studyMode !== "quiz" ? (
                         <button
                           onClick={() => setActiveTab("studycomplete")}
-                          className="px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-1 bg-green-600 hover:bg-green-700 active:scale-95 text-white text-sm touch-manipulation"
+                          className="min-h-[48px] px-6 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 active:scale-95 text-white text-base touch-manipulation shadow-sm"
                         >
                           <span className="hidden sm:inline">Finish</span>
-                          <CheckCircle2 className="w-4 h-4" />
+                          <CheckCircle2 className="w-5 h-5" />
                         </button>
                       ) : (
                         <button
                           onClick={handleNext}
-                          className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 text-sm touch-manipulation ${
+                          className={`min-h-[48px] px-5 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2 text-base touch-manipulation shadow-sm ${
                             darkMode
                               ? "bg-slate-700 hover:bg-slate-600 text-white active:scale-95"
                               : "bg-white hover:bg-slate-100 text-slate-900 active:scale-95"
                           }`}
                         >
-                          <span className="hidden sm:inline text-sm">Next</span>
-                          <ChevronRight className="w-4 h-4" />
+                          <span className="hidden sm:inline">Next</span>
+                          <ChevronRight className="w-5 h-5" />
                         </button>
                       )}
                     </>
