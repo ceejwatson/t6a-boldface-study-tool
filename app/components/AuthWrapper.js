@@ -128,8 +128,8 @@ export default function AuthWrapper({ children }) {
         try {
           const result = await syncProgress(user.id);
           if (result.success) {
-            setSyncStatus("synced");
-            setTimeout(() => setSyncStatus("idle"), 1500);
+            // Silently set to idle - no "Synced!" indicator for automatic syncs
+            setSyncStatus("idle");
           } else {
             setSyncStatus("error");
             setTimeout(() => setSyncStatus("idle"), 2000);
@@ -143,9 +143,7 @@ export default function AuthWrapper({ children }) {
         }
       }, 2000); // Wait 2 seconds after last action
 
-      console.log(
-        "⏱️ [SYNC] Sync queued - will sync in 2 seconds if no more actions",
-      );
+      // Silent queuing - no console log spam
     };
   })();
 
