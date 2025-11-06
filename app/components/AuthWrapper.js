@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, createContext, useContext } from "react";
 import { supabase } from "../lib/supabase";
 import {
   syncProgress,
@@ -10,6 +10,17 @@ import {
 import Auth from "./Auth";
 import UserProfile from "./UserProfile";
 import { Loader2, Cloud, CloudOff, CheckCircle } from "lucide-react";
+
+// Create Sync Context to provide sync function throughout the app
+const SyncContext = createContext(null);
+
+export const useSync = () => {
+  const context = useContext(SyncContext);
+  if (!context) {
+    return { triggerSync: () => {}, isSyncing: false }; // Return no-op for guest mode
+  }
+  return context;
+};
 
 export default function AuthWrapper({ children }) {
   const [user, setUser] = useState(null);
@@ -66,6 +77,14 @@ export default function AuthWrapper({ children }) {
       if (result.success) {
         setSyncStatus("synced");
         setTimeout(() => setSyncStatus("idle"), 2000);
+
+        // Dispatch custom event to notify app that sync is complete
+        // This allows the main app to reload data from localStorage
+        window.dispatchEvent(
+          new CustomEvent("supabase-sync-complete", {
+            detail: { userId, timestamp: Date.now() },
+          }),
+        );
       } else {
         setSyncStatus("error");
         setTimeout(() => setSyncStatus("idle"), 3000);
@@ -74,6 +93,35 @@ export default function AuthWrapper({ children }) {
       console.error("Initial sync failed:", error);
       setSyncStatus("error");
       setTimeout(() => setSyncStatus("idle"), 3000);
+    } finally {
+      setSyncing(false);
+    }
+  };
+
+  // Manual sync trigger for immediate syncing after actions
+  const triggerSync = async () => {
+    if (!user || user.isGuest || !user.id || syncing) {
+      console.log("⏭️ [SYNC] Skipping sync - guest mode or already syncing");
+      return;
+    }
+
+    console.log("🚀 [SYNC] Manual sync triggered by user action");
+    setSyncing(true);
+    setSyncStatus("syncing");
+
+    try {
+      const result = await syncProgress(user.id);
+      if (result.success) {
+        setSyncStatus("synced");
+        setTimeout(() => setSyncStatus("idle"), 1500);
+      } else {
+        setSyncStatus("error");
+        setTimeout(() => setSyncStatus("idle"), 2000);
+      }
+    } catch (error) {
+      console.error("❌ [SYNC] Manual sync failed:", error);
+      setSyncStatus("error");
+      setTimeout(() => setSyncStatus("idle"), 2000);
     } finally {
       setSyncing(false);
     }
@@ -114,46 +162,48 @@ export default function AuthWrapper({ children }) {
 
   // User is logged in - show app with user profile
   return (
-    <div className="animate-fade-in">
-      {/* Sync Status Indicator - Fixed position */}
-      {syncStatus !== "idle" && (
-        <div className="fixed top-4 right-4 z-50">
-          <div
-            className={`px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 ${
-              syncStatus === "syncing"
-                ? "bg-blue-600 text-white"
-                : syncStatus === "synced"
-                  ? "bg-green-600 text-white"
-                  : "bg-red-600 text-white"
-            }`}
-          >
-            {syncStatus === "syncing" && (
-              <>
-                <Loader2 className="animate-spin" size={16} />
-                <span className="text-sm font-medium">Syncing...</span>
-              </>
-            )}
-            {syncStatus === "synced" && (
-              <>
-                <CheckCircle size={16} />
-                <span className="text-sm font-medium">Synced!</span>
-              </>
-            )}
-            {syncStatus === "error" && (
-              <>
-                <CloudOff size={16} />
-                <span className="text-sm font-medium">Sync failed</span>
-              </>
-            )}
+    <SyncContext.Provider value={{ triggerSync, isSyncing: syncing }}>
+      <div className="animate-fade-in">
+        {/* Sync Status Indicator - Fixed position */}
+        {syncStatus !== "idle" && (
+          <div className="fixed top-4 right-4 z-50">
+            <div
+              className={`px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 ${
+                syncStatus === "syncing"
+                  ? "bg-blue-600 text-white"
+                  : syncStatus === "synced"
+                    ? "bg-green-600 text-white"
+                    : "bg-red-600 text-white"
+              }`}
+            >
+              {syncStatus === "syncing" && (
+                <>
+                  <Loader2 className="animate-spin" size={16} />
+                  <span className="text-sm font-medium">Syncing...</span>
+                </>
+              )}
+              {syncStatus === "synced" && (
+                <>
+                  <CheckCircle size={16} />
+                  <span className="text-sm font-medium">Synced!</span>
+                </>
+              )}
+              {syncStatus === "error" && (
+                <>
+                  <CloudOff size={16} />
+                  <span className="text-sm font-medium">Sync failed</span>
+                </>
+              )}
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* User Profile - This will be rendered at the top of the app */}
-      <UserProfile user={user} onLogout={handleLogout} />
+        {/* User Profile - This will be rendered at the top of the app */}
+        <UserProfile user={user} onLogout={handleLogout} />
 
-      {/* Main App Content */}
-      {children}
-    </div>
+        {/* Main App Content */}
+        {children}
+      </div>
+    </SyncContext.Provider>
   );
 }

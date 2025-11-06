@@ -25,6 +25,8 @@ import {
   Gauge,
 } from "lucide-react";
 
+import { useSync } from "./components/AuthWrapper";
+
 import MultipleChoice from "./components/MultipleChoice";
 import TrueFalse from "./components/TrueFalse";
 import ReorderSequence from "./components/ReorderSequence";
@@ -53,6 +55,9 @@ import {
 import { questionDatabase, getLimitationQuestions } from "./questionData";
 
 export default function T6AEnhancedStudyTool() {
+  // Get sync function from context
+  const { triggerSync, isSyncing } = useSync();
+
   // UI State - Dark mode only
   const darkMode = true; // Always dark mode
   const [activeTab, setActiveTab] = useState("home");
@@ -106,8 +111,8 @@ export default function T6AEnhancedStudyTool() {
   // Track flashcards marked as "Don't Know" for focused study
   const [fontSize, setFontSize] = useState("medium"); // 'small', 'medium', 'large'
 
-  // Load saved data
-  useEffect(() => {
+  // Function to load data from localStorage
+  const loadDataFromLocalStorage = () => {
     const savedPerformance = localStorage.getItem("t6a-performance");
     const savedFlags = localStorage.getItem("t6a-flagged");
     const savedSRS = localStorage.getItem("t6a-srs");
@@ -123,6 +128,11 @@ export default function T6AEnhancedStudyTool() {
     if (savedMastery) setQuestionMastery(JSON.parse(savedMastery));
     if (savedUnknown) setUnknownFlashcards(JSON.parse(savedUnknown));
     if (savedFontSize) setFontSize(savedFontSize);
+  };
+
+  // Load saved data on mount
+  useEffect(() => {
+    loadDataFromLocalStorage();
 
     // Don't auto-load questions - wait for user to configure study setup
 
@@ -136,6 +146,26 @@ export default function T6AEnhancedStudyTool() {
       });
     });
     setSelectedTopics(allCategories);
+  }, []);
+
+  // Listen for Supabase sync completion and reload data
+  useEffect(() => {
+    const handleSyncComplete = (event) => {
+      console.log("🎯 [APP] Received sync-complete event:", event.detail);
+      console.log(
+        "🔄 [APP] Reloading all data from localStorage into React state...",
+      );
+      loadDataFromLocalStorage();
+      console.log("✅ [APP] State reloaded successfully");
+    };
+
+    console.log("👂 [APP] Setting up sync-complete event listener");
+    window.addEventListener("supabase-sync-complete", handleSyncComplete);
+
+    return () => {
+      console.log("🔌 [APP] Cleaning up sync-complete event listener");
+      window.removeEventListener("supabase-sync-complete", handleSyncComplete);
+    };
   }, []);
 
   // Save performance
@@ -616,6 +646,10 @@ export default function T6AEnhancedStudyTool() {
 
     // Update SRS data using SM-2 algorithm
     updateSRS(question, isCorrect);
+
+    // Trigger immediate sync after answering question
+    console.log("💫 [APP] Triggering sync after question answered");
+    triggerSync();
   };
 
   // SM-2 Spaced Repetition Algorithm
@@ -798,6 +832,10 @@ export default function T6AEnhancedStudyTool() {
     } else {
       setFlaggedQuestions((prev) => [...prev, currentQuestion.id]);
     }
+
+    // Trigger immediate sync after flagging
+    console.log("💫 [APP] Triggering sync after flag toggle");
+    triggerSync();
   };
 
   // Helper function for font size classes
@@ -2693,6 +2731,12 @@ export default function T6AEnhancedStudyTool() {
                         [currentQuestion.id]: updatedCard,
                       };
                     });
+
+                    // Trigger immediate sync after flashcard rating
+                    console.log(
+                      "💫 [APP] Triggering sync after flashcard rating",
+                    );
+                    triggerSync();
 
                     // Move to next card
                     if (currentQuestionIndex < currentQuestions.length - 1) {
