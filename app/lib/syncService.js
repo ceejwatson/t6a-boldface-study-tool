@@ -366,6 +366,11 @@ export async function syncProgress(userId, notifyApp = true) {
     await pushProgress(userId, mergedProgress);
     console.log("⬆️ [SYNC] Step 5/5: Merged progress pushed to remote");
 
+    // Update local timestamp to track last sync
+    if (typeof window !== "undefined" && localStorage) {
+      localStorage.setItem("t6a-last-sync-timestamp", Date.now().toString());
+    }
+
     // Notify app to reload data if requested (for auto-sync and manual sync)
     if (notifyApp && typeof window !== "undefined") {
       console.log("📢 [SYNC] Dispatching sync-complete event to app");
@@ -396,11 +401,61 @@ export async function syncProgress(userId, notifyApp = true) {
  */
 export function setupAutoSync(userId) {
   let syncInterval;
+  let pollInterval;
 
   const performSync = () => {
     syncProgress(userId).catch((err) => {
       console.error("Auto-sync failed:", err);
     });
+  };
+
+  // Poll for remote changes every 5 seconds (for multi-device sync)
+  const pollForChanges = async () => {
+    try {
+      const remoteProgress = await pullProgress(userId);
+      if (!remoteProgress) return;
+
+      // Get local timestamp
+      const localProgress = getLocalProgress();
+      const localTimestamp = localStorage.getItem("t6a-last-sync-timestamp");
+
+      // If remote has been updated more recently, pull and merge
+      if (remoteProgress.updatedAt) {
+        const remoteTime = new Date(remoteProgress.updatedAt).getTime();
+        const localTime = localTimestamp ? parseInt(localTimestamp) : 0;
+
+        if (remoteTime > localTime) {
+          console.log(
+            "🔔 [SYNC] Detected changes from another device! Pulling updates...",
+          );
+
+          // Merge remote changes with local
+          const mergedProgress = mergeProgress(localProgress, remoteProgress);
+
+          // Save merged data locally
+          saveLocalProgress(mergedProgress);
+
+          // Update timestamp
+          localStorage.setItem(
+            "t6a-last-sync-timestamp",
+            remoteTime.toString(),
+          );
+
+          // Notify app to reload
+          if (typeof window !== "undefined") {
+            window.dispatchEvent(
+              new CustomEvent("supabase-sync-complete", {
+                detail: { userId, timestamp: Date.now(), source: "poll" },
+              }),
+            );
+          }
+
+          console.log("✅ [SYNC] Multi-device sync completed");
+        }
+      }
+    } catch (error) {
+      console.error("❌ [SYNC] Poll failed:", error);
+    }
   };
 
   // Sync when tab becomes visible
@@ -412,8 +467,11 @@ export function setupAutoSync(userId) {
 
   document.addEventListener("visibilitychange", handleVisibilityChange);
 
-  // Sync every 2 minutes
+  // Full sync every 2 minutes
   syncInterval = setInterval(performSync, 2 * 60 * 1000);
+
+  // Poll for changes every 5 seconds
+  pollInterval = setInterval(pollForChanges, 5 * 1000);
 
   // Initial sync
   performSync();
@@ -422,6 +480,7 @@ export function setupAutoSync(userId) {
   return () => {
     document.removeEventListener("visibilitychange", handleVisibilityChange);
     clearInterval(syncInterval);
+    clearInterval(pollInterval);
   };
 }
 
