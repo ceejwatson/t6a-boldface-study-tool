@@ -23,6 +23,11 @@ html {
     background-color: #0a0a0a;
     min-height: 100vh;
     min-height: -webkit-fill-available;
+    /* Prevent iOS bounce/overscroll */
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+    height: 100%;
 }
 
 body {
@@ -33,6 +38,13 @@ body {
     min-height: -webkit-fill-available;
     padding: env(safe-area-inset-top) env(safe-area-inset-right)
         env(safe-area-inset-bottom) env(safe-area-inset-left);
+    /* Prevent iOS bounce/overscroll */
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: none;
 }
 
 #__next,
@@ -40,6 +52,11 @@ body {
     min-height: 100vh;
     min-height: -webkit-fill-available;
     background-color: #0a0a0a;
+    /* Allow internal scrolling but prevent overscroll */
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: none;
+    height: 100%;
 }
 
 /* Smooth transition animations */

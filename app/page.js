@@ -1091,7 +1091,10 @@ export default function T6AEnhancedStudyTool() {
         </div>
       </header>
 
-      <main className="flex-1 overflow-y-auto">
+      <main
+        className="flex-1 overflow-y-auto overscroll-none"
+        style={{ WebkitOverflowScrolling: "touch", overscrollBehavior: "none" }}
+      >
         <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-8">
           {/* Simplified Navigation Bar - Only show when not on home screen */}
           {activeTab !== "home" && (
