@@ -794,6 +794,93 @@ export const questionDatabase = {
         "NO - Wet runway maximum crosswind is 10 knots. Winds from 090° on runway 18 (180°) create a 90° crosswind angle, so the full 12 knots is crosswind component. This exceeds the 10 knot wet runway limit. If the runway were dry, you'd be within the 25 knot limit, but standing water makes it wet.",
       limitation: true,
     },
+    {
+      id: "mc-101",
+      category: "Fuel",
+      topic: "Fuel States",
+      difficulty: "high",
+      question:
+        "What is the minimum fuel quantity for declaring 'Minimum Fuel' with dual crew?",
+      options: ["100 lbs", "150 lbs", "200 lbs", "250 lbs"],
+      correctAnswer: 1,
+      explanation:
+        "Minimum Fuel (dual crew) is 150 lbs. This fuel state tells ATC you need priority handling but it's not yet an emergency. Minimum Fuel solo is 200 lbs due to less efficient CG. Emergency Fuel is 100 lbs.",
+      limitation: true,
+    },
+    {
+      id: "mc-102",
+      category: "Propulsion",
+      topic: "ITT Limits",
+      difficulty: "high",
+      question:
+        "What is the maximum ITT for takeoff and maximum continuous power?",
+      options: ["750°C", "820°C", "870°C", "1000°C"],
+      correctAnswer: 1,
+      explanation:
+        "Maximum ITT for takeoff and maximum continuous power is 820°C. Idle max is 750°C, transient (20 sec) is 821-870°C, and above 871°C indicates severe damage and the engine should not be restarted.",
+      limitation: true,
+    },
+    {
+      id: "mc-103",
+      category: "Airspeed",
+      topic: "Critical Speeds",
+      difficulty: "medium",
+      question: "What is the best glide speed (zoom/glide) for the T-6A?",
+      options: ["100 KIAS", "125 KIAS", "150 KIAS", "175 KIAS"],
+      correctAnswer: 1,
+      explanation:
+        "Best glide speed is 125 KIAS. This speed provides the optimal balance between energy conservation and controllability during an engine-out emergency pattern.",
+      limitation: true,
+    },
+    {
+      id: "mc-104",
+      category: "Wind Limits",
+      topic: "Crosswind",
+      difficulty: "medium",
+      question: "What is the maximum crosswind limit for a dry runway?",
+      options: ["15 knots", "20 knots", "25 knots", "30 knots"],
+      correctAnswer: 2,
+      explanation:
+        "Maximum crosswind for a dry runway is 25 knots. This reduces to 20 knots for touch-and-go, 10 knots for wet runway, and 5 knots for icy runway.",
+      limitation: true,
+    },
+    {
+      id: "mc-105",
+      category: "Propulsion",
+      topic: "Oil Pressure",
+      difficulty: "high",
+      question:
+        "What is the minimum oil pressure required for takeoff and maximum power?",
+      options: ["15 PSI", "40 PSI", "90 PSI", "120 PSI"],
+      correctAnswer: 2,
+      explanation:
+        "Minimum oil pressure for takeoff and maximum power is 90 PSI (range is 90-120 PSI). Idle minimum is 15 PSI, and the absolute maximum limit is 200 PSI.",
+      limitation: true,
+    },
+    {
+      id: "mc-106",
+      category: "Propulsion",
+      topic: "Engine Parameters",
+      difficulty: "medium",
+      question: "What is the Np (propeller speed) idle range?",
+      options: ["30-40%", "46-50%", "60-70%", "80-90%"],
+      correctAnswer: 1,
+      explanation:
+        "Np (propeller speed) idle range is 46-50%. N1 (gas generator turbine) idle is 60-61%. Avoid the Np resonance range of 62-80%.",
+      limitation: true,
+    },
+    {
+      id: "mc-107",
+      category: "Airspeed",
+      topic: "Mach Limits",
+      difficulty: "high",
+      question: "What is the maximum Mach number for the T-6A?",
+      options: ["0.55", "0.60", "0.67", "0.75"],
+      correctAnswer: 2,
+      explanation:
+        "Maximum Mach number is 0.67 Mach. This is the high-altitude speed limit to prevent compressibility effects and ensure structural integrity.",
+      limitation: true,
+    },
   ],
 
   // TRUE/FALSE QUESTIONS
@@ -1056,6 +1143,75 @@ export const questionDatabase = {
         "FALSE. Touch-and-go operations have a maximum crosswind of 20 knots, which is more restrictive than the normal dry runway limit of 25 knots. The reduced limit accounts for the dynamic nature of touch-and-go operations with rapidly changing weight and configuration.",
       limitation: true,
     },
+    {
+      id: "tf-101",
+      category: "G Limits",
+      topic: "Structural",
+      difficulty: "high",
+      question:
+        "The symmetric G-limits with gear and flaps extended are 0 to +2.5 Gs.",
+      correctAnswer: true,
+      explanation:
+        "TRUE. With gear and/or flaps extended, the symmetric G-limits are 0 to +2.5 Gs. These limits are much more restrictive than clean configuration (-3.5 to +7.0 Gs) because extended gear and flaps are structurally fragile. No negative Gs are allowed with gear/flaps extended.",
+      limitation: true,
+    },
+    {
+      id: "tf-102",
+      category: "Propulsion",
+      topic: "Engine",
+      difficulty: "high",
+      question: "Maximum oil temperature is 110°C.",
+      correctAnswer: false,
+      explanation:
+        "FALSE. Maximum oil temperature is 105°C. Higher temperatures reduce lubrication effectiveness and indicate cooling problems. Exceeding this limit risks engine damage.",
+      limitation: true,
+    },
+    {
+      id: "tf-103",
+      category: "Fuel",
+      topic: "Fuel States",
+      difficulty: "medium",
+      question:
+        "Emergency fuel is declared at 100 lbs regardless of crew configuration.",
+      correctAnswer: true,
+      explanation:
+        "TRUE. Emergency fuel is 100 lbs for both solo and dual operations. This requires immediate landing. Note that minimum fuel varies: 150 lbs dual, 200 lbs solo.",
+      limitation: true,
+    },
+    {
+      id: "tf-104",
+      category: "Wind Limits",
+      topic: "Crosswind",
+      difficulty: "medium",
+      question: "The maximum crosswind on an icy runway is 10 knots.",
+      correctAnswer: false,
+      explanation:
+        "FALSE. Maximum crosswind on an icy runway is only 5 knots. Minimal friction makes directional control extremely difficult. Wet runway is 10 knots, dry runway is 25 knots.",
+      limitation: true,
+    },
+    {
+      id: "tf-105",
+      category: "Propulsion",
+      topic: "ITT Limits",
+      difficulty: "high",
+      question:
+        "Transient ITT between 821-870°C is allowed for up to 20 seconds.",
+      correctAnswer: true,
+      explanation:
+        "TRUE. Transient ITT of 821-870°C is permitted for 20 seconds during power changes. Normal max is 820°C. Above 871°C indicates severe damage and the engine should not be restarted.",
+      limitation: true,
+    },
+    {
+      id: "tf-106",
+      category: "Airspeed",
+      topic: "Critical Speeds",
+      difficulty: "medium",
+      question: "VNE (Never Exceed Speed) for the T-6A is 320 KIAS.",
+      correctAnswer: false,
+      explanation:
+        "FALSE. VNE is 316 KIAS, not 320 KIAS. This is the maximum airspeed in clean configuration to prevent structural damage. At high altitude, the limiting factor becomes 0.67 Mach.",
+      limitation: true,
+    },
   ],
 
   // REORDER/SEQUENCE QUESTIONS
@@ -1183,67 +1339,6 @@ export const questionDatabase = {
       explanation:
         "BOLDFACE for ejection. When the decision to eject is made, PULL THE EJECTION HANDLE immediately. Don't waste time with other actions. The ejection sequence is automatic: canopy jettisons, seat fires, you separate from seat, parachute deploys. Hesitation costs altitude and can be fatal. Brief ejection decision altitude before every flight.",
       limitation: false,
-    },
-    // Additional reorderSequence for flashcard practice
-    {
-      id: "seq-16",
-      category: "Limitations",
-      topic: "Critical Speeds",
-      difficulty: "high",
-      question: "Order these speeds from slowest to fastest:",
-      correctOrder: ["Best Glide (125 KIAS)", "VLE/VFE (150 KIAS)", "VNE (316 KIAS)"],
-      explanation: "Key airspeed limits in order: Best glide speed for emergency pattern, gear/flap extension speed, and never exceed speed.",
-      limitation: true,
-    },
-    {
-      id: "seq-17",
-      category: "Fuel",
-      topic: "Fuel States",
-      difficulty: "medium",
-      question: "Order these fuel states from most to least fuel:",
-      correctOrder: ["Normal Recovery (200 lbs)", "Minimum Fuel (150 lbs)", "Emergency Fuel (100 lbs)"],
-      explanation: "Fuel states in descending order: Normal recovery, minimum fuel, emergency fuel.",
-      limitation: true,
-    },
-    {
-      id: "seq-18",
-      category: "Propulsion",
-      topic: "ITT Limits",
-      difficulty: "high",
-      question: "Order these ITT limits from lowest to highest:",
-      correctOrder: ["Idle Max (750°C)", "Takeoff Max (820°C)", "Transient 20s (870°C)"],
-      explanation: "ITT limits in ascending order: Idle maximum, takeoff maximum, transient allowable.",
-      limitation: true,
-    },
-    {
-      id: "seq-19",
-      category: "G Limits",
-      topic: "Structural",
-      difficulty: "critical",
-      question: "What are the symmetric clean G-limits?",
-      correctOrder: ["-3.5 G", "0 G", "+7.0 G"],
-      explanation: "Symmetric clean configuration G-limits: negative 3.5, zero, positive 7.0 Gs.",
-      limitation: true,
-    },
-    {
-      id: "seq-20",
-      category: "Wind Limits",
-      topic: "Crosswind",
-      difficulty: "medium",
-      question: "Order crosswind limits from highest to lowest:",
-      correctOrder: ["Dry (25 kts)", "Touch-n-Go (20 kts)", "Wet (10 kts)", "Icy (5 kts)"],
-      explanation: "Crosswind limits decrease with reduced friction: dry, touch-and-go, wet, icy.",
-      limitation: true,
-    },
-    {
-      id: "seq-23",
-      category: "Propulsion",
-      topic: "Oil Pressure",
-      difficulty: "high",
-      question: "Order oil pressure parameters from lowest to highest:",
-      correctOrder: ["Idle Min (15 PSI)", "Takeoff Min (90 PSI)", "Takeoff Max (120 PSI)", "System Max (200 PSI)"],
-      explanation: "Oil pressure ranges: idle minimum, takeoff range, absolute maximum.",
-      limitation: true,
     },
   ],
 
@@ -1407,7 +1502,8 @@ export const questionDatabase = {
         { left: "Minimum (Solo)", right: "200 lbs" },
         { left: "Emergency", right: "100 lbs" },
       ],
-      explanation: "Know your fuel states for proper radio calls and decision making.",
+      explanation:
+        "Know your fuel states for proper radio calls and decision making.",
       limitation: true,
     },
     {
@@ -1422,7 +1518,8 @@ export const questionDatabase = {
         { left: "Max ITT Idle", right: "750°C" },
         { left: "Transient ITT (20s)", right: "870°C" },
       ],
-      explanation: "Engine operating limits - critical for engine health and safety.",
+      explanation:
+        "Engine operating limits - critical for engine health and safety.",
       limitation: true,
     },
     {
@@ -1452,7 +1549,8 @@ export const questionDatabase = {
         { left: "Icy Runway", right: "5 kts" },
         { left: "Touch & Go", right: "20 kts" },
       ],
-      explanation: "Crosswind limits decrease significantly with reduced runway friction.",
+      explanation:
+        "Crosswind limits decrease significantly with reduced runway friction.",
       limitation: true,
     },
     {
@@ -1467,7 +1565,8 @@ export const questionDatabase = {
         { left: "Normal Ops", right: "100%" },
         { left: "Overspeed Max", right: "106%" },
       ],
-      explanation: "Np ranges: idle, resonance avoidance zone, normal, and overspeed limit.",
+      explanation:
+        "Np ranges: idle, resonance avoidance zone, normal, and overspeed limit.",
       limitation: true,
     },
     {
@@ -1482,7 +1581,8 @@ export const questionDatabase = {
         { left: "Low Pressure", right: "2850 PSI" },
         { left: "High Pressure", right: "3300 PSI" },
       ],
-      explanation: "Hydraulic pressure parameters for normal and emergency operations.",
+      explanation:
+        "Hydraulic pressure parameters for normal and emergency operations.",
       limitation: true,
     },
     {
@@ -1527,7 +1627,8 @@ export const questionDatabase = {
         { left: "Max Altitude OBOGS", right: "25,000 ft" },
         { left: "Descent Target", right: "Below 10,000 ft" },
       ],
-      explanation: "Critical oxygen system parameters for emergency procedures.",
+      explanation:
+        "Critical oxygen system parameters for emergency procedures.",
       limitation: false,
     },
     {
@@ -1617,7 +1718,8 @@ export const questionDatabase = {
         { left: "Max ITT Continuous", right: "820°C" },
         { left: "Max Oil Temp", right: "105°C" },
       ],
-      explanation: "Ambient and system temperature limits for flight operations.",
+      explanation:
+        "Ambient and system temperature limits for flight operations.",
       limitation: true,
     },
     {
@@ -1691,7 +1793,8 @@ export const questionDatabase = {
       difficulty: "critical",
       question: "What is VNE?",
       answer: "316 KIAS or 0.67 Mach, whichever is lower",
-      explanation: "VNE (Never Exceed Speed) is the maximum operating speed. Exceeding this risks structural failure.",
+      explanation:
+        "VNE (Never Exceed Speed) is the maximum operating speed. Exceeding this risks structural failure.",
       limitation: true,
     },
     {
@@ -1721,7 +1824,8 @@ export const questionDatabase = {
       difficulty: "critical",
       question: "What is maximum takeoff torque?",
       answer: "100%",
-      explanation: "Maximum torque limit for takeoff to protect engine and propeller.",
+      explanation:
+        "Maximum torque limit for takeoff to protect engine and propeller.",
       limitation: true,
     },
     {
@@ -1731,7 +1835,8 @@ export const questionDatabase = {
       difficulty: "critical",
       question: "What is maximum ITT for takeoff?",
       answer: "820°C",
-      explanation: "Maximum Interstage Turbine Temperature for takeoff/max continuous power.",
+      explanation:
+        "Maximum Interstage Turbine Temperature for takeoff/max continuous power.",
       limitation: true,
     },
     {
@@ -1751,7 +1856,8 @@ export const questionDatabase = {
       difficulty: "high",
       question: "What is the transient ITT limit?",
       answer: "821-870°C for 20 seconds",
-      explanation: "Brief temperature excursions allowed during rapid power changes.",
+      explanation:
+        "Brief temperature excursions allowed during rapid power changes.",
       limitation: true,
     },
     {
@@ -1761,7 +1867,8 @@ export const questionDatabase = {
       difficulty: "critical",
       question: "Above what ITT should you NOT attempt a restart?",
       answer: "871°C",
-      explanation: "ITT above 871°C indicates severe engine damage from hot start.",
+      explanation:
+        "ITT above 871°C indicates severe engine damage from hot start.",
       limitation: true,
     },
     {
@@ -1781,7 +1888,8 @@ export const questionDatabase = {
       difficulty: "critical",
       question: "What torque percentage indicates a system malfunction?",
       answer: "Above 107%",
-      explanation: "Torque above 107% suggests PMU failure or other critical issues.",
+      explanation:
+        "Torque above 107% suggests PMU failure or other critical issues.",
       limitation: true,
     },
     {
@@ -1811,7 +1919,8 @@ export const questionDatabase = {
       difficulty: "medium",
       question: "What Np range should be avoided during ground operations?",
       answer: "62-80%",
-      explanation: "Stabilized ground operations in this range cause resonance concerns.",
+      explanation:
+        "Stabilized ground operations in this range cause resonance concerns.",
       limitation: true,
     },
     {
@@ -1821,7 +1930,8 @@ export const questionDatabase = {
       difficulty: "medium",
       question: "What is minimum N1 for ground pressurization?",
       answer: "67%",
-      explanation: "Gas generator speed required for ECS to provide adequate cabin pressurization.",
+      explanation:
+        "Gas generator speed required for ECS to provide adequate cabin pressurization.",
       limitation: true,
     },
     {
@@ -1831,7 +1941,8 @@ export const questionDatabase = {
       difficulty: "high",
       question: "What is maximum oil pressure?",
       answer: "200 PSI",
-      explanation: "Excessive oil pressure indicates blockage or relief valve failure.",
+      explanation:
+        "Excessive oil pressure indicates blockage or relief valve failure.",
       limitation: true,
     },
     {
@@ -1861,7 +1972,8 @@ export const questionDatabase = {
       difficulty: "high",
       question: "What is the transient oil temperature limit?",
       answer: "106-110°C for 10 minutes",
-      explanation: "Brief temperature excursions allowed during climbs on hot days.",
+      explanation:
+        "Brief temperature excursions allowed during climbs on hot days.",
       limitation: true,
     },
     {
@@ -1871,7 +1983,8 @@ export const questionDatabase = {
       difficulty: "medium",
       question: "What is minimum battery voltage for engine start?",
       answer: "23.5 Volts",
-      explanation: "Minimum battery voltage required to successfully start the engine.",
+      explanation:
+        "Minimum battery voltage required to successfully start the engine.",
       limitation: true,
     },
     {
@@ -1881,7 +1994,8 @@ export const questionDatabase = {
       difficulty: "critical",
       question: "What are the symmetric clean G limits?",
       answer: "-3.5 to +7.0 Gs",
-      explanation: "Maximum G limits in clean configuration with symmetric loading.",
+      explanation:
+        "Maximum G limits in clean configuration with symmetric loading.",
       limitation: true,
     },
     {
@@ -1911,7 +2025,8 @@ export const questionDatabase = {
       difficulty: "medium",
       question: "What is maximum crosswind on a dry runway?",
       answer: "25 knots",
-      explanation: "Maximum crosswind component for takeoff/landing on dry runway.",
+      explanation:
+        "Maximum crosswind component for takeoff/landing on dry runway.",
       limitation: true,
     },
     {
@@ -1921,7 +2036,8 @@ export const questionDatabase = {
       difficulty: "high",
       question: "What is maximum crosswind on a wet runway?",
       answer: "10 knots",
-      explanation: "Reduced crosswind limit due to decreased traction on wet surfaces.",
+      explanation:
+        "Reduced crosswind limit due to decreased traction on wet surfaces.",
       limitation: true,
     },
     {
@@ -1931,7 +2047,8 @@ export const questionDatabase = {
       difficulty: "high",
       question: "What is maximum crosswind on an icy runway?",
       answer: "5 knots",
-      explanation: "Minimal crosswind allowed due to near-zero friction on ice.",
+      explanation:
+        "Minimal crosswind allowed due to near-zero friction on ice.",
       limitation: true,
     },
     {
@@ -1941,7 +2058,8 @@ export const questionDatabase = {
       difficulty: "medium",
       question: "What is maximum crosswind for touch-and-go?",
       answer: "20 knots",
-      explanation: "More restrictive than normal dry runway limit due to dynamic operations.",
+      explanation:
+        "More restrictive than normal dry runway limit due to dynamic operations.",
       limitation: true,
     },
     {
@@ -1971,7 +2089,8 @@ export const questionDatabase = {
       difficulty: "high",
       question: "What is normal recovery fuel?",
       answer: "200 pounds",
-      explanation: "Normal fuel quantity for pattern, approach, and go-around if needed.",
+      explanation:
+        "Normal fuel quantity for pattern, approach, and go-around if needed.",
       limitation: true,
     },
     {
@@ -1981,7 +2100,8 @@ export const questionDatabase = {
       difficulty: "high",
       question: "What is minimum fuel (dual)?",
       answer: "150 pounds",
-      explanation: "Minimum fuel state for dual crew operations (declare to ATC).",
+      explanation:
+        "Minimum fuel state for dual crew operations (declare to ATC).",
       limitation: true,
     },
     {
@@ -2001,7 +2121,8 @@ export const questionDatabase = {
       difficulty: "critical",
       question: "What is emergency fuel?",
       answer: "100 pounds",
-      explanation: "Emergency fuel requiring immediate landing at nearest suitable field.",
+      explanation:
+        "Emergency fuel requiring immediate landing at nearest suitable field.",
       limitation: true,
     },
     {
@@ -2011,7 +2132,8 @@ export const questionDatabase = {
       difficulty: "medium",
       question: "What is minimum fuel per side for aerobatics?",
       answer: "150 pounds per side",
-      explanation: "Ensures adequate fuel pressure during negative G maneuvers.",
+      explanation:
+        "Ensures adequate fuel pressure during negative G maneuvers.",
       limitation: true,
     },
     {
@@ -2021,7 +2143,8 @@ export const questionDatabase = {
       difficulty: "high",
       question: "What is maximum fuel imbalance for aerobatics?",
       answer: "50 pounds",
-      explanation: "Aerobatic maneuvers prohibited with greater than 50 pounds imbalance.",
+      explanation:
+        "Aerobatic maneuvers prohibited with greater than 50 pounds imbalance.",
       limitation: true,
     },
     {
@@ -2071,7 +2194,8 @@ export const questionDatabase = {
       difficulty: "critical",
       question: "What is minimum cloud clearance for spin entry?",
       answer: "7,000 feet above clouds",
-      explanation: "Massive buffer to ensure VMC during entire spin and recovery.",
+      explanation:
+        "Massive buffer to ensure VMC during entire spin and recovery.",
       limitation: true,
     },
     {
@@ -2081,7 +2205,8 @@ export const questionDatabase = {
       difficulty: "medium",
       question: "What is minimum ambient temperature for ground operations?",
       answer: "-23°C",
-      explanation: "Below this, hydraulic fluid becomes too viscous and systems may freeze.",
+      explanation:
+        "Below this, hydraulic fluid becomes too viscous and systems may freeze.",
       limitation: true,
     },
     {
@@ -2091,7 +2216,8 @@ export const questionDatabase = {
       difficulty: "medium",
       question: "What is maximum ambient temperature for ground operations?",
       answer: "+43°C",
-      explanation: "Above this, systems risk overheating during ground operations.",
+      explanation:
+        "Above this, systems risk overheating during ground operations.",
       limitation: true,
     },
     {
@@ -2121,7 +2247,8 @@ export const questionDatabase = {
       difficulty: "medium",
       question: "At what pressure does the overpressurization valve open?",
       answer: "4.0 PSI",
-      explanation: "Prevents excessive cabin pressurization and structural damage.",
+      explanation:
+        "Prevents excessive cabin pressurization and structural damage.",
       limitation: true,
     },
     {
@@ -2141,7 +2268,8 @@ export const questionDatabase = {
       difficulty: "medium",
       question: "What is minimum Landing Distance Available (LDA)?",
       answer: "4,000 feet",
-      explanation: "Ensures adequate stopping distance for all weight configurations.",
+      explanation:
+        "Ensures adequate stopping distance for all weight configurations.",
       limitation: true,
     },
     {
@@ -2151,7 +2279,8 @@ export const questionDatabase = {
       difficulty: "critical",
       question: "Is flight into known icing permitted?",
       answer: "NO - Prohibited",
-      explanation: "T-6A is NOT certified for flight in known icing conditions.",
+      explanation:
+        "T-6A is NOT certified for flight in known icing conditions.",
       limitation: true,
     },
     {
@@ -2171,7 +2300,8 @@ export const questionDatabase = {
       difficulty: "critical",
       question: "What is BOS duration?",
       answer: "10 minutes",
-      explanation: "Backup Oxygen System provides 10 minutes of emergency oxygen.",
+      explanation:
+        "Backup Oxygen System provides 10 minutes of emergency oxygen.",
       limitation: false,
     },
     {

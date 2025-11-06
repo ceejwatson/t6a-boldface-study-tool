@@ -2970,9 +2970,9 @@ export default function T6AEnhancedStudyTool() {
                       <div className="flex items-center gap-2">
                         <button
                           onClick={toggleFlag}
-                          className={`min-w-[44px] min-h-[44px] px-3 py-2 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2 touch-manipulation shadow-sm ${
+                          className={`min-w-[36px] min-h-[36px] px-2 py-1.5 rounded-lg font-semibold transition-all duration-200 flex items-center justify-center gap-1.5 touch-manipulation shadow-sm ${
                             flaggedQuestions.includes(currentQuestion.id)
-                              ? "bg-yellow-500 hover:bg-yellow-600 text-white scale-110"
+                              ? "bg-yellow-500 hover:bg-yellow-600 text-white"
                               : darkMode
                                 ? "bg-slate-700 text-slate-300 hover:bg-slate-600 hover:text-yellow-400"
                                 : "bg-slate-200 text-slate-700 hover:bg-slate-300"
@@ -2983,12 +2983,12 @@ export default function T6AEnhancedStudyTool() {
                               : "Flag for review"
                           }
                         >
-                          <span className="text-xl">
+                          <span className="text-base">
                             {flaggedQuestions.includes(currentQuestion.id)
                               ? "⭐"
                               : "☆"}
                           </span>
-                          <span className="hidden sm:inline text-sm">
+                          <span className="hidden sm:inline text-xs">
                             {flaggedQuestions.includes(currentQuestion.id)
                               ? "Flagged"
                               : "Flag"}
