@@ -75,6 +75,7 @@ export default function T6AEnhancedStudyTool() {
   const [currentQuestions, setCurrentQuestions] = useState([]);
   const [userAnswers, setUserAnswers] = useState({});
   const [showExplanation, setShowExplanation] = useState(false);
+  const [hideMasteredQuestions, setHideMasteredQuestions] = useState(false);
   const [selectedTopics, setSelectedTopics] = useState([]);
   const [selectedQuestionTypes, setSelectedQuestionTypes] = useState([
     "multipleChoice",
@@ -3026,74 +3027,90 @@ export default function T6AEnhancedStudyTool() {
             </div>
           ) : (
             <div className="max-w-4xl mx-auto pb-20 px-4">
-              {/* Header Bar */}
-              <div className="flex items-center justify-between mb-6">
+              {/* Mastery Progress Section */}
+              <div
+                className={`text-center mb-6 pb-6 border-b ${darkMode ? "border-slate-700" : "border-slate-200"}`}
+              >
                 <h2
-                  className={`text-lg font-medium ${darkMode ? "text-white" : "text-slate-900"}`}
+                  className={`text-lg font-semibold mb-2 ${darkMode ? "text-purple-400" : "text-purple-600"}`}
                 >
-                  Quiz
+                  Mastery Progress
                 </h2>
-                <span
-                  className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-500"}`}
+                <p
+                  className={`text-sm mb-4 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
                 >
-                  {currentQuestionIndex + 1} / {currentQuestions.length}
-                </span>
+                  {
+                    Object.values(questionMastery).filter(
+                      (m) => (m?.correctCount || 0) >= 3,
+                    ).length
+                  }{" "}
+                  / {getAllQuestions().length} questions mastered
+                  <span
+                    className={`ml-1 ${darkMode ? "text-slate-500" : "text-slate-400"}`}
+                  >
+                    (
+                    {Math.round(
+                      (Object.values(questionMastery).filter(
+                        (m) => (m?.correctCount || 0) >= 3,
+                      ).length /
+                        getAllQuestions().length) *
+                        100,
+                    )}
+                    %)
+                  </span>
+                </p>
+
+                {/* Settings Checkboxes */}
+                {studyMode === "quiz" && (
+                  <div className="flex justify-center gap-4 mb-3">
+                    <label
+                      className={`flex items-center gap-2 cursor-pointer ${darkMode ? "text-slate-300" : "text-slate-700"}`}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={hideMasteredQuestions}
+                        onChange={(e) =>
+                          setHideMasteredQuestions(e.target.checked)
+                        }
+                        className="w-4 h-4 rounded border-slate-300 text-purple-600 focus:ring-purple-500 focus:ring-offset-0"
+                      />
+                      <span className="text-sm">Hide mastered questions</span>
+                    </label>
+                    <label
+                      className={`flex items-center gap-2 cursor-pointer ${darkMode ? "text-slate-300" : "text-slate-700"}`}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={showExplanation}
+                        onChange={(e) => setShowExplanation(e.target.checked)}
+                        className="w-4 h-4 rounded border-slate-300 text-purple-600 focus:ring-purple-500 focus:ring-offset-0"
+                      />
+                      <span className="text-sm">Instant Grade</span>
+                    </label>
+                  </div>
+                )}
               </div>
 
-              {/* Question Card */}
+              {/* Progress Bar */}
+              <div className="mb-6">
+                <div
+                  className={`h-2 rounded-full overflow-hidden ${darkMode ? "bg-slate-700" : "bg-slate-200"}`}
+                >
+                  <div
+                    className="h-full bg-purple-500 transition-all duration-300 ease-out"
+                    style={{
+                      width: `${((currentQuestionIndex + 1) / currentQuestions.length) * 100}%`,
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Question Card - Minimalistic */}
               {currentQuestion ? (
                 <div
                   key={currentQuestion.id}
-                  className={`${darkMode ? "bg-slate-800/50" : "bg-white"} rounded-xl p-6 md:p-8 question-enter`}
+                  className={`${darkMode ? "bg-slate-800/30" : "bg-white"} rounded-lg p-6 md:p-8 border ${darkMode ? "border-slate-700/50" : "border-slate-200"} question-enter`}
                 >
-                  <div className="mb-4 flex items-center justify-between flex-wrap gap-2">
-                    <div className="flex items-center gap-2">
-                      {/* Show star only if mastered */}
-                      {studyMode !== "study" &&
-                        (() => {
-                          const mastery = questionMastery[currentQuestion.id];
-                          const correctCount = mastery?.correctCount || 0;
-
-                          if (correctCount >= 3) {
-                            return (
-                              <span className="text-yellow-400 text-xl">
-                                ⭐
-                              </span>
-                            );
-                          }
-                          return null;
-                        })()}
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={toggleFlag}
-                        className={`min-w-[36px] min-h-[36px] px-2 py-1.5 rounded-lg font-semibold transition-all duration-200 flex items-center justify-center gap-1.5 touch-manipulation shadow-sm ${
-                          flaggedQuestions.includes(currentQuestion.id)
-                            ? "bg-yellow-500 hover:bg-yellow-600 text-white"
-                            : darkMode
-                              ? "bg-slate-700 text-slate-300 hover:bg-slate-600 hover:text-yellow-400"
-                              : "bg-slate-200 text-slate-700 hover:bg-slate-300"
-                        }`}
-                        title={
-                          flaggedQuestions.includes(currentQuestion.id)
-                            ? "Unflag question"
-                            : "Flag for review"
-                        }
-                      >
-                        <span className="text-base">
-                          {flaggedQuestions.includes(currentQuestion.id)
-                            ? "⭐"
-                            : "☆"}
-                        </span>
-                        <span className="hidden sm:inline text-xs">
-                          {flaggedQuestions.includes(currentQuestion.id)
-                            ? "Flagged"
-                            : "Flag"}
-                        </span>
-                      </button>
-                    </div>
-                  </div>
-
                   {renderQuestion()}
                 </div>
               ) : (
@@ -3103,52 +3120,6 @@ export default function T6AEnhancedStudyTool() {
                   <p className={darkMode ? "text-slate-400" : "text-slate-600"}>
                     Loading question...
                   </p>
-                </div>
-              )}
-
-              {/* Keyboard Hints - Subtle, only on desktop */}
-              {currentQuestion && (
-                <div className="hidden md:flex justify-center mt-2 mb-2">
-                  <div
-                    className={`flex items-center gap-3 px-4 py-2 rounded-lg text-xs ${darkMode ? "bg-slate-700/50 text-slate-400" : "bg-slate-100 text-slate-600"} transition-opacity duration-300`}
-                  >
-                    <span className="flex items-center gap-1">
-                      <kbd
-                        className={`px-2 py-1 rounded ${darkMode ? "bg-slate-600" : "bg-white"} font-mono`}
-                      >
-                        ←
-                      </kbd>
-                      Previous
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <kbd
-                        className={`px-2 py-1 rounded ${darkMode ? "bg-slate-600" : "bg-white"} font-mono`}
-                      >
-                        →
-                      </kbd>
-                      Next
-                    </span>
-                    {currentQuestion.questionType === "multipleChoice" && (
-                      <span className="flex items-center gap-1">
-                        <kbd
-                          className={`px-2 py-1 rounded ${darkMode ? "bg-slate-600" : "bg-white"} font-mono`}
-                        >
-                          1-4
-                        </kbd>
-                        Select
-                      </span>
-                    )}
-                    {currentQuestion.questionType === "trueFalse" && (
-                      <span className="flex items-center gap-1">
-                        <kbd
-                          className={`px-2 py-1 rounded ${darkMode ? "bg-slate-600" : "bg-white"} font-mono`}
-                        >
-                          T/F
-                        </kbd>
-                        Answer
-                      </span>
-                    )}
-                  </div>
                 </div>
               )}
 
