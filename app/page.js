@@ -1371,243 +1371,256 @@ export default function T6AEnhancedStudyTool() {
           {/* Main Content */}
           {activeTab === "home" ? (
             <div className="max-w-4xl mx-auto px-4">
-              {/* Hero Section - Compact */}
-              <div className="text-center pt-2 sm:pt-4 pb-4 sm:pb-6 mb-4 sm:mb-8">
-                <div className="flex justify-center mb-2 sm:mb-3">
-                  <img
-                    src="/t6atransparent.png"
-                    alt="T-6A Texan II"
-                    className="w-48 sm:w-64 md:w-72 h-auto"
-                  />
-                </div>
-                <h1
-                  className={`text-2xl sm:text-3xl md:text-4xl font-bold mb-1 sm:mb-2 ${darkMode ? "text-white" : "text-slate-900"}`}
+              {/* Mastery Progress Section */}
+              <div
+                className={`max-w-2xl mx-auto mb-8 ${darkMode ? "bg-slate-800/50" : "bg-white"} rounded-2xl p-6 shadow-lg`}
+              >
+                <h2
+                  className={`text-xl font-semibold mb-4 text-center ${darkMode ? "text-white" : "text-slate-900"}`}
                 >
-                  T-6A Texan II
-                </h1>
+                  Mastery Progress
+                </h2>
                 <p
-                  className={`text-sm sm:text-base ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                  className={`text-center mb-4 ${darkMode ? "text-slate-300" : "text-slate-700"}`}
                 >
-                  BOLDFACE Study Tool
+                  {
+                    Object.values(questionMastery).filter(
+                      (m) => (m?.correctCount || 0) >= 3,
+                    ).length
+                  }{" "}
+                  / {getAllQuestions().length} questions mastered
+                  <span
+                    className={`ml-2 ${darkMode ? "text-slate-400" : "text-slate-500"}`}
+                  >
+                    (
+                    {Math.round(
+                      (Object.values(questionMastery).filter(
+                        (m) => (m?.correctCount || 0) >= 3,
+                      ).length /
+                        getAllQuestions().length) *
+                        100,
+                    )}
+                    %)
+                  </span>
                 </p>
-              </div>
 
-              {/* Main Action Buttons - Redesigned */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6 max-w-2xl mx-auto">
-                <button
-                  onClick={() => {
-                    // Auto-select all topics for quiz mode
-                    const allCategories = [
-                      ...new Set(getAllQuestions().map((q) => q.category)),
-                    ];
-                    setSelectedTopics(allCategories);
-                    setStudyMode("quiz"); // Set to quiz mode immediately
-                    setShowQuizSetup(true);
-                    setActiveTab("quizsetup");
-                  }}
-                  className={`group ${darkMode ? "bg-gradient-to-br from-orange-500/20 to-orange-600/10 hover:from-orange-500/30 hover:to-orange-600/20 border border-orange-500/30" : "bg-gradient-to-br from-orange-500 to-orange-600"} backdrop-blur-xl rounded-2xl p-4 sm:p-6 transition-all duration-300 flex flex-col items-center justify-center shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 touch-manipulation`}
-                >
-                  <div
-                    className={`${darkMode ? "bg-orange-500/40" : "bg-white/30"} p-3 sm:p-5 rounded-2xl mb-2 sm:mb-3 group-hover:scale-110 transition-transform shadow-lg`}
+                {/* Checkboxes */}
+                <div className="flex justify-center gap-6 mb-4">
+                  <label
+                    className={`flex items-center gap-2 cursor-pointer ${darkMode ? "text-slate-300" : "text-slate-700"}`}
                   >
-                    <Brain
-                      className={`w-8 h-8 sm:w-10 sm:h-10 ${darkMode ? "text-orange-200" : "text-white"}`}
-                      strokeWidth={2.5}
+                    <input
+                      type="checkbox"
+                      checked={hideMasteredQuestions}
+                      onChange={(e) =>
+                        setHideMasteredQuestions(e.target.checked)
+                      }
+                      className="w-4 h-4 rounded"
                     />
-                  </div>
-                  <h3
-                    className={`text-base sm:text-lg font-semibold ${darkMode ? "text-white" : "text-white"}`}
+                    <span className="text-sm">Hide mastered questions</span>
+                  </label>
+                  <label
+                    className={`flex items-center gap-2 cursor-pointer ${darkMode ? "text-slate-300" : "text-slate-700"}`}
                   >
-                    Quiz
-                  </h3>
-                </button>
-
-                <button
-                  onClick={() => {
-                    // Get all questions with incorrect answers
-                    const reviewQuestions = getAllQuestions().filter((q) => {
-                      const mastery = questionMastery[q.id];
-                      return mastery && mastery.incorrectCount >= 1;
-                    });
-
-                    if (reviewQuestions.length === 0) {
-                      alert(
-                        "No questions to review yet. Try taking a quiz first!",
-                      );
-                      return;
-                    }
-
-                    // Set up study mode with review questions
-                    setCurrentQuestions(reviewQuestions);
-                    setCurrentQuestionIndex(0);
-                    setUserAnswers({});
-                    setShowExplanation(false);
-                    setStudyMode("study");
-                    setReviewIncorrectOnly(true);
-                    setReviewSessionCorrect([]); // Reset review session tracking
-                    setActiveTab("study");
-                  }}
-                  className={`group ${darkMode ? "bg-gradient-to-br from-red-500/20 to-red-600/10 hover:from-red-500/30 hover:to-red-600/20 border border-red-500/30" : "bg-gradient-to-br from-red-500 to-red-600"} backdrop-blur-xl rounded-2xl p-4 sm:p-6 transition-all duration-300 flex flex-col items-center justify-center shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 touch-manipulation`}
-                >
-                  <div
-                    className={`${darkMode ? "bg-red-500/40" : "bg-white/30"} p-3 sm:p-5 rounded-2xl mb-2 sm:mb-3 group-hover:scale-110 transition-transform shadow-lg`}
-                  >
-                    <RotateCcw
-                      className={`w-8 h-8 sm:w-10 sm:h-10 ${darkMode ? "text-red-200" : "text-white"}`}
-                      strokeWidth={2.5}
+                    <input
+                      type="checkbox"
+                      checked={showExplanation}
+                      onChange={(e) => setShowExplanation(e.target.checked)}
+                      className="w-4 h-4 rounded"
                     />
-                  </div>
-                  <h3
-                    className={`text-base sm:text-lg font-semibold ${darkMode ? "text-white" : "text-white"}`}
-                  >
-                    Review
-                  </h3>
-                </button>
-
-                <button
-                  onClick={() => {
-                    setActiveTab("learningpath");
-                  }}
-                  className={`group ${darkMode ? "bg-gradient-to-br from-green-500/20 to-green-600/10 hover:from-green-500/30 hover:to-green-600/20 border border-green-500/30" : "bg-gradient-to-br from-green-500 to-green-600"} backdrop-blur-xl rounded-2xl p-4 sm:p-6 transition-all duration-300 flex flex-col items-center justify-center shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 touch-manipulation`}
-                >
-                  <div
-                    className={`${darkMode ? "bg-green-500/40" : "bg-white/30"} p-3 sm:p-5 rounded-2xl mb-2 sm:mb-3 group-hover:scale-110 transition-transform shadow-lg`}
-                  >
-                    <ChevronRight
-                      className={`w-8 h-8 sm:w-10 sm:h-10 ${darkMode ? "text-green-200" : "text-white"}`}
-                      strokeWidth={2.5}
-                    />
-                  </div>
-                  <h3
-                    className={`text-base sm:text-lg font-semibold ${darkMode ? "text-white" : "text-white"}`}
-                  >
-                    Categories
-                  </h3>
-                </button>
-
-                <button
-                  onClick={() => {
-                    setActiveTab("cockpit");
-                  }}
-                  className={`group ${darkMode ? "bg-gradient-to-br from-teal-500/20 to-teal-600/10 hover:from-teal-500/30 hover:to-teal-600/20 border border-teal-500/30" : "bg-gradient-to-br from-teal-500 to-teal-600"} backdrop-blur-xl rounded-2xl p-4 sm:p-6 transition-all duration-300 flex flex-col items-center justify-center shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 touch-manipulation`}
-                >
-                  <div
-                    className={`${darkMode ? "bg-teal-500/40" : "bg-white/30"} p-3 sm:p-5 rounded-2xl mb-2 sm:mb-3 group-hover:scale-110 transition-transform shadow-lg`}
-                  >
-                    <Gauge
-                      className={`w-8 h-8 sm:w-10 sm:h-10 ${darkMode ? "text-teal-200" : "text-white"}`}
-                      strokeWidth={2.5}
-                    />
-                  </div>
-                  <h3
-                    className={`text-base sm:text-lg font-semibold ${darkMode ? "text-white" : "text-white"}`}
-                  >
-                    Cockpit
-                  </h3>
-                </button>
-
-                <button
-                  onClick={() => {
-                    setActiveTab("progress");
-                  }}
-                  className={`group ${darkMode ? "bg-gradient-to-br from-indigo-500/20 to-indigo-600/10 hover:from-indigo-500/30 hover:to-indigo-600/20 border border-indigo-500/30" : "bg-gradient-to-br from-indigo-500 to-indigo-600"} backdrop-blur-xl rounded-2xl p-4 sm:p-6 transition-all duration-300 flex flex-col items-center justify-center shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 touch-manipulation`}
-                >
-                  <div
-                    className={`${darkMode ? "bg-indigo-500/40" : "bg-white/30"} p-3 sm:p-5 rounded-2xl mb-2 sm:mb-3 group-hover:scale-110 transition-transform shadow-lg`}
-                  >
-                    <Award
-                      className={`w-8 h-8 sm:w-10 sm:h-10 ${darkMode ? "text-indigo-200" : "text-white"}`}
-                      strokeWidth={2.5}
-                    />
-                  </div>
-                  <h3
-                    className={`text-base sm:text-lg font-semibold ${darkMode ? "text-white" : "text-white"}`}
-                  >
-                    Progress
-                  </h3>
-                </button>
-              </div>
-
-              {/* Stats - Simple & Elegant */}
-              {performanceStats.overall.correct > 0 && (
-                <div
-                  className={`${darkMode ? "bg-white/5" : "bg-slate-100"} rounded-xl p-5 mb-6 max-w-md mx-auto`}
-                >
-                  <div className="grid grid-cols-2 gap-4 text-center">
-                    <div>
-                      <div
-                        className={`text-3xl font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
-                      >
-                        {
-                          Object.values(questionMastery).filter(
-                            (q) => q.correctCount >= 3,
-                          ).length
-                        }
-                      </div>
-                      <div
-                        className={`text-xs mt-1 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
-                      >
-                        Mastered
-                      </div>
-                    </div>
-                    <div>
-                      <div
-                        className={`text-3xl font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
-                      >
-                        {performanceStats.overall.correct +
-                          performanceStats.overall.incorrect >
-                        0
-                          ? Math.round(
-                              (performanceStats.overall.correct /
-                                (performanceStats.overall.correct +
-                                  performanceStats.overall.incorrect)) *
-                                100,
-                            )
-                          : 0}
-                        %
-                      </div>
-                      <div
-                        className={`text-xs mt-1 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
-                      >
-                        Accuracy
-                      </div>
-                    </div>
-                  </div>
+                    <span className="text-sm">Instant Grade</span>
+                  </label>
                 </div>
-              )}
 
-              {/* Quick Access - Only show flagged questions */}
-              {flaggedQuestions.length > 0 && (
-                <div className="mt-8">
+                {/* Open Study Guide Button */}
+                <button
+                  onClick={() => setActiveTab("learningpath")}
+                  className={`w-full py-3 rounded-xl font-medium transition-all ${
+                    darkMode
+                      ? "bg-blue-600 hover:bg-blue-700 text-white"
+                      : "bg-blue-500 hover:bg-blue-600 text-white"
+                  }`}
+                >
+                  Open Study Guide
+                </button>
+              </div>
+
+              {/* Choose Your Challenge Section */}
+              <div className="max-w-2xl mx-auto mb-8">
+                <h2
+                  className={`text-xl font-semibold mb-4 ${darkMode ? "text-white" : "text-slate-900"}`}
+                >
+                  Choose Your Challenge
+                </h2>
+                <div className="grid grid-cols-2 gap-4">
+                  {/* Quickie - 10 questions */}
                   <button
                     onClick={() => {
-                      setStudyMode("flagged");
-                      setActiveTab("study");
-                      setShowStudySetup(false);
-                      loadQuestions("flagged");
+                      setQuestionCount(10);
+                      setStudyMode("quiz");
+                      setShowQuizSetup(true);
+                      setActiveTab("quizsetup");
                     }}
-                    className={`w-full ${darkMode ? "bg-white/5 hover:bg-white/10" : "bg-slate-100 hover:bg-slate-200"} rounded-xl p-4 transition text-left`}
+                    className={`${darkMode ? "bg-slate-800/50 hover:bg-slate-700/50" : "bg-white hover:bg-slate-50"} rounded-xl p-6 transition-all border ${darkMode ? "border-slate-700" : "border-slate-200"} hover:scale-105 active:scale-95`}
                   >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <Target
-                          className={`w-5 h-5 ${darkMode ? "text-yellow-400" : "text-yellow-600"}`}
-                        />
-                        <span
-                          className={`font-medium ${darkMode ? "text-white" : "text-slate-900"}`}
-                        >
-                          Flagged Questions
-                        </span>
-                      </div>
-                      <span
-                        className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
-                      >
-                        {flaggedQuestions.length}
-                      </span>
-                    </div>
+                    <h3
+                      className={`text-lg font-semibold mb-1 ${darkMode ? "text-white" : "text-slate-900"}`}
+                    >
+                      Quickie
+                    </h3>
+                    <p
+                      className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                    >
+                      10 questions
+                    </p>
+                  </button>
+
+                  {/* Not-Quickie - 50 questions */}
+                  <button
+                    onClick={() => {
+                      setQuestionCount(50);
+                      setStudyMode("quiz");
+                      setShowQuizSetup(true);
+                      setActiveTab("quizsetup");
+                    }}
+                    className={`${darkMode ? "bg-slate-800/50 hover:bg-slate-700/50" : "bg-white hover:bg-slate-50"} rounded-xl p-6 transition-all border ${darkMode ? "border-slate-700" : "border-slate-200"} hover:scale-105 active:scale-95`}
+                  >
+                    <h3
+                      className={`text-lg font-semibold mb-1 ${darkMode ? "text-white" : "text-slate-900"}`}
+                    >
+                      Not-Quickie
+                    </h3>
+                    <p
+                      className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                    >
+                      50 questions
+                    </p>
+                  </button>
+
+                  {/* Marathon - 100 questions */}
+                  <button
+                    onClick={() => {
+                      setQuestionCount(100);
+                      setStudyMode("quiz");
+                      setShowQuizSetup(true);
+                      setActiveTab("quizsetup");
+                    }}
+                    className={`${darkMode ? "bg-slate-800/50 hover:bg-slate-700/50" : "bg-white hover:bg-slate-50"} rounded-xl p-6 transition-all border ${darkMode ? "border-slate-700" : "border-slate-200"} hover:scale-105 active:scale-95`}
+                  >
+                    <h3
+                      className={`text-lg font-semibold mb-1 ${darkMode ? "text-white" : "text-slate-900"}`}
+                    >
+                      Marathon
+                    </h3>
+                    <p
+                      className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                    >
+                      100 questions
+                    </p>
+                  </button>
+
+                  {/* Incorrect - Review missed questions */}
+                  <button
+                    onClick={() => {
+                      const reviewQuestions = getAllQuestions().filter((q) => {
+                        const mastery = questionMastery[q.id];
+                        return mastery && mastery.incorrectCount >= 1;
+                      });
+
+                      if (reviewQuestions.length === 0) {
+                        alert(
+                          "No incorrect questions yet. Try taking a quiz first!",
+                        );
+                        return;
+                      }
+
+                      setCurrentQuestions(reviewQuestions);
+                      setCurrentQuestionIndex(0);
+                      setUserAnswers({});
+                      setShowExplanation(false);
+                      setStudyMode("quiz");
+                      setReviewIncorrectOnly(true);
+                      setReviewSessionCorrect([]);
+                      setActiveTab("study");
+                    }}
+                    className={`${darkMode ? "bg-red-900/30 hover:bg-red-900/40 border-red-700" : "bg-red-50 hover:bg-red-100 border-red-200"} rounded-xl p-6 transition-all border hover:scale-105 active:scale-95`}
+                  >
+                    <h3
+                      className={`text-lg font-semibold mb-1 ${darkMode ? "text-red-400" : "text-red-700"}`}
+                    >
+                      Incorrect
+                    </h3>
+                    <p
+                      className={`text-sm ${darkMode ? "text-red-300" : "text-red-600"}`}
+                    >
+                      {
+                        Object.values(questionMastery).filter(
+                          (m) => m.incorrectCount >= 1,
+                        ).length
+                      }{" "}
+                      questions
+                    </p>
                   </button>
                 </div>
-              )}
+              </div>
+
+              {/* Practice by Topic Section */}
+              <div className="max-w-2xl mx-auto">
+                <h2
+                  className={`text-xl font-semibold mb-4 ${darkMode ? "text-white" : "text-slate-900"}`}
+                >
+                  Practice by Topic
+                </h2>
+                <div className="grid grid-cols-2 gap-4">
+                  <button
+                    onClick={() => setActiveTab("learningpath")}
+                    className={`${darkMode ? "bg-slate-800/50 hover:bg-slate-700/50" : "bg-white hover:bg-slate-50"} rounded-xl p-6 transition-all border ${darkMode ? "border-slate-700" : "border-slate-200"} hover:scale-105 active:scale-95`}
+                  >
+                    <h3
+                      className={`text-lg font-semibold mb-1 ${darkMode ? "text-white" : "text-slate-900"}`}
+                    >
+                      Categories
+                    </h3>
+                    <p
+                      className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                    >
+                      Study by topic
+                    </p>
+                  </button>
+
+                  <button
+                    onClick={() => setActiveTab("cockpit")}
+                    className={`${darkMode ? "bg-slate-800/50 hover:bg-slate-700/50" : "bg-white hover:bg-slate-50"} rounded-xl p-6 transition-all border ${darkMode ? "border-slate-700" : "border-slate-200"} hover:scale-105 active:scale-95`}
+                  >
+                    <h3
+                      className={`text-lg font-semibold mb-1 ${darkMode ? "text-white" : "text-slate-900"}`}
+                    >
+                      Cockpit
+                    </h3>
+                    <p
+                      className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                    >
+                      Visual reference
+                    </p>
+                  </button>
+
+                  <button
+                    onClick={() => setActiveTab("progress")}
+                    className={`${darkMode ? "bg-slate-800/50 hover:bg-slate-700/50" : "bg-white hover:bg-slate-50"} rounded-xl p-6 transition-all border ${darkMode ? "border-slate-700" : "border-slate-200"} hover:scale-105 active:scale-95`}
+                  >
+                    <h3
+                      className={`text-lg font-semibold mb-1 ${darkMode ? "text-white" : "text-slate-900"}`}
+                    >
+                      Progress
+                    </h3>
+                    <p
+                      className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                    >
+                      View stats
+                    </p>
+                  </button>
+                </div>
+              </div>
             </div>
           ) : activeTab === "quizsetup" ? (
             <div
@@ -3027,77 +3040,13 @@ export default function T6AEnhancedStudyTool() {
             </div>
           ) : (
             <div className="max-w-4xl mx-auto pb-20 px-4">
-              {/* Mastery Progress Section */}
-              <div
-                className={`text-center mb-6 pb-6 border-b ${darkMode ? "border-slate-700" : "border-slate-200"}`}
-              >
-                <h2
-                  className={`text-lg font-semibold mb-2 ${darkMode ? "text-purple-400" : "text-purple-600"}`}
-                >
-                  Mastery Progress
-                </h2>
-                <p
-                  className={`text-sm mb-4 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
-                >
-                  {
-                    Object.values(questionMastery).filter(
-                      (m) => (m?.correctCount || 0) >= 3,
-                    ).length
-                  }{" "}
-                  / {getAllQuestions().length} questions mastered
-                  <span
-                    className={`ml-1 ${darkMode ? "text-slate-500" : "text-slate-400"}`}
-                  >
-                    (
-                    {Math.round(
-                      (Object.values(questionMastery).filter(
-                        (m) => (m?.correctCount || 0) >= 3,
-                      ).length /
-                        getAllQuestions().length) *
-                        100,
-                    )}
-                    %)
-                  </span>
-                </p>
-
-                {/* Settings Checkboxes */}
-                {studyMode === "quiz" && (
-                  <div className="flex justify-center gap-4 mb-3">
-                    <label
-                      className={`flex items-center gap-2 cursor-pointer ${darkMode ? "text-slate-300" : "text-slate-700"}`}
-                    >
-                      <input
-                        type="checkbox"
-                        checked={hideMasteredQuestions}
-                        onChange={(e) =>
-                          setHideMasteredQuestions(e.target.checked)
-                        }
-                        className="w-4 h-4 rounded border-slate-300 text-purple-600 focus:ring-purple-500 focus:ring-offset-0"
-                      />
-                      <span className="text-sm">Hide mastered questions</span>
-                    </label>
-                    <label
-                      className={`flex items-center gap-2 cursor-pointer ${darkMode ? "text-slate-300" : "text-slate-700"}`}
-                    >
-                      <input
-                        type="checkbox"
-                        checked={showExplanation}
-                        onChange={(e) => setShowExplanation(e.target.checked)}
-                        className="w-4 h-4 rounded border-slate-300 text-purple-600 focus:ring-purple-500 focus:ring-offset-0"
-                      />
-                      <span className="text-sm">Instant Grade</span>
-                    </label>
-                  </div>
-                )}
-              </div>
-
               {/* Progress Bar */}
-              <div className="mb-6">
+              <div className="mb-8 mt-4">
                 <div
                   className={`h-2 rounded-full overflow-hidden ${darkMode ? "bg-slate-700" : "bg-slate-200"}`}
                 >
                   <div
-                    className="h-full bg-purple-500 transition-all duration-300 ease-out"
+                    className="h-full bg-blue-500 transition-all duration-300 ease-out"
                     style={{
                       width: `${((currentQuestionIndex + 1) / currentQuestions.length) * 100}%`,
                     }}
