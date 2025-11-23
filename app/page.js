@@ -2937,7 +2937,7 @@ export default function T6AEnhancedStudyTool() {
                           <div
                             className={`${darkMode ? "bg-cyan-500/30" : "bg-cyan-200"} px-2 py-1 rounded-lg text-xs font-semibold ${darkMode ? "text-cyan-200" : "text-cyan-700"}`}
                           >
-                            {topicStats.total} Q's
+                            {topicStats.total} Questions
                           </div>
                         </div>
 
