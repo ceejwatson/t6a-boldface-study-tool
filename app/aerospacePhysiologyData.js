@@ -447,10 +447,18 @@ export function getAllAerospacePhysiologyQuestions() {
       ...q,
       questionType: "reorderSequence",
     })),
-    ...aerospacePhysiologyQuestions.matchItems.map((q) => ({
-      ...q,
-      questionType: "matchItems",
-    })),
+    ...aerospacePhysiologyQuestions.matchItems.map((q) => {
+      // Transform leftColumn/rightColumn into pairs format expected by component
+      const pairs = q.leftColumn.map((left, index) => ({
+        left: left,
+        right: q.rightColumn[index],
+      }));
+      return {
+        ...q,
+        questionType: "matchItems",
+        pairs: pairs,
+      };
+    }),
   ];
 }
 
