@@ -899,6 +899,31 @@ export default function T6AEnhancedStudyTool() {
       );
     }
 
+    // Validate question has required fields
+    if (!currentQuestion.question || !currentQuestion.questionType) {
+      console.error("Invalid question structure:", currentQuestion);
+      return (
+        <div className="text-center py-12">
+          <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
+          <p className="text-red-400">
+            Error: Invalid question data. Question #{currentQuestionIndex + 1}
+          </p>
+          <button
+            onClick={() => {
+              if (currentQuestionIndex < currentQuestions.length - 1) {
+                setCurrentQuestionIndex(currentQuestionIndex + 1);
+              } else {
+                setActiveTab("home");
+              }
+            }}
+            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded"
+          >
+            Skip Question
+          </button>
+        </div>
+      );
+    }
+
     // Use Active Recall mode if in study mode with activeRecall, learnNew, or review sub-modes
     if (
       studyMode === "study" &&
@@ -938,30 +963,62 @@ export default function T6AEnhancedStudyTool() {
     }
 
     // Regular question rendering for quiz mode, readThrough study mode, and learningpath
-    const props = {
-      question: currentQuestion,
-      onAnswer: handleAnswer,
-      showExplanation: showExplanation,
-      userAnswer: userAnswers[currentQuestion.id],
-      disabled: showExplanation, // Disable after answer is shown in both modes
-      darkMode: darkMode,
-      showCorrectness: studyMode !== "study", // Show green/red in quiz, but not in review mode
-      fontSize: fontSize,
-      compact: studyMode === "study", // Compact layout for review mode
-      onRate: studyMode === "study" ? handleReviewRate : undefined, // Rating system for review mode
-    };
+    try {
+      const props = {
+        question: currentQuestion,
+        onAnswer: handleAnswer,
+        showExplanation: showExplanation,
+        userAnswer: userAnswers[currentQuestion.id],
+        disabled: showExplanation, // Disable after answer is shown in both modes
+        darkMode: darkMode,
+        showCorrectness: studyMode !== "study", // Show green/red in quiz, but not in review mode
+        fontSize: fontSize,
+        compact: studyMode === "study", // Compact layout for review mode
+        onRate: studyMode === "study" ? handleReviewRate : undefined, // Rating system for review mode
+      };
 
-    switch (currentQuestion.questionType) {
-      case "multipleChoice":
-        return <MultipleChoice {...props} />;
-      case "trueFalse":
-        return <TrueFalse {...props} />;
-      case "reorderSequence":
-        return <ReorderSequence {...props} />;
-      case "matchItems":
-        return <MatchItems {...props} />;
-      default:
-        return <div>Unknown question type</div>;
+      switch (currentQuestion.questionType) {
+        case "multipleChoice":
+          return <MultipleChoice {...props} />;
+        case "trueFalse":
+          return <TrueFalse {...props} />;
+        case "reorderSequence":
+          return <ReorderSequence {...props} />;
+        case "matchItems":
+          return <MatchItems {...props} />;
+        default:
+          console.error("Unknown question type:", currentQuestion.questionType);
+          return (
+            <div className="text-center py-12">
+              <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
+              <p className="text-red-400">
+                Unknown question type: {currentQuestion.questionType}
+              </p>
+            </div>
+          );
+      }
+    } catch (error) {
+      console.error("Error rendering question:", error, currentQuestion);
+      return (
+        <div className="text-center py-12">
+          <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
+          <p className="text-red-400">
+            Error rendering question. Please skip to the next one.
+          </p>
+          <button
+            onClick={() => {
+              if (currentQuestionIndex < currentQuestions.length - 1) {
+                setCurrentQuestionIndex(currentQuestionIndex + 1);
+              } else {
+                setActiveTab("home");
+              }
+            }}
+            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded"
+          >
+            Skip Question
+          </button>
+        </div>
+      );
     }
   };
 
