@@ -1102,8 +1102,8 @@ export default function T6AEnhancedStudyTool() {
         style={{ WebkitOverflowScrolling: "touch", overscrollBehavior: "none" }}
       >
         <div className="container mx-auto px-3 sm:px-4 py-1.5 sm:py-2">
-          {/* Simplified Navigation Bar - Only show when not on home screen */}
-          {activeTab !== "home" && (
+          {/* Hidden navigation - removed for cleaner interface */}
+          {false && activeTab !== "home" && (
             <div className="mb-2 sm:mb-3">
               <div
                 className={`flex items-center justify-between gap-2 sm:gap-3 p-2 sm:p-3 rounded-xl ${darkMode ? "bg-slate-800/50" : "bg-white/50"} backdrop-blur-sm border ${darkMode ? "border-slate-700" : "border-slate-200"}`}
@@ -3151,11 +3151,19 @@ export default function T6AEnhancedStudyTool() {
             <div className="max-w-4xl mx-auto pb-20 px-4">
               {/* Header Bar */}
               <div className="flex items-center justify-between mb-6">
-                <h2
-                  className={`text-lg font-medium ${darkMode ? "text-white" : "text-slate-900"}`}
-                >
-                  Quiz
-                </h2>
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => setActiveTab("home")}
+                    className={`text-sm ${darkMode ? "text-slate-400 hover:text-white" : "text-slate-500 hover:text-slate-900"} transition-colors`}
+                  >
+                    ← Home
+                  </button>
+                  <h2
+                    className={`text-lg font-medium ${darkMode ? "text-white" : "text-slate-900"}`}
+                  >
+                    Quiz
+                  </h2>
+                </div>
                 <span
                   className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-500"}`}
                 >
