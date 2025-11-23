@@ -3148,24 +3148,29 @@ export default function T6AEnhancedStudyTool() {
               </div>
             </div>
           ) : (
-            <div className="max-w-3xl mx-auto pb-20 px-4">
+            <div className="max-w-4xl mx-auto pb-20 px-4">
+              {/* Header Bar */}
+              <div className="flex items-center justify-between mb-6">
+                <h2
+                  className={`text-lg font-medium ${darkMode ? "text-white" : "text-slate-900"}`}
+                >
+                  Quiz
+                </h2>
+                <span
+                  className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-500"}`}
+                >
+                  {currentQuestionIndex + 1} / {currentQuestions.length}
+                </span>
+              </div>
+
               {/* Question Card */}
               <div
                 key={currentQuestion?.id}
-                className={`${darkMode ? "bg-slate-800/50" : "bg-white"} backdrop-blur-xl rounded-2xl shadow-lg p-6 md:p-8 question-enter`}
+                className={`${darkMode ? "bg-slate-800/50" : "bg-white"} rounded-xl p-6 md:p-8 question-enter`}
               >
                 {currentQuestion && (
                   <>
-                    {/* Simple Question Counter */}
-                    <div className="text-center mb-6">
-                      <span
-                        className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-500"}`}
-                      >
-                        {currentQuestionIndex + 1} / {currentQuestions.length}
-                      </span>
-                    </div>
-
-                    <div className="mb-4 flex items-center justify-between flex-wrap gap-2">
+                    <div className="mb-4 flex items-center justify-start flex-wrap gap-2">
                       <div className="flex items-center gap-2">
                         {showExplanation &&
                           studyMode !== "study" &&
