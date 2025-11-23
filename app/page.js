@@ -3100,39 +3100,25 @@ export default function T6AEnhancedStudyTool() {
               </div>
             </div>
           ) : (
-            <div className="max-w-4xl mx-auto pb-20">
-              {/* Question Counter with Progress Bar */}
-              <div className="mb-2">
-                <div className="text-center mb-1">
-                  <span
-                    className={`text-sm font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
-                  >
-                    Question {currentQuestionIndex + 1} of{" "}
-                    {currentQuestions.length}
-                  </span>
-                </div>
-                {/* Progress Bar */}
-                <div
-                  className={`w-full h-1.5 rounded-full overflow-hidden ${darkMode ? "bg-slate-800" : "bg-slate-200"}`}
-                >
-                  <div
-                    className={`h-full transition-all duration-500 ease-out ${darkMode ? "bg-gradient-to-r from-blue-400 to-cyan-400 shadow-[0_0_8px_rgba(96,165,250,0.5)]" : "bg-gradient-to-r from-blue-500 to-blue-600"}`}
-                    style={{
-                      width: `${((currentQuestionIndex + 1) / currentQuestions.length) * 100}%`,
-                    }}
-                  />
-                </div>
-              </div>
-
+            <div className="max-w-3xl mx-auto pb-20 px-4">
               {/* Question Card */}
               <div
                 key={currentQuestion?.id}
-                className={`${darkMode ? "bg-slate-800 border-slate-700" : "bg-white border-slate-300"} rounded-xl shadow-2xl ${studyMode === "study" ? "p-2 md:p-3" : "p-3 md:p-4"} border-2 question-enter`}
+                className={`${darkMode ? "bg-slate-800/50" : "bg-white"} backdrop-blur-xl rounded-2xl shadow-lg p-6 md:p-8 question-enter`}
               >
                 {currentQuestion && (
                   <>
-                    <div className="mb-2 flex items-center justify-between flex-wrap gap-1">
-                      <div className="flex items-center gap-1">
+                    {/* Simple Question Counter */}
+                    <div className="text-center mb-6">
+                      <span
+                        className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-500"}`}
+                      >
+                        {currentQuestionIndex + 1} / {currentQuestions.length}
+                      </span>
+                    </div>
+
+                    <div className="mb-4 flex items-center justify-between flex-wrap gap-2">
+                      <div className="flex items-center gap-2">
                         {showExplanation &&
                           studyMode !== "study" &&
                           (() => {
@@ -3142,23 +3128,20 @@ export default function T6AEnhancedStudyTool() {
 
                             if (incorrectCount >= 2) {
                               return (
-                                <span className="bg-orange-600 text-white px-2 py-0.5 rounded-full text-xs font-bold flex items-center gap-1">
-                                  <XCircle className="w-3 h-3" />
-                                  WEAK
+                                <span className="bg-orange-500/20 text-orange-400 px-2 py-1 rounded text-xs font-medium">
+                                  Weak
                                 </span>
                               );
                             } else if (correctCount >= 3) {
                               return (
-                                <span className="bg-green-600 text-white px-2 py-0.5 rounded-full text-xs font-bold flex items-center gap-1">
-                                  <CheckCircle2 className="w-3 h-3" />
-                                  MASTERED
+                                <span className="bg-green-500/20 text-green-400 px-2 py-1 rounded text-xs font-medium">
+                                  Mastered
                                 </span>
                               );
                             } else if (correctCount >= 1) {
                               return (
-                                <span className="bg-blue-600 text-white px-2 py-0.5 rounded-full text-xs font-bold flex items-center gap-1">
-                                  <TrendingUp className="w-3 h-3" />
-                                  LEARNING
+                                <span className="bg-blue-500/20 text-blue-400 px-2 py-1 rounded text-xs font-medium">
+                                  Learning
                                 </span>
                               );
                             } else {
