@@ -44,8 +44,8 @@ export default function MultipleChoice({
       return userAnswer === originalIndex
         ? "bg-blue-600 text-white border-blue-600 scale-[1.02]"
         : darkMode
-          ? "bg-slate-800 text-white border-slate-600 hover:border-blue-500 hover:scale-[1.01]"
-          : "bg-white text-slate-900 border-slate-300 hover:border-blue-500 hover:scale-[1.01]";
+          ? "bg-slate-700 text-white border-slate-600 hover:border-blue-500 hover:bg-slate-600 hover:scale-[1.01]"
+          : "bg-white text-slate-900 border-slate-300 hover:border-blue-500 hover:bg-blue-50 hover:scale-[1.01]";
     }
 
     // Show results (only in quiz mode)
@@ -112,11 +112,14 @@ export default function MultipleChoice({
             key={displayIndex}
             onClick={() => handleSelect(originalIndex)}
             disabled={disabled}
-            className={`w-full p-3 min-h-[48px] rounded-lg border-2 transition-all duration-200 text-left flex items-center justify-between touch-manipulation ${getOptionStyle(originalIndex)} ${
+            className={`w-full p-4 rounded-lg border-2 transition-all duration-200 text-left flex items-center justify-between touch-manipulation ${getOptionStyle(originalIndex)} ${
               disabled ? "cursor-not-allowed" : "cursor-pointer active:scale-95"
             }`}
+            style={{ minHeight: "auto" }}
           >
-            <span className={`flex-1 ${getFontSizeClass()}`}>{option}</span>
+            <span className={`flex-1 leading-relaxed ${getFontSizeClass()}`}>
+              {option}
+            </span>
             {getOptionIcon(originalIndex)}
           </button>
         ))}
