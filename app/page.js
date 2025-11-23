@@ -1469,33 +1469,15 @@ export default function T6AEnhancedStudyTool() {
                   {/* Quickie - 10 questions */}
                   <button
                     onClick={() => {
+                      setQuestionCount(10);
                       setStudyMode("quiz");
-                      let allQuestions = getAllQuestions();
-
-                      // Filter out mastered questions if checkbox is enabled
-                      if (hideMasteredQuestions) {
-                        allQuestions = allQuestions.filter((q) => {
-                          const mastery = questionMastery[q.id];
-                          return !mastery || (mastery.correctCount || 0) < 3;
-                        });
-                      }
-
-                      // Shuffle questions
-                      for (let i = allQuestions.length - 1; i > 0; i--) {
-                        const j = Math.floor(Math.random() * (i + 1));
-                        [allQuestions[i], allQuestions[j]] = [
-                          allQuestions[j],
-                          allQuestions[i],
-                        ];
-                      }
-
-                      // Limit to 10 questions
-                      const limitedQuestions = allQuestions.slice(0, 10);
-
-                      setCurrentQuestions(limitedQuestions);
-                      setCurrentQuestionIndex(0);
-                      setUserAnswers({});
-                      setActiveTab("study");
+                      // Auto-select all topics
+                      const allCategories = [
+                        ...new Set(getAllQuestions().map((q) => q.category)),
+                      ];
+                      setSelectedTopics(allCategories);
+                      setShowQuizSetup(true);
+                      setActiveTab("quizsetup");
                     }}
                     className={`${darkMode ? "bg-slate-800/50 hover:bg-slate-700/50" : "bg-white hover:bg-slate-50"} rounded-xl p-6 transition-all border ${darkMode ? "border-slate-700" : "border-slate-200"} hover:scale-105 active:scale-95`}
                   >
@@ -1514,33 +1496,15 @@ export default function T6AEnhancedStudyTool() {
                   {/* Not-Quickie - 50 questions */}
                   <button
                     onClick={() => {
+                      setQuestionCount(50);
                       setStudyMode("quiz");
-                      let allQuestions = getAllQuestions();
-
-                      // Filter out mastered questions if checkbox is enabled
-                      if (hideMasteredQuestions) {
-                        allQuestions = allQuestions.filter((q) => {
-                          const mastery = questionMastery[q.id];
-                          return !mastery || (mastery.correctCount || 0) < 3;
-                        });
-                      }
-
-                      // Shuffle questions
-                      for (let i = allQuestions.length - 1; i > 0; i--) {
-                        const j = Math.floor(Math.random() * (i + 1));
-                        [allQuestions[i], allQuestions[j]] = [
-                          allQuestions[j],
-                          allQuestions[i],
-                        ];
-                      }
-
-                      // Limit to 50 questions
-                      const limitedQuestions = allQuestions.slice(0, 50);
-
-                      setCurrentQuestions(limitedQuestions);
-                      setCurrentQuestionIndex(0);
-                      setUserAnswers({});
-                      setActiveTab("study");
+                      // Auto-select all topics
+                      const allCategories = [
+                        ...new Set(getAllQuestions().map((q) => q.category)),
+                      ];
+                      setSelectedTopics(allCategories);
+                      setShowQuizSetup(true);
+                      setActiveTab("quizsetup");
                     }}
                     className={`${darkMode ? "bg-slate-800/50 hover:bg-slate-700/50" : "bg-white hover:bg-slate-50"} rounded-xl p-6 transition-all border ${darkMode ? "border-slate-700" : "border-slate-200"} hover:scale-105 active:scale-95`}
                   >
@@ -1559,33 +1523,15 @@ export default function T6AEnhancedStudyTool() {
                   {/* Marathon - 100 questions */}
                   <button
                     onClick={() => {
+                      setQuestionCount(100);
                       setStudyMode("quiz");
-                      let allQuestions = getAllQuestions();
-
-                      // Filter out mastered questions if checkbox is enabled
-                      if (hideMasteredQuestions) {
-                        allQuestions = allQuestions.filter((q) => {
-                          const mastery = questionMastery[q.id];
-                          return !mastery || (mastery.correctCount || 0) < 3;
-                        });
-                      }
-
-                      // Shuffle questions
-                      for (let i = allQuestions.length - 1; i > 0; i--) {
-                        const j = Math.floor(Math.random() * (i + 1));
-                        [allQuestions[i], allQuestions[j]] = [
-                          allQuestions[j],
-                          allQuestions[i],
-                        ];
-                      }
-
-                      // Limit to 100 questions
-                      const limitedQuestions = allQuestions.slice(0, 100);
-
-                      setCurrentQuestions(limitedQuestions);
-                      setCurrentQuestionIndex(0);
-                      setUserAnswers({});
-                      setActiveTab("study");
+                      // Auto-select all topics
+                      const allCategories = [
+                        ...new Set(getAllQuestions().map((q) => q.category)),
+                      ];
+                      setSelectedTopics(allCategories);
+                      setShowQuizSetup(true);
+                      setActiveTab("quizsetup");
                     }}
                     className={`${darkMode ? "bg-slate-800/50 hover:bg-slate-700/50" : "bg-white hover:bg-slate-50"} rounded-xl p-6 transition-all border ${darkMode ? "border-slate-700" : "border-slate-200"} hover:scale-105 active:scale-95`}
                   >
@@ -1667,22 +1613,6 @@ export default function T6AEnhancedStudyTool() {
                       className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
                     >
                       Study by topic
-                    </p>
-                  </button>
-
-                  <button
-                    onClick={() => setActiveTab("cockpit")}
-                    className={`${darkMode ? "bg-slate-800/50 hover:bg-slate-700/50" : "bg-white hover:bg-slate-50"} rounded-xl p-6 transition-all border ${darkMode ? "border-slate-700" : "border-slate-200"} hover:scale-105 active:scale-95`}
-                  >
-                    <h3
-                      className={`text-lg font-semibold mb-1 ${darkMode ? "text-white" : "text-slate-900"}`}
-                    >
-                      Cockpit
-                    </h3>
-                    <p
-                      className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
-                    >
-                      Visual reference
                     </p>
                   </button>
 
@@ -1848,11 +1778,20 @@ export default function T6AEnhancedStudyTool() {
                       return;
                     }
 
-                    // Auto-select all topics
-                    const allCategories = [
-                      ...new Set(all.map((q) => q.category).filter(Boolean)),
-                    ];
-                    setSelectedTopics(allCategories);
+                    // Filter by selected topics
+                    if (selectedTopics.length > 0) {
+                      all = all.filter((q) =>
+                        selectedTopics.includes(q.category),
+                      );
+                    }
+
+                    // Filter out mastered questions if checkbox is enabled
+                    if (hideMasteredQuestions) {
+                      all = all.filter((q) => {
+                        const mastery = questionMastery[q.id];
+                        return !mastery || (mastery.correctCount || 0) < 3;
+                      });
+                    }
 
                     // Shuffle questions
                     for (let i = all.length - 1; i > 0; i--) {
