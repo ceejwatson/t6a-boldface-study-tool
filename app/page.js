@@ -993,105 +993,98 @@ export default function T6AEnhancedStudyTool() {
     <div
       className={`min-h-screen flex flex-col ${darkMode ? "bg-slate-700" : "bg-slate-100"}`}
     >
-      {/* Header */}
+      {/* Header - Simplified */}
       <header
-        className={`${darkMode ? "bg-slate-900/95 border-blue-700/50" : "bg-white/95 border-blue-300/50"} backdrop-blur border-b z-20 shadow-xl flex-shrink-0`}
+        className={`${darkMode ? "bg-slate-900/80" : "bg-white/80"} backdrop-blur border-b ${darkMode ? "border-slate-800" : "border-slate-200"} z-20 flex-shrink-0`}
       >
-        <div className="container mx-auto px-2 sm:px-4 py-1.5 sm:py-3">
-          <div className="flex items-center justify-between flex-wrap gap-2 sm:gap-4">
-            <div className="flex items-center gap-2 sm:gap-3">
-              <div className="bg-blue-600 p-1 sm:p-2 rounded-lg">
-                <BookOpen className="w-5 h-5 sm:w-8 sm:h-8 text-white" />
-              </div>
-              <div>
-                <h1
-                  className={`text-base sm:text-xl md:text-2xl font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
-                >
-                  T-6A Texan II
-                </h1>
-                <p
-                  className={`text-xs sm:text-sm ${darkMode ? "text-blue-300" : "text-blue-600"} hidden sm:block`}
-                >
-                  Enhanced Study Tool
-                </p>
-              </div>
-            </div>
+        <div className="container mx-auto px-4 py-2">
+          <div className="flex items-center justify-between">
+            <h1
+              className={`text-sm font-medium ${darkMode ? "text-white" : "text-slate-900"}`}
+            >
+              T-6A Study Tool
+            </h1>
 
-            <div className="flex items-center gap-1.5 sm:gap-4">
-              {/* Font Size Selector - Mobile Optimized */}
-              <div className="flex items-center gap-1 sm:gap-2">
-                <span
-                  className={`text-xs ${darkMode ? "text-slate-400" : "text-slate-600"} hidden sm:inline`}
-                >
-                  Text:
-                </span>
-                <div className="flex items-center gap-0.5 sm:gap-1 bg-slate-800/50 p-0.5 sm:p-1 rounded-lg">
-                  <button
-                    onClick={() => setFontSize("small")}
-                    className={`min-w-[32px] min-h-[32px] sm:min-w-[36px] sm:min-h-[36px] px-1.5 sm:px-2 py-1 rounded text-xs font-medium transition touch-manipulation ${
-                      fontSize === "small"
-                        ? "bg-blue-600 text-white"
-                        : "text-slate-400 hover:text-white hover:bg-slate-700"
-                    }`}
-                    title="Small text"
-                  >
-                    A
-                  </button>
-                  <button
-                    onClick={() => setFontSize("medium")}
-                    className={`min-w-[32px] min-h-[32px] sm:min-w-[36px] sm:min-h-[36px] px-1.5 sm:px-2 py-1 rounded text-sm font-medium transition touch-manipulation ${
-                      fontSize === "medium"
-                        ? "bg-blue-600 text-white"
-                        : "text-slate-400 hover:text-white hover:bg-slate-700"
-                    }`}
-                    title="Medium text"
-                  >
-                    A
-                  </button>
-                  <button
-                    onClick={() => setFontSize("large")}
-                    className={`min-w-[32px] min-h-[32px] sm:min-w-[36px] sm:min-h-[36px] px-1.5 sm:px-2 py-1 rounded text-base font-medium transition touch-manipulation ${
-                      fontSize === "large"
-                        ? "bg-blue-600 text-white"
-                        : "text-slate-400 hover:text-white hover:bg-slate-700"
-                    }`}
-                    title="Large text"
-                  >
-                    A
-                  </button>
-                  <button
-                    onClick={() => setFontSize("xlarge")}
-                    className={`min-w-[32px] min-h-[32px] sm:min-w-[36px] sm:min-h-[36px] px-1.5 sm:px-2 py-1 rounded text-lg font-medium transition touch-manipulation ${
-                      fontSize === "xlarge"
-                        ? "bg-blue-600 text-white"
-                        : "text-slate-400 hover:text-white hover:bg-slate-700"
-                    }`}
-                    title="Extra large text"
-                  >
-                    A
-                  </button>
-                </div>
-              </div>
+            <div className="flex items-center gap-2">
+              {/* Hidden font size and PDF controls for minimal interface */}
+              {false && (
+                <>
+                  {/* Font Size Selector - Mobile Optimized */}
+                  <div className="flex items-center gap-1 sm:gap-2">
+                    <span
+                      className={`text-xs ${darkMode ? "text-slate-400" : "text-slate-600"} hidden sm:inline`}
+                    >
+                      Text:
+                    </span>
+                    <div className="flex items-center gap-0.5 sm:gap-1 bg-slate-800/50 p-0.5 sm:p-1 rounded-lg">
+                      <button
+                        onClick={() => setFontSize("small")}
+                        className={`min-w-[32px] min-h-[32px] sm:min-w-[36px] sm:min-h-[36px] px-1.5 sm:px-2 py-1 rounded text-xs font-medium transition touch-manipulation ${
+                          fontSize === "small"
+                            ? "bg-blue-600 text-white"
+                            : "text-slate-400 hover:text-white hover:bg-slate-700"
+                        }`}
+                        title="Small text"
+                      >
+                        A
+                      </button>
+                      <button
+                        onClick={() => setFontSize("medium")}
+                        className={`min-w-[32px] min-h-[32px] sm:min-w-[36px] sm:min-h-[36px] px-1.5 sm:px-2 py-1 rounded text-sm font-medium transition touch-manipulation ${
+                          fontSize === "medium"
+                            ? "bg-blue-600 text-white"
+                            : "text-slate-400 hover:text-white hover:bg-slate-700"
+                        }`}
+                        title="Medium text"
+                      >
+                        A
+                      </button>
+                      <button
+                        onClick={() => setFontSize("large")}
+                        className={`min-w-[32px] min-h-[32px] sm:min-w-[36px] sm:min-h-[36px] px-1.5 sm:px-2 py-1 rounded text-base font-medium transition touch-manipulation ${
+                          fontSize === "large"
+                            ? "bg-blue-600 text-white"
+                            : "text-slate-400 hover:text-white hover:bg-slate-700"
+                        }`}
+                        title="Large text"
+                      >
+                        A
+                      </button>
+                      <button
+                        onClick={() => setFontSize("xlarge")}
+                        className={`min-w-[32px] min-h-[32px] sm:min-w-[36px] sm:min-h-[36px] px-1.5 sm:px-2 py-1 rounded text-lg font-medium transition touch-manipulation ${
+                          fontSize === "xlarge"
+                            ? "bg-blue-600 text-white"
+                            : "text-slate-400 hover:text-white hover:bg-slate-700"
+                        }`}
+                        title="Extra large text"
+                      >
+                        A
+                      </button>
+                    </div>
+                  </div>
 
-              {/* PDF Reference Button */}
-              <a
-                href="https://www.sheppard.af.mil/Portals/65/T-6A%20Boldface%20Ops%20Limits%2C%201%20Jun%202023%20%28Filled%29.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1 sm:py-2 rounded-lg transition-all touch-manipulation min-h-[32px] sm:min-h-[40px] ${
-                  darkMode
-                    ? "bg-blue-600 hover:bg-blue-700 text-white"
-                    : "bg-blue-500 hover:bg-blue-600 text-white"
-                }`}
-                title="Official T-6A BOLDFACE Emergency Procedures and Operating Limitations PDF"
-              >
-                <FileText className="w-3.5 h-3.5 sm:w-5 sm:h-5" />
-                <span className="hidden md:inline font-medium text-sm">
-                  T-6A BOLDFACE Reference
-                </span>
-                <span className="md:hidden font-medium text-xs">PDF</span>
-                <ExternalLink className="w-2.5 h-2.5 sm:w-4 sm:h-4" />
-              </a>
+                  {/* PDF Reference Button */}
+                  <a
+                    href="https://www.sheppard.af.mil/Portals/65/T-6A%20Boldface%20Ops%20Limits%2C%201%20Jun%202023%20%28Filled%29.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1 sm:py-2 rounded-lg transition-all touch-manipulation min-h-[32px] sm:min-h-[40px] ${
+                      darkMode
+                        ? "bg-blue-600 hover:bg-blue-700 text-white"
+                        : "bg-blue-500 hover:bg-blue-600 text-white"
+                    }`}
+                    title="Official T-6A BOLDFACE Emergency Procedures and Operating Limitations PDF"
+                  >
+                    <FileText className="w-3.5 h-3.5 sm:w-5 sm:h-5" />
+                    <span className="hidden md:inline font-medium text-sm">
+                      T-6A BOLDFACE Reference
+                    </span>
+                    <span className="md:hidden font-medium text-xs">PDF</span>
+                    <ExternalLink className="w-2.5 h-2.5 sm:w-4 sm:h-4" />
+                  </a>
+                </>
+              )}
             </div>
           </div>
         </div>
