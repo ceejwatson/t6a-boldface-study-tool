@@ -54,7 +54,6 @@ import {
 
 import { questionDatabase, getLimitationQuestions } from "./questionData";
 import {
-  aerospacePhysiologyQuestions,
   aerospacePhysiologyTopics,
   getAllAerospacePhysiologyQuestions,
   getQuestionsByTopic as getAPQuestionsByTopic,
@@ -113,8 +112,6 @@ export default function T6AEnhancedStudyTool() {
   const [flaggedQuestions, setFlaggedQuestions] = useState([]);
   const [questionMastery, setQuestionMastery] = useState({});
   // Structure: { questionId: { correctCount: 0, incorrectCount: 0, lastAnswered: timestamp } }
-  const [unknownFlashcards, setUnknownFlashcards] = useState([]);
-  // Track flashcards marked as "Don't Know" for focused study
   const [fontSize, setFontSize] = useState("medium"); // 'small', 'medium', 'large'
 
   // Function to load data from localStorage
@@ -124,7 +121,6 @@ export default function T6AEnhancedStudyTool() {
     const savedSRS = localStorage.getItem("t6a-srs");
     const savedHistory = localStorage.getItem("t6a-session-history");
     const savedMastery = localStorage.getItem("t6a-mastery");
-    const savedUnknown = localStorage.getItem("t6a-unknown-flashcards");
     const savedFontSize = localStorage.getItem("t6a-font-size");
     const savedDarkMode = localStorage.getItem("t6a-dark-mode");
 
@@ -133,7 +129,6 @@ export default function T6AEnhancedStudyTool() {
     if (savedSRS) setSrsData(JSON.parse(savedSRS));
     if (savedHistory) setSessionHistory(JSON.parse(savedHistory));
     if (savedMastery) setQuestionMastery(JSON.parse(savedMastery));
-    if (savedUnknown) setUnknownFlashcards(JSON.parse(savedUnknown));
     if (savedFontSize) setFontSize(savedFontSize);
     if (savedDarkMode !== null) setDarkMode(JSON.parse(savedDarkMode));
   };
@@ -210,14 +205,6 @@ export default function T6AEnhancedStudyTool() {
   useEffect(() => {
     localStorage.setItem("t6a-dark-mode", JSON.stringify(darkMode));
   }, [darkMode]);
-
-  // Save unknown flashcards
-  useEffect(() => {
-    localStorage.setItem(
-      "t6a-unknown-flashcards",
-      JSON.stringify(unknownFlashcards),
-    );
-  }, [unknownFlashcards]);
 
   // Calculate weak topics based on performance
   useEffect(() => {
@@ -496,11 +483,6 @@ export default function T6AEnhancedStudyTool() {
         }
         return prev;
       });
-
-      // Remove from unknownFlashcards if it was there
-      setUnknownFlashcards((prev) =>
-        prev.filter((id) => id !== currentQuestion.id),
-      );
 
       // Remove from current review session
       setCurrentQuestions((prev) => {
@@ -792,11 +774,6 @@ export default function T6AEnhancedStudyTool() {
             return updated;
           });
         });
-
-        // Remove from unknownFlashcards
-        setUnknownFlashcards((prev) =>
-          prev.filter((id) => !reviewSessionCorrect.includes(id)),
-        );
 
         setActiveTab("results");
         setReviewIncorrectOnly(false);
@@ -1307,28 +1284,14 @@ export default function T6AEnhancedStudyTool() {
                 <button
                   onClick={() => {
                     // Get all questions with incorrect answers
-                    const incorrectQuestions = getAllQuestions().filter((q) => {
+                    const reviewQuestions = getAllQuestions().filter((q) => {
                       const mastery = questionMastery[q.id];
                       return mastery && mastery.incorrectCount >= 1;
                     });
 
-                    // Get all "Don't Know" flashcards
-                    const dontKnowQuestions = getAllQuestions().filter((q) =>
-                      unknownFlashcards.includes(q.id),
-                    );
-
-                    // Combine and deduplicate
-                    const reviewQuestionsSet = new Set([
-                      ...incorrectQuestions.map((q) => q.id),
-                      ...dontKnowQuestions.map((q) => q.id),
-                    ]);
-                    const reviewQuestions = getAllQuestions().filter((q) =>
-                      reviewQuestionsSet.has(q.id),
-                    );
-
                     if (reviewQuestions.length === 0) {
                       alert(
-                        "No questions to review yet. Try taking a quiz or marking flashcards as 'Don't Know'!",
+                        "No questions to review yet. Try taking a quiz first!",
                       );
                       return;
                     }
@@ -1863,67 +1826,6 @@ export default function T6AEnhancedStudyTool() {
                 )}
 
                 {/* Unknown Flashcards - Only show if there are unknown flashcards */}
-                {unknownFlashcards.length > 0 && (
-                  <button
-                    onClick={() => {
-                      if (unknownFlashcards.length < 10) {
-                        setQuestionCount(unknownFlashcards.length);
-                      }
-
-                      // Get flashcard questions directly from database
-                      const flashcardQuestions =
-                        questionDatabase.flashcard || [];
-                      const allFlashcards = flashcardQuestions.map((q) => ({
-                        ...q,
-                        questionType: "flashcard",
-                      }));
-
-                      // Filter to only unknown flashcards
-                      const unknownQs = allFlashcards.filter((q) =>
-                        unknownFlashcards.includes(q.id),
-                      );
-
-                      setCurrentQuestions(unknownQs);
-                      setCurrentQuestionIndex(0);
-                      setUserAnswers({});
-                      setShowExplanation(false);
-                      setStudyMode("flashcard");
-                      setActiveTab("flashcard");
-                      setShowStudySetup(false);
-                    }}
-                    className={`w-full ${darkMode ? "bg-purple-500/20 hover:bg-purple-500/30 border-2 border-purple-500/50" : "bg-purple-100 hover:bg-purple-200 border-2 border-purple-300"} rounded-2xl p-5 transition text-left hover:scale-[1.02]`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-4">
-                        <div
-                          className={`${darkMode ? "bg-purple-500/30" : "bg-purple-500/20"} p-3 rounded-xl`}
-                        >
-                          <RotateCcw
-                            className={`w-7 h-7 ${darkMode ? "text-purple-300" : "text-purple-600"}`}
-                            strokeWidth={2.5}
-                          />
-                        </div>
-                        <div>
-                          <div
-                            className={`font-semibold text-lg ${darkMode ? "text-white" : "text-slate-900"}`}
-                          >
-                            Unknown Flashcards
-                          </div>
-                          <div
-                            className={`text-sm ${darkMode ? "text-purple-300" : "text-purple-700"}`}
-                          >
-                            Cards you marked as unknown
-                          </div>
-                        </div>
-                      </div>
-                      <div
-                        className={`text-sm font-medium ${darkMode ? "text-purple-300" : "text-purple-700"}`}
-                      >
-                        {unknownFlashcards.length} cards
-                      </div>
-                    </div>
-                  </button>
-                )}
               </div>
             </div>
           ) : activeTab === "progress" ? (
@@ -2687,11 +2589,6 @@ export default function T6AEnhancedStudyTool() {
                             return updated;
                           });
                         });
-                        setUnknownFlashcards((prev) =>
-                          prev.filter(
-                            (id) => !reviewSessionCorrect.includes(id),
-                          ),
-                        );
                       }
 
                       setActiveTab("home");
@@ -2729,11 +2626,6 @@ export default function T6AEnhancedStudyTool() {
                             return updated;
                           });
                         });
-                        setUnknownFlashcards((prev) =>
-                          prev.filter(
-                            (id) => !reviewSessionCorrect.includes(id),
-                          ),
-                        );
                       }
 
                       setShowQuizSetup(true);
@@ -2746,106 +2638,6 @@ export default function T6AEnhancedStudyTool() {
                     Take Another Quiz
                   </button>
                 </div>
-              </div>
-            </div>
-          ) : activeTab === "flashcard" ? (
-            <div className="max-w-4xl mx-auto">
-              {currentQuestions.length > 0 && currentQuestion ? (
-                <Flashcard
-                  question={currentQuestion}
-                  onNext={() => {
-                    if (currentQuestionIndex < currentQuestions.length - 1) {
-                      setCurrentQuestionIndex(currentQuestionIndex + 1);
-                    }
-                  }}
-                  onPrevious={() => {
-                    if (currentQuestionIndex > 0) {
-                      setCurrentQuestionIndex(currentQuestionIndex - 1);
-                    }
-                  }}
-                  onRate={(quality) => {
-                    // Track "Don't Know" cards (quality 0-2)
-                    if (quality <= 2) {
-                      if (!unknownFlashcards.includes(currentQuestion.id)) {
-                        setUnknownFlashcards((prev) => [
-                          ...prev,
-                          currentQuestion.id,
-                        ]);
-                      }
-                    } else {
-                      // Remove from unknown if they now know it
-                      setUnknownFlashcards((prev) =>
-                        prev.filter((id) => id !== currentQuestion.id),
-                      );
-                    }
-
-                    // Update SM-2 SRS data based on quality rating
-                    setSrsData((prev) => {
-                      const existingCard = prev[currentQuestion.id];
-                      const updatedCard = calculateSM2(quality, existingCard);
-                      return {
-                        ...prev,
-                        [currentQuestion.id]: updatedCard,
-                      };
-                    });
-
-                    // Trigger immediate sync after flashcard rating
-                    console.log(
-                      "💫 [APP] Triggering sync after flashcard rating",
-                    );
-                    triggerSync();
-
-                    // Move to next card
-                    if (currentQuestionIndex < currentQuestions.length - 1) {
-                      setCurrentQuestionIndex(currentQuestionIndex + 1);
-                    } else {
-                      // Completed all flashcards
-                      setActiveTab("home");
-                    }
-                  }}
-                  currentIndex={currentQuestionIndex}
-                  totalCards={currentQuestions.length}
-                  darkMode={darkMode}
-                />
-              ) : (
-                <div
-                  className={`${darkMode ? "bg-slate-800" : "bg-white"} rounded-xl p-8 text-center`}
-                >
-                  <CheckCircle2
-                    className={`w-16 h-16 mx-auto mb-4 ${darkMode ? "text-green-400" : "text-green-600"}`}
-                  />
-                  <h2
-                    className={`text-2xl font-bold mb-2 ${darkMode ? "text-white" : "text-slate-900"}`}
-                  >
-                    All Cards Reviewed!
-                  </h2>
-                  <p
-                    className={`mb-6 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
-                  >
-                    You&apos;ve reviewed all flashcards due for today. Great
-                    work!
-                  </p>
-                  <button
-                    onClick={() => setActiveTab("home")}
-                    className="px-6 py-3 rounded-lg font-medium transition bg-purple-600 hover:bg-purple-700 text-white"
-                  >
-                    Return to Home
-                  </button>
-                </div>
-              )}
-
-              {/* Navigation buttons */}
-              <div className="mt-6 text-center">
-                <button
-                  onClick={() => setActiveTab("home")}
-                  className={`px-6 py-3 rounded-lg font-medium transition ${
-                    darkMode
-                      ? "bg-slate-700 hover:bg-slate-600 text-white"
-                      : "bg-slate-300 hover:bg-slate-400 text-slate-900"
-                  }`}
-                >
-                  ← Exit Flashcards
-                </button>
               </div>
             </div>
           ) : activeTab === "cockpit" ? (
