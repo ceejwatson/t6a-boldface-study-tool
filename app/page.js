@@ -1278,33 +1278,6 @@ export default function T6AEnhancedStudyTool() {
 
                 <button
                   onClick={() => {
-                    setStudyMode("aerophysiology");
-                    setActiveTab("aerophysiologysetup");
-                  }}
-                  className={`group ${darkMode ? "bg-gradient-to-br from-cyan-500/20 to-cyan-600/10 hover:from-cyan-500/30 hover:to-cyan-600/20 border border-cyan-500/30" : "bg-gradient-to-br from-cyan-500 to-cyan-600"} backdrop-blur-xl rounded-2xl p-4 sm:p-6 transition-all duration-300 flex flex-col items-center justify-center shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 touch-manipulation`}
-                >
-                  <div
-                    className={`${darkMode ? "bg-cyan-500/40" : "bg-white/30"} p-3 sm:p-5 rounded-2xl mb-2 sm:mb-3 group-hover:scale-110 transition-transform shadow-lg`}
-                  >
-                    <FileText
-                      className={`w-8 h-8 sm:w-10 sm:h-10 ${darkMode ? "text-cyan-200" : "text-white"}`}
-                      strokeWidth={2.5}
-                    />
-                  </div>
-                  <h3
-                    className={`text-base sm:text-lg font-semibold ${darkMode ? "text-white" : "text-white"} text-center`}
-                  >
-                    Aerospace
-                  </h3>
-                  <p
-                    className={`text-xs ${darkMode ? "text-cyan-200" : "text-white"} mt-1`}
-                  >
-                    Physiology
-                  </p>
-                </button>
-
-                <button
-                  onClick={() => {
                     // Get all questions with incorrect answers
                     const incorrectQuestions = getAllQuestions().filter((q) => {
                       const mastery = questionMastery[q.id];
@@ -1541,11 +1514,82 @@ export default function T6AEnhancedStudyTool() {
                 <p
                   className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
                 >
-                  How many questions?
+                  Choose quiz type and number of questions
                 </p>
               </div>
 
+              {/* Quiz Type Selection */}
+              <div className="mb-8">
+                <h3
+                  className={`text-sm font-medium mb-3 ${darkMode ? "text-slate-300" : "text-slate-700"}`}
+                >
+                  Select Quiz Type
+                </h3>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    onClick={() => {
+                      setStudyMode("quiz");
+                      setSelectedTopics([]);
+                    }}
+                    className={`p-4 rounded-xl text-left transition-all ${
+                      studyMode === "quiz"
+                        ? darkMode
+                          ? "bg-orange-500/30 border-2 border-orange-500"
+                          : "bg-orange-100 border-2 border-orange-500"
+                        : darkMode
+                          ? "bg-slate-700/50 hover:bg-slate-700 border-2 border-transparent"
+                          : "bg-white hover:bg-slate-50 border-2 border-slate-200"
+                    }`}
+                  >
+                    <div
+                      className={`font-semibold ${studyMode === "quiz" ? "text-orange-400" : darkMode ? "text-slate-300" : "text-slate-700"}`}
+                    >
+                      T-6A Aircraft
+                    </div>
+                    <div
+                      className={`text-xs mt-1 ${studyMode === "quiz" ? "text-orange-300" : darkMode ? "text-slate-400" : "text-slate-500"}`}
+                    >
+                      Boldface & Systems
+                    </div>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setStudyMode("aerophysiology");
+                      setSelectedTopics([]);
+                    }}
+                    className={`p-4 rounded-xl text-left transition-all ${
+                      studyMode === "aerophysiology"
+                        ? darkMode
+                          ? "bg-cyan-500/30 border-2 border-cyan-500"
+                          : "bg-cyan-100 border-2 border-cyan-500"
+                        : darkMode
+                          ? "bg-slate-700/50 hover:bg-slate-700 border-2 border-transparent"
+                          : "bg-white hover:bg-slate-50 border-2 border-slate-200"
+                    }`}
+                  >
+                    <div
+                      className={`font-semibold ${studyMode === "aerophysiology" ? "text-cyan-400" : darkMode ? "text-slate-300" : "text-slate-700"}`}
+                    >
+                      Aerospace Physiology
+                    </div>
+                    <div
+                      className={`text-xs mt-1 ${studyMode === "aerophysiology" ? "text-cyan-300" : darkMode ? "text-slate-400" : "text-slate-500"}`}
+                    >
+                      Hypoxia, Vision, G-Forces
+                    </div>
+                  </button>
+                </div>
+              </div>
+
               {/* Question Count - Apple Style */}
+              <div className="mb-4">
+                <h3
+                  className={`text-sm font-medium mb-3 ${darkMode ? "text-slate-300" : "text-slate-700"}`}
+                >
+                  Number of Questions
+                </h3>
+              </div>
               <div className="grid grid-cols-3 gap-4 mb-8">
                 {[10, 25, 50].map((count) => (
                   <button
@@ -1568,23 +1612,28 @@ export default function T6AEnhancedStudyTool() {
 
               <button
                 onClick={() => {
-                  // Set question types first
-                  const quizTypes = [
-                    "multipleChoice",
-                    "trueFalse",
-                    "reorderSequence",
-                    "matchItems",
-                  ];
-                  setSelectedQuestionTypes(quizTypes);
+                  let all = [];
 
-                  // Get all questions with quiz types
-                  const all = [];
-                  quizTypes.forEach((type) => {
-                    const questions = questionDatabase[type] || [];
-                    questions.forEach((q) => {
-                      all.push({ ...q, questionType: type });
+                  if (studyMode === "aerophysiology") {
+                    // Get aerospace physiology questions
+                    all = getAllAerospacePhysiologyQuestions();
+                  } else {
+                    // Get T-6A aircraft questions
+                    const quizTypes = [
+                      "multipleChoice",
+                      "trueFalse",
+                      "reorderSequence",
+                      "matchItems",
+                    ];
+                    setSelectedQuestionTypes(quizTypes);
+
+                    quizTypes.forEach((type) => {
+                      const questions = questionDatabase[type] || [];
+                      questions.forEach((q) => {
+                        all.push({ ...q, questionType: type });
+                      });
                     });
-                  });
+                  }
 
                   // Auto-select all topics
                   const allCategories = [
@@ -1605,7 +1654,6 @@ export default function T6AEnhancedStudyTool() {
                   setCurrentQuestionIndex(0);
                   setUserAnswers({});
                   setShowExplanation(false);
-                  setStudyMode("quiz");
                   setActiveTab("study");
                   setShowQuizSetup(false);
                 }}
