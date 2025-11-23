@@ -75,6 +75,7 @@ export default function T6AEnhancedStudyTool() {
   const [currentQuestions, setCurrentQuestions] = useState([]);
   const [userAnswers, setUserAnswers] = useState({});
   const [showExplanation, setShowExplanation] = useState(false);
+  const [instantGrade, setInstantGrade] = useState(false); // Checkbox preference for instant grading
   const [hideMasteredQuestions, setHideMasteredQuestions] = useState(false);
   const [selectedTopics, setSelectedTopics] = useState([]);
   const [selectedQuestionTypes, setSelectedQuestionTypes] = useState([
@@ -531,7 +532,10 @@ export default function T6AEnhancedStudyTool() {
 
       if (autoSubmitTypes.includes(currentQuestion.questionType)) {
         // Auto-submit for simple question types in both study and quiz mode
-        setShowExplanation(true);
+        // Only show explanation if instant grade is enabled
+        if (instantGrade) {
+          setShowExplanation(true);
+        }
         // Don't track performance in limitations mode
         if (studyMode !== "limitations") {
           const isCorrect = checkAnswer(currentQuestion, answer);
@@ -558,7 +562,10 @@ export default function T6AEnhancedStudyTool() {
           (pair, index) => answer[index] !== undefined,
         );
         if (allMatched) {
-          setShowExplanation(true);
+          // Only show explanation if instant grade is enabled
+          if (instantGrade) {
+            setShowExplanation(true);
+          }
           const isCorrect = checkAnswer(currentQuestion, answer);
           updatePerformance(currentQuestion, isCorrect);
 
@@ -798,7 +805,10 @@ export default function T6AEnhancedStudyTool() {
         if (answer) {
           try {
             // Auto-submit the answer before moving to next
-            setShowExplanation(true);
+            // Only show explanation if instant grade is enabled
+            if (instantGrade) {
+              setShowExplanation(true);
+            }
             const isCorrect = checkAnswer(currentQuestion, answer);
             updatePerformance(currentQuestion, isCorrect);
 
@@ -812,7 +822,10 @@ export default function T6AEnhancedStudyTool() {
               });
             }
 
-            return; // Don't move to next yet, let user see the result
+            // Only pause to show result if instant grade is enabled
+            if (instantGrade) {
+              return; // Don't move to next yet, let user see the result
+            }
           } catch (error) {
             console.error(
               "Error auto-submitting answer in handleNext:",
@@ -1424,8 +1437,8 @@ export default function T6AEnhancedStudyTool() {
                   >
                     <input
                       type="checkbox"
-                      checked={showExplanation}
-                      onChange={(e) => setShowExplanation(e.target.checked)}
+                      checked={instantGrade}
+                      onChange={(e) => setInstantGrade(e.target.checked)}
                       className="w-4 h-4 rounded"
                     />
                     <span className="text-sm">Instant Grade</span>
@@ -1456,10 +1469,33 @@ export default function T6AEnhancedStudyTool() {
                   {/* Quickie - 10 questions */}
                   <button
                     onClick={() => {
-                      setQuestionCount(10);
                       setStudyMode("quiz");
-                      setShowQuizSetup(true);
-                      setActiveTab("quizsetup");
+                      let allQuestions = getAllQuestions();
+
+                      // Filter out mastered questions if checkbox is enabled
+                      if (hideMasteredQuestions) {
+                        allQuestions = allQuestions.filter((q) => {
+                          const mastery = questionMastery[q.id];
+                          return !mastery || (mastery.correctCount || 0) < 3;
+                        });
+                      }
+
+                      // Shuffle questions
+                      for (let i = allQuestions.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [allQuestions[i], allQuestions[j]] = [
+                          allQuestions[j],
+                          allQuestions[i],
+                        ];
+                      }
+
+                      // Limit to 10 questions
+                      const limitedQuestions = allQuestions.slice(0, 10);
+
+                      setCurrentQuestions(limitedQuestions);
+                      setCurrentQuestionIndex(0);
+                      setUserAnswers({});
+                      setActiveTab("study");
                     }}
                     className={`${darkMode ? "bg-slate-800/50 hover:bg-slate-700/50" : "bg-white hover:bg-slate-50"} rounded-xl p-6 transition-all border ${darkMode ? "border-slate-700" : "border-slate-200"} hover:scale-105 active:scale-95`}
                   >
@@ -1478,10 +1514,33 @@ export default function T6AEnhancedStudyTool() {
                   {/* Not-Quickie - 50 questions */}
                   <button
                     onClick={() => {
-                      setQuestionCount(50);
                       setStudyMode("quiz");
-                      setShowQuizSetup(true);
-                      setActiveTab("quizsetup");
+                      let allQuestions = getAllQuestions();
+
+                      // Filter out mastered questions if checkbox is enabled
+                      if (hideMasteredQuestions) {
+                        allQuestions = allQuestions.filter((q) => {
+                          const mastery = questionMastery[q.id];
+                          return !mastery || (mastery.correctCount || 0) < 3;
+                        });
+                      }
+
+                      // Shuffle questions
+                      for (let i = allQuestions.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [allQuestions[i], allQuestions[j]] = [
+                          allQuestions[j],
+                          allQuestions[i],
+                        ];
+                      }
+
+                      // Limit to 50 questions
+                      const limitedQuestions = allQuestions.slice(0, 50);
+
+                      setCurrentQuestions(limitedQuestions);
+                      setCurrentQuestionIndex(0);
+                      setUserAnswers({});
+                      setActiveTab("study");
                     }}
                     className={`${darkMode ? "bg-slate-800/50 hover:bg-slate-700/50" : "bg-white hover:bg-slate-50"} rounded-xl p-6 transition-all border ${darkMode ? "border-slate-700" : "border-slate-200"} hover:scale-105 active:scale-95`}
                   >
@@ -1500,10 +1559,33 @@ export default function T6AEnhancedStudyTool() {
                   {/* Marathon - 100 questions */}
                   <button
                     onClick={() => {
-                      setQuestionCount(100);
                       setStudyMode("quiz");
-                      setShowQuizSetup(true);
-                      setActiveTab("quizsetup");
+                      let allQuestions = getAllQuestions();
+
+                      // Filter out mastered questions if checkbox is enabled
+                      if (hideMasteredQuestions) {
+                        allQuestions = allQuestions.filter((q) => {
+                          const mastery = questionMastery[q.id];
+                          return !mastery || (mastery.correctCount || 0) < 3;
+                        });
+                      }
+
+                      // Shuffle questions
+                      for (let i = allQuestions.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [allQuestions[i], allQuestions[j]] = [
+                          allQuestions[j],
+                          allQuestions[i],
+                        ];
+                      }
+
+                      // Limit to 100 questions
+                      const limitedQuestions = allQuestions.slice(0, 100);
+
+                      setCurrentQuestions(limitedQuestions);
+                      setCurrentQuestionIndex(0);
+                      setUserAnswers({});
+                      setActiveTab("study");
                     }}
                     className={`${darkMode ? "bg-slate-800/50 hover:bg-slate-700/50" : "bg-white hover:bg-slate-50"} rounded-xl p-6 transition-all border ${darkMode ? "border-slate-700" : "border-slate-200"} hover:scale-105 active:scale-95`}
                   >
@@ -3116,7 +3198,10 @@ export default function T6AEnhancedStudyTool() {
                         !showExplanation && (
                           <button
                             onClick={() => {
-                              setShowExplanation(true);
+                              // Only show explanation if instant grade is enabled
+                              if (instantGrade) {
+                                setShowExplanation(true);
+                              }
                               const answer = userAnswers[currentQuestion.id];
                               if (answer) {
                                 const isCorrect = checkAnswer(
