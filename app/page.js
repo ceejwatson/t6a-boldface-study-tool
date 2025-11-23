@@ -64,8 +64,8 @@ export default function T6AEnhancedStudyTool() {
   // Get sync function from context
   const { triggerSync, isSyncing } = useSync();
 
-  // UI State - Dark mode only
-  const darkMode = true; // Always dark mode
+  // UI State
+  const [darkMode, setDarkMode] = useState(true);
   const [activeTab, setActiveTab] = useState("home");
   const [studyMode, setStudyMode] = useState("study"); // 'study', 'quiz', 'custom', 'limitations'
   const [studySubMode, setStudySubMode] = useState("activeRecall"); // 'activeRecall', 'learnNew', 'review', 'readThrough'
@@ -126,6 +126,7 @@ export default function T6AEnhancedStudyTool() {
     const savedMastery = localStorage.getItem("t6a-mastery");
     const savedUnknown = localStorage.getItem("t6a-unknown-flashcards");
     const savedFontSize = localStorage.getItem("t6a-font-size");
+    const savedDarkMode = localStorage.getItem("t6a-dark-mode");
 
     if (savedPerformance) setPerformanceStats(JSON.parse(savedPerformance));
     if (savedFlags) setFlaggedQuestions(JSON.parse(savedFlags));
@@ -134,6 +135,7 @@ export default function T6AEnhancedStudyTool() {
     if (savedMastery) setQuestionMastery(JSON.parse(savedMastery));
     if (savedUnknown) setUnknownFlashcards(JSON.parse(savedUnknown));
     if (savedFontSize) setFontSize(savedFontSize);
+    if (savedDarkMode !== null) setDarkMode(JSON.parse(savedDarkMode));
   };
 
   // Load saved data on mount
@@ -203,6 +205,11 @@ export default function T6AEnhancedStudyTool() {
   useEffect(() => {
     localStorage.setItem("t6a-font-size", fontSize);
   }, [fontSize]);
+
+  // Save dark mode preference
+  useEffect(() => {
+    localStorage.setItem("t6a-dark-mode", JSON.stringify(darkMode));
+  }, [darkMode]);
 
   // Save unknown flashcards
   useEffect(() => {
@@ -1355,30 +1362,6 @@ export default function T6AEnhancedStudyTool() {
 
                 <button
                   onClick={() => {
-                    // Set flashcard-specific question types (simple Q&A format)
-                    setSelectedQuestionTypes(["flashcard"]);
-                    setStudyMode("flashcard");
-                    setActiveTab("flashcardsetup");
-                  }}
-                  className={`group ${darkMode ? "bg-gradient-to-br from-purple-500/20 to-purple-600/10 hover:from-purple-500/30 hover:to-purple-600/20 border border-purple-500/30" : "bg-gradient-to-br from-purple-500 to-purple-600"} backdrop-blur-xl rounded-2xl p-4 sm:p-6 transition-all duration-300 flex flex-col items-center justify-center shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 touch-manipulation`}
-                >
-                  <div
-                    className={`${darkMode ? "bg-purple-500/40" : "bg-white/30"} p-3 sm:p-5 rounded-2xl mb-2 sm:mb-3 group-hover:scale-110 transition-transform shadow-lg`}
-                  >
-                    <RotateCcw
-                      className={`w-8 h-8 sm:w-10 sm:h-10 ${darkMode ? "text-purple-200" : "text-white"}`}
-                      strokeWidth={2.5}
-                    />
-                  </div>
-                  <h3
-                    className={`text-base sm:text-lg font-semibold ${darkMode ? "text-white" : "text-white"}`}
-                  >
-                    Flashcards
-                  </h3>
-                </button>
-
-                <button
-                  onClick={() => {
                     setActiveTab("learningpath");
                   }}
                   className={`group ${darkMode ? "bg-gradient-to-br from-green-500/20 to-green-600/10 hover:from-green-500/30 hover:to-green-600/20 border border-green-500/30" : "bg-gradient-to-br from-green-500 to-green-600"} backdrop-blur-xl rounded-2xl p-4 sm:p-6 transition-all duration-300 flex flex-col items-center justify-center shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 touch-manipulation`}
@@ -1685,84 +1668,6 @@ export default function T6AEnhancedStudyTool() {
                 } active:scale-95`}
               >
                 Start Quiz
-              </button>
-            </div>
-          ) : activeTab === "flashcardsetup" ? (
-            <div
-              className={`max-w-2xl mx-auto ${darkMode ? "bg-slate-800/50" : "bg-white/50"} backdrop-blur-xl rounded-3xl p-8 shadow-2xl`}
-            >
-              <div className="text-center mb-8">
-                <h2
-                  className={`text-3xl font-semibold ${darkMode ? "text-white" : "text-slate-900"} mb-2`}
-                >
-                  Flashcard Setup
-                </h2>
-                <p
-                  className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
-                >
-                  How many flashcards?
-                </p>
-              </div>
-
-              {/* Flashcard Count - Apple Style */}
-              <div className="grid grid-cols-3 gap-4 mb-8">
-                {[10, 25, 50].map((count) => (
-                  <button
-                    key={count}
-                    onClick={() => setQuestionCount(count)}
-                    className={`p-6 rounded-2xl font-semibold text-2xl transition-all duration-200 ${
-                      questionCount === count
-                        ? darkMode
-                          ? "bg-purple-500 text-white shadow-lg shadow-purple-500/50 scale-105"
-                          : "bg-purple-500 text-white shadow-lg shadow-purple-500/50 scale-105"
-                        : darkMode
-                          ? "bg-slate-700/50 text-slate-300 hover:bg-slate-700 hover:scale-102"
-                          : "bg-white text-slate-700 hover:bg-slate-50 hover:scale-102 border-2 border-slate-200"
-                    }`}
-                  >
-                    {count}
-                  </button>
-                ))}
-              </div>
-
-              <button
-                onClick={() => {
-                  // Get flashcard questions directly from database
-                  const flashcardQuestions = questionDatabase.flashcard || [];
-                  const allFlashcards = flashcardQuestions.map((q) => ({
-                    ...q,
-                    questionType: "flashcard",
-                  }));
-
-                  // Shuffle
-                  for (let i = allFlashcards.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [allFlashcards[i], allFlashcards[j]] = [
-                      allFlashcards[j],
-                      allFlashcards[i],
-                    ];
-                  }
-
-                  // Limit to selected count
-                  const limitedFlashcards = allFlashcards.slice(
-                    0,
-                    questionCount,
-                  );
-
-                  setCurrentQuestions(limitedFlashcards);
-                  setCurrentQuestionIndex(0);
-                  setUserAnswers({});
-                  setShowExplanation(false);
-                  setStudyMode("flashcard");
-                  setActiveTab("flashcard");
-                }}
-                className={`w-full px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-200 ${
-                  darkMode
-                    ? "bg-purple-600 hover:bg-purple-700 text-white shadow-lg hover:shadow-xl"
-                    : "bg-purple-500 hover:bg-purple-600 text-white shadow-lg hover:shadow-xl"
-                } active:scale-95`}
-              >
-                Start Flashcards
               </button>
             </div>
           ) : activeTab === "studysetup" ? (
