@@ -53,6 +53,12 @@ import {
 } from "./learningPath";
 
 import { questionDatabase, getLimitationQuestions } from "./questionData";
+import {
+  aerospacePhysiologyQuestions,
+  aerospacePhysiologyTopics,
+  getAllAerospacePhysiologyQuestions,
+  getQuestionsByTopic as getAPQuestionsByTopic,
+} from "./aerospacePhysiologyData";
 
 export default function T6AEnhancedStudyTool() {
   // Get sync function from context
@@ -1268,6 +1274,32 @@ export default function T6AEnhancedStudyTool() {
                   >
                     Quiz
                   </h3>
+                </button>
+
+                <button
+                  onClick={() => {
+                    setActiveTab("aerophysiology");
+                  }}
+                  className={`group ${darkMode ? "bg-gradient-to-br from-cyan-500/20 to-cyan-600/10 hover:from-cyan-500/30 hover:to-cyan-600/20 border border-cyan-500/30" : "bg-gradient-to-br from-cyan-500 to-cyan-600"} backdrop-blur-xl rounded-2xl p-4 sm:p-6 transition-all duration-300 flex flex-col items-center justify-center shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 touch-manipulation`}
+                >
+                  <div
+                    className={`${darkMode ? "bg-cyan-500/40" : "bg-white/30"} p-3 sm:p-5 rounded-2xl mb-2 sm:mb-3 group-hover:scale-110 transition-transform shadow-lg`}
+                  >
+                    <FileText
+                      className={`w-8 h-8 sm:w-10 sm:h-10 ${darkMode ? "text-cyan-200" : "text-white"}`}
+                      strokeWidth={2.5}
+                    />
+                  </div>
+                  <h3
+                    className={`text-base sm:text-lg font-semibold ${darkMode ? "text-white" : "text-white"} text-center`}
+                  >
+                    Aerospace
+                  </h3>
+                  <p
+                    className={`text-xs ${darkMode ? "text-cyan-200" : "text-white"} mt-1`}
+                  >
+                    Physiology
+                  </p>
                 </button>
 
                 <button
@@ -2843,6 +2875,139 @@ export default function T6AEnhancedStudyTool() {
             </div>
           ) : activeTab === "cockpit" ? (
             <CockpitReference darkMode={darkMode} />
+          ) : activeTab === "aerophysiology" ? (
+            <div className={`max-w-4xl mx-auto px-4`}>
+              {/* Header */}
+              <div className="text-center pt-4 pb-6 mb-6">
+                <h1
+                  className={`text-3xl sm:text-4xl font-bold mb-2 ${darkMode ? "text-white" : "text-slate-900"}`}
+                >
+                  Aerospace Physiology
+                </h1>
+                <p
+                  className={`text-base ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                >
+                  Study Guide Questions by Topic
+                </p>
+              </div>
+
+              {/* Topic Selection Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                {Object.entries(aerospacePhysiologyTopics).map(
+                  ([key, topicName]) => {
+                    const topicQuestions = getAPQuestionsByTopic(topicName);
+                    const topicStats = topicQuestions.reduce(
+                      (acc, q) => {
+                        const mastery = questionMastery[q.id];
+                        if (mastery) {
+                          acc.attempted++;
+                          if (mastery.correctCount > mastery.incorrectCount)
+                            acc.mastered++;
+                        }
+                        return acc;
+                      },
+                      {
+                        attempted: 0,
+                        mastered: 0,
+                        total: topicQuestions.length,
+                      },
+                    );
+
+                    return (
+                      <button
+                        key={key}
+                        onClick={() => {
+                          // Load questions for this specific topic
+                          const questions = getAPQuestionsByTopic(topicName);
+                          setCurrentQuestions(questions);
+                          setCurrentQuestionIndex(0);
+                          setUserAnswers({});
+                          setShowExplanation(false);
+                          setStudyMode("aerophysiology");
+                          setActiveTab("study");
+                        }}
+                        className={`group ${darkMode ? "bg-gradient-to-br from-cyan-500/20 to-cyan-600/10 hover:from-cyan-500/30 hover:to-cyan-600/20 border border-cyan-500/30" : "bg-gradient-to-br from-cyan-50 to-cyan-100 hover:from-cyan-100 hover:to-cyan-200 border border-cyan-200"} backdrop-blur-xl rounded-2xl p-5 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] text-left`}
+                      >
+                        <div className="flex items-start justify-between mb-3">
+                          <h3
+                            className={`text-lg font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
+                          >
+                            {topicName}
+                          </h3>
+                          <div
+                            className={`${darkMode ? "bg-cyan-500/30" : "bg-cyan-200"} px-2 py-1 rounded-lg text-xs font-semibold ${darkMode ? "text-cyan-200" : "text-cyan-700"}`}
+                          >
+                            {topicStats.total} Q's
+                          </div>
+                        </div>
+
+                        {/* Progress Bar */}
+                        {topicStats.attempted > 0 && (
+                          <div className="mb-2">
+                            <div
+                              className={`h-2 ${darkMode ? "bg-slate-700" : "bg-slate-200"} rounded-full overflow-hidden`}
+                            >
+                              <div
+                                className="h-full bg-gradient-to-r from-cyan-500 to-cyan-600 transition-all duration-500"
+                                style={{
+                                  width: `${(topicStats.mastered / topicStats.total) * 100}%`,
+                                }}
+                              />
+                            </div>
+                            <p
+                              className={`text-xs mt-1 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                            >
+                              {topicStats.mastered} of {topicStats.total}{" "}
+                              mastered
+                            </p>
+                          </div>
+                        )}
+
+                        <div className="flex items-center gap-2 mt-3">
+                          <ArrowRight
+                            className={`w-4 h-4 ${darkMode ? "text-cyan-400" : "text-cyan-600"} group-hover:translate-x-1 transition-transform`}
+                          />
+                          <span
+                            className={`text-sm ${darkMode ? "text-cyan-400" : "text-cyan-600"} font-medium`}
+                          >
+                            Start Topic
+                          </span>
+                        </div>
+                      </button>
+                    );
+                  },
+                )}
+              </div>
+
+              {/* Quick Action: Study All */}
+              <div className="text-center mt-8">
+                <button
+                  onClick={() => {
+                    const allQuestions = getAllAerospacePhysiologyQuestions();
+                    setCurrentQuestions(allQuestions);
+                    setCurrentQuestionIndex(0);
+                    setUserAnswers({});
+                    setShowExplanation(false);
+                    setStudyMode("aerophysiology");
+                    setActiveTab("study");
+                  }}
+                  className={`${darkMode ? "bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-600 hover:to-cyan-700" : "bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-600 hover:to-cyan-700"} text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 active:scale-95`}
+                >
+                  Study All Topics (
+                  {getAllAerospacePhysiologyQuestions().length} Questions)
+                </button>
+              </div>
+
+              {/* Back Button */}
+              <div className="text-center mt-6">
+                <button
+                  onClick={() => setActiveTab("home")}
+                  className={`${darkMode ? "text-slate-400 hover:text-white" : "text-slate-600 hover:text-slate-900"} font-medium transition-colors`}
+                >
+                  ← Back to Home
+                </button>
+              </div>
+            </div>
           ) : activeTab === "learningpath" ? (
             <LearningPath
               learningPath={learningPath}
