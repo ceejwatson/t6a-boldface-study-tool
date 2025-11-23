@@ -582,18 +582,40 @@ export default function T6AEnhancedStudyTool() {
   };
 
   const checkAnswer = (question, answer) => {
-    switch (question.questionType) {
-      case "multipleChoice":
-        return answer === question.correctAnswer;
-      case "trueFalse":
-        return answer === question.correctAnswer;
-      case "reorderSequence":
-        return JSON.stringify(answer) === JSON.stringify(question.correctOrder);
-      case "matchItems":
-        // Index-based matching: answer[leftIndex] should equal leftIndex for correct match
-        return question.pairs.every((pair, index) => answer[index] === index);
-      default:
-        return false;
+    try {
+      switch (question.questionType) {
+        case "multipleChoice":
+          return answer === question.correctAnswer;
+        case "trueFalse":
+          return answer === question.correctAnswer;
+        case "reorderSequence":
+          if (!question.correctOrder) {
+            console.error(
+              "Missing correctOrder in reorderSequence question:",
+              question,
+            );
+            return false;
+          }
+          return (
+            JSON.stringify(answer) === JSON.stringify(question.correctOrder)
+          );
+        case "matchItems":
+          if (!question.pairs) {
+            console.error("Missing pairs in matchItems question:", question);
+            return false;
+          }
+          // Index-based matching: answer[leftIndex] should equal leftIndex for correct match
+          return question.pairs.every((pair, index) => answer[index] === index);
+        default:
+          console.error(
+            "Unknown question type in checkAnswer:",
+            question.questionType,
+          );
+          return false;
+      }
+    } catch (error) {
+      console.error("Error in checkAnswer:", error, { question, answer });
+      return false;
     }
   };
 
@@ -759,6 +781,12 @@ export default function T6AEnhancedStudyTool() {
   };
 
   const handleNext = () => {
+    // Validate currentQuestion exists
+    if (!currentQuestion) {
+      console.error("handleNext called with no currentQuestion");
+      return;
+    }
+
     // Auto-submit match items or reorder sequence if not yet submitted
     if (!showExplanation && currentQuestion) {
       if (
@@ -767,22 +795,34 @@ export default function T6AEnhancedStudyTool() {
       ) {
         const answer = userAnswers[currentQuestion.id];
         if (answer) {
-          // Auto-submit the answer before moving to next
-          setShowExplanation(true);
-          const isCorrect = checkAnswer(currentQuestion, answer);
-          updatePerformance(currentQuestion, isCorrect);
+          try {
+            // Auto-submit the answer before moving to next
+            setShowExplanation(true);
+            const isCorrect = checkAnswer(currentQuestion, answer);
+            updatePerformance(currentQuestion, isCorrect);
 
-          // In review mode, track correct answers in session
-          if (studyMode === "study" && isCorrect) {
-            setReviewSessionCorrect((prev) => {
-              if (!prev.includes(currentQuestion.id)) {
-                return [...prev, currentQuestion.id];
-              }
-              return prev;
-            });
+            // In review mode, track correct answers in session
+            if (studyMode === "study" && isCorrect) {
+              setReviewSessionCorrect((prev) => {
+                if (!prev.includes(currentQuestion.id)) {
+                  return [...prev, currentQuestion.id];
+                }
+                return prev;
+              });
+            }
+
+            return; // Don't move to next yet, let user see the result
+          } catch (error) {
+            console.error(
+              "Error auto-submitting answer in handleNext:",
+              error,
+              {
+                question: currentQuestion,
+                answer,
+              },
+            );
+            // Continue to next question on error
           }
-
-          return; // Don't move to next yet, let user see the result
         }
       }
     }
@@ -830,6 +870,11 @@ export default function T6AEnhancedStudyTool() {
   };
 
   const handlePrevious = () => {
+    // Validate we're not at the start
+    if (currentQuestionIndex <= 0) {
+      return;
+    }
+
     if (reviewIncorrectOnly) {
       // Move to previous question in the incorrect questions list
       if (currentQuestionIndex > 0) {
@@ -837,16 +882,20 @@ export default function T6AEnhancedStudyTool() {
         setShowExplanation(false);
       }
     } else if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex((prev) => prev - 1);
-      // In quiz mode, keep explanation visible for already answered questions
-      // In study mode, reset explanation for retrieval practice
-      if (studyMode === "quiz") {
-        const prevQuestion = currentQuestions[currentQuestionIndex - 1];
-        const hasAnswer =
-          prevQuestion && userAnswers[prevQuestion.id] !== undefined;
-        setShowExplanation(hasAnswer); // Show explanation if question was already answered
-      } else {
-        setShowExplanation(false); // Reset in study mode
+      try {
+        setCurrentQuestionIndex((prev) => prev - 1);
+        // In quiz mode, keep explanation visible for already answered questions
+        // In study mode, reset explanation for retrieval practice
+        if (studyMode === "quiz") {
+          const prevQuestion = currentQuestions[currentQuestionIndex - 1];
+          const hasAnswer =
+            prevQuestion && userAnswers[prevQuestion.id] !== undefined;
+          setShowExplanation(hasAnswer); // Show explanation if question was already answered
+        } else {
+          setShowExplanation(false); // Reset in study mode
+        }
+      } catch (error) {
+        console.error("Error in handlePrevious:", error);
       }
     }
   };

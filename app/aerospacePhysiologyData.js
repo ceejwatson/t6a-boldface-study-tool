@@ -305,7 +305,7 @@ export const aerospacePhysiologyQuestions = {
       difficulty: "critical",
       question:
         "Arrange the steps for responding to suspected hypoxia in the correct order:",
-      correctSequence: [
+      correctOrder: [
         "Recognize symptoms (confusion, euphoria, impaired judgment)",
         "Immediately select 100% oxygen and check flow",
         "Descend to a lower altitude (below 10,000 feet if possible)",
@@ -325,7 +325,7 @@ export const aerospacePhysiologyQuestions = {
       difficulty: "medium",
       question:
         "Arrange the steps for optimizing night vision adaptation before a night flight:",
-      correctSequence: [
+      correctOrder: [
         "Avoid bright lights for 30 minutes prior to flight",
         "Use red cockpit lighting during preflight",
         "Allow eyes to fully adapt (30 minutes) in dim environment",
