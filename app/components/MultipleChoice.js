@@ -129,21 +129,33 @@ export default function MultipleChoice({
         <div
           className={`${compact ? "mt-1.5 p-2" : "mt-3 p-3"} rounded-lg ${
             userAnswer === question.correctAnswer
-              ? "bg-green-900/30 border-2 border-green-600"
-              : "bg-red-900/30 border-2 border-red-600"
+              ? darkMode
+                ? "bg-green-900/30 border-2 border-green-600"
+                : "bg-green-100 border-2 border-green-500"
+              : darkMode
+                ? "bg-red-900/30 border-2 border-red-600"
+                : "bg-red-100 border-2 border-red-500"
           }`}
         >
           <div className="flex items-center gap-2 mb-1">
             {userAnswer === question.correctAnswer ? (
-              <CheckCircle2 className="w-5 h-5 text-green-400" />
+              <CheckCircle2
+                className={`w-5 h-5 ${darkMode ? "text-green-400" : "text-green-700"}`}
+              />
             ) : (
-              <XCircle className="w-5 h-5 text-red-400" />
+              <XCircle
+                className={`w-5 h-5 ${darkMode ? "text-red-400" : "text-red-700"}`}
+              />
             )}
             <span
               className={`font-semibold text-sm ${
                 userAnswer === question.correctAnswer
-                  ? "text-green-400"
-                  : "text-red-400"
+                  ? darkMode
+                    ? "text-green-400"
+                    : "text-green-800"
+                  : darkMode
+                    ? "text-red-400"
+                    : "text-red-800"
               }`}
             >
               {userAnswer === question.correctAnswer ? "Correct!" : "Incorrect"}

@@ -1579,50 +1579,69 @@ export default function T6AEnhancedStudyTool() {
 
               <button
                 onClick={() => {
-                  let all = [];
+                  try {
+                    let all = [];
 
-                  if (studyMode === "aerophysiology") {
-                    // Get aerospace physiology questions
-                    all = getAllAerospacePhysiologyQuestions();
-                  } else {
-                    // Get T-6A aircraft questions
-                    const quizTypes = [
-                      "multipleChoice",
-                      "trueFalse",
-                      "reorderSequence",
-                      "matchItems",
-                    ];
-                    setSelectedQuestionTypes(quizTypes);
+                    if (studyMode === "aerophysiology") {
+                      // Get aerospace physiology questions
+                      all = getAllAerospacePhysiologyQuestions();
+                      console.log(
+                        "Aerospace physiology questions loaded:",
+                        all.length,
+                      );
+                    } else {
+                      // Get T-6A aircraft questions
+                      const quizTypes = [
+                        "multipleChoice",
+                        "trueFalse",
+                        "reorderSequence",
+                        "matchItems",
+                      ];
+                      setSelectedQuestionTypes(quizTypes);
 
-                    quizTypes.forEach((type) => {
-                      const questions = questionDatabase[type] || [];
-                      questions.forEach((q) => {
-                        all.push({ ...q, questionType: type });
+                      quizTypes.forEach((type) => {
+                        const questions = questionDatabase[type] || [];
+                        questions.forEach((q) => {
+                          all.push({ ...q, questionType: type });
+                        });
                       });
-                    });
+                    }
+
+                    if (all.length === 0) {
+                      alert("No questions available. Please try again.");
+                      return;
+                    }
+
+                    // Auto-select all topics
+                    const allCategories = [
+                      ...new Set(all.map((q) => q.category).filter(Boolean)),
+                    ];
+                    setSelectedTopics(allCategories);
+
+                    // Shuffle questions
+                    for (let i = all.length - 1; i > 0; i--) {
+                      const j = Math.floor(Math.random() * (i + 1));
+                      [all[i], all[j]] = [all[j], all[i]];
+                    }
+
+                    // Limit to selected count
+                    const limitedQuestions = all.slice(0, questionCount);
+
+                    console.log(
+                      "Starting quiz with",
+                      limitedQuestions.length,
+                      "questions",
+                    );
+                    setCurrentQuestions(limitedQuestions);
+                    setCurrentQuestionIndex(0);
+                    setUserAnswers({});
+                    setShowExplanation(false);
+                    setActiveTab("study");
+                    setShowQuizSetup(false);
+                  } catch (error) {
+                    console.error("Error starting quiz:", error);
+                    alert("Error starting quiz: " + error.message);
                   }
-
-                  // Auto-select all topics
-                  const allCategories = [
-                    ...new Set(all.map((q) => q.category)),
-                  ];
-                  setSelectedTopics(allCategories);
-
-                  // Shuffle questions
-                  for (let i = all.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [all[i], all[j]] = [all[j], all[i]];
-                  }
-
-                  // Limit to selected count
-                  const limitedQuestions = all.slice(0, questionCount);
-
-                  setCurrentQuestions(limitedQuestions);
-                  setCurrentQuestionIndex(0);
-                  setUserAnswers({});
-                  setShowExplanation(false);
-                  setActiveTab("study");
-                  setShowQuizSetup(false);
                 }}
                 className={`w-full px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-200 ${
                   darkMode
