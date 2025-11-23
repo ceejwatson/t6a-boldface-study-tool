@@ -1016,6 +1016,24 @@ export default function T6AEnhancedStudyTool() {
             </div>
 
             <div className="flex items-center gap-2">
+              <button
+                onClick={() => setDarkMode(!darkMode)}
+                className={`p-1.5 sm:p-2 rounded-lg transition-colors touch-manipulation min-w-[32px] min-h-[32px] sm:min-w-[40px] sm:min-h-[40px] flex items-center justify-center ${
+                  darkMode
+                    ? "bg-slate-700 hover:bg-slate-600 text-yellow-400"
+                    : "bg-slate-200 hover:bg-slate-300 text-slate-700"
+                }`}
+                title={
+                  darkMode ? "Switch to light mode" : "Switch to dark mode"
+                }
+              >
+                {darkMode ? (
+                  <Sun className="w-4 h-4 sm:w-5 sm:h-5" />
+                ) : (
+                  <Moon className="w-4 h-4 sm:w-5 sm:h-5" />
+                )}
+              </button>
+
               {/* Hidden font size and PDF controls for minimal interface */}
               {false && (
                 <>
