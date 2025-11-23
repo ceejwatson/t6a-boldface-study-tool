@@ -1278,7 +1278,8 @@ export default function T6AEnhancedStudyTool() {
 
                 <button
                   onClick={() => {
-                    setActiveTab("aerophysiology");
+                    setStudyMode("aerophysiology");
+                    setActiveTab("aerophysiologysetup");
                   }}
                   className={`group ${darkMode ? "bg-gradient-to-br from-cyan-500/20 to-cyan-600/10 hover:from-cyan-500/30 hover:to-cyan-600/20 border border-cyan-500/30" : "bg-gradient-to-br from-cyan-500 to-cyan-600"} backdrop-blur-xl rounded-2xl p-4 sm:p-6 transition-all duration-300 flex flex-col items-center justify-center shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 touch-manipulation`}
                 >
@@ -2875,24 +2876,41 @@ export default function T6AEnhancedStudyTool() {
             </div>
           ) : activeTab === "cockpit" ? (
             <CockpitReference darkMode={darkMode} />
-          ) : activeTab === "aerophysiology" ? (
-            <div className={`max-w-4xl mx-auto px-4`}>
+          ) : activeTab === "aerophysiologysetup" ? (
+            <div
+              className={`max-w-2xl mx-auto ${darkMode ? "bg-slate-800/50" : "bg-white/50"} backdrop-blur-xl rounded-3xl p-8 shadow-2xl`}
+            >
               {/* Header */}
-              <div className="text-center pt-4 pb-6 mb-6">
-                <h1
-                  className={`text-3xl sm:text-4xl font-bold mb-2 ${darkMode ? "text-white" : "text-slate-900"}`}
+              <div className="text-center mb-8">
+                <h2
+                  className={`text-3xl font-semibold ${darkMode ? "text-white" : "text-slate-900"} mb-2`}
                 >
-                  Aerospace Physiology
-                </h1>
+                  Aerospace Physiology Quiz
+                </h2>
                 <p
-                  className={`text-base ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                  className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
                 >
-                  Study Guide Questions by Topic
+                  Select topics to study
                 </p>
               </div>
 
-              {/* Topic Selection Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+              {/* Select All Button */}
+              <button
+                onClick={() => {
+                  const allTopics = Object.values(aerospacePhysiologyTopics);
+                  setSelectedTopics(allTopics);
+                }}
+                className={`w-full mb-4 px-4 py-2 rounded-lg text-sm font-medium transition ${
+                  darkMode
+                    ? "bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300"
+                    : "bg-cyan-100 hover:bg-cyan-200 text-cyan-700"
+                }`}
+              >
+                Select All Topics
+              </button>
+
+              {/* Topic Selection */}
+              <div className="space-y-2 mb-8 max-h-96 overflow-y-auto">
                 {Object.entries(aerospacePhysiologyTopics).map(
                   ([key, topicName]) => {
                     const topicQuestions = getAPQuestionsByTopic(topicName);
@@ -2913,64 +2931,56 @@ export default function T6AEnhancedStudyTool() {
                       },
                     );
 
+                    const isSelected = selectedTopics.includes(topicName);
+
                     return (
                       <button
                         key={key}
                         onClick={() => {
-                          // Load questions for this specific topic
-                          const questions = getAPQuestionsByTopic(topicName);
-                          setCurrentQuestions(questions);
-                          setCurrentQuestionIndex(0);
-                          setUserAnswers({});
-                          setShowExplanation(false);
-                          setStudyMode("aerophysiology");
-                          setActiveTab("study");
+                          if (isSelected) {
+                            setSelectedTopics(
+                              selectedTopics.filter((t) => t !== topicName),
+                            );
+                          } else {
+                            setSelectedTopics([...selectedTopics, topicName]);
+                          }
                         }}
-                        className={`group ${darkMode ? "bg-gradient-to-br from-cyan-500/20 to-cyan-600/10 hover:from-cyan-500/30 hover:to-cyan-600/20 border border-cyan-500/30" : "bg-gradient-to-br from-cyan-50 to-cyan-100 hover:from-cyan-100 hover:to-cyan-200 border border-cyan-200"} backdrop-blur-xl rounded-2xl p-5 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] text-left`}
+                        className={`w-full p-4 rounded-xl text-left transition-all duration-200 ${
+                          isSelected
+                            ? darkMode
+                              ? "bg-cyan-500/30 border-2 border-cyan-500"
+                              : "bg-cyan-100 border-2 border-cyan-500"
+                            : darkMode
+                              ? "bg-slate-700/50 hover:bg-slate-700 border-2 border-transparent"
+                              : "bg-white hover:bg-slate-50 border-2 border-slate-200"
+                        }`}
                       >
-                        <div className="flex items-start justify-between mb-3">
-                          <h3
-                            className={`text-lg font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
+                        <div className="flex items-center justify-between">
+                          <span
+                            className={`font-medium ${
+                              isSelected
+                                ? darkMode
+                                  ? "text-cyan-200"
+                                  : "text-cyan-700"
+                                : darkMode
+                                  ? "text-slate-300"
+                                  : "text-slate-700"
+                            }`}
                           >
                             {topicName}
-                          </h3>
-                          <div
-                            className={`${darkMode ? "bg-cyan-500/30" : "bg-cyan-200"} px-2 py-1 rounded-lg text-xs font-semibold ${darkMode ? "text-cyan-200" : "text-cyan-700"}`}
-                          >
-                            {topicStats.total} Questions
-                          </div>
-                        </div>
-
-                        {/* Progress Bar */}
-                        {topicStats.attempted > 0 && (
-                          <div className="mb-2">
-                            <div
-                              className={`h-2 ${darkMode ? "bg-slate-700" : "bg-slate-200"} rounded-full overflow-hidden`}
-                            >
-                              <div
-                                className="h-full bg-gradient-to-r from-cyan-500 to-cyan-600 transition-all duration-500"
-                                style={{
-                                  width: `${(topicStats.mastered / topicStats.total) * 100}%`,
-                                }}
-                              />
-                            </div>
-                            <p
-                              className={`text-xs mt-1 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
-                            >
-                              {topicStats.mastered} of {topicStats.total}{" "}
-                              mastered
-                            </p>
-                          </div>
-                        )}
-
-                        <div className="flex items-center gap-2 mt-3">
-                          <ArrowRight
-                            className={`w-4 h-4 ${darkMode ? "text-cyan-400" : "text-cyan-600"} group-hover:translate-x-1 transition-transform`}
-                          />
+                          </span>
                           <span
-                            className={`text-sm ${darkMode ? "text-cyan-400" : "text-cyan-600"} font-medium`}
+                            className={`text-xs px-2 py-1 rounded ${
+                              isSelected
+                                ? darkMode
+                                  ? "bg-cyan-500/50 text-cyan-100"
+                                  : "bg-cyan-200 text-cyan-800"
+                                : darkMode
+                                  ? "bg-slate-600 text-slate-300"
+                                  : "bg-slate-200 text-slate-600"
+                            }`}
                           >
-                            Start Topic
+                            {topicQuestions.length} Q
                           </span>
                         </div>
                       </button>
@@ -2979,24 +2989,48 @@ export default function T6AEnhancedStudyTool() {
                 )}
               </div>
 
-              {/* Quick Action: Study All */}
-              <div className="text-center mt-8">
-                <button
-                  onClick={() => {
-                    const allQuestions = getAllAerospacePhysiologyQuestions();
-                    setCurrentQuestions(allQuestions);
-                    setCurrentQuestionIndex(0);
-                    setUserAnswers({});
-                    setShowExplanation(false);
-                    setStudyMode("aerophysiology");
-                    setActiveTab("study");
-                  }}
-                  className={`${darkMode ? "bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-600 hover:to-cyan-700" : "bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-600 hover:to-cyan-700"} text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 active:scale-95`}
-                >
-                  Study All Topics (
-                  {getAllAerospacePhysiologyQuestions().length} Questions)
-                </button>
-              </div>
+              {/* Start Button */}
+              <button
+                onClick={() => {
+                  if (selectedTopics.length === 0) {
+                    alert("Please select at least one topic");
+                    return;
+                  }
+
+                  const questions = getAllAerospacePhysiologyQuestions().filter(
+                    (q) => selectedTopics.includes(q.category),
+                  );
+
+                  if (questions.length === 0) {
+                    alert("No questions available for selected topics");
+                    return;
+                  }
+
+                  setCurrentQuestions(questions);
+                  setCurrentQuestionIndex(0);
+                  setUserAnswers({});
+                  setShowExplanation(false);
+                  setActiveTab("study");
+                }}
+                className={`w-full py-4 rounded-xl font-semibold text-lg transition-all duration-200 ${
+                  selectedTopics.length > 0
+                    ? darkMode
+                      ? "bg-cyan-500 hover:bg-cyan-600 text-white shadow-lg shadow-cyan-500/50"
+                      : "bg-cyan-500 hover:bg-cyan-600 text-white shadow-lg shadow-cyan-500/50"
+                    : darkMode
+                      ? "bg-slate-700 text-slate-500 cursor-not-allowed"
+                      : "bg-slate-200 text-slate-400 cursor-not-allowed"
+                }`}
+                disabled={selectedTopics.length === 0}
+              >
+                Start Quiz (
+                {selectedTopics.length > 0
+                  ? getAllAerospacePhysiologyQuestions().filter((q) =>
+                      selectedTopics.includes(q.category),
+                    ).length
+                  : 0}{" "}
+                Questions)
+              </button>
 
               {/* Back Button */}
               <div className="text-center mt-6">
