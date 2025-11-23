@@ -508,60 +508,76 @@ export default function T6AEnhancedStudyTool() {
   };
 
   const handleAnswer = (answer) => {
-    // In quiz mode, prevent re-answering once explanation is shown
-    if (studyMode === "quiz" && showExplanation) {
-      return;
-    }
-
-    const newAnswers = { ...userAnswers, [currentQuestion.id]: answer };
-    setUserAnswers(newAnswers);
-
-    // For multiple choice and true/false, auto-submit immediately
-    const autoSubmitTypes = ["multipleChoice", "trueFalse"];
-
-    if (autoSubmitTypes.includes(currentQuestion.questionType)) {
-      // Auto-submit for simple question types in both study and quiz mode
-      setShowExplanation(true);
-      // Don't track performance in limitations mode
-      if (studyMode !== "limitations") {
-        const isCorrect = checkAnswer(currentQuestion, answer);
-        updatePerformance(currentQuestion, isCorrect);
-
-        // In review mode, track correct answers in session
-        if (studyMode === "study" && isCorrect) {
-          setReviewSessionCorrect((prev) => {
-            if (!prev.includes(currentQuestion.id)) {
-              return [...prev, currentQuestion.id];
-            }
-            return prev;
-          });
-        }
+    try {
+      // In quiz mode, prevent re-answering once explanation is shown
+      if (studyMode === "quiz" && showExplanation) {
+        return;
       }
-      return;
-    }
 
-    // For complex types (reorder, match), just save answer
-    // User will submit manually for reorder, but auto-submit for match items
-    if (currentQuestion.questionType === "matchItems") {
-      // Check if all items are matched (using index-based matching)
-      const allMatched = currentQuestion.pairs.every(
-        (pair, index) => answer[index] !== undefined,
-      );
-      if (allMatched) {
+      if (!currentQuestion || !currentQuestion.id) {
+        console.error(
+          "Invalid currentQuestion in handleAnswer:",
+          currentQuestion,
+        );
+        return;
+      }
+
+      const newAnswers = { ...userAnswers, [currentQuestion.id]: answer };
+      setUserAnswers(newAnswers);
+
+      // For multiple choice and true/false, auto-submit immediately
+      const autoSubmitTypes = ["multipleChoice", "trueFalse"];
+
+      if (autoSubmitTypes.includes(currentQuestion.questionType)) {
+        // Auto-submit for simple question types in both study and quiz mode
         setShowExplanation(true);
-        const isCorrect = checkAnswer(currentQuestion, answer);
-        updatePerformance(currentQuestion, isCorrect);
+        // Don't track performance in limitations mode
+        if (studyMode !== "limitations") {
+          const isCorrect = checkAnswer(currentQuestion, answer);
+          updatePerformance(currentQuestion, isCorrect);
 
-        // In review mode, track correct answers in session
-        if (studyMode === "study" && isCorrect) {
-          setReviewSessionCorrect((prev) => {
-            if (!prev.includes(currentQuestion.id)) {
-              return [...prev, currentQuestion.id];
-            }
-            return prev;
-          });
+          // In review mode, track correct answers in session
+          if (studyMode === "study" && isCorrect) {
+            setReviewSessionCorrect((prev) => {
+              if (!prev.includes(currentQuestion.id)) {
+                return [...prev, currentQuestion.id];
+              }
+              return prev;
+            });
+          }
+        }
+        return;
+      }
+
+      // For complex types (reorder, match), just save answer
+      // User will submit manually for reorder, but auto-submit for match items
+      if (currentQuestion.questionType === "matchItems") {
+        // Check if all items are matched (using index-based matching)
+        const allMatched = currentQuestion.pairs.every(
+          (pair, index) => answer[index] !== undefined,
+        );
+        if (allMatched) {
+          setShowExplanation(true);
+          const isCorrect = checkAnswer(currentQuestion, answer);
+          updatePerformance(currentQuestion, isCorrect);
+
+          // In review mode, track correct answers in session
+          if (studyMode === "study" && isCorrect) {
+            setReviewSessionCorrect((prev) => {
+              if (!prev.includes(currentQuestion.id)) {
+                return [...prev, currentQuestion.id];
+              }
+              return prev;
+            });
+          }
         }
       }
+    } catch (error) {
+      console.error("Error in handleAnswer:", error, {
+        currentQuestion,
+        answer,
+        studyMode,
+      });
     }
   };
 
@@ -582,92 +598,110 @@ export default function T6AEnhancedStudyTool() {
   };
 
   const updatePerformance = (question, isCorrect) => {
-    // Skip stat tracking for learning path practice mode and study mode
-    if (studyMode === "learningpath" || studyMode === "study") {
-      return;
-    }
-
-    // Update SM-2 SRS data
-    setSrsData((prev) => {
-      const existingCard = prev[question.id];
-      const quality = mapPerformanceToQuality(isCorrect);
-      const updatedCard = calculateSM2(quality, existingCard);
-
-      return {
-        ...prev,
-        [question.id]: updatedCard,
-      };
-    });
-
-    // Update questionMastery (only in quiz mode, not study mode)
-    setQuestionMastery((prev) => {
-      const existing = prev[question.id] || {
-        correctCount: 0,
-        incorrectCount: 0,
-        lastAnswered: null,
-      };
-      return {
-        ...prev,
-        [question.id]: {
-          correctCount: isCorrect
-            ? existing.correctCount + 1
-            : existing.correctCount,
-          incorrectCount: !isCorrect
-            ? existing.incorrectCount + 1
-            : existing.incorrectCount,
-          lastAnswered: Date.now(),
-        },
-      };
-    });
-
-    setPerformanceStats((prev) => {
-      const newStats = { ...prev };
-
-      // Update overall
-      if (isCorrect) {
-        newStats.overall.correct++;
-        newStats.overall.streak++;
-        newStats.overall.bestStreak = Math.max(
-          newStats.overall.streak,
-          newStats.overall.bestStreak,
-        );
-      } else {
-        newStats.overall.incorrect++;
-        newStats.overall.streak = 0;
+    try {
+      // Skip stat tracking for learning path practice mode and study mode
+      if (studyMode === "learningpath" || studyMode === "study") {
+        return;
       }
 
-      // Update by category
-      if (!newStats.byCategory[question.category]) {
-        newStats.byCategory[question.category] = { correct: 0, incorrect: 0 };
-      }
-      if (isCorrect) {
-        newStats.byCategory[question.category].correct++;
-      } else {
-        newStats.byCategory[question.category].incorrect++;
+      if (
+        !question ||
+        !question.id ||
+        !question.category ||
+        !question.questionType
+      ) {
+        console.error("Invalid question in updatePerformance:", question);
+        return;
       }
 
-      // Update by question type
-      if (!newStats.byQuestionType[question.questionType]) {
-        newStats.byQuestionType[question.questionType] = {
-          correct: 0,
-          incorrect: 0,
+      // Update SM-2 SRS data
+      setSrsData((prev) => {
+        const existingCard = prev[question.id];
+        const quality = mapPerformanceToQuality(isCorrect);
+        const updatedCard = calculateSM2(quality, existingCard);
+
+        return {
+          ...prev,
+          [question.id]: updatedCard,
         };
-      }
-      if (isCorrect) {
-        newStats.byQuestionType[question.questionType].correct++;
-      } else {
-        newStats.byQuestionType[question.questionType].incorrect++;
-      }
+      });
 
-      return newStats;
-    });
+      // Update questionMastery (only in quiz mode, not study mode)
+      setQuestionMastery((prev) => {
+        const existing = prev[question.id] || {
+          correctCount: 0,
+          incorrectCount: 0,
+          lastAnswered: null,
+        };
+        return {
+          ...prev,
+          [question.id]: {
+            correctCount: isCorrect
+              ? existing.correctCount + 1
+              : existing.correctCount,
+            incorrectCount: !isCorrect
+              ? existing.incorrectCount + 1
+              : existing.incorrectCount,
+            lastAnswered: Date.now(),
+          },
+        };
+      });
 
-    // Update SRS data using SM-2 algorithm
-    updateSRS(question, isCorrect);
+      setPerformanceStats((prev) => {
+        const newStats = { ...prev };
 
-    // Trigger immediate sync after answering question
-    console.log("💫 [APP] Triggering sync after question answered");
-    triggerSync();
+        // Update overall
+        if (isCorrect) {
+          newStats.overall.correct++;
+          newStats.overall.streak++;
+          newStats.overall.bestStreak = Math.max(
+            newStats.overall.streak,
+            newStats.overall.bestStreak,
+          );
+        } else {
+          newStats.overall.incorrect++;
+          newStats.overall.streak = 0;
+        }
+
+        // Update by category
+        if (!newStats.byCategory[question.category]) {
+          newStats.byCategory[question.category] = { correct: 0, incorrect: 0 };
+        }
+        if (isCorrect) {
+          newStats.byCategory[question.category].correct++;
+        } else {
+          newStats.byCategory[question.category].incorrect++;
+        }
+
+        // Update by question type
+        if (!newStats.byQuestionType[question.questionType]) {
+          newStats.byQuestionType[question.questionType] = {
+            correct: 0,
+            incorrect: 0,
+          };
+        }
+        if (isCorrect) {
+          newStats.byQuestionType[question.questionType].correct++;
+        } else {
+          newStats.byQuestionType[question.questionType].incorrect++;
+        }
+
+        return newStats;
+      });
+
+      // Update SRS data using SM-2 algorithm
+      updateSRS(question, isCorrect);
+
+      // Trigger immediate sync after answering question
+      console.log("💫 [APP] Triggering sync after question answered");
+      triggerSync();
+    } catch (error) {
+      console.error("Error in updatePerformance:", error, {
+        question,
+        isCorrect,
+        studyMode,
+      });
+    }
   };
 
   // SM-2 Spaced Repetition Algorithm
