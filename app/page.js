@@ -999,11 +999,21 @@ export default function T6AEnhancedStudyTool() {
       >
         <div className="container mx-auto px-4 py-2">
           <div className="flex items-center justify-between">
-            <h1
-              className={`text-sm font-medium ${darkMode ? "text-white" : "text-slate-900"}`}
-            >
-              T-6A Study Tool
-            </h1>
+            <div className="flex items-center gap-3">
+              {activeTab !== "home" && (
+                <button
+                  onClick={() => setActiveTab("home")}
+                  className={`text-sm ${darkMode ? "text-slate-400 hover:text-white" : "text-slate-500 hover:text-slate-900"} transition-colors`}
+                >
+                  ← Home
+                </button>
+              )}
+              <h1
+                className={`text-sm font-medium ${darkMode ? "text-white" : "text-slate-900"}`}
+              >
+                Study Tool
+              </h1>
+            </div>
 
             <div className="flex items-center gap-2">
               {/* Hidden font size and PDF controls for minimal interface */}
