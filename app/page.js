@@ -3090,125 +3090,70 @@ export default function T6AEnhancedStudyTool() {
               </div>
 
               {/* Question Card */}
-              <div
-                key={currentQuestion?.id}
-                className={`${darkMode ? "bg-slate-800/50" : "bg-white"} rounded-xl p-6 md:p-8 question-enter`}
-              >
-                {currentQuestion && (
-                  <>
-                    <div className="mb-4 flex items-center justify-between flex-wrap gap-2">
-                      <div className="flex items-center gap-2">
-                        {/* Show star only if mastered */}
-                        {studyMode !== "study" &&
-                          (() => {
-                            const mastery = questionMastery[currentQuestion.id];
-                            const correctCount = mastery?.correctCount || 0;
+              {currentQuestion ? (
+                <div
+                  key={currentQuestion.id}
+                  className={`${darkMode ? "bg-slate-800/50" : "bg-white"} rounded-xl p-6 md:p-8 question-enter`}
+                >
+                  <div className="mb-4 flex items-center justify-between flex-wrap gap-2">
+                    <div className="flex items-center gap-2">
+                      {/* Show star only if mastered */}
+                      {studyMode !== "study" &&
+                        (() => {
+                          const mastery = questionMastery[currentQuestion.id];
+                          const correctCount = mastery?.correctCount || 0;
 
-                            if (correctCount >= 3) {
-                              return (
-                                <span className="text-yellow-400 text-xl">
-                                  ⭐
-                                </span>
-                              );
-                            }
-                            return null;
-                          })()}
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={toggleFlag}
-                          className={`min-w-[36px] min-h-[36px] px-2 py-1.5 rounded-lg font-semibold transition-all duration-200 flex items-center justify-center gap-1.5 touch-manipulation shadow-sm ${
-                            flaggedQuestions.includes(currentQuestion.id)
-                              ? "bg-yellow-500 hover:bg-yellow-600 text-white"
-                              : darkMode
-                                ? "bg-slate-700 text-slate-300 hover:bg-slate-600 hover:text-yellow-400"
-                                : "bg-slate-200 text-slate-700 hover:bg-slate-300"
-                          }`}
-                          title={
-                            flaggedQuestions.includes(currentQuestion.id)
-                              ? "Unflag question"
-                              : "Flag for review"
+                          if (correctCount >= 3) {
+                            return (
+                              <span className="text-yellow-400 text-xl">
+                                ⭐
+                              </span>
+                            );
                           }
-                        >
-                          <span className="text-base">
-                            {flaggedQuestions.includes(currentQuestion.id)
-                              ? "⭐"
-                              : "☆"}
-                          </span>
-                          <span className="hidden sm:inline text-xs">
-                            {flaggedQuestions.includes(currentQuestion.id)
-                              ? "Flagged"
-                              : "Flag"}
-                          </span>
-                        </button>
-                      </div>
+                          return null;
+                        })()}
                     </div>
-
-                    {/* Mastery Progress Bar - Hidden for minimal interface */}
-                    {false &&
-                      studyMode !== "study" &&
-                      (() => {
-                        const mastery = questionMastery[currentQuestion.id];
-                        const correctCount = mastery?.correctCount || 0;
-                        const incorrectCount = mastery?.incorrectCount || 0;
-                        const totalAttempts = correctCount + incorrectCount;
-
-                        if (totalAttempts > 0) {
-                          const masteryProgress = Math.min(
-                            (correctCount / 3) * 100,
-                            100,
-                          ); // 3 correct = 100%
-                          const isWeak = incorrectCount >= 2;
-                          const isMastered = correctCount >= 3;
-
-                          return (
-                            <div className="mb-2">
-                              <div className="flex items-center justify-between text-xs mb-0.5">
-                                <span
-                                  className={
-                                    darkMode
-                                      ? "text-slate-400"
-                                      : "text-slate-600"
-                                  }
-                                >
-                                  Mastery Progress
-                                </span>
-                                <span
-                                  className={`font-semibold ${
-                                    isMastered
-                                      ? "text-green-400"
-                                      : isWeak
-                                        ? "text-orange-400"
-                                        : "text-blue-400"
-                                  }`}
-                                >
-                                  {correctCount}/3 correct
-                                </span>
-                              </div>
-                              <div
-                                className={`w-full h-2 rounded-full overflow-hidden ${darkMode ? "bg-slate-700" : "bg-slate-200"}`}
-                              >
-                                <div
-                                  className={`h-full transition-all duration-500 ${
-                                    isMastered
-                                      ? "bg-gradient-to-r from-green-500 to-emerald-500"
-                                      : isWeak
-                                        ? "bg-gradient-to-r from-orange-500 to-red-500"
-                                        : "bg-gradient-to-r from-blue-500 to-cyan-500"
-                                  }`}
-                                  style={{ width: `${masteryProgress}%` }}
-                                />
-                              </div>
-                            </div>
-                          );
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={toggleFlag}
+                        className={`min-w-[36px] min-h-[36px] px-2 py-1.5 rounded-lg font-semibold transition-all duration-200 flex items-center justify-center gap-1.5 touch-manipulation shadow-sm ${
+                          flaggedQuestions.includes(currentQuestion.id)
+                            ? "bg-yellow-500 hover:bg-yellow-600 text-white"
+                            : darkMode
+                              ? "bg-slate-700 text-slate-300 hover:bg-slate-600 hover:text-yellow-400"
+                              : "bg-slate-200 text-slate-700 hover:bg-slate-300"
+                        }`}
+                        title={
+                          flaggedQuestions.includes(currentQuestion.id)
+                            ? "Unflag question"
+                            : "Flag for review"
                         }
-                        return null;
-                      })()}
-                  </>
-                )}
+                      >
+                        <span className="text-base">
+                          {flaggedQuestions.includes(currentQuestion.id)
+                            ? "⭐"
+                            : "☆"}
+                        </span>
+                        <span className="hidden sm:inline text-xs">
+                          {flaggedQuestions.includes(currentQuestion.id)
+                            ? "Flagged"
+                            : "Flag"}
+                        </span>
+                      </button>
+                    </div>
+                  </div>
 
-                {renderQuestion()}
-              </div>
+                  {renderQuestion()}
+                </div>
+              ) : (
+                <div
+                  className={`${darkMode ? "bg-slate-800/50" : "bg-white"} rounded-xl p-6 md:p-8 text-center`}
+                >
+                  <p className={darkMode ? "text-slate-400" : "text-slate-600"}>
+                    Loading question...
+                  </p>
+                </div>
+              )}
 
               {/* Keyboard Hints - Subtle, only on desktop */}
               {currentQuestion && (
