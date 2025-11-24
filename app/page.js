@@ -2479,45 +2479,164 @@ export default function T6AEnhancedStudyTool() {
                       >
                         Questions to Review ({incorrectQuestions.length})
                       </h3>
-                      <div className="space-y-2 mb-8">
+                      <div className="space-y-6 mb-8">
                         {incorrectQuestions.map((question, index) => {
                           const userAnswer = userAnswers[question.id];
                           return (
                             <div
                               key={question.id}
-                              className={`p-4 rounded-lg border cursor-pointer transition ${
+                              className={`p-6 rounded-lg border ${
                                 darkMode
-                                  ? "bg-slate-800/50 border-slate-700 hover:bg-slate-700/50"
-                                  : "bg-slate-50 border-slate-200 hover:bg-slate-100"
+                                  ? "bg-slate-800/50 border-slate-700"
+                                  : "bg-white border-slate-200"
                               }`}
-                              onClick={() => {
-                                setCurrentQuestionIndex(
-                                  currentQuestions.indexOf(question),
-                                );
-                                setViewingSingleQuestion(true);
-                                setActiveTab("study");
-                              }}
                             >
-                              <div className="flex items-start justify-between">
-                                <div className="flex-1">
+                              {/* Question Text */}
+                              <div className="mb-4">
+                                <div className="flex items-start gap-2">
+                                  <XCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
                                   <div
-                                    className={`font-medium ${darkMode ? "text-slate-300" : "text-slate-700"}`}
+                                    className={`font-semibold text-base ${darkMode ? "text-white" : "text-slate-900"}`}
                                   >
                                     {question.question}
                                   </div>
+                                </div>
+                              </div>
+
+                              {/* Multiple Choice Options */}
+                              {question.questionType === "multipleChoice" &&
+                                question.options && (
+                                  <div className="space-y-2">
+                                    {question.options.map((option, idx) => {
+                                      const isUserAnswer = userAnswer === idx;
+                                      const isCorrectAnswer =
+                                        question.correctAnswer === idx;
+
+                                      return (
+                                        <div
+                                          key={idx}
+                                          className={`p-3 rounded-lg border-2 ${
+                                            isCorrectAnswer
+                                              ? darkMode
+                                                ? "bg-green-900/30 border-green-600 text-green-400"
+                                                : "bg-green-50 border-green-500 text-green-700"
+                                              : isUserAnswer
+                                                ? darkMode
+                                                  ? "bg-red-900/30 border-red-600 text-red-400"
+                                                  : "bg-red-50 border-red-500 text-red-700"
+                                                : darkMode
+                                                  ? "bg-slate-700/30 border-slate-600 text-slate-400"
+                                                  : "bg-slate-50 border-slate-300 text-slate-600"
+                                          }`}
+                                        >
+                                          <div className="flex items-start gap-2">
+                                            <span className="font-semibold">
+                                              {String.fromCharCode(97 + idx)})
+                                            </span>
+                                            <span className="flex-1">
+                                              {option}
+                                            </span>
+                                            {isCorrectAnswer && (
+                                              <span className="text-xs font-bold">
+                                                ✓ CORRECT
+                                              </span>
+                                            )}
+                                            {isUserAnswer &&
+                                              !isCorrectAnswer && (
+                                                <span className="text-xs font-bold">
+                                                  ✗ YOUR ANSWER
+                                                </span>
+                                              )}
+                                          </div>
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
+                                )}
+
+                              {/* True/False Options */}
+                              {question.questionType === "trueFalse" && (
+                                <div className="space-y-2">
                                   <div
-                                    className={`text-xs mt-2 ${darkMode ? "text-slate-500" : "text-slate-500"}`}
+                                    className={`p-3 rounded-lg border-2 ${
+                                      question.correctAnswer === true
+                                        ? darkMode
+                                          ? "bg-green-900/30 border-green-600 text-green-400"
+                                          : "bg-green-50 border-green-500 text-green-700"
+                                        : userAnswer === true
+                                          ? darkMode
+                                            ? "bg-red-900/30 border-red-600 text-red-400"
+                                            : "bg-red-50 border-red-500 text-red-700"
+                                          : darkMode
+                                            ? "bg-slate-700/30 border-slate-600 text-slate-400"
+                                            : "bg-slate-50 border-slate-300 text-slate-600"
+                                    }`}
                                   >
-                                    Your answer:{" "}
-                                    {typeof userAnswer === "string"
-                                      ? userAnswer
-                                      : Array.isArray(userAnswer)
-                                        ? userAnswer.join(", ")
-                                        : JSON.stringify(userAnswer)}
+                                    <div className="flex items-start gap-2">
+                                      <span className="font-semibold">a)</span>
+                                      <span className="flex-1">True</span>
+                                      {question.correctAnswer === true && (
+                                        <span className="text-xs font-bold">
+                                          ✓ CORRECT
+                                        </span>
+                                      )}
+                                      {userAnswer === true &&
+                                        question.correctAnswer !== true && (
+                                          <span className="text-xs font-bold">
+                                            ✗ YOUR ANSWER
+                                          </span>
+                                        )}
+                                    </div>
+                                  </div>
+                                  <div
+                                    className={`p-3 rounded-lg border-2 ${
+                                      question.correctAnswer === false
+                                        ? darkMode
+                                          ? "bg-green-900/30 border-green-600 text-green-400"
+                                          : "bg-green-50 border-green-500 text-green-700"
+                                        : userAnswer === false
+                                          ? darkMode
+                                            ? "bg-red-900/30 border-red-600 text-red-400"
+                                            : "bg-red-50 border-red-500 text-red-700"
+                                          : darkMode
+                                            ? "bg-slate-700/30 border-slate-600 text-slate-400"
+                                            : "bg-slate-50 border-slate-300 text-slate-600"
+                                    }`}
+                                  >
+                                    <div className="flex items-start gap-2">
+                                      <span className="font-semibold">b)</span>
+                                      <span className="flex-1">False</span>
+                                      {question.correctAnswer === false && (
+                                        <span className="text-xs font-bold">
+                                          ✓ CORRECT
+                                        </span>
+                                      )}
+                                      {userAnswer === false &&
+                                        question.correctAnswer !== false && (
+                                          <span className="text-xs font-bold">
+                                            ✗ YOUR ANSWER
+                                          </span>
+                                        )}
+                                    </div>
                                   </div>
                                 </div>
-                                <XCircle className="w-5 h-5 text-red-500 flex-shrink-0 ml-2" />
-                              </div>
+                              )}
+
+                              {/* Other question types */}
+                              {(question.questionType === "reorderSequence" ||
+                                question.questionType === "matchItems") && (
+                                <div
+                                  className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                                >
+                                  <p>
+                                    Your answer: {JSON.stringify(userAnswer)}
+                                  </p>
+                                  <p className="mt-2">
+                                    Correct answer:{" "}
+                                    {JSON.stringify(question.correctAnswer)}
+                                  </p>
+                                </div>
+                              )}
                             </div>
                           );
                         })}
