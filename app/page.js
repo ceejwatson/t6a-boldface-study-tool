@@ -1424,13 +1424,32 @@ export default function T6AEnhancedStudyTool() {
               <div
                 className={`max-w-2xl mx-auto mb-6 sm:mb-8 ${darkMode ? "bg-slate-800 border border-slate-700" : "bg-white"} rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-lg`}
               >
-                <h2
-                  className={`text-xl font-semibold mb-4 text-center ${darkMode ? "text-white" : "text-slate-900"}`}
-                >
-                  Mastery Progress
-                </h2>
+                <div className="flex items-center justify-center gap-2 mb-3">
+                  <h2
+                    className={`text-xl font-semibold text-center ${darkMode ? "text-white" : "text-slate-900"}`}
+                  >
+                    Mastery Progress
+                  </h2>
+                  <button
+                    onClick={() => {
+                      alert(
+                        "A question is considered 'mastered' when you answer it correctly twice in a row.\n\n" +
+                          "Mastered questions can be hidden from the topic sections to help you focus on material you haven't learned yet.",
+                      );
+                    }}
+                    className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${
+                      darkMode
+                        ? "bg-slate-700 text-slate-300 hover:bg-slate-600"
+                        : "bg-slate-200 text-slate-700 hover:bg-slate-300"
+                    }`}
+                    title="What is mastery?"
+                  >
+                    ?
+                  </button>
+                </div>
+
                 <p
-                  className={`text-center mb-4 ${darkMode ? "text-slate-300" : "text-slate-700"}`}
+                  className={`text-center mb-4 font-semibold ${darkMode ? "text-slate-300" : "text-slate-700"}`}
                 >
                   {(() => {
                     // Get total count across ALL questions (aircraft + aerospace physiology)
