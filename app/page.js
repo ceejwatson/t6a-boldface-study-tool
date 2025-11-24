@@ -1386,11 +1386,15 @@ export default function T6AEnhancedStudyTool() {
             <div className="max-w-4xl mx-auto px-4">
               {/* T-6A Image */}
               <div className="text-center mb-6">
-                <img
-                  src="/t6atransparent.png"
-                  alt="T-6A Texan II"
-                  className="w-48 sm:w-64 md:w-72 h-auto mx-auto"
-                />
+                <div
+                  className={`inline-block p-6 rounded-2xl ${darkMode ? "" : "bg-gradient-to-br from-blue-50 to-slate-100 shadow-lg"}`}
+                >
+                  <img
+                    src="/t6atransparent.png"
+                    alt="T-6A Texan II"
+                    className="w-48 sm:w-64 md:w-72 h-auto mx-auto"
+                  />
+                </div>
               </div>
 
               {/* Mastery Progress Section */}
@@ -2033,31 +2037,63 @@ export default function T6AEnhancedStudyTool() {
             </div>
           ) : activeTab === "progress" ? (
             <div className="max-w-3xl mx-auto px-4">
-              <h2 className={`text-2xl font-bold mb-6 text-center ${darkMode ? "text-white" : "text-slate-900"}`}>
+              <h2
+                className={`text-2xl font-bold mb-6 text-center ${darkMode ? "text-white" : "text-slate-900"}`}
+              >
                 Progress
               </h2>
 
               {/* Overall Stats */}
               <div className="grid grid-cols-3 gap-4 mb-6">
-                <div className={`${darkMode ? "bg-slate-800/50" : "bg-white"} rounded-xl p-4 text-center border ${darkMode ? "border-slate-700" : "border-slate-200"}`}>
+                <div
+                  className={`${darkMode ? "bg-slate-800/50" : "bg-white"} rounded-xl p-4 text-center border ${darkMode ? "border-slate-700" : "border-slate-200"}`}
+                >
                   <div className="text-3xl font-bold text-green-500">
-                    {Object.values(questionMastery).filter((q) => (q?.correctCount || 0) >= 3).length}
+                    {
+                      Object.values(questionMastery).filter(
+                        (q) => (q?.correctCount || 0) >= 3,
+                      ).length
+                    }
                   </div>
-                  <div className={`text-xs mt-1 ${darkMode ? "text-slate-400" : "text-slate-600"}`}>Mastered</div>
+                  <div
+                    className={`text-xs mt-1 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                  >
+                    Mastered
+                  </div>
                 </div>
-                <div className={`${darkMode ? "bg-slate-800/50" : "bg-white"} rounded-xl p-4 text-center border ${darkMode ? "border-slate-700" : "border-slate-200"}`}>
+                <div
+                  className={`${darkMode ? "bg-slate-800/50" : "bg-white"} rounded-xl p-4 text-center border ${darkMode ? "border-slate-700" : "border-slate-200"}`}
+                >
                   <div className="text-3xl font-bold text-blue-500">
-                    {performanceStats.overall.correct + performanceStats.overall.incorrect > 0
-                      ? Math.round((performanceStats.overall.correct / (performanceStats.overall.correct + performanceStats.overall.incorrect)) * 100)
-                      : 0}%
+                    {performanceStats.overall.correct +
+                      performanceStats.overall.incorrect >
+                    0
+                      ? Math.round(
+                          (performanceStats.overall.correct /
+                            (performanceStats.overall.correct +
+                              performanceStats.overall.incorrect)) *
+                            100,
+                        )
+                      : 0}
+                    %
                   </div>
-                  <div className={`text-xs mt-1 ${darkMode ? "text-slate-400" : "text-slate-600"}`}>Accuracy</div>
+                  <div
+                    className={`text-xs mt-1 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                  >
+                    Accuracy
+                  </div>
                 </div>
-                <div className={`${darkMode ? "bg-slate-800/50" : "bg-white"} rounded-xl p-4 text-center border ${darkMode ? "border-slate-700" : "border-slate-200"}`}>
+                <div
+                  className={`${darkMode ? "bg-slate-800/50" : "bg-white"} rounded-xl p-4 text-center border ${darkMode ? "border-slate-700" : "border-slate-200"}`}
+                >
                   <div className="text-3xl font-bold text-orange-500">
                     {performanceStats.overall.bestStreak}
                   </div>
-                  <div className={`text-xs mt-1 ${darkMode ? "text-slate-400" : "text-slate-600"}`}>Best Streak</div>
+                  <div
+                    className={`text-xs mt-1 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                  >
+                    Best Streak
+                  </div>
                 </div>
               </div>
 
@@ -2081,24 +2117,32 @@ export default function T6AEnhancedStudyTool() {
                   return Object.entries(categoriesData)
                     .sort((a, b) => a[0].localeCompare(b[0]))
                     .map(([category, data]) => {
-                      const percentage = Math.round((data.mastered / data.total) * 100);
+                      const percentage = Math.round(
+                        (data.mastered / data.total) * 100,
+                      );
 
                       return (
                         <div
                           key={category}
                           className={`${darkMode ? "bg-slate-800/50 border-slate-700" : "bg-white border-slate-200"} border rounded-xl p-3`}
                         >
-                          <div className={`text-xs font-semibold mb-2 ${darkMode ? "text-white" : "text-slate-900"}`}>
+                          <div
+                            className={`text-xs font-semibold mb-2 ${darkMode ? "text-white" : "text-slate-900"}`}
+                          >
                             {category}
                           </div>
                           <div className="flex items-center gap-2">
-                            <div className={`flex-1 h-1.5 rounded-full overflow-hidden ${darkMode ? "bg-slate-700" : "bg-slate-200"}`}>
+                            <div
+                              className={`flex-1 h-1.5 rounded-full overflow-hidden ${darkMode ? "bg-slate-700" : "bg-slate-200"}`}
+                            >
                               <div
                                 className="h-full bg-blue-500 transition-all"
                                 style={{ width: `${percentage}%` }}
                               />
                             </div>
-                            <div className={`text-xs font-medium ${darkMode ? "text-slate-400" : "text-slate-600"}`}>
+                            <div
+                              className={`text-xs font-medium ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                            >
                               {data.mastered}/{data.total}
                             </div>
                           </div>
@@ -2415,9 +2459,10 @@ export default function T6AEnhancedStudyTool() {
               {/* Topic Selection */}
               <div className="grid grid-cols-1 gap-3 mb-6">
                 {aerospacePhysiologyTopics.map((topic) => {
-                  const topicQuestions = getAllAerospacePhysiologyQuestions().filter(
-                    (q) => q.category === topic.name,
-                  );
+                  const topicQuestions =
+                    getAllAerospacePhysiologyQuestions().filter(
+                      (q) => q.category === topic.name,
+                    );
                   const isSelected = selectedTopics.includes(topic.name);
 
                   return (
@@ -2468,8 +2513,7 @@ export default function T6AEnhancedStudyTool() {
                       </div>
                     </button>
                   );
-                },
-                )}
+                })}
               </div>
 
               {/* Start Button */}
@@ -2527,18 +2571,24 @@ export default function T6AEnhancedStudyTool() {
             </div>
           ) : activeTab === "learningpath" ? (
             <div className="max-w-3xl mx-auto px-4">
-              <h2 className={`text-2xl font-bold mb-6 text-center ${darkMode ? "text-white" : "text-slate-900"}`}>
+              <h2
+                className={`text-2xl font-bold mb-6 text-center ${darkMode ? "text-white" : "text-slate-900"}`}
+              >
                 Categories
               </h2>
 
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {(() => {
                   const allQuestions = getAllQuestions();
-                  const categories = [...new Set(allQuestions.map(q => q.category))].sort();
+                  const categories = [
+                    ...new Set(allQuestions.map((q) => q.category)),
+                  ].sort();
 
                   return categories.map((category) => {
-                    const categoryQuestions = allQuestions.filter(q => q.category === category);
-                    const masteredCount = categoryQuestions.filter(q => {
+                    const categoryQuestions = allQuestions.filter(
+                      (q) => q.category === category,
+                    );
+                    const masteredCount = categoryQuestions.filter((q) => {
                       const mastery = questionMastery[q.id];
                       return mastery && (mastery.correctCount || 0) >= 3;
                     }).length;
@@ -2549,12 +2599,17 @@ export default function T6AEnhancedStudyTool() {
                         onClick={() => {
                           setStudyMode("quiz");
                           setSelectedCategory(category);
-                          const filtered = allQuestions.filter(q => q.category === category);
+                          const filtered = allQuestions.filter(
+                            (q) => q.category === category,
+                          );
 
                           // Shuffle
                           for (let i = filtered.length - 1; i > 0; i--) {
                             const j = Math.floor(Math.random() * (i + 1));
-                            [filtered[i], filtered[j]] = [filtered[j], filtered[i]];
+                            [filtered[i], filtered[j]] = [
+                              filtered[j],
+                              filtered[i],
+                            ];
                           }
 
                           setCurrentQuestions(filtered);
@@ -2564,10 +2619,14 @@ export default function T6AEnhancedStudyTool() {
                         }}
                         className={`${darkMode ? "bg-slate-800/50 hover:bg-slate-700/50 border-slate-700" : "bg-white hover:bg-slate-50 border-slate-200"} border rounded-xl p-4 transition-all hover:scale-105 active:scale-95 text-left`}
                       >
-                        <h3 className={`font-semibold text-sm mb-1 ${darkMode ? "text-white" : "text-slate-900"}`}>
+                        <h3
+                          className={`font-semibold text-sm mb-1 ${darkMode ? "text-white" : "text-slate-900"}`}
+                        >
                           {category}
                         </h3>
-                        <p className={`text-xs ${darkMode ? "text-slate-400" : "text-slate-600"}`}>
+                        <p
+                          className={`text-xs ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                        >
                           {masteredCount}/{categoryQuestions.length} mastered
                         </p>
                       </button>
