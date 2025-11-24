@@ -270,10 +270,10 @@ export const aerospacePhysiologyQuestions = {
       question:
         "Which of the following are common symptoms (not signs) of hypoxic hypoxia that you would personally experience?",
       options: [
-        "Cyanosis, muscle incoordination, unconsciousness",
+        "Cyanosis, muscle incoordination, unconsciousness (observable signs)",
         "Air hunger, headache, lightheadedness, tingling in extremities",
-        "Euphoria, belligerence, impaired judgment",
-        "Increased respiration, mental confusion, dysphoria",
+        "Euphoria, belligerence, impaired judgment (observable signs)",
+        "Increased respiration, mental confusion, dysphoria (signs)",
       ],
       correctAnswer: 1,
       explanation:
@@ -292,10 +292,10 @@ export const aerospacePhysiologyQuestions = {
       question:
         "At FL350, a rapid decompression occurs. What is your approximate Time of Useful Consciousness (TUC)?",
       options: [
-        "5-10 seconds",
-        "15-30 seconds",
-        "30-60 seconds",
-        "1-2 minutes",
+        "5-10 seconds TUC",
+        "15-30 seconds TUC",
+        "30-60 seconds TUC",
+        "1-2 minutes TUC",
       ],
       correctAnswer: 1,
       explanation:
@@ -836,10 +836,10 @@ export const aerospacePhysiologyQuestions = {
       question:
         "What causes the Graveyard Spiral illusion and why is it dangerous?",
       options: [
-        "Banking too steeply at low altitude",
-        "Prolonged constant-rate turn where semicircular canals stop sensing rotation, making pilot feel level; correcting to actual level feels like turning opposite direction, leading pilot to re-enter spiral",
-        "Flying upside down without realizing it",
-        "Excessive G-forces during aerobatics",
+        "Banking too steeply at low altitude causing excessive sink rate",
+        "Prolonged turn stops canal rotation sensing; correcting to level feels like opposite turn, pilot re-enters spiral tightening descent",
+        "Flying inverted without realizing orientation due to vestibular confusion",
+        "Excessive G-forces during aerobatics overloading vestibular system sensors",
       ],
       correctAnswer: 1,
       explanation:
@@ -920,10 +920,10 @@ export const aerospacePhysiologyQuestions = {
       question:
         "What is the most widely accepted theory for the cause of motion sickness?",
       options: [
-        "Inner ear infection",
-        "Sensory conflict theory - mismatch between visual, vestibular, and somatosensory inputs",
-        "Low blood sugar",
-        "Dehydration",
+        "Inner ear infection causing disrupted vestibular system function",
+        "Sensory conflict theory - mismatch between visual, vestibular, somatosensory inputs",
+        "Low blood sugar levels causing decreased cerebral function symptoms",
+        "Dehydration causing reduced blood volume and vestibular dysfunction",
       ],
       correctAnswer: 1,
       explanation:
@@ -1051,10 +1051,10 @@ export const aerospacePhysiologyQuestions = {
       question:
         "What is G-induced Loss of Consciousness (G-LOC) and what are its phases?",
       options: [
-        "A temporary state of confusion during high G maneuvers",
-        "Complete loss of consciousness from excessive positive Gz with phases: period of relative incapacitation (unconscious), period of absolute incapacitation (convulsions/muscle jerks), recovery period (confusion)",
-        "Permanent brain damage from G exposure",
-        "Loss of vision but not consciousness",
+        "Temporary confusion state during high G with disorientation symptoms",
+        "Complete unconsciousness from excessive +Gz; phases: absolute incapacitation (unconscious), relative incapacitation (convulsions), recovery (confusion)",
+        "Permanent brain damage from excessive G exposure to cerebral tissues",
+        "Loss of vision capability but consciousness maintained throughout episode",
       ],
       correctAnswer: 1,
       explanation:
@@ -1095,10 +1095,10 @@ export const aerospacePhysiologyQuestions = {
       question:
         "What are the key elements of correctly performing the Anti-G Straining Maneuver (AGSM)?",
       options: [
-        "Hold your breath and tense all muscles",
-        "Breathe normally and relax",
-        "Tense muscles of legs, abdomen, and arms while performing a 3-second strain cycle: forcefully exhale against closed glottis for 3 seconds (straining), rapid breath exchange, repeat",
-        "Hyperventilate before the G onset",
+        "Hold breath continuously while tensing all major muscle groups throughout",
+        "Breathe normally with relaxed muscles to maintain adequate oxygen flow",
+        "Tense leg/abdomen/arm muscles, perform 3-sec strain cycle against closed glottis, rapid breath exchange, repeat continuously",
+        "Hyperventilate rapidly before G onset to increase blood oxygen saturation",
       ],
       correctAnswer: 2,
       explanation:
@@ -1162,10 +1162,10 @@ export const aerospacePhysiologyQuestions = {
       question:
         "What are the effects of hypoglycemia (low blood sugar) on aircrew performance?",
       options: [
-        "Improved alertness and energy",
-        "Symptoms similar to hypoxia: weakness, trembling, confusion, sweating, headache, impaired judgment, and possible unconsciousness",
-        "No significant effects",
-        "Only affects diabetic pilots",
+        "Improved alertness and energy levels with enhanced cognitive function",
+        "Symptoms mimicking hypoxia: weakness, trembling, confusion, sweating, headache, impaired judgment, possible unconsciousness",
+        "No significant physiological effects on normal flight operations",
+        "Only affects diabetic pilots; normal pilots unaffected by condition",
       ],
       correctAnswer: 1,
       explanation:
@@ -1183,10 +1183,10 @@ export const aerospacePhysiologyQuestions = {
       question:
         "What are signs and symptoms of dehydration and why is it particularly dangerous in aviation?",
       options: [
-        "Only excessive thirst; not dangerous",
-        "Symptoms include fatigue, headache, dizziness, decreased performance, dark urine; dangerous because it increases susceptibility to hypoxia, DCS, and G-LOC",
-        "Skin rash only",
-        "Dehydration only occurs in hot weather",
+        "Only excessive thirst sensation; not particularly dangerous to aircrew",
+        "Symptoms: fatigue, headache, dizziness, decreased performance, dark urine; increases hypoxia, DCS, G-LOC susceptibility significantly",
+        "Skin rash only; no other physiological symptoms present whatsoever",
+        "Dehydration only occurs in hot weather operations, not normal flights",
       ],
       correctAnswer: 1,
       explanation:
@@ -1204,10 +1204,10 @@ export const aerospacePhysiologyQuestions = {
       difficulty: "high",
       question: "What is the difference between acute and chronic fatigue?",
       options: [
-        "No practical difference",
-        "Acute fatigue results from a single period of inadequate rest and is relieved by proper sleep; chronic fatigue accumulates over time from repeated inadequate rest and requires extended recovery",
-        "Acute is physical; chronic is mental",
-        "Acute is dangerous; chronic is not",
+        "No practical difference exists between the two fatigue types",
+        "Acute results from single inadequate rest period, relieved by proper sleep; chronic accumulates over time, requires extended recovery",
+        "Acute is solely physical fatigue; chronic is solely mental fatigue",
+        "Acute is dangerous to flight ops; chronic is not dangerous",
       ],
       correctAnswer: 1,
       explanation:
@@ -2463,10 +2463,10 @@ export const aerospacePhysiologyQuestions = {
       question:
         "What are the four principle physiological effects of exposure to G forces?",
       options: [
-        "Happiness, sadness, anger, and fear",
-        "Cardiovascular (blood pooling), pulmonary (breathing difficulty), musculoskeletal (increased weight), and visual (reduced blood flow to eyes)",
-        "Only affects the heart",
-        "Hunger, thirst, fatigue, and cold",
+        "Happiness, sadness, anger, fear emotions during stress response",
+        "Cardiovascular (blood pooling), pulmonary (breathing difficulty), musculoskeletal (increased weight), visual (reduced eye blood flow)",
+        "Only affects the heart with no other system impacts",
+        "Hunger, thirst, fatigue, cold sensations during G exposure",
       ],
       correctAnswer: 1,
       explanation:
@@ -2549,10 +2549,10 @@ export const aerospacePhysiologyQuestions = {
       question:
         "What are common errors when performing the Anti-G Straining Maneuver (AGSM)?",
       options: [
-        "There are no common errors - everyone does it perfectly",
-        "Holding breath too long causing hypocapnia, inadequate muscle tensing, improper breathing cycle (not exhaling forcefully), skipping the straining maneuver",
-        "Tensing muscles too much",
-        "Breathing too rapidly",
+        "There are no common errors - all pilots perform perfectly",
+        "Holding breath too long (hypocapnia), inadequate muscle tensing, improper breathing cycle, skipping straining maneuver entirely",
+        "Tensing muscles excessively causing cramping and discomfort",
+        "Breathing too rapidly causing hyperventilation and dizziness",
       ],
       correctAnswer: 1,
       explanation:
@@ -2858,10 +2858,10 @@ export const aerospacePhysiologyQuestions = {
       question:
         "What are the five types of oxygen storage systems and their key characteristics?",
       options: [
-        "There is only one type of oxygen system",
-        "Gaseous (high pressure cylinders), Liquid (LOX - cold, requires insulation), Chemical (oxygen candles), OBOGS (On-Board Oxygen Generating System), and Molecular sieve",
-        "All systems are identical in function",
-        "Only OBOGS exists in modern aircraft",
+        "There is only one type of oxygen system used in aviation",
+        "Gaseous (high pressure cylinders), Liquid (LOX cryogenic), Chemical (candles), OBOGS (on-board generation), Molecular sieve (ambient concentration)",
+        "All systems are identical in function with no differences whatsoever",
+        "Only OBOGS exists in modern aircraft; others discontinued completely",
       ],
       correctAnswer: 1,
       explanation:

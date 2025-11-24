@@ -1691,7 +1691,12 @@ export default function T6AEnhancedStudyTool() {
                     </h3>
                   </button>
                   <button
-                    onClick={() => window.open("/boldface.pdf", "_blank")}
+                    onClick={() =>
+                      window.open(
+                        "https://www.sheppard.af.mil/Portals/65/T-6A%20Boldface%20Ops%20Limits%2C%201%20Jun%202023%20%28Filled%29.pdf",
+                        "_blank",
+                      )
+                    }
                     className={`w-full ${darkMode ? "bg-slate-700/50 hover:bg-slate-600/50" : "bg-slate-100 hover:bg-slate-200"} rounded-xl p-4 transition-all border ${darkMode ? "border-slate-600" : "border-slate-300"} hover:scale-102 active:scale-98`}
                   >
                     <h3
