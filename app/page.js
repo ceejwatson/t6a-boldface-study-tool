@@ -2766,14 +2766,30 @@ export default function T6AEnhancedStudyTool() {
                       {/* Next Question */}
                       <button
                         onClick={() => {
+                          console.log("Finish button clicked", {
+                            currentQuestionIndex,
+                            totalQuestions: currentQuestions.length,
+                            studyMode,
+                            instantGrade,
+                            userAnswersCount: Object.keys(userAnswers).length,
+                          });
+
                           if (
                             currentQuestionIndex ===
                             currentQuestions.length - 1
                           ) {
                             // Last question - grade all questions and go to results
+                            console.log(
+                              "On last question, studyMode:",
+                              studyMode,
+                            );
                             if (studyMode === "quiz") {
+                              console.log("Is quiz mode, grading questions...");
                               // If instant grade is off, we need to grade all answered questions now
                               if (!instantGrade) {
+                                console.log(
+                                  "Instant grade is OFF, grading all questions",
+                                );
                                 currentQuestions.forEach((question) => {
                                   const userAnswer = userAnswers[question.id];
                                   if (userAnswer !== undefined) {
@@ -2781,13 +2797,23 @@ export default function T6AEnhancedStudyTool() {
                                       question,
                                       userAnswer,
                                     );
+                                    console.log(
+                                      `Grading Q${question.id}:`,
+                                      isCorrect,
+                                    );
                                     updatePerformance(question, isCorrect);
                                   } else {
                                     // Grade unanswered questions as incorrect
+                                    console.log(
+                                      `Q${question.id} unanswered, marking incorrect`,
+                                    );
                                     updatePerformance(question, false);
                                   }
                                 });
                               } else {
+                                console.log(
+                                  "Instant grade is ON, grading unanswered only",
+                                );
                                 // If instant grade is on, just grade any remaining unanswered questions
                                 currentQuestions.forEach((question) => {
                                   if (userAnswers[question.id] === undefined) {
@@ -2795,11 +2821,18 @@ export default function T6AEnhancedStudyTool() {
                                   }
                                 });
                               }
+                              console.log("Setting activeTab to results");
                               setActiveTab("results");
                             } else {
+                              console.log(
+                                "Not quiz mode, going to study complete",
+                              );
                               setActiveTab("studycomplete");
                             }
                           } else {
+                            console.log(
+                              "Not on last question, calling handleNext",
+                            );
                             handleNext();
                           }
                         }}
