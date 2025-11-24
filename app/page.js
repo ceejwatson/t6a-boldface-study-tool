@@ -1628,10 +1628,12 @@ export default function T6AEnhancedStudyTool() {
                   <button
                     onClick={() => {
                       setQuestionSet("aerophysiology");
-                      // Auto-select all aerospace physiology topics
-                      const aeroCategories = aerospacePhysiologyTopics.map(
-                        (t) => t.name,
-                      );
+                      // Auto-select all aerospace physiology topics - get unique categories from questions
+                      const aeroQuestions =
+                        getAllAerospacePhysiologyQuestions();
+                      const aeroCategories = [
+                        ...new Set(aeroQuestions.map((q) => q.category)),
+                      ];
                       setSelectedTopics(aeroCategories);
                     }}
                     className={`p-4 rounded-xl text-left transition-all ${
