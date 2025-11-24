@@ -66,6 +66,7 @@ export default function T6AEnhancedStudyTool() {
   // UI State
   const [darkMode, setDarkMode] = useState(true);
   const [activeTab, setActiveTab] = useState("home");
+  const [studyMode, setStudyMode] = useState("quiz"); // Always quiz mode
   const [studySubMode, setStudySubMode] = useState("activeRecall"); // 'activeRecall', 'learnNew', 'review', 'readThrough'
   const [selectedCategory, setSelectedCategory] = useState("all"); // Category filter for study mode
 
@@ -914,6 +915,7 @@ export default function T6AEnhancedStudyTool() {
     setCurrentQuestionIndex(0);
     setUserAnswers({});
     setShowExplanation(false);
+    setStudyMode("learningpath"); // New mode for learning path practice
     setActiveTab("study");
   };
 
@@ -1272,12 +1274,56 @@ export default function T6AEnhancedStudyTool() {
                     activeTab === "studysetup" ||
                     activeTab === "quizsetup") && (
                     <div className="flex items-center gap-2 px-3 py-2">
-                      <Brain className="w-4 h-4 text-orange-400" />
-                      <span
-                        className={`font-medium ${darkMode ? "text-white" : "text-slate-900"}`}
-                      >
-                        Quiz Mode
-                      </span>
+                      {studyMode === "study" && (
+                        <>
+                          <RotateCcw className="w-4 h-4 text-red-400" />
+                          <span
+                            className={`font-medium ${darkMode ? "text-white" : "text-slate-900"}`}
+                          >
+                            Review
+                          </span>
+                        </>
+                      )}
+                      {studyMode === "quiz" && (
+                        <>
+                          <Brain className="w-4 h-4 text-orange-400" />
+                          <span
+                            className={`font-medium ${darkMode ? "text-white" : "text-slate-900"}`}
+                          >
+                            Quiz Mode
+                          </span>
+                        </>
+                      )}
+                      {studyMode === "weak" && (
+                        <>
+                          <Zap className="w-4 h-4 text-orange-400" />
+                          <span
+                            className={`font-medium ${darkMode ? "text-white" : "text-slate-900"}`}
+                          >
+                            Weak Topics
+                          </span>
+                        </>
+                      )}
+                      {studyMode === "review" && (
+                        <>
+                          <RotateCcw className="w-4 h-4 text-teal-400" />
+                          <span
+                            className={`font-medium ${darkMode ? "text-white" : "text-slate-900"}`}
+                          >
+                            Review
+                          </span>
+                        </>
+                      )}
+                      {studyMode === "flagged" && (
+                        <>
+                          <Target className="w-4 h-4 text-yellow-400" />
+                          <span
+                            className={`font-medium ${darkMode ? "text-white" : "text-slate-900"}`}
+                          >
+                            Flagged
+                          </span>
+                        </>
+                      )}
                     </div>
                   )}
 
@@ -1411,6 +1457,7 @@ export default function T6AEnhancedStudyTool() {
                   <button
                     onClick={() => {
                       setQuestionCount(10);
+                      setStudyMode("quiz");
                       // Auto-select all topics
                       const allCategories = [
                         ...new Set(getAllQuestions().map((q) => q.category)),
@@ -1437,6 +1484,7 @@ export default function T6AEnhancedStudyTool() {
                   <button
                     onClick={() => {
                       setQuestionCount(50);
+                      setStudyMode("quiz");
                       // Auto-select all topics
                       const allCategories = [
                         ...new Set(getAllQuestions().map((q) => q.category)),
@@ -1463,6 +1511,7 @@ export default function T6AEnhancedStudyTool() {
                   <button
                     onClick={() => {
                       setQuestionCount(100);
+                      setStudyMode("quiz");
                       // Auto-select all topics
                       const allCategories = [
                         ...new Set(getAllQuestions().map((q) => q.category)),
@@ -1504,6 +1553,7 @@ export default function T6AEnhancedStudyTool() {
                       setCurrentQuestionIndex(0);
                       setUserAnswers({});
                       setShowExplanation(false);
+                      setStudyMode("quiz");
                       setReviewIncorrectOnly(true);
                       setReviewSessionCorrect([]);
                       setActiveTab("study");
@@ -1598,6 +1648,7 @@ export default function T6AEnhancedStudyTool() {
                 <div className="grid grid-cols-2 gap-3">
                   <button
                     onClick={() => {
+                      setStudyMode("quiz");
                       setSelectedTopics([]);
                     }}
                     className={`p-4 rounded-xl text-left transition-all ${
@@ -1624,6 +1675,7 @@ export default function T6AEnhancedStudyTool() {
 
                   <button
                     onClick={() => {
+                      setStudyMode("aerophysiology");
                       setSelectedTopics([]);
                     }}
                     className={`p-4 rounded-xl text-left transition-all ${
@@ -1794,6 +1846,7 @@ export default function T6AEnhancedStudyTool() {
                       "reorderSequence",
                       "matchItems",
                     ]);
+                    setStudyMode("study");
                     setStudySubMode("readThrough");
                     setActiveTab("study");
                     setShowStudySetup(false);
@@ -1844,6 +1897,7 @@ export default function T6AEnhancedStudyTool() {
                       if (weakCount < 10) {
                         setQuestionCount(weakCount);
                       }
+                      setStudyMode("weak");
                       setActiveTab("study");
                       setShowStudySetup(false);
                       loadQuestions("weak");
@@ -1908,6 +1962,7 @@ export default function T6AEnhancedStudyTool() {
                       setCurrentQuestionIndex(0);
                       setUserAnswers({});
                       setShowExplanation(false);
+                      setStudyMode("quiz");
                       setReviewIncorrectOnly(true);
                       setActiveTab("study");
                       setShowStudySetup(false);
@@ -2159,6 +2214,7 @@ export default function T6AEnhancedStudyTool() {
                       setActiveTab(
                         studyMode === "learningpath" ? "learningpath" : "home",
                       );
+                      setStudyMode("study");
                       setUserAnswers({});
                       setCurrentQuestionIndex(0);
                       setShowExplanation(false);
@@ -2322,6 +2378,7 @@ export default function T6AEnhancedStudyTool() {
                   <button
                     onClick={() => {
                       setActiveTab("home");
+                      setStudyMode("study");
                       setUserAnswers({});
                       setCurrentQuestionIndex(0);
                       setShowExplanation(false);
@@ -2446,6 +2503,7 @@ export default function T6AEnhancedStudyTool() {
                   setCurrentQuestionIndex(0);
                   setUserAnswers({});
                   setShowExplanation(false);
+                  setStudyMode("quiz");
                   setActiveTab("study");
                 }}
                 className={`w-full py-4 rounded-xl font-semibold text-lg transition-all duration-200 ${
@@ -2506,6 +2564,7 @@ export default function T6AEnhancedStudyTool() {
                       <button
                         key={category}
                         onClick={() => {
+                          setStudyMode("quiz");
                           setSelectedCategory(category);
                           const filtered = allQuestions.filter(
                             (q) => q.category === category,
