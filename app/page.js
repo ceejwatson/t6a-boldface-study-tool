@@ -1780,13 +1780,28 @@ export default function T6AEnhancedStudyTool() {
 
                     console.log("Questions before filter:", all.length);
                     console.log("Selected topics:", selectedTopics);
+                    console.log("Question set:", questionSet);
 
                     // Filter by selected topics
-                    if (selectedTopics.length > 0) {
+                    // For aerophysiology: if topics are selected, filter by them. If not, use all aero questions.
+                    // For aircraft: always filter by selected topics
+                    if (
+                      questionSet === "aircraft" &&
+                      selectedTopics.length > 0
+                    ) {
+                      all = all.filter((q) =>
+                        selectedTopics.includes(q.category),
+                      );
+                    } else if (
+                      questionSet === "aerophysiology" &&
+                      selectedTopics.length > 0
+                    ) {
+                      // Only filter aero questions if user has specifically selected certain topics
                       all = all.filter((q) =>
                         selectedTopics.includes(q.category),
                       );
                     }
+                    // If aerophysiology with no topics, keep all aero questions (auto-selection case)
 
                     console.log("Questions after topic filter:", all.length);
 
