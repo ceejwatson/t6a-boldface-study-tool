@@ -704,14 +704,26 @@ export default function T6AEnhancedStudyTool() {
           incorrectCount: 0,
           lastAnswered: null,
         };
+
+        // Calculate new incorrectCount
+        let newIncorrectCount;
+        if (isCorrect) {
+          // Reset to 0 when answered correctly
+          newIncorrectCount = 0;
+        } else {
+          // Only set to 1 if currently 0 (first miss in regular quiz)
+          // This prevents accumulating multiple incorrect counts
+          newIncorrectCount =
+            existing.incorrectCount === 0 ? 1 : existing.incorrectCount;
+        }
+
         return {
           ...prev,
           [question.id]: {
             correctCount: isCorrect
               ? existing.correctCount + 1
               : existing.correctCount,
-            // Reset incorrectCount to 0 when answered correctly, otherwise increment
-            incorrectCount: isCorrect ? 0 : existing.incorrectCount + 1,
+            incorrectCount: newIncorrectCount,
             lastAnswered: Date.now(),
           },
         };
@@ -1382,12 +1394,12 @@ export default function T6AEnhancedStudyTool() {
                     if (!instantGrade) {
                       currentQuestions.forEach((question) => {
                         const userAnswer = userAnswers[question.id];
+                        // Only track performance for questions that were actually answered
                         if (userAnswer !== undefined) {
                           const isCorrect = checkAnswer(question, userAnswer);
                           updatePerformance(question, isCorrect);
-                        } else {
-                          updatePerformance(question, false);
                         }
+                        // Don't track unanswered questions as incorrect
                       });
                     }
                     // Go to results (already graded if instant grade was ON)
@@ -1697,7 +1709,7 @@ export default function T6AEnhancedStudyTool() {
                     <h3
                       className={`text-lg font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
                     >
-                      📄 View All Questions
+                      View All Questions
                     </h3>
                   </button>
                   <button
@@ -1712,7 +1724,7 @@ export default function T6AEnhancedStudyTool() {
                     <h3
                       className={`text-lg font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
                     >
-                      📑 BoldFace PDF
+                      BoldFace PDF
                     </h3>
                   </button>
                 </div>
@@ -3292,12 +3304,12 @@ export default function T6AEnhancedStudyTool() {
                     if (!instantGrade) {
                       currentQuestions.forEach((question) => {
                         const userAnswer = userAnswers[question.id];
+                        // Only track performance for questions that were actually answered
                         if (userAnswer !== undefined) {
                           const isCorrect = checkAnswer(question, userAnswer);
                           updatePerformance(question, isCorrect);
-                        } else {
-                          updatePerformance(question, false);
                         }
+                        // Don't track unanswered questions as incorrect
                       });
                     }
                     // Go to results (already graded if instant grade was ON)
