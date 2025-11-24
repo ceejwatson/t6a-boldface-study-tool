@@ -1721,6 +1721,9 @@ export default function T6AEnhancedStudyTool() {
                       return;
                     }
 
+                    console.log("Questions before filter:", all.length);
+                    console.log("Selected topics:", selectedTopics);
+
                     // Filter by selected topics
                     if (selectedTopics.length > 0) {
                       all = all.filter((q) =>
@@ -1728,12 +1731,23 @@ export default function T6AEnhancedStudyTool() {
                       );
                     }
 
+                    console.log("Questions after topic filter:", all.length);
+
                     // Filter out mastered questions if checkbox is enabled
                     if (hideMasteredQuestions) {
                       all = all.filter((q) => {
                         const mastery = questionMastery[q.id];
                         return !mastery || (mastery.correctCount || 0) < 3;
                       });
+                    }
+
+                    console.log("Questions after mastery filter:", all.length);
+
+                    if (all.length === 0) {
+                      alert(
+                        "No questions available after filtering. Try selecting different topics or turning off 'Hide mastered questions'.",
+                      );
+                      return;
                     }
 
                     // Shuffle questions
