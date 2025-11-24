@@ -1570,23 +1570,33 @@ export default function T6AEnhancedStudyTool() {
                       View stats
                     </p>
                   </button>
-
-                  <button
-                    onClick={() => setActiveTab("allquestions")}
-                    className={`${darkMode ? "bg-slate-800/50 hover:bg-slate-700/50" : "bg-white hover:bg-slate-50"} rounded-xl p-6 transition-all border ${darkMode ? "border-slate-700" : "border-slate-200"} hover:scale-105 active:scale-95`}
-                  >
-                    <h3
-                      className={`text-lg font-semibold mb-1 ${darkMode ? "text-white" : "text-slate-900"}`}
-                    >
-                      All Questions
-                    </h3>
-                    <p
-                      className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
-                    >
-                      Print view
-                    </p>
-                  </button>
                 </div>
+              </div>
+
+              {/* Print All Questions Section */}
+              <div
+                className={`max-w-2xl mx-auto mb-8 ${darkMode ? "bg-slate-800/50" : "bg-white"} rounded-2xl p-6 shadow-lg`}
+              >
+                <h2
+                  className={`text-xl font-semibold mb-4 text-center ${darkMode ? "text-white" : "text-slate-900"}`}
+                >
+                  Study Materials
+                </h2>
+                <button
+                  onClick={() => setActiveTab("allquestions")}
+                  className={`w-full ${darkMode ? "bg-slate-700/50 hover:bg-slate-600/50" : "bg-slate-100 hover:bg-slate-200"} rounded-xl p-4 transition-all border ${darkMode ? "border-slate-600" : "border-slate-300"} hover:scale-102 active:scale-98`}
+                >
+                  <h3
+                    className={`text-lg font-semibold mb-1 ${darkMode ? "text-white" : "text-slate-900"}`}
+                  >
+                    📄 View All Questions
+                  </h3>
+                  <p
+                    className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                  >
+                    Print-friendly format with answers
+                  </p>
+                </button>
               </div>
             </div>
           ) : activeTab === "quizsetup" ? (
@@ -2745,38 +2755,98 @@ export default function T6AEnhancedStudyTool() {
               </div>
             </div>
           ) : (
-            <div className="max-w-4xl mx-auto pb-20 px-4">
-              {/* Progress Bar */}
-              <div className="mb-8 mt-4">
-                <div
-                  className={`h-2 rounded-full overflow-hidden ${darkMode ? "bg-slate-700" : "bg-slate-200"}`}
+            <div className="max-w-7xl mx-auto px-4 py-8">
+              {/* Header with Back Button */}
+              <div className="mb-6 flex justify-between items-center">
+                <h1 className={`text-2xl font-bold ${darkMode ? "text-white" : "text-slate-900"}`}>
+                  Quiz - {currentQuestions.length} Questions
+                </h1>
+                <button
+                  onClick={() => {
+                    setActiveTab("home");
+                    setUserAnswers({});
+                    setCurrentQuestionIndex(0);
+                  }}
+                  className={`px-4 py-2 rounded-lg ${darkMode ? "bg-slate-700 hover:bg-slate-600 text-white" : "bg-slate-200 hover:bg-slate-300 text-slate-900"}`}
                 >
-                  <div
-                    className="h-full bg-blue-500 transition-all duration-300 ease-out"
-                    style={{
-                      width: `${((currentQuestionIndex + 1) / currentQuestions.length) * 100}%`,
-                    }}
-                  />
-                </div>
+                  ← Back to Home
+                </button>
               </div>
 
-              {/* Question Card - Minimalistic */}
-              {currentQuestion ? (
-                <div
-                  key={currentQuestion.id}
-                  className={`${darkMode ? "bg-slate-800/30" : "bg-white"} rounded-lg p-6 md:p-8 border ${darkMode ? "border-slate-700/50" : "border-slate-200"} question-enter`}
-                >
-                  {renderQuestion()}
-                </div>
-              ) : (
-                <div
-                  className={`${darkMode ? "bg-slate-800/50" : "bg-white"} rounded-xl p-6 md:p-8 text-center`}
-                >
-                  <p className={darkMode ? "text-slate-400" : "text-slate-600"}>
-                    Loading question...
-                  </p>
-                </div>
-              )}
+              {/* All Questions in 2-Column Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {currentQuestions.map((q, index) => {
+                  const questionNumber = index + 1;
+
+                  return (
+                    <div
+                      key={q.id}
+                      className={`p-6 rounded-lg border ${darkMode ? "bg-slate-800/50 border-slate-700" : "bg-white border-slate-200"}`}
+                    >
+                      <div className="mb-3">
+                        <span className={`font-bold text-base ${darkMode ? "text-white" : "text-slate-900"}`}>
+                          {questionNumber}. {q.question}
+                        </span>
+                      </div>
+
+                      {q.questionType === "multipleChoice" && q.options && (
+                        <div className="space-y-1.5">
+                          {q.options.map((option, idx) => (
+                            <div key={idx} className={`text-sm ${darkMode ? "text-slate-300" : "text-slate-700"}`}>
+                              <span className={q.correctAnswer === idx ? "font-bold" : ""}>
+                                {String.fromCharCode(97 + idx)}) {option}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {q.questionType === "trueFalse" && (
+                        <div className="space-y-1.5">
+                          <div className={`text-sm ${darkMode ? "text-slate-300" : "text-slate-700"}`}>
+                            <span className={q.correctAnswer === true ? "font-bold" : ""}>
+                              a) True
+                            </span>
+                          </div>
+                          <div className={`text-sm ${darkMode ? "text-slate-300" : "text-slate-700"}`}>
+                            <span className={q.correctAnswer === false ? "font-bold" : ""}>
+                              b) False
+                            </span>
+                          </div>
+                        </div>
+                      )}
+
+                      {q.questionType === "reorderSequence" && q.sequence && (
+                        <div className="space-y-1.5">
+                          <div className={`text-xs font-semibold mb-2 ${darkMode ? "text-slate-400" : "text-slate-600"}`}>
+                            Correct Order:
+                          </div>
+                          {q.sequence.map((step, idx) => (
+                            <div key={idx} className={`text-sm ${darkMode ? "text-slate-300" : "text-slate-700"}`}>
+                              <span className="font-bold">
+                                {idx + 1}. {step}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {q.questionType === "matchItems" && q.pairs && (
+                        <div className="space-y-1.5">
+                          {q.pairs.map((pair, idx) => (
+                            <div key={idx} className={`text-sm ${darkMode ? "text-slate-300" : "text-slate-700"}`}>
+                              <span className="font-bold">
+                                {pair.left} → {pair.right}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
 
               {/* Navigation - Fixed at Bottom - Mobile Optimized */}
               <div
