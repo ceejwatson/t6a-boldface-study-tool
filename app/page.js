@@ -1559,12 +1559,19 @@ export default function T6AEnhancedStudyTool() {
                 </h2>
                 <div className="grid grid-cols-3 gap-3">
                   {(() => {
+                    // Count mastery across ALL questions (aircraft + aerospace physiology)
                     const aeroQuestions = getAllAerospacePhysiologyQuestions();
-                    const masteredCount = aeroQuestions.filter((q) => {
+                    const aircraftQuestions = getAllQuestions();
+                    const allQuestions = [
+                      ...aircraftQuestions,
+                      ...aeroQuestions,
+                    ];
+
+                    const masteredCount = allQuestions.filter((q) => {
                       const mastery = questionMastery[q.id];
                       return mastery && (mastery.correctCount || 0) >= 3;
                     }).length;
-                    const totalCount = aeroQuestions.length;
+                    const totalCount = allQuestions.length;
                     const masteryPercentage =
                       totalCount > 0 ? (masteredCount / totalCount) * 100 : 0;
 
