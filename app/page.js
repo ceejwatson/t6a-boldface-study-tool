@@ -1420,25 +1420,30 @@ export default function T6AEnhancedStudyTool() {
                 <p
                   className={`text-center mb-4 ${darkMode ? "text-slate-300" : "text-slate-700"}`}
                 >
-                  {
-                    Object.values(questionMastery).filter(
+                  {(() => {
+                    // Get total count across ALL questions (aircraft + aerospace physiology)
+                    const totalQuestions =
+                      getAllAircraftQuestions().length +
+                      getAllAerospacePhysiologyQuestions().length;
+                    const masteredCount = Object.values(questionMastery).filter(
                       (m) => (m?.correctCount || 0) >= 3,
-                    ).length
-                  }{" "}
-                  / {getAllQuestions().length} questions mastered
-                  <span
-                    className={`ml-2 ${darkMode ? "text-slate-400" : "text-slate-500"}`}
-                  >
-                    (
-                    {Math.round(
-                      (Object.values(questionMastery).filter(
-                        (m) => (m?.correctCount || 0) >= 3,
-                      ).length /
-                        getAllQuestions().length) *
-                        100,
-                    )}
-                    %)
-                  </span>
+                    ).length;
+                    const percentage =
+                      totalQuestions > 0
+                        ? Math.round((masteredCount / totalQuestions) * 100)
+                        : 0;
+
+                    return (
+                      <>
+                        {masteredCount} / {totalQuestions} questions mastered
+                        <span
+                          className={`ml-2 ${darkMode ? "text-slate-400" : "text-slate-500"}`}
+                        >
+                          ({percentage}%)
+                        </span>
+                      </>
+                    );
+                  })()}
                 </p>
 
                 {/* Checkboxes */}
@@ -1611,19 +1616,14 @@ export default function T6AEnhancedStudyTool() {
                 </h2>
                 <div className="grid grid-cols-3 gap-3">
                   {(() => {
-                    // Count mastery across ALL questions (aircraft + aerospace physiology)
+                    // Count mastery for ONLY Aerospace Physiology questions
                     const aeroQuestions = getAllAerospacePhysiologyQuestions();
-                    const aircraftQuestions = getAllAircraftQuestions();
-                    const allQuestions = [
-                      ...aircraftQuestions,
-                      ...aeroQuestions,
-                    ];
 
-                    const masteredCount = allQuestions.filter((q) => {
+                    const masteredCount = aeroQuestions.filter((q) => {
                       const mastery = questionMastery[q.id];
                       return mastery && (mastery.correctCount || 0) >= 3;
                     }).length;
-                    const totalCount = allQuestions.length;
+                    const totalCount = aeroQuestions.length;
                     const masteryPercentage =
                       totalCount > 0 ? (masteredCount / totalCount) * 100 : 0;
 

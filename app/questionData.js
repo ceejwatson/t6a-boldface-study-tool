@@ -83,10 +83,10 @@ export const questionDatabase = {
       question:
         "What immediate action do you take for OBOGS failure or physiological symptoms?",
       options: [
-        "Continue mission and monitor",
-        "Turn OBOGS off, activate BOS, descend below 10,000 ft",
-        "Pull circuit breaker immediately",
-        "Switch to backup oxygen bottle",
+        "Continue mission and monitor closely",
+        "OBOGS off, BOS on, descend <10K",
+        "Pull OBOGS breaker and land ASAP",
+        "Switch to backup bottle and RTB",
       ],
       correctAnswer: 1,
       explanation:
@@ -421,10 +421,10 @@ export const questionDatabase = {
       difficulty: "high",
       question: "What is the aerobatics/spins oil pressure range at idle?",
       options: [
-        "10-20 PSI",
-        "15-40 PSI for 5 seconds",
-        "40-60 PSI",
-        "60-90 PSI",
+        "10-20 PSI (continuous)",
+        "15-40 PSI (5 sec max)",
+        "40-60 PSI (continuous)",
+        "60-90 PSI (continuous)",
       ],
       correctAnswer: 1,
       explanation:
