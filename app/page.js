@@ -356,6 +356,59 @@ export default function T6AEnhancedStudyTool() {
     return all;
   };
 
+  // Shuffle multiple choice options to make answers less predictable
+  const shuffleQuestionOptions = (question) => {
+    if (question.questionType !== "multipleChoice" || !question.options) {
+      return question;
+    }
+
+    // Create array of [option, originalIndex] pairs
+    const optionsWithIndices = question.options.map((opt, idx) => ({
+      option: opt,
+      originalIndex: idx,
+    }));
+
+    // Shuffle using Fisher-Yates algorithm
+    for (let i = optionsWithIndices.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [optionsWithIndices[i], optionsWithIndices[j]] = [
+        optionsWithIndices[j],
+        optionsWithIndices[i],
+      ];
+    }
+
+    // Extract shuffled options and find new correct answer index
+    const shuffledOptions = optionsWithIndices.map((item) => item.option);
+    const newCorrectIndex = optionsWithIndices.findIndex(
+      (item) => item.originalIndex === question.correctAnswer,
+    );
+
+    return {
+      ...question,
+      options: shuffledOptions,
+      correctAnswer: newCorrectIndex,
+      originalCorrectAnswer: question.correctAnswer, // Keep original for reference
+    };
+  };
+
+  // Get ALL aircraft questions regardless of selected types
+  const getAllAircraftQuestions = () => {
+    const all = [];
+    const quizTypes = [
+      "multipleChoice",
+      "trueFalse",
+      "reorderSequence",
+      "matchItems",
+    ];
+    quizTypes.forEach((type) => {
+      const questions = questionDatabase[type] || [];
+      questions.forEach((q) => {
+        all.push({ ...q, questionType: type });
+      });
+    });
+    return all;
+  };
+
   const getCustomQuestions = () => {
     let questions = getAllQuestions();
 
@@ -657,9 +710,8 @@ export default function T6AEnhancedStudyTool() {
             correctCount: isCorrect
               ? existing.correctCount + 1
               : existing.correctCount,
-            incorrectCount: !isCorrect
-              ? existing.incorrectCount + 1
-              : existing.incorrectCount,
+            // Reset incorrectCount to 0 when answered correctly, otherwise increment
+            incorrectCount: isCorrect ? 0 : existing.incorrectCount + 1,
             lastAnswered: Date.now(),
           },
         };
@@ -1561,7 +1613,7 @@ export default function T6AEnhancedStudyTool() {
                   {(() => {
                     // Count mastery across ALL questions (aircraft + aerospace physiology)
                     const aeroQuestions = getAllAerospacePhysiologyQuestions();
-                    const aircraftQuestions = getAllQuestions();
+                    const aircraftQuestions = getAllAircraftQuestions();
                     const allQuestions = [
                       ...aircraftQuestions,
                       ...aeroQuestions,
@@ -1853,12 +1905,17 @@ export default function T6AEnhancedStudyTool() {
                     // Limit to selected count
                     const limitedQuestions = all.slice(0, questionCount);
 
+                    // Shuffle options for multiple choice questions to make answers less predictable
+                    const shuffledQuestions = limitedQuestions.map((q) =>
+                      shuffleQuestionOptions(q),
+                    );
+
                     console.log(
                       "Starting quiz with",
-                      limitedQuestions.length,
+                      shuffledQuestions.length,
                       "questions",
                     );
-                    setCurrentQuestions(limitedQuestions);
+                    setCurrentQuestions(shuffledQuestions);
                     setCurrentQuestionIndex(0);
                     setUserAnswers({});
                     setShowExplanation(false);
@@ -2020,7 +2077,12 @@ export default function T6AEnhancedStudyTool() {
                         setQuestionCount(incorrectQs.length);
                       }
 
-                      setCurrentQuestions(incorrectQs);
+                      // Shuffle options for multiple choice questions
+                      const shuffledIncorrectQs = incorrectQs.map((q) =>
+                        shuffleQuestionOptions(q),
+                      );
+
+                      setCurrentQuestions(shuffledIncorrectQs);
                       setCurrentQuestionIndex(0);
                       setUserAnswers({});
                       setShowExplanation(false);
@@ -2811,7 +2873,12 @@ export default function T6AEnhancedStudyTool() {
                     return;
                   }
 
-                  setCurrentQuestions(questions);
+                  // Shuffle options for multiple choice questions
+                  const shuffledQuestions = questions.map((q) =>
+                    shuffleQuestionOptions(q),
+                  );
+
+                  setCurrentQuestions(shuffledQuestions);
                   setCurrentQuestionIndex(0);
                   setUserAnswers({});
                   setShowExplanation(false);
@@ -2887,7 +2954,7 @@ export default function T6AEnhancedStudyTool() {
                               (q) => q.category === category,
                             );
 
-                            // Shuffle
+                            // Shuffle question order
                             for (let i = filtered.length - 1; i > 0; i--) {
                               const j = Math.floor(Math.random() * (i + 1));
                               [filtered[i], filtered[j]] = [
@@ -2896,7 +2963,12 @@ export default function T6AEnhancedStudyTool() {
                               ];
                             }
 
-                            setCurrentQuestions(filtered);
+                            // Shuffle options for multiple choice questions
+                            const shuffledFiltered = filtered.map((q) =>
+                              shuffleQuestionOptions(q),
+                            );
+
+                            setCurrentQuestions(shuffledFiltered);
                             setCurrentQuestionIndex(0);
                             setUserAnswers({});
                             setActiveTab("study");
