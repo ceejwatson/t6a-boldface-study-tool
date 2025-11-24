@@ -1384,23 +1384,6 @@ export default function T6AEnhancedStudyTool() {
           {/* Main Content */}
           {activeTab === "home" ? (
             <div className="max-w-4xl mx-auto px-4">
-              {/* T-6A Image */}
-              <div className="text-center mb-6">
-                <div
-                  className={`inline-block rounded-2xl ${darkMode ? "" : "bg-gradient-to-br from-blue-50 to-slate-100 shadow-lg p-6"}`}
-                >
-                  <img
-                    src={
-                      darkMode
-                        ? "/t6atransparent-dark.png"
-                        : "/t6atransparent.png"
-                    }
-                    alt="T-6A Texan II"
-                    className="w-56 sm:w-72 md:w-80 h-auto mx-auto"
-                  />
-                </div>
-              </div>
-
               {/* Mastery Progress Section */}
               <div
                 className={`max-w-2xl mx-auto mb-8 ${darkMode ? "bg-slate-800/50" : "bg-white"} rounded-2xl p-6 shadow-lg`}
@@ -2786,8 +2769,14 @@ export default function T6AEnhancedStudyTool() {
                             currentQuestionIndex ===
                             currentQuestions.length - 1
                           ) {
-                            // Last question - go to results
+                            // Last question - grade unanswered questions as incorrect and go to results
                             if (studyMode === "quiz") {
+                              // Grade all unanswered questions as incorrect
+                              currentQuestions.forEach((question) => {
+                                if (userAnswers[question.id] === undefined) {
+                                  updatePerformance(question, false);
+                                }
+                              });
                               setActiveTab("results");
                             } else {
                               setActiveTab("studycomplete");
