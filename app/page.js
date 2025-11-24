@@ -1488,13 +1488,15 @@ export default function T6AEnhancedStudyTool() {
               </div>
 
               {/* Choose Your Challenge Section */}
-              <div className="max-w-2xl mx-auto mb-8">
+              <div
+                className={`max-w-2xl mx-auto mb-8 ${darkMode ? "bg-slate-800/50" : "bg-white"} rounded-2xl p-6 shadow-lg`}
+              >
                 <h2
-                  className={`text-xl font-semibold mb-4 ${darkMode ? "text-white" : "text-slate-900"}`}
+                  className={`text-xl font-semibold mb-4 text-center ${darkMode ? "text-white" : "text-slate-900"}`}
                 >
                   Choose Your Challenge
                 </h2>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-3">
                   {/* Quickie - 10 questions */}
                   <button
                     onClick={() => {
@@ -1507,15 +1509,15 @@ export default function T6AEnhancedStudyTool() {
                       setShowQuizSetup(true);
                       setActiveTab("quizsetup");
                     }}
-                    className={`${darkMode ? "bg-slate-800/50 hover:bg-slate-700/50" : "bg-white hover:bg-slate-50"} rounded-xl p-6 transition-all border ${darkMode ? "border-slate-700" : "border-slate-200"} hover:scale-105 active:scale-95`}
+                    className={`${darkMode ? "bg-slate-700/50 hover:bg-slate-600/50" : "bg-slate-100 hover:bg-slate-200"} rounded-xl p-4 transition-all border ${darkMode ? "border-slate-600" : "border-slate-300"}`}
                   >
                     <h3
-                      className={`text-lg font-semibold mb-1 ${darkMode ? "text-white" : "text-slate-900"}`}
+                      className={`text-base font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
                     >
                       Quickie
                     </h3>
                     <p
-                      className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                      className={`text-xs mt-1 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
                     >
                       10 questions
                     </p>
@@ -1533,15 +1535,15 @@ export default function T6AEnhancedStudyTool() {
                       setShowQuizSetup(true);
                       setActiveTab("quizsetup");
                     }}
-                    className={`${darkMode ? "bg-slate-800/50 hover:bg-slate-700/50" : "bg-white hover:bg-slate-50"} rounded-xl p-6 transition-all border ${darkMode ? "border-slate-700" : "border-slate-200"} hover:scale-105 active:scale-95`}
+                    className={`${darkMode ? "bg-slate-700/50 hover:bg-slate-600/50" : "bg-slate-100 hover:bg-slate-200"} rounded-xl p-4 transition-all border ${darkMode ? "border-slate-600" : "border-slate-300"}`}
                   >
                     <h3
-                      className={`text-lg font-semibold mb-1 ${darkMode ? "text-white" : "text-slate-900"}`}
+                      className={`text-base font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
                     >
                       Not-Quickie
                     </h3>
                     <p
-                      className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                      className={`text-xs mt-1 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
                     >
                       50 questions
                     </p>
@@ -1559,15 +1561,15 @@ export default function T6AEnhancedStudyTool() {
                       setShowQuizSetup(true);
                       setActiveTab("quizsetup");
                     }}
-                    className={`${darkMode ? "bg-slate-800/50 hover:bg-slate-700/50" : "bg-white hover:bg-slate-50"} rounded-xl p-6 transition-all border ${darkMode ? "border-slate-700" : "border-slate-200"} hover:scale-105 active:scale-95`}
+                    className={`${darkMode ? "bg-slate-700/50 hover:bg-slate-600/50" : "bg-slate-100 hover:bg-slate-200"} rounded-xl p-4 transition-all border ${darkMode ? "border-slate-600" : "border-slate-300"}`}
                   >
                     <h3
-                      className={`text-lg font-semibold mb-1 ${darkMode ? "text-white" : "text-slate-900"}`}
+                      className={`text-base font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
                     >
                       Marathon
                     </h3>
                     <p
-                      className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                      className={`text-xs mt-1 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
                     >
                       100 questions
                     </p>
@@ -1606,15 +1608,15 @@ export default function T6AEnhancedStudyTool() {
                       setReviewSessionCorrect([]);
                       setActiveTab("study");
                     }}
-                    className={`${darkMode ? "bg-slate-800/50 hover:bg-slate-700/50" : "bg-white hover:bg-slate-50"} rounded-xl p-6 transition-all border ${darkMode ? "border-slate-700" : "border-slate-200"} hover:scale-105 active:scale-95`}
+                    className={`${darkMode ? "bg-slate-700/50 hover:bg-slate-600/50" : "bg-slate-100 hover:bg-slate-200"} rounded-xl p-4 transition-all border ${darkMode ? "border-slate-600" : "border-slate-300"}`}
                   >
                     <h3
-                      className={`text-lg font-semibold mb-1 ${darkMode ? "text-white" : "text-slate-900"}`}
+                      className={`text-base font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
                     >
                       Incorrect
                     </h3>
                     <p
-                      className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                      className={`text-xs mt-1 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
                     >
                       {
                         Object.values(questionMastery).filter(
@@ -1674,7 +1676,7 @@ export default function T6AEnhancedStudyTool() {
                     return (
                       <button
                         onClick={() => setActiveTab("learningpath")}
-                        className={`${darkMode ? "bg-slate-800/50 hover:bg-slate-700/50" : "bg-white hover:bg-slate-50"} rounded-xl p-4 transition-all border ${darkMode ? "border-slate-700" : "border-slate-200"} hover:scale-105 active:scale-95`}
+                        className={`${darkMode ? "bg-slate-700/50 hover:bg-slate-600/50" : "bg-slate-100 hover:bg-slate-200"} rounded-xl p-4 transition-all border ${darkMode ? "border-slate-600" : "border-slate-300"}`}
                       >
                         <h3
                           className={`text-base font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
@@ -1701,13 +1703,13 @@ export default function T6AEnhancedStudyTool() {
                 >
                   Study Materials
                 </h2>
-                <div className="space-y-3">
+                <div className="grid grid-cols-2 gap-3">
                   <button
                     onClick={() => setActiveTab("allquestions")}
-                    className={`w-full ${darkMode ? "bg-slate-700/50 hover:bg-slate-600/50" : "bg-slate-100 hover:bg-slate-200"} rounded-xl p-4 transition-all border ${darkMode ? "border-slate-600" : "border-slate-300"} hover:scale-102 active:scale-98`}
+                    className={`${darkMode ? "bg-slate-700/50 hover:bg-slate-600/50" : "bg-slate-100 hover:bg-slate-200"} rounded-xl p-4 transition-all border ${darkMode ? "border-slate-600" : "border-slate-300"}`}
                   >
                     <h3
-                      className={`text-lg font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
+                      className={`text-base font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
                     >
                       View All Questions
                     </h3>
@@ -1719,10 +1721,10 @@ export default function T6AEnhancedStudyTool() {
                         "_blank",
                       )
                     }
-                    className={`w-full ${darkMode ? "bg-slate-700/50 hover:bg-slate-600/50" : "bg-slate-100 hover:bg-slate-200"} rounded-xl p-4 transition-all border ${darkMode ? "border-slate-600" : "border-slate-300"} hover:scale-102 active:scale-98`}
+                    className={`${darkMode ? "bg-slate-700/50 hover:bg-slate-600/50" : "bg-slate-100 hover:bg-slate-200"} rounded-xl p-4 transition-all border ${darkMode ? "border-slate-600" : "border-slate-300"}`}
                   >
                     <h3
-                      className={`text-lg font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
+                      className={`text-base font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
                     >
                       BoldFace PDF
                     </h3>
@@ -1763,20 +1765,20 @@ export default function T6AEnhancedStudyTool() {
                     className={`p-4 rounded-xl text-left transition-all ${
                       questionSet === "aircraft"
                         ? darkMode
-                          ? "bg-orange-500/30 border-2 border-orange-500"
-                          : "bg-orange-100 border-2 border-orange-500"
+                          ? "bg-slate-600 border-2 border-slate-500"
+                          : "bg-slate-100 border-2 border-slate-400"
                         : darkMode
                           ? "bg-slate-700/50 hover:bg-slate-700 border-2 border-transparent"
                           : "bg-white hover:bg-slate-50 border-2 border-slate-200"
                     }`}
                   >
                     <div
-                      className={`font-semibold ${questionSet === "aircraft" ? "text-orange-400" : darkMode ? "text-slate-300" : "text-slate-700"}`}
+                      className={`font-semibold ${questionSet === "aircraft" ? (darkMode ? "text-white" : "text-slate-900") : darkMode ? "text-slate-300" : "text-slate-700"}`}
                     >
                       T-6A Aircraft
                     </div>
                     <div
-                      className={`text-xs mt-1 ${questionSet === "aircraft" ? "text-orange-300" : darkMode ? "text-slate-400" : "text-slate-500"}`}
+                      className={`text-xs mt-1 ${questionSet === "aircraft" ? (darkMode ? "text-slate-300" : "text-slate-600") : darkMode ? "text-slate-400" : "text-slate-500"}`}
                     >
                       Boldface & Systems
                     </div>
@@ -1796,20 +1798,20 @@ export default function T6AEnhancedStudyTool() {
                     className={`p-4 rounded-xl text-left transition-all ${
                       questionSet === "aerophysiology"
                         ? darkMode
-                          ? "bg-cyan-500/30 border-2 border-cyan-500"
-                          : "bg-cyan-100 border-2 border-cyan-500"
+                          ? "bg-slate-600 border-2 border-slate-500"
+                          : "bg-slate-100 border-2 border-slate-400"
                         : darkMode
                           ? "bg-slate-700/50 hover:bg-slate-700 border-2 border-transparent"
                           : "bg-white hover:bg-slate-50 border-2 border-slate-200"
                     }`}
                   >
                     <div
-                      className={`font-semibold ${questionSet === "aerophysiology" ? "text-cyan-400" : darkMode ? "text-slate-300" : "text-slate-700"}`}
+                      className={`font-semibold ${questionSet === "aerophysiology" ? (darkMode ? "text-white" : "text-slate-900") : darkMode ? "text-slate-300" : "text-slate-700"}`}
                     >
                       Aerospace Physiology
                     </div>
                     <div
-                      className={`text-xs mt-1 ${questionSet === "aerophysiology" ? "text-cyan-300" : darkMode ? "text-slate-400" : "text-slate-500"}`}
+                      className={`text-xs mt-1 ${questionSet === "aerophysiology" ? (darkMode ? "text-slate-300" : "text-slate-600") : darkMode ? "text-slate-400" : "text-slate-500"}`}
                     >
                       Hypoxia, Vision, G-Forces
                     </div>
@@ -1833,10 +1835,10 @@ export default function T6AEnhancedStudyTool() {
                     className={`p-6 rounded-2xl font-semibold text-2xl transition-all duration-200 ${
                       questionCount === count
                         ? darkMode
-                          ? "bg-orange-500 text-white shadow-lg shadow-orange-500/50 scale-105"
-                          : "bg-orange-500 text-white shadow-lg shadow-orange-500/50 scale-105"
+                          ? "bg-slate-600 text-white border-2 border-slate-500 scale-105"
+                          : "bg-slate-100 text-slate-900 border-2 border-slate-400 scale-105"
                         : darkMode
-                          ? "bg-slate-700/50 text-slate-300 hover:bg-slate-700 hover:scale-102"
+                          ? "bg-slate-700/50 text-slate-300 hover:bg-slate-700 hover:scale-102 border-2 border-transparent"
                           : "bg-white text-slate-700 hover:bg-slate-50 hover:scale-102 border-2 border-slate-200"
                     }`}
                   >
@@ -1955,8 +1957,8 @@ export default function T6AEnhancedStudyTool() {
                 }}
                 className={`w-full px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-200 ${
                   darkMode
-                    ? "bg-orange-600 hover:bg-orange-700 text-white shadow-lg hover:shadow-xl"
-                    : "bg-orange-500 hover:bg-orange-600 text-white shadow-lg hover:shadow-xl"
+                    ? "bg-green-600 hover:bg-green-700 text-white shadow-lg hover:shadow-xl"
+                    : "bg-green-500 hover:bg-green-600 text-white shadow-lg hover:shadow-xl"
                 } active:scale-95`}
               >
                 Start Quiz
