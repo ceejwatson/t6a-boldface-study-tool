@@ -1801,9 +1801,8 @@ export default function T6AEnhancedStudyTool() {
                     console.log("Questions after mastery filter:", all.length);
 
                     if (all.length === 0) {
-                      alert(
-                        "No questions available after filtering. Try selecting different topics or turning off 'Hide mastered questions'.",
-                      );
+                      // Don't show annoying alert - just don't start the quiz
+                      // User can adjust filters and try again
                       return;
                     }
 
@@ -3028,6 +3027,35 @@ export default function T6AEnhancedStudyTool() {
                     </div>
                   );
                 })}
+              </div>
+
+              {/* Submit Quiz Button */}
+              <div className="mt-8 flex justify-center">
+                <button
+                  onClick={() => {
+                    // If instant grade is OFF, grade all questions now
+                    if (!instantGrade) {
+                      currentQuestions.forEach((question) => {
+                        const userAnswer = userAnswers[question.id];
+                        if (userAnswer !== undefined) {
+                          const isCorrect = checkAnswer(question, userAnswer);
+                          updatePerformance(question, isCorrect);
+                        } else {
+                          updatePerformance(question, false);
+                        }
+                      });
+                    }
+                    // Go to results (already graded if instant grade was ON)
+                    setActiveTab("results");
+                  }}
+                  className={`px-8 py-4 rounded-xl font-bold text-lg transition-all ${
+                    darkMode
+                      ? "bg-green-600 hover:bg-green-700 text-white"
+                      : "bg-green-500 hover:bg-green-600 text-white"
+                  } shadow-lg hover:scale-105 active:scale-95`}
+                >
+                  {instantGrade ? "View Results" : "Submit Quiz"}
+                </button>
               </div>
             </div>
           )}
