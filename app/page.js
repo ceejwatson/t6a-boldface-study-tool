@@ -2271,7 +2271,512 @@ export default function T6AEnhancedStudyTool() {
                       className={`text-3xl font-bold ${darkMode ? "text-red-400" : "text-red-700"}`}
                     >
                       {
-                  <svg className="transform -rotate-90 w-48 h-48">
+                        Object.keys(userAnswers).filter((id) => {
+                          const question = currentQuestions.find(
+                            (q) => q.id === id,
+                          );
+                          return (
+                            question && !checkAnswer(question, userAnswers[id])
+                          );
+                        }).length
+                      }
+                    </div>
+                    <div
+                      className={`text-sm ${darkMode ? "text-red-300" : "text-red-600"}`}
+                    >
+                      Incorrect
+                    </div>
+                  </div>
+                  <div
+                    className={`p-4 rounded-lg ${darkMode ? "bg-blue-900/30 border-2 border-blue-600" : "bg-blue-100 border-2 border-blue-400"}`}
+                  >
+                    <div
+                      className={`text-3xl font-bold ${darkMode ? "text-blue-400" : "text-blue-700"}`}
+                    >
+                      {currentQuestions.length -
+                        Object.keys(userAnswers).length}
+                    </div>
+                    <div
+                      className={`text-sm ${darkMode ? "text-blue-300" : "text-blue-600"}`}
+                    >
+                      Unanswered
+                    </div>
+                  </div>
+                </div>
+
+                {/* Question List */}
+                <div className="space-y-3">
+                  {currentQuestions.map((question, index) => {
+                    const userAnswer = userAnswers[question.id];
+                    const isAnswered = userAnswer !== undefined;
+                    const isCorrect = isAnswered
+                      ? checkAnswer(question, userAnswer)
+                      : null;
+
+                    return (
+                      <div
+                        key={question.id}
+                        className={`p-4 rounded-lg border-2 cursor-pointer transition ${
+                          !isAnswered
+                            ? darkMode
+                              ? "bg-slate-700/30 border-slate-600"
+                              : "bg-slate-50 border-slate-300"
+                            : isCorrect
+                              ? darkMode
+                                ? "bg-green-900/20 border-green-600"
+                                : "bg-green-50 border-green-400"
+                              : darkMode
+                                ? "bg-red-900/20 border-red-600"
+                                : "bg-red-50 border-red-400"
+                        } ${darkMode ? "hover:bg-slate-700/50" : "hover:bg-slate-100"}`}
+                        onClick={() => {
+                          setCurrentQuestionIndex(index);
+                          setViewingSingleQuestion(true);
+                          setActiveTab("study");
+                        }}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <span
+                              className={`font-medium ${darkMode ? "text-slate-300" : "text-slate-700"}`}
+                            >
+                              Question {index + 1}
+                            </span>
+                            {isAnswered && (
+                              <>
+                                {isCorrect ? (
+                                  <CheckCircle2 className="w-5 h-5 text-green-500" />
+                                ) : (
+                                  <XCircle className="w-5 h-5 text-red-500" />
+                                )}
+                              </>
+                            )}
+                          </div>
+                          <span
+                            className={`text-xs px-2 py-1 rounded ${darkMode ? "bg-slate-600 text-slate-300" : "bg-slate-200 text-slate-600"}`}
+                          >
+                            {question.category}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex gap-3 mt-6">
+                  <button
+                    onClick={() => {
+                      setActiveTab("home");
+                      setStudyMode("study");
+                      setUserAnswers({});
+                      setCurrentQuestionIndex(0);
+                      setShowExplanation(false);
+                    }}
+                    className={`flex-1 px-6 py-3 rounded-lg font-medium transition ${
+                      darkMode
+                        ? "bg-slate-700 hover:bg-slate-600 text-white"
+                        : "bg-slate-300 hover:bg-slate-400 text-slate-900"
+                    }`}
+                  >
+                    Return Home
+                  </button>
+                  <button
+                    onClick={() => {
+                      setCurrentQuestionIndex(0);
+                      setShowExplanation(false);
+                      setUserAnswers({});
+                      setActiveTab("study");
+                    }}
+                    className="flex-1 px-6 py-3 rounded-lg font-medium transition bg-blue-600 hover:bg-blue-700 text-white"
+                  >
+                    Review Quiz
+                  </button>
+                </div>
+              </div>
+            </div>
+          ) : activeTab === "aerophysiology" ? (
+            <div
+              className={`max-w-2xl mx-auto ${darkMode ? "bg-slate-800/50" : "bg-white/50"} backdrop-blur-xl rounded-3xl p-8 shadow-2xl`}
+            >
+              <div className="text-center mb-8">
+                <h2
+                  className={`text-3xl font-semibold ${darkMode ? "text-white" : "text-slate-900"} mb-2`}
+                >
+                  Aerospace Physiology Quiz
+                </h2>
+                <p
+                  className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                >
+                  Select topics to study
+                </p>
+              </div>
+
+              {/* Topic Selection */}
+              <div className="grid grid-cols-1 gap-3 mb-6">
+                {aerospacePhysiologyTopics.map((topic) => {
+                  const topicQuestions = getAllAerospacePhysiologyQuestions().filter(
+                    (q) => q.category === topic.name,
+                  );
+                  const isSelected = selectedTopics.includes(topic.name);
+
+                  return (
+                    <button
+                      key={topic.name}
+                      onClick={() => {
+                        if (isSelected) {
+                          setSelectedTopics(
+                            selectedTopics.filter((t) => t !== topic.name),
+                          );
+                        } else {
+                          setSelectedTopics([...selectedTopics, topic.name]);
+                        }
+                      }}
+                      className={`p-4 rounded-xl text-left transition-all ${
+                        isSelected
+                          ? darkMode
+                            ? "bg-cyan-500/30 border-2 border-cyan-500"
+                            : "bg-cyan-100 border-2 border-cyan-500"
+                          : darkMode
+                            ? "bg-slate-700/50 hover:bg-slate-700 border-2 border-transparent"
+                            : "bg-white hover:bg-slate-50 border-2 border-slate-200"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                          <div
+                            className={`font-semibold ${isSelected ? "text-cyan-400" : darkMode ? "text-slate-300" : "text-slate-700"}`}
+                          >
+                            {topic.name}
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <span
+                            className={`text-xs px-2 py-1 rounded ${
+                              isSelected
+                                ? darkMode
+                                  ? "bg-cyan-500/50 text-cyan-100"
+                                  : "bg-cyan-200 text-cyan-800"
+                                : darkMode
+                                  ? "bg-slate-600 text-slate-300"
+                                  : "bg-slate-200 text-slate-600"
+                            }`}
+                          >
+                            {topicQuestions.length} Q
+                          </span>
+                        </div>
+                      </div>
+                    </button>
+                  );
+                },
+                )}
+              </div>
+
+              {/* Start Button */}
+              <button
+                onClick={() => {
+                  if (selectedTopics.length === 0) {
+                    alert("Please select at least one topic");
+                    return;
+                  }
+
+                  const questions = getAllAerospacePhysiologyQuestions().filter(
+                    (q) => selectedTopics.includes(q.category),
+                  );
+
+                  if (questions.length === 0) {
+                    alert("No questions available for selected topics");
+                    return;
+                  }
+
+                  setCurrentQuestions(questions);
+                  setCurrentQuestionIndex(0);
+                  setUserAnswers({});
+                  setShowExplanation(false);
+                  setActiveTab("study");
+                }}
+                className={`w-full py-4 rounded-xl font-semibold text-lg transition-all duration-200 ${
+                  selectedTopics.length > 0
+                    ? darkMode
+                      ? "bg-cyan-500 hover:bg-cyan-600 text-white shadow-lg shadow-cyan-500/50"
+                      : "bg-cyan-500 hover:bg-cyan-600 text-white shadow-lg shadow-cyan-500/50"
+                    : darkMode
+                      ? "bg-slate-700 text-slate-500 cursor-not-allowed"
+                      : "bg-slate-200 text-slate-400 cursor-not-allowed"
+                }`}
+                disabled={selectedTopics.length === 0}
+              >
+                Start Quiz (
+                {selectedTopics.length > 0
+                  ? getAllAerospacePhysiologyQuestions().filter((q) =>
+                      selectedTopics.includes(q.category),
+                    ).length
+                  : 0}{" "}
+                Questions)
+              </button>
+
+              {/* Back Button */}
+              <div className="text-center mt-6">
+                <button
+                  onClick={() => setActiveTab("home")}
+                  className={`${darkMode ? "text-slate-400 hover:text-white" : "text-slate-600 hover:text-slate-900"} font-medium transition-colors`}
+                >
+                  ← Back to Home
+                </button>
+              </div>
+            </div>
+          ) : activeTab === "learningpath" ? (
+            <div className="max-w-3xl mx-auto px-4">
+              <h2 className={`text-2xl font-bold mb-6 text-center ${darkMode ? "text-white" : "text-slate-900"}`}>
+                Categories
+              </h2>
+
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                {(() => {
+                  const allQuestions = getAllQuestions();
+                  const categories = [...new Set(allQuestions.map(q => q.category))].sort();
+
+                  return categories.map((category) => {
+                    const categoryQuestions = allQuestions.filter(q => q.category === category);
+                    const masteredCount = categoryQuestions.filter(q => {
+                      const mastery = questionMastery[q.id];
+                      return mastery && (mastery.correctCount || 0) >= 3;
+                    }).length;
+
+                    return (
+                      <button
+                        key={category}
+                        onClick={() => {
+                          setStudyMode("quiz");
+                          setSelectedCategory(category);
+                          const filtered = allQuestions.filter(q => q.category === category);
+
+                          // Shuffle
+                          for (let i = filtered.length - 1; i > 0; i--) {
+                            const j = Math.floor(Math.random() * (i + 1));
+                            [filtered[i], filtered[j]] = [filtered[j], filtered[i]];
+                          }
+
+                          setCurrentQuestions(filtered);
+                          setCurrentQuestionIndex(0);
+                          setUserAnswers({});
+                          setActiveTab("study");
+                        }}
+                        className={`${darkMode ? "bg-slate-800/50 hover:bg-slate-700/50 border-slate-700" : "bg-white hover:bg-slate-50 border-slate-200"} border rounded-xl p-4 transition-all hover:scale-105 active:scale-95 text-left`}
+                      >
+                        <h3 className={`font-semibold text-sm mb-1 ${darkMode ? "text-white" : "text-slate-900"}`}>
+                          {category}
+                        </h3>
+                        <p className={`text-xs ${darkMode ? "text-slate-400" : "text-slate-600"}`}>
+                          {masteredCount}/{categoryQuestions.length} mastered
+                        </p>
+                      </button>
+                    );
+                  });
+                })()}
+              </div>
+            </div>
+          ) : currentQuestions.length === 0 ? (
+            <div className="max-w-4xl mx-auto">
+              <div
+                className={`${darkMode ? "bg-slate-800" : "bg-white"} rounded-xl p-8 text-center`}
+              >
+                <AlertCircle
+                  className={`w-16 h-16 mx-auto mb-4 ${darkMode ? "text-yellow-400" : "text-yellow-600"}`}
+                />
+                <h2
+                  className={`text-2xl font-bold mb-2 ${darkMode ? "text-white" : "text-slate-900"}`}
+                >
+                  No Questions Available
+                </h2>
+                <p
+                  className={`mb-6 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                >
+                  Please select topics and question types to begin studying.
+                </p>
+                <button
+                  onClick={() => setActiveTab("home")}
+                  className={`px-6 py-3 rounded-lg font-medium transition ${
+                    darkMode
+                      ? "bg-slate-700 hover:bg-slate-600 text-white"
+                      : "bg-slate-300 hover:bg-slate-400 text-slate-900"
+                  }`}
+                >
+                  ← Back to Home
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="max-w-4xl mx-auto pb-20 px-4">
+              {/* Progress Bar */}
+              <div className="mb-8 mt-4">
+                <div
+                  className={`h-2 rounded-full overflow-hidden ${darkMode ? "bg-slate-700" : "bg-slate-200"}`}
+                >
+                  <div
+                    className="h-full bg-blue-500 transition-all duration-300 ease-out"
+                    style={{
+                      width: `${((currentQuestionIndex + 1) / currentQuestions.length) * 100}%`,
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Question Card - Minimalistic */}
+              {currentQuestion ? (
+                <div
+                  key={currentQuestion.id}
+                  className={`${darkMode ? "bg-slate-800/30" : "bg-white"} rounded-lg p-6 md:p-8 border ${darkMode ? "border-slate-700/50" : "border-slate-200"} question-enter`}
+                >
+                  {renderQuestion()}
+                </div>
+              ) : (
+                <div
+                  className={`${darkMode ? "bg-slate-800/50" : "bg-white"} rounded-xl p-6 md:p-8 text-center`}
+                >
+                  <p className={darkMode ? "text-slate-400" : "text-slate-600"}>
+                    Loading question...
+                  </p>
+                </div>
+              )}
+
+              {/* Navigation - Fixed at Bottom - Mobile Optimized */}
+              <div
+                className={`fixed bottom-0 left-0 right-0 ${darkMode ? "bg-slate-900/95" : "bg-white/95"} backdrop-blur-sm border-t ${darkMode ? "border-slate-700" : "border-slate-300"} p-1.5 sm:p-3 shadow-2xl z-10 safe-area-bottom`}
+              >
+                <div className="max-w-4xl mx-auto flex justify-between items-center gap-2">
+                  {viewingSingleQuestion ? (
+                    <button
+                      onClick={() => {
+                        setActiveTab("results");
+                        setViewingSingleQuestion(false);
+                      }}
+                      className={`flex-1 px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2 text-sm touch-manipulation ${
+                        darkMode
+                          ? "bg-blue-600 hover:bg-blue-700 text-white active:scale-95"
+                          : "bg-blue-500 hover:bg-blue-600 text-white active:scale-95"
+                      }`}
+                    >
+                      <ChevronRight className="w-4 h-4 rotate-180" />
+                      Back to Review
+                    </button>
+                  ) : (
+                    <>
+                      <button
+                        onClick={handlePrevious}
+                        disabled={currentQuestionIndex === 0}
+                        className={`min-h-[44px] px-4 py-2.5 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2 text-sm touch-manipulation shadow-sm ${
+                          currentQuestionIndex === 0
+                            ? darkMode
+                              ? "bg-slate-800 text-slate-600 cursor-not-allowed"
+                              : "bg-slate-200 text-slate-400 cursor-not-allowed"
+                            : darkMode
+                              ? "bg-slate-700 hover:bg-slate-600 text-white active:scale-95"
+                              : "bg-white hover:bg-slate-100 text-slate-900 active:scale-95"
+                        }`}
+                      >
+                        <ChevronRight className="w-4 h-4 rotate-180" />
+                        <span className="hidden sm:inline">Previous</span>
+                      </button>
+
+                      {/* Submit button for reorder sequence - ALWAYS visible */}
+                      {currentQuestion?.questionType === "reorderSequence" &&
+                        !showExplanation && (
+                          <button
+                            onClick={() => {
+                              // Only show explanation if instant grade is enabled
+                              if (instantGrade) {
+                                setShowExplanation(true);
+                              }
+                              const answer = userAnswers[currentQuestion.id];
+                              if (answer) {
+                                const isCorrect = checkAnswer(
+                                  currentQuestion,
+                                  answer,
+                                );
+                                updatePerformance(currentQuestion, isCorrect);
+                              } else {
+                                // If no answer saved yet, mark as incorrect in quiz mode
+                                if (studyMode === "quiz") {
+                                  updatePerformance(currentQuestion, false);
+                                }
+                              }
+                            }}
+                            className="min-h-[44px] bg-green-600 hover:bg-green-700 active:scale-95 text-white px-5 py-2.5 rounded-xl font-semibold transition-all duration-200 text-sm touch-manipulation shadow-sm"
+                          >
+                            Submit
+                          </button>
+                        )}
+
+                      {/* Submit Answer for match items in quiz mode if not answered */}
+                      {studyMode === "quiz" &&
+                        !showExplanation &&
+                        currentQuestion?.questionType === "matchItems" &&
+                        !userAnswers[currentQuestion?.id] && (
+                          <button
+                            onClick={() => {
+                              setShowExplanation(true);
+                              updatePerformance(currentQuestion, false);
+                            }}
+                            className="min-h-[44px] bg-red-600 hover:bg-red-700 active:scale-95 text-white px-5 py-2.5 rounded-xl font-semibold transition-all duration-200 text-sm touch-manipulation shadow-sm"
+                          >
+                            Skip
+                          </button>
+                        )}
+
+                      {/* Next Question */}
+                      <button
+                        onClick={() => {
+                          if (
+                            currentQuestionIndex ===
+                            currentQuestions.length - 1
+                          ) {
+                            // Last question - go to results
+                            if (studyMode === "quiz") {
+                              setActiveTab("results");
+                            } else {
+                              setActiveTab("studycomplete");
+                            }
+                          } else {
+                            handleNext();
+                          }
+                        }}
+                        disabled={
+                          currentQuestionIndex >= currentQuestions.length - 1 &&
+                          studyMode !== "quiz"
+                        }
+                        className={`min-h-[44px] px-4 py-2.5 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2 text-sm touch-manipulation shadow-sm ${
+                          darkMode
+                            ? "bg-blue-600 hover:bg-blue-700 text-white active:scale-95"
+                            : "bg-blue-500 hover:bg-blue-600 text-white active:scale-95"
+                        }`}
+                      >
+                        <span className="hidden sm:inline">
+                          {currentQuestionIndex === currentQuestions.length - 1
+                            ? studyMode === "quiz"
+                              ? "Finish Quiz"
+                              : "Complete"
+                            : "Next"}
+                        </span>
+                        <span className="sm:hidden">
+                          {currentQuestionIndex === currentQuestions.length - 1
+                            ? "Finish"
+                            : "Next"}
+                        </span>
+                        <ChevronRight className="w-4 h-4" />
+                      </button>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </main>
+    </div>
+  );
+}
+
                     <circle
                       cx="96"
                       cy="96"
