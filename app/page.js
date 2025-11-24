@@ -1416,18 +1416,6 @@ export default function T6AEnhancedStudyTool() {
                     <span className="text-sm">Instant Grade</span>
                   </label>
                 </div>
-
-                {/* Open Study Guide Button */}
-                <button
-                  onClick={() => setActiveTab("learningpath")}
-                  className={`w-full py-3 rounded-xl font-medium transition-all ${
-                    darkMode
-                      ? "bg-blue-600 hover:bg-blue-700 text-white"
-                      : "bg-blue-500 hover:bg-blue-600 text-white"
-                  }`}
-                >
-                  Open Study Guide
-                </button>
               </div>
 
               {/* Choose Your Challenge Section */}
@@ -1611,21 +1599,38 @@ export default function T6AEnhancedStudyTool() {
                 >
                   Study Materials
                 </h2>
-                <button
-                  onClick={() => setActiveTab("allquestions")}
-                  className={`w-full ${darkMode ? "bg-slate-700/50 hover:bg-slate-600/50" : "bg-slate-100 hover:bg-slate-200"} rounded-xl p-4 transition-all border ${darkMode ? "border-slate-600" : "border-slate-300"} hover:scale-102 active:scale-98`}
-                >
-                  <h3
-                    className={`text-lg font-semibold mb-1 ${darkMode ? "text-white" : "text-slate-900"}`}
+                <div className="space-y-3">
+                  <button
+                    onClick={() => setActiveTab("learningpath")}
+                    className={`w-full ${darkMode ? "bg-slate-700/50 hover:bg-slate-600/50" : "bg-slate-100 hover:bg-slate-200"} rounded-xl p-4 transition-all border ${darkMode ? "border-slate-600" : "border-slate-300"} hover:scale-102 active:scale-98`}
                   >
-                    📄 View All Questions
-                  </h3>
-                  <p
-                    className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                    <h3
+                      className={`text-lg font-semibold mb-1 ${darkMode ? "text-white" : "text-slate-900"}`}
+                    >
+                      📖 BoldFace Procedures
+                    </h3>
+                    <p
+                      className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                    >
+                      Study guide organized by topic and chapter
+                    </p>
+                  </button>
+                  <button
+                    onClick={() => setActiveTab("allquestions")}
+                    className={`w-full ${darkMode ? "bg-slate-700/50 hover:bg-slate-600/50" : "bg-slate-100 hover:bg-slate-200"} rounded-xl p-4 transition-all border ${darkMode ? "border-slate-600" : "border-slate-300"} hover:scale-102 active:scale-98`}
                   >
-                    Print-friendly format with answers
-                  </p>
-                </button>
+                    <h3
+                      className={`text-lg font-semibold mb-1 ${darkMode ? "text-white" : "text-slate-900"}`}
+                    >
+                      📄 View All Questions
+                    </h3>
+                    <p
+                      className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                    >
+                      Print-friendly format with answers
+                    </p>
+                  </button>
+                </div>
               </div>
             </div>
           ) : activeTab === "quizsetup" ? (
@@ -2822,68 +2827,76 @@ export default function T6AEnhancedStudyTool() {
               </div>
             </div>
           ) : activeTab === "learningpath" ? (
-            <div className="max-w-3xl mx-auto px-4">
+            <div className="max-w-4xl mx-auto px-4">
               <h2
                 className={`text-2xl font-bold mb-6 text-center ${darkMode ? "text-white" : "text-slate-900"}`}
               >
-                Categories
+                Study by Topic
               </h2>
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                {(() => {
-                  const allQuestions = getAllQuestions();
-                  const categories = [
-                    ...new Set(allQuestions.map((q) => q.category)),
-                  ].sort();
+              {/* Aerophysiology Topic */}
+              <div className="mb-8">
+                <h3
+                  className={`text-xl font-bold mb-4 ${darkMode ? "text-cyan-400" : "text-cyan-600"}`}
+                >
+                  Aerospace Physiology
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {(() => {
+                    const aeroQuestions = getAllAerospacePhysiologyQuestions();
+                    const aeroCategories = [
+                      ...new Set(aeroQuestions.map((q) => q.category)),
+                    ].sort();
 
-                  return categories.map((category) => {
-                    const categoryQuestions = allQuestions.filter(
-                      (q) => q.category === category,
-                    );
-                    const masteredCount = categoryQuestions.filter((q) => {
-                      const mastery = questionMastery[q.id];
-                      return mastery && (mastery.correctCount || 0) >= 3;
-                    }).length;
+                    return aeroCategories.map((category) => {
+                      const categoryQuestions = aeroQuestions.filter(
+                        (q) => q.category === category,
+                      );
+                      const masteredCount = categoryQuestions.filter((q) => {
+                        const mastery = questionMastery[q.id];
+                        return mastery && (mastery.correctCount || 0) >= 3;
+                      }).length;
 
-                    return (
-                      <button
-                        key={category}
-                        onClick={() => {
-                          setSelectedCategory(category);
-                          const filtered = allQuestions.filter(
-                            (q) => q.category === category,
-                          );
+                      return (
+                        <button
+                          key={category}
+                          onClick={() => {
+                            setSelectedCategory(category);
+                            const filtered = aeroQuestions.filter(
+                              (q) => q.category === category,
+                            );
 
-                          // Shuffle
-                          for (let i = filtered.length - 1; i > 0; i--) {
-                            const j = Math.floor(Math.random() * (i + 1));
-                            [filtered[i], filtered[j]] = [
-                              filtered[j],
-                              filtered[i],
-                            ];
-                          }
+                            // Shuffle
+                            for (let i = filtered.length - 1; i > 0; i--) {
+                              const j = Math.floor(Math.random() * (i + 1));
+                              [filtered[i], filtered[j]] = [
+                                filtered[j],
+                                filtered[i],
+                              ];
+                            }
 
-                          setCurrentQuestions(filtered);
-                          setCurrentQuestionIndex(0);
-                          setUserAnswers({});
-                          setActiveTab("study");
-                        }}
-                        className={`${darkMode ? "bg-slate-800/50 hover:bg-slate-700/50 border-slate-700" : "bg-white hover:bg-slate-50 border-slate-200"} border rounded-xl p-4 transition-all hover:scale-105 active:scale-95 text-left`}
-                      >
-                        <h3
-                          className={`font-semibold text-sm mb-1 ${darkMode ? "text-white" : "text-slate-900"}`}
+                            setCurrentQuestions(filtered);
+                            setCurrentQuestionIndex(0);
+                            setUserAnswers({});
+                            setActiveTab("study");
+                          }}
+                          className={`${darkMode ? "bg-slate-800/50 hover:bg-slate-700/50 border-slate-700" : "bg-white hover:bg-slate-50 border-slate-200"} border rounded-xl p-4 transition-all hover:scale-105 active:scale-95 text-left`}
                         >
-                          {category}
-                        </h3>
-                        <p
-                          className={`text-xs ${darkMode ? "text-slate-400" : "text-slate-600"}`}
-                        >
-                          {masteredCount}/{categoryQuestions.length} mastered
-                        </p>
-                      </button>
-                    );
-                  });
-                })()}
+                          <h3
+                            className={`font-semibold text-sm mb-1 ${darkMode ? "text-white" : "text-slate-900"}`}
+                          >
+                            {category}
+                          </h3>
+                          <p
+                            className={`text-xs ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                          >
+                            {masteredCount}/{categoryQuestions.length} mastered
+                          </p>
+                        </button>
+                      );
+                    });
+                  })()}
+                </div>
               </div>
             </div>
           ) : currentQuestions.length === 0 ? (
