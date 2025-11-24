@@ -2775,103 +2775,74 @@ export default function T6AEnhancedStudyTool() {
                           </button>
                         )}
 
-                      {/* Next Question */}
-                      <button
-                        onClick={() => {
-                          console.log("Finish button clicked", {
-                            currentQuestionIndex,
-                            totalQuestions: currentQuestions.length,
-                            studyMode,
-                            instantGrade,
-                            userAnswersCount: Object.keys(userAnswers).length,
-                          });
-
-                          if (
-                            currentQuestionIndex ===
-                            currentQuestions.length - 1
-                          ) {
-                            // Last question - grade all questions and go to results
-                            console.log(
-                              "On last question, studyMode:",
-                              studyMode,
-                            );
-                            if (studyMode === "quiz") {
-                              console.log("Is quiz mode, grading questions...");
-                              // If instant grade is off, we need to grade all answered questions now
-                              if (!instantGrade) {
-                                console.log(
-                                  "Instant grade is OFF, grading all questions",
-                                );
-                                currentQuestions.forEach((question) => {
-                                  const userAnswer = userAnswers[question.id];
-                                  if (userAnswer !== undefined) {
-                                    const isCorrect = checkAnswer(
-                                      question,
-                                      userAnswer,
-                                    );
-                                    console.log(
-                                      `Grading Q${question.id}:`,
-                                      isCorrect,
-                                    );
-                                    updatePerformance(question, isCorrect);
-                                  } else {
-                                    // Grade unanswered questions as incorrect
-                                    console.log(
-                                      `Q${question.id} unanswered, marking incorrect`,
-                                    );
-                                    updatePerformance(question, false);
-                                  }
-                                });
-                              } else {
-                                console.log(
-                                  "Instant grade is ON, grading unanswered only",
-                                );
-                                // If instant grade is on, just grade any remaining unanswered questions
-                                currentQuestions.forEach((question) => {
-                                  if (userAnswers[question.id] === undefined) {
-                                    updatePerformance(question, false);
-                                  }
-                                });
-                              }
-                              console.log("Setting activeTab to results");
-                              setActiveTab("results");
+                      {/* Next/Complete Button */}
+                      {currentQuestionIndex === currentQuestions.length - 1 &&
+                      studyMode === "quiz" ? (
+                        // Complete Quiz button on last question
+                        <button
+                          onClick={() => {
+                            console.log("Complete Quiz clicked");
+                            // Grade all questions
+                            if (!instantGrade) {
+                              // If instant grade is off, grade all answered questions now
+                              currentQuestions.forEach((question) => {
+                                const userAnswer = userAnswers[question.id];
+                                if (userAnswer !== undefined) {
+                                  const isCorrect = checkAnswer(
+                                    question,
+                                    userAnswer,
+                                  );
+                                  updatePerformance(question, isCorrect);
+                                } else {
+                                  updatePerformance(question, false);
+                                }
+                              });
                             } else {
-                              console.log(
-                                "Not quiz mode, going to study complete",
-                              );
-                              setActiveTab("studycomplete");
+                              // If instant grade is on, just grade unanswered questions
+                              currentQuestions.forEach((question) => {
+                                if (userAnswers[question.id] === undefined) {
+                                  updatePerformance(question, false);
+                                }
+                              });
                             }
-                          } else {
-                            console.log(
-                              "Not on last question, calling handleNext",
-                            );
-                            handleNext();
+                            // Go to results
+                            setActiveTab("results");
+                          }}
+                          className={`min-h-[44px] px-6 py-2.5 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2 text-sm touch-manipulation shadow-sm bg-green-600 hover:bg-green-700 text-white active:scale-95`}
+                        >
+                          <span>Complete Quiz</span>
+                          <CheckCircle2 className="w-4 h-4" />
+                        </button>
+                      ) : (
+                        // Next button for all other cases
+                        <button
+                          onClick={() => {
+                            if (
+                              currentQuestionIndex ===
+                              currentQuestions.length - 1
+                            ) {
+                              // Last question in non-quiz mode
+                              setActiveTab("studycomplete");
+                            } else {
+                              handleNext();
+                            }
+                          }}
+                          disabled={
+                            currentQuestionIndex >=
+                              currentQuestions.length - 1 &&
+                            studyMode !== "quiz"
                           }
-                        }}
-                        disabled={
-                          currentQuestionIndex >= currentQuestions.length - 1 &&
-                          studyMode !== "quiz"
-                        }
-                        className={`min-h-[44px] px-4 py-2.5 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2 text-sm touch-manipulation shadow-sm ${
-                          darkMode
-                            ? "bg-blue-600 hover:bg-blue-700 text-white active:scale-95"
-                            : "bg-blue-500 hover:bg-blue-600 text-white active:scale-95"
-                        }`}
-                      >
-                        <span className="hidden sm:inline">
-                          {currentQuestionIndex === currentQuestions.length - 1
-                            ? studyMode === "quiz"
-                              ? "Finish Quiz"
-                              : "Complete"
-                            : "Next"}
-                        </span>
-                        <span className="sm:hidden">
-                          {currentQuestionIndex === currentQuestions.length - 1
-                            ? "Finish"
-                            : "Next"}
-                        </span>
-                        <ChevronRight className="w-4 h-4" />
-                      </button>
+                          className={`min-h-[44px] px-4 py-2.5 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2 text-sm touch-manipulation shadow-sm ${
+                            darkMode
+                              ? "bg-blue-600 hover:bg-blue-700 text-white active:scale-95"
+                              : "bg-blue-500 hover:bg-blue-600 text-white active:scale-95"
+                          }`}
+                        >
+                          <span className="hidden sm:inline">Next</span>
+                          <span className="sm:hidden">Next</span>
+                          <ChevronRight className="w-4 h-4" />
+                        </button>
+                      )}
                     </>
                   )}
                 </div>
