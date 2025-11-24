@@ -1419,10 +1419,10 @@ export default function T6AEnhancedStudyTool() {
 
           {/* Main Content */}
           {activeTab === "home" ? (
-            <div className="max-w-4xl mx-auto px-4">
+            <div className="max-w-4xl mx-auto px-4 sm:px-6">
               {/* Mastery Progress Section */}
               <div
-                className={`max-w-2xl mx-auto mb-8 ${darkMode ? "bg-slate-800/50" : "bg-white"} rounded-2xl p-6 shadow-lg`}
+                className={`max-w-2xl mx-auto mb-6 sm:mb-8 ${darkMode ? "bg-slate-800 border border-slate-700" : "bg-white"} rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-lg`}
               >
                 <h2
                   className={`text-xl font-semibold mb-4 text-center ${darkMode ? "text-white" : "text-slate-900"}`}
@@ -1459,7 +1459,7 @@ export default function T6AEnhancedStudyTool() {
                 </p>
 
                 {/* Checkboxes */}
-                <div className="flex justify-center gap-6 mb-4">
+                <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-6 mb-4">
                   <label
                     className={`flex items-center gap-2 cursor-pointer ${darkMode ? "text-slate-300" : "text-slate-700"}`}
                   >
@@ -1469,9 +1469,11 @@ export default function T6AEnhancedStudyTool() {
                       onChange={(e) =>
                         setHideMasteredQuestions(e.target.checked)
                       }
-                      className="w-4 h-4 rounded"
+                      className="w-5 h-5 sm:w-4 sm:h-4 rounded"
                     />
-                    <span className="text-sm">Hide mastered questions</span>
+                    <span className="text-sm sm:text-sm">
+                      Hide mastered questions
+                    </span>
                   </label>
                   <label
                     className={`flex items-center gap-2 cursor-pointer ${darkMode ? "text-slate-300" : "text-slate-700"}`}
@@ -1480,23 +1482,23 @@ export default function T6AEnhancedStudyTool() {
                       type="checkbox"
                       checked={instantGrade}
                       onChange={(e) => setInstantGrade(e.target.checked)}
-                      className="w-4 h-4 rounded"
+                      className="w-5 h-5 sm:w-4 sm:h-4 rounded"
                     />
-                    <span className="text-sm">Instant Grade</span>
+                    <span className="text-sm sm:text-sm">Instant Grade</span>
                   </label>
                 </div>
               </div>
 
               {/* Choose Your Challenge Section */}
               <div
-                className={`max-w-2xl mx-auto mb-8 ${darkMode ? "bg-slate-800/50" : "bg-white"} rounded-2xl p-6 shadow-lg`}
+                className={`max-w-2xl mx-auto mb-6 sm:mb-8 ${darkMode ? "bg-slate-800 border border-slate-700" : "bg-white"} rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-lg`}
               >
                 <h2
-                  className={`text-xl font-semibold mb-4 text-center ${darkMode ? "text-white" : "text-slate-900"}`}
+                  className={`text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-center ${darkMode ? "text-white" : "text-slate-900"}`}
                 >
                   Choose Your Challenge
                 </h2>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-2 sm:gap-3">
                   {/* Quickie - 10 questions */}
                   <button
                     onClick={() => {
@@ -1509,15 +1511,15 @@ export default function T6AEnhancedStudyTool() {
                       setShowQuizSetup(true);
                       setActiveTab("quizsetup");
                     }}
-                    className={`${darkMode ? "bg-slate-700/50 hover:bg-slate-600/50" : "bg-slate-100 hover:bg-slate-200"} rounded-xl p-4 transition-all border ${darkMode ? "border-slate-600" : "border-slate-300"}`}
+                    className={`${darkMode ? "bg-slate-700 hover:bg-slate-600 border-slate-600" : "bg-slate-100 hover:bg-slate-200 border-slate-300"} rounded-lg sm:rounded-xl p-3 sm:p-4 transition-all border active:scale-95`}
                   >
                     <h3
-                      className={`text-base font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
+                      className={`text-sm sm:text-base font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
                     >
                       Quickie
                     </h3>
                     <p
-                      className={`text-xs mt-1 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                      className={`text-xs mt-0.5 sm:mt-1 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
                     >
                       10 questions
                     </p>
@@ -1535,15 +1537,15 @@ export default function T6AEnhancedStudyTool() {
                       setShowQuizSetup(true);
                       setActiveTab("quizsetup");
                     }}
-                    className={`${darkMode ? "bg-slate-700/50 hover:bg-slate-600/50" : "bg-slate-100 hover:bg-slate-200"} rounded-xl p-4 transition-all border ${darkMode ? "border-slate-600" : "border-slate-300"}`}
+                    className={`${darkMode ? "bg-slate-700 hover:bg-slate-600 border-slate-600" : "bg-slate-100 hover:bg-slate-200 border-slate-300"} rounded-lg sm:rounded-xl p-3 sm:p-4 transition-all border active:scale-95`}
                   >
                     <h3
-                      className={`text-base font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
+                      className={`text-sm sm:text-base font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
                     >
                       Not-Quickie
                     </h3>
                     <p
-                      className={`text-xs mt-1 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                      className={`text-xs mt-0.5 sm:mt-1 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
                     >
                       50 questions
                     </p>
@@ -1561,15 +1563,15 @@ export default function T6AEnhancedStudyTool() {
                       setShowQuizSetup(true);
                       setActiveTab("quizsetup");
                     }}
-                    className={`${darkMode ? "bg-slate-700/50 hover:bg-slate-600/50" : "bg-slate-100 hover:bg-slate-200"} rounded-xl p-4 transition-all border ${darkMode ? "border-slate-600" : "border-slate-300"}`}
+                    className={`${darkMode ? "bg-slate-700 hover:bg-slate-600 border-slate-600" : "bg-slate-100 hover:bg-slate-200 border-slate-300"} rounded-lg sm:rounded-xl p-3 sm:p-4 transition-all border active:scale-95`}
                   >
                     <h3
-                      className={`text-base font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
+                      className={`text-sm sm:text-base font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
                     >
                       Marathon
                     </h3>
                     <p
-                      className={`text-xs mt-1 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                      className={`text-xs mt-0.5 sm:mt-1 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
                     >
                       100 questions
                     </p>
@@ -1608,15 +1610,15 @@ export default function T6AEnhancedStudyTool() {
                       setReviewSessionCorrect([]);
                       setActiveTab("study");
                     }}
-                    className={`${darkMode ? "bg-slate-700/50 hover:bg-slate-600/50" : "bg-slate-100 hover:bg-slate-200"} rounded-xl p-4 transition-all border ${darkMode ? "border-slate-600" : "border-slate-300"}`}
+                    className={`${darkMode ? "bg-slate-700 hover:bg-slate-600 border-slate-600" : "bg-slate-100 hover:bg-slate-200 border-slate-300"} rounded-lg sm:rounded-xl p-3 sm:p-4 transition-all border active:scale-95`}
                   >
                     <h3
-                      className={`text-base font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
+                      className={`text-sm sm:text-base font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
                     >
                       Incorrect
                     </h3>
                     <p
-                      className={`text-xs mt-1 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                      className={`text-xs mt-0.5 sm:mt-1 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
                     >
                       {
                         Object.values(questionMastery).filter(
@@ -1631,14 +1633,14 @@ export default function T6AEnhancedStudyTool() {
 
               {/* Practice by Topic Section */}
               <div
-                className={`max-w-2xl mx-auto mb-8 ${darkMode ? "bg-slate-800/50" : "bg-white"} rounded-2xl p-6 shadow-lg`}
+                className={`max-w-2xl mx-auto mb-6 sm:mb-8 ${darkMode ? "bg-slate-800 border border-slate-700" : "bg-white"} rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-lg`}
               >
                 <h2
-                  className={`text-xl font-semibold mb-4 text-center ${darkMode ? "text-white" : "text-slate-900"}`}
+                  className={`text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-center ${darkMode ? "text-white" : "text-slate-900"}`}
                 >
                   Practice by Topic
                 </h2>
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
                   {(() => {
                     // Count mastery for ONLY Aerospace Physiology questions
                     const aeroQuestions = getAllAerospacePhysiologyQuestions();
@@ -1676,15 +1678,15 @@ export default function T6AEnhancedStudyTool() {
                     return (
                       <button
                         onClick={() => setActiveTab("learningpath")}
-                        className={`${darkMode ? "bg-slate-700/50 hover:bg-slate-600/50" : "bg-slate-100 hover:bg-slate-200"} rounded-xl p-4 transition-all border ${darkMode ? "border-slate-600" : "border-slate-300"}`}
+                        className={`${darkMode ? "bg-slate-700 hover:bg-slate-600 border-slate-600" : "bg-slate-100 hover:bg-slate-200 border-slate-300"} rounded-lg sm:rounded-xl p-3 sm:p-4 transition-all border active:scale-95`}
                       >
                         <h3
-                          className={`text-base font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
+                          className={`text-sm sm:text-base font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
                         >
                           📁 Aerospace Physiology
                         </h3>
                         <p
-                          className={`text-xs mt-1 font-medium ${masteryColor}`}
+                          className={`text-xs mt-0.5 sm:mt-1 font-medium ${masteryColor}`}
                         >
                           {masteredCount}/{totalCount} mastered
                         </p>
@@ -1696,20 +1698,20 @@ export default function T6AEnhancedStudyTool() {
 
               {/* Print All Questions Section */}
               <div
-                className={`max-w-2xl mx-auto mb-8 ${darkMode ? "bg-slate-800/50" : "bg-white"} rounded-2xl p-6 shadow-lg`}
+                className={`max-w-2xl mx-auto mb-6 sm:mb-8 ${darkMode ? "bg-slate-800 border border-slate-700" : "bg-white"} rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-lg`}
               >
                 <h2
-                  className={`text-xl font-semibold mb-4 text-center ${darkMode ? "text-white" : "text-slate-900"}`}
+                  className={`text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-center ${darkMode ? "text-white" : "text-slate-900"}`}
                 >
                   Study Materials
                 </h2>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-2 sm:gap-3">
                   <button
                     onClick={() => setActiveTab("allquestions")}
-                    className={`${darkMode ? "bg-slate-700/50 hover:bg-slate-600/50" : "bg-slate-100 hover:bg-slate-200"} rounded-xl p-4 transition-all border ${darkMode ? "border-slate-600" : "border-slate-300"}`}
+                    className={`${darkMode ? "bg-slate-700 hover:bg-slate-600 border-slate-600" : "bg-slate-100 hover:bg-slate-200 border-slate-300"} rounded-lg sm:rounded-xl p-3 sm:p-4 transition-all border active:scale-95`}
                   >
                     <h3
-                      className={`text-base font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
+                      className={`text-sm sm:text-base font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
                     >
                       View All Questions
                     </h3>
@@ -1721,10 +1723,10 @@ export default function T6AEnhancedStudyTool() {
                         "_blank",
                       )
                     }
-                    className={`${darkMode ? "bg-slate-700/50 hover:bg-slate-600/50" : "bg-slate-100 hover:bg-slate-200"} rounded-xl p-4 transition-all border ${darkMode ? "border-slate-600" : "border-slate-300"}`}
+                    className={`${darkMode ? "bg-slate-700 hover:bg-slate-600 border-slate-600" : "bg-slate-100 hover:bg-slate-200 border-slate-300"} rounded-lg sm:rounded-xl p-3 sm:p-4 transition-all border active:scale-95`}
                   >
                     <h3
-                      className={`text-base font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
+                      className={`text-sm sm:text-base font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
                     >
                       BoldFace PDF
                     </h3>
@@ -1761,6 +1763,13 @@ export default function T6AEnhancedStudyTool() {
                     onClick={() => {
                       setQuestionSet("aircraft");
                       setSelectedTopics([]);
+                      // Reset to default aircraft question types
+                      setSelectedQuestionTypes([
+                        "multipleChoice",
+                        "trueFalse",
+                        "reorderSequence",
+                        "matchItems",
+                      ]);
                     }}
                     className={`p-4 rounded-xl text-left transition-all ${
                       questionSet === "aircraft"
@@ -1794,6 +1803,8 @@ export default function T6AEnhancedStudyTool() {
                         ...new Set(aeroQuestions.map((q) => q.category)),
                       ];
                       setSelectedTopics(aeroCategories);
+                      // Also update selectedQuestionTypes for aero (only uses multiple choice)
+                      setSelectedQuestionTypes(["multipleChoice"]);
                     }}
                     className={`p-4 rounded-xl text-left transition-all ${
                       questionSet === "aerophysiology"
