@@ -67,6 +67,7 @@ export default function T6AEnhancedStudyTool() {
   const [darkMode, setDarkMode] = useState(true);
   const [activeTab, setActiveTab] = useState("home");
   const [studyMode, setStudyMode] = useState("quiz"); // Always quiz mode
+  const [questionSet, setQuestionSet] = useState("aircraft"); // 'aircraft' or 'aerophysiology'
   const [studySubMode, setStudySubMode] = useState("activeRecall"); // 'activeRecall', 'learnNew', 'review', 'readThrough'
   const [selectedCategory, setSelectedCategory] = useState("all"); // Category filter for study mode
 
@@ -1599,10 +1600,11 @@ export default function T6AEnhancedStudyTool() {
                 <div className="grid grid-cols-2 gap-3">
                   <button
                     onClick={() => {
+                      setQuestionSet("aircraft");
                       setSelectedTopics([]);
                     }}
                     className={`p-4 rounded-xl text-left transition-all ${
-                      studyMode === "quiz"
+                      questionSet === "aircraft"
                         ? darkMode
                           ? "bg-orange-500/30 border-2 border-orange-500"
                           : "bg-orange-100 border-2 border-orange-500"
@@ -1612,12 +1614,12 @@ export default function T6AEnhancedStudyTool() {
                     }`}
                   >
                     <div
-                      className={`font-semibold ${studyMode === "quiz" ? "text-orange-400" : darkMode ? "text-slate-300" : "text-slate-700"}`}
+                      className={`font-semibold ${questionSet === "aircraft" ? "text-orange-400" : darkMode ? "text-slate-300" : "text-slate-700"}`}
                     >
                       T-6A Aircraft
                     </div>
                     <div
-                      className={`text-xs mt-1 ${studyMode === "quiz" ? "text-orange-300" : darkMode ? "text-slate-400" : "text-slate-500"}`}
+                      className={`text-xs mt-1 ${questionSet === "aircraft" ? "text-orange-300" : darkMode ? "text-slate-400" : "text-slate-500"}`}
                     >
                       Boldface & Systems
                     </div>
@@ -1625,21 +1627,30 @@ export default function T6AEnhancedStudyTool() {
 
                   <button
                     onClick={() => {
+                      setQuestionSet("aerophysiology");
                       // Auto-select all aerospace physiology topics
                       const aeroCategories = aerospacePhysiologyTopics.map(
                         (t) => t.name,
                       );
                       setSelectedTopics(aeroCategories);
                     }}
-                    className={`p-4 rounded-xl text-left transition-all ${darkMode ? "bg-slate-700/50 hover:bg-slate-700 border-2 border-transparent" : "bg-white hover:bg-slate-50 border-2 border-slate-200"}`}
+                    className={`p-4 rounded-xl text-left transition-all ${
+                      questionSet === "aerophysiology"
+                        ? darkMode
+                          ? "bg-cyan-500/30 border-2 border-cyan-500"
+                          : "bg-cyan-100 border-2 border-cyan-500"
+                        : darkMode
+                          ? "bg-slate-700/50 hover:bg-slate-700 border-2 border-transparent"
+                          : "bg-white hover:bg-slate-50 border-2 border-slate-200"
+                    }`}
                   >
                     <div
-                      className={`font-semibold ${darkMode ? "text-slate-300" : "text-slate-700"}`}
+                      className={`font-semibold ${questionSet === "aerophysiology" ? "text-cyan-400" : darkMode ? "text-slate-300" : "text-slate-700"}`}
                     >
                       Aerospace Physiology
                     </div>
                     <div
-                      className={`text-xs mt-1 ${darkMode ? "text-slate-400" : "text-slate-500"}`}
+                      className={`text-xs mt-1 ${questionSet === "aerophysiology" ? "text-cyan-300" : darkMode ? "text-slate-400" : "text-slate-500"}`}
                     >
                       Hypoxia, Vision, G-Forces
                     </div>
@@ -1680,7 +1691,7 @@ export default function T6AEnhancedStudyTool() {
                   try {
                     let all = [];
 
-                    if (studyMode === "aerophysiology") {
+                    if (questionSet === "aerophysiology") {
                       // Get aerospace physiology questions
                       all = getAllAerospacePhysiologyQuestions();
                       console.log(
