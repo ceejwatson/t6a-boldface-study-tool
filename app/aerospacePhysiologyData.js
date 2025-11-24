@@ -141,10 +141,10 @@ export const aerospacePhysiologyQuestions = {
       question:
         "What is the most important factor in the control of ventilation under normal conditions?",
       options: [
-        "Arterial oxygen pressure (PaO₂)",
+        "Arterial oxygen partial pressure (PaO₂)",
         "Arterial carbon dioxide pressure (PaCO₂)",
-        "Blood pH level measurement",
-        "Heart rate measurement",
+        "Blood plasma pH level and acid-base balance",
+        "Heart rate and cardiac output measurement",
       ],
       correctAnswer: 1,
       explanation:
@@ -162,10 +162,10 @@ export const aerospacePhysiologyQuestions = {
       question:
         "Where does gas exchange between the respiratory and circulatory systems occur?",
       options: [
-        "At the trachea location",
-        "At the bronchi location",
-        "At the alveolar-capillary interface",
-        "At the bronchioles location",
+        "At the trachea and upper airway passages",
+        "At the bronchi and large airway branches",
+        "At the alveolar-capillary interface membranes",
+        "At the bronchioles and terminal airways",
       ],
       correctAnswer: 2,
       explanation:
@@ -206,10 +206,10 @@ export const aerospacePhysiologyQuestions = {
       question:
         "Which aviation-related factors can affect oxygen delivery to tissues? (Select the most complete answer)",
       options: [
-        "Altitude exposure only",
-        "Altitude and G-forces only",
+        "Altitude exposure reducing atmospheric oxygen pressure",
+        "Altitude and G-forces affecting blood distribution",
         "Altitude, G-forces, and toxic gases/substances",
-        "G-forces and cabin temperature only",
+        "G-forces and cabin temperature affecting metabolism",
       ],
       correctAnswer: 2,
       explanation:
@@ -249,10 +249,10 @@ export const aerospacePhysiologyQuestions = {
       question:
         "A pilot smokes cigarettes before flight and then experiences oxygen equipment failure at altitude. What types of hypoxia is the pilot experiencing?",
       options: [
-        "Hypoxic hypoxia exposure only",
-        "Hypemic hypoxia exposure only",
-        "Both hypoxic and hypemic hypoxia together",
-        "Histotoxic hypoxia exposure only",
+        "Hypoxic hypoxia from equipment failure only",
+        "Hypemic hypoxia from carbon monoxide only",
+        "Both hypoxic and hypemic hypoxia combined",
+        "Histotoxic hypoxia from cellular poisoning only",
       ],
       correctAnswer: 2,
       explanation:
@@ -314,10 +314,10 @@ export const aerospacePhysiologyQuestions = {
       question:
         "What is the first priority when treating for physiological symptoms in the T-6?",
       options: [
-        "Descend below 10,000 ft MSL immediately and safely",
-        "Communicate with instructor/flight lead for guidance",
-        "Pull green ring and gangload regulator to max O2 under pressure",
-        "Check all oxygen connections for security and proper function",
+        "Descend below 10,000 ft MSL immediately and safely to increase pressure",
+        "Communicate with instructor or flight lead for guidance on symptoms",
+        "Pull green ring and gangload regulator to deliver maximum oxygen",
+        "Check all oxygen system connections for security and proper function",
       ],
       correctAnswer: 2,
       explanation:
@@ -355,10 +355,10 @@ export const aerospacePhysiologyQuestions = {
       question:
         "Why are all physiological symptoms (hypoxia, hypocapnia, etc.) treated the same way in flight?",
       options: [
-        "Because they all have identical physiological causes",
-        "To save time when executing aircraft checklist procedures",
-        "Because symptoms may be confused or occur simultaneously, and time should not be wasted trying to distinguish causes",
-        "Because only hypoxia is actually dangerous to aircrew",
+        "Because all physiological conditions share identical underlying root causes and mechanisms",
+        "To minimize time delay when executing emergency aircraft checklist procedures rapidly",
+        "Because symptoms overlap and may occur together, making distinction impractical during emergency",
+        "Because hypoxia is the only condition that actually poses danger to aircrew safety",
       ],
       correctAnswer: 2,
       explanation:
@@ -377,10 +377,10 @@ export const aerospacePhysiologyQuestions = {
       question:
         "According to Boyle's Law, when does trapped gas in body cavities cause the most problems?",
       options: [
-        "During cruise flight at constant altitude level",
-        "During ascent, as expanding gas cannot escape properly",
-        "During descent, when pressure differential prevents equalization",
-        "Only during rapid decompressions at high altitude",
+        "During cruise flight at constant altitude with stable pressure",
+        "During ascent phase as expanding gas cannot escape body cavities",
+        "During descent when pressure differential prevents equalization",
+        "Only during rapid decompression events occurring at high altitude",
       ],
       correctAnswer: 2,
       explanation:
@@ -399,10 +399,10 @@ export const aerospacePhysiologyQuestions = {
       question:
         "What is the most effective method to equalize pressure in the middle ear during descent?",
       options: [
-        "Swallowing or yawning repeatedly during descent",
-        "Moving head from side to side during pressure changes",
+        "Swallowing or yawning repeatedly during descent to open eustachian tubes",
+        "Moving head from side to side during pressure changes to shift fluid",
         "Valsalva maneuver - close mouth, pinch nose, exhale forcefully",
-        "Waiting until you feel pain before attempting equalization",
+        "Waiting until you feel ear pain before attempting any equalization methods",
       ],
       correctAnswer: 2,
       explanation:
@@ -420,10 +420,10 @@ export const aerospacePhysiologyQuestions = {
       difficulty: "high",
       question: "What is the primary cause of decompression sickness (DCS)?",
       options: [
-        "Rapid pressure changes causing damage to lungs",
-        "Evolution of nitrogen bubbles from tissues and fluids due to reduced atmospheric pressure",
-        "Excessive oxygen saturation at high altitude exposure",
-        "Carbon dioxide buildup in bloodstream system",
+        "Rapid pressure changes causing mechanical lung tissue damage and alveolar rupture",
+        "Nitrogen gas evolution from body tissues and fluids forming bubbles at reduced pressure",
+        "Excessive oxygen saturation causing free radical damage in body tissues at altitude",
+        "Carbon dioxide accumulation in bloodstream causing acidosis and tissue hypoxia symptoms",
       ],
       correctAnswer: 1,
       explanation:
@@ -486,10 +486,10 @@ export const aerospacePhysiologyQuestions = {
       question:
         "Why should crewmembers avoid strenuous exercise for 12 hours after high altitude exposure?",
       options: [
-        "To prevent muscle fatigue after exposure",
-        "To avoid dislodging nitrogen bubbles that could travel to dangerous locations in body",
-        "To allow body to restore normal oxygen levels",
-        "To prevent dehydration complications",
+        "To prevent accumulated muscle fatigue and lactic acid buildup from altitude exposure",
+        "To avoid dislodging nitrogen bubbles that could migrate to critical organs and brain",
+        "To allow cardiovascular system adequate time to restore normal blood oxygen saturation",
+        "To prevent exercise-induced dehydration which compounds existing fluid loss from altitude",
       ],
       correctAnswer: 1,
       explanation:
@@ -509,10 +509,10 @@ export const aerospacePhysiologyQuestions = {
       question:
         "What is the primary advantage of cabin pressurization systems in aircraft?",
       options: [
-        "Increased fuel efficiency at altitude",
+        "Increased fuel efficiency at high altitude through optimized engine performance",
         "Minimizing hazards of DCS, hypoxia, and fatigue by maintaining effective cabin altitude",
-        "Allowing flight above weather systems",
-        "Reducing engine wear during operations",
+        "Allowing flight above weather systems to avoid turbulence and icing conditions",
+        "Reducing engine wear during high altitude operations through better air density",
       ],
       correctAnswer: 1,
       explanation:
@@ -576,9 +576,9 @@ export const aerospacePhysiologyQuestions = {
       question:
         "Which part of the eye is responsible for acute, detailed vision in daylight conditions?",
       options: [
-        "The rods located in peripheral retina",
+        "The rods located in peripheral retina area",
         "The fovea containing many cone cells",
-        "The optic nerve of the eye",
+        "The optic nerve of the eye structure",
         "The cornea at the front of eye",
       ],
       correctAnswer: 1,
@@ -597,9 +597,9 @@ export const aerospacePhysiologyQuestions = {
       difficulty: "medium",
       question: "What causes the physiological blind spot in each eye?",
       options: [
-        "The lens blocking light from reaching retina",
+        "The lens blocking light from reaching retina tissue",
         "The optic nerve leaving eye with no photoreceptors at that point",
-        "Damage to retina from UV exposure over time",
+        "Damage to retina from UV exposure over time period",
         "The fovea having no peripheral vision capability at all",
       ],
       correctAnswer: 1,
@@ -640,10 +640,10 @@ export const aerospacePhysiologyQuestions = {
       difficulty: "medium",
       question: "What is empty-field myopia and why is it dangerous?",
       options: [
-        "Permanent damage to vision from high altitude exposure",
+        "Permanent retinal damage from prolonged high altitude UV exposure affecting visual acuity",
         "Eyes automatically focus at 10-30 ft when no visual cues present, making distant objects blurry",
-        "Complete loss of color vision at altitude",
-        "Temporary blindness from looking at clouds",
+        "Complete loss of color discrimination and visual acuity at high altitude environments",
+        "Temporary visual impairment and blindness from extended viewing of clouds or haze layers",
       ],
       correctAnswer: 1,
       explanation:
@@ -705,10 +705,10 @@ export const aerospacePhysiologyQuestions = {
       difficulty: "medium",
       question: "What is autokinesis and how can you prevent this illusion?",
       options: [
-        "A spinning sensation; prevented by using instruments",
+        "A spinning sensation in darkness; prevented by using instrument cross-check techniques",
         "Illusion that stationary light is moving; prevented by shifting gaze to other objects and using peripheral vision",
-        "False horizon from ground lights; prevented by referencing instruments",
-        "Temporary blindness; prevented by avoiding bright lights",
+        "False horizon from ground lights; prevented by referencing flight instruments properly",
+        "Temporary blindness in darkness; prevented by avoiding bright light exposures",
       ],
       correctAnswer: 1,
       explanation:
@@ -836,10 +836,10 @@ export const aerospacePhysiologyQuestions = {
       question:
         "What causes the Graveyard Spiral illusion and why is it dangerous?",
       options: [
-        "Banking too steeply at low altitude causing excessive sink rate",
+        "Banking too steeply at low altitude causing excessive sink rate and spatial confusion",
         "Prolonged turn stops canal rotation sensing; correcting to level feels like opposite turn, pilot re-enters spiral tightening descent",
-        "Flying inverted without realizing orientation due to vestibular confusion",
-        "Excessive G-forces during aerobatics overloading vestibular system sensors",
+        "Flying inverted without realizing orientation due to vestibular confusion and sensory conflict",
+        "Excessive G-forces during aerobatics overloading vestibular system sensors and causing disorientation",
       ],
       correctAnswer: 1,
       explanation:
@@ -856,10 +856,10 @@ export const aerospacePhysiologyQuestions = {
       difficulty: "high",
       question: "What causes the Coriolis illusion?",
       options: [
-        "Flying in clouds for extended periods of time",
+        "Flying in clouds for extended periods of time without external visual references",
         "Making head movement in different plane while in prolonged turn, stimulating multiple semicircular canals simultaneously",
-        "Rapid altitude changes during flight maneuvers",
-        "Flying at high G-forces during maneuvers",
+        "Rapid altitude changes during flight maneuvers causing pressure differentials",
+        "Flying at high G-forces during maneuvers causing vestibular overload",
       ],
       correctAnswer: 1,
       explanation:
@@ -1051,10 +1051,10 @@ export const aerospacePhysiologyQuestions = {
       question:
         "What is G-induced Loss of Consciousness (G-LOC) and what are its phases?",
       options: [
-        "Temporary confusion state during high G with disorientation symptoms",
+        "Temporary confusion state during high G with disorientation symptoms and impaired judgment",
         "Complete unconsciousness from excessive +Gz; phases: absolute incapacitation (unconscious), relative incapacitation (convulsions), recovery (confusion)",
-        "Permanent brain damage from excessive G exposure to cerebral tissues",
-        "Loss of vision capability but consciousness maintained throughout episode",
+        "Permanent brain damage from excessive G exposure to cerebral tissues and neural structures",
+        "Loss of vision capability but consciousness maintained throughout episode without complete incapacitation",
       ],
       correctAnswer: 1,
       explanation:
@@ -1095,10 +1095,10 @@ export const aerospacePhysiologyQuestions = {
       question:
         "What are the key elements of correctly performing the Anti-G Straining Maneuver (AGSM)?",
       options: [
-        "Hold breath continuously while tensing all major muscle groups throughout",
-        "Breathe normally with relaxed muscles to maintain adequate oxygen flow",
+        "Hold breath continuously while tensing all major muscle groups throughout exposure to G-forces",
+        "Breathe normally with relaxed muscles to maintain adequate oxygen flow during maneuvers",
         "Tense leg/abdomen/arm muscles, perform 3-sec strain cycle against closed glottis, rapid breath exchange, repeat continuously",
-        "Hyperventilate rapidly before G onset to increase blood oxygen saturation",
+        "Hyperventilate rapidly before G onset to increase blood oxygen saturation levels significantly",
       ],
       correctAnswer: 2,
       explanation:
@@ -1117,10 +1117,10 @@ export const aerospacePhysiologyQuestions = {
       question:
         "What level of protection does a properly fitted and functioning G-suit provide?",
       options: [
-        "Complete protection from all G-forces",
+        "Complete protection from all G-forces during maneuvers",
         "Approximately 1-1.5 G of protection by applying pressure to lower extremities and abdomen",
-        "Protection only during low G maneuvers",
-        "No significant protection; psychological benefit only",
+        "Protection only during low G maneuvers and operations",
+        "No significant protection; psychological benefit only during flight",
       ],
       correctAnswer: 1,
       explanation:
@@ -1162,10 +1162,10 @@ export const aerospacePhysiologyQuestions = {
       question:
         "What are the effects of hypoglycemia (low blood sugar) on aircrew performance?",
       options: [
-        "Improved alertness and energy levels with enhanced cognitive function",
+        "Improved alertness and energy levels with enhanced cognitive function and physical performance",
         "Symptoms mimicking hypoxia: weakness, trembling, confusion, sweating, headache, impaired judgment, possible unconsciousness",
-        "No significant physiological effects on normal flight operations",
-        "Only affects diabetic pilots; normal pilots unaffected by condition",
+        "No significant physiological effects on normal flight operations or crew performance whatsoever",
+        "Only affects diabetic pilots; normal pilots unaffected by condition during flight operations",
       ],
       correctAnswer: 1,
       explanation:
@@ -1183,10 +1183,10 @@ export const aerospacePhysiologyQuestions = {
       question:
         "What are signs and symptoms of dehydration and why is it particularly dangerous in aviation?",
       options: [
-        "Only excessive thirst sensation; not particularly dangerous to aircrew",
+        "Only excessive thirst sensation; not particularly dangerous to aircrew during operations",
         "Symptoms: fatigue, headache, dizziness, decreased performance, dark urine; increases hypoxia, DCS, G-LOC susceptibility significantly",
-        "Skin rash only; no other physiological symptoms present whatsoever",
-        "Dehydration only occurs in hot weather operations, not normal flights",
+        "Skin rash only; no other physiological symptoms present whatsoever during flight",
+        "Dehydration only occurs in hot weather operations, not normal flights at altitude",
       ],
       correctAnswer: 1,
       explanation:
@@ -1204,10 +1204,10 @@ export const aerospacePhysiologyQuestions = {
       difficulty: "high",
       question: "What is the difference between acute and chronic fatigue?",
       options: [
-        "No practical difference exists between the two fatigue types",
+        "No practical difference exists between the two fatigue types during operations",
         "Acute results from single inadequate rest period, relieved by proper sleep; chronic accumulates over time, requires extended recovery",
-        "Acute is solely physical fatigue; chronic is solely mental fatigue",
-        "Acute is dangerous to flight ops; chronic is not dangerous",
+        "Acute is solely physical fatigue; chronic is solely mental fatigue during operations",
+        "Acute is dangerous to flight ops; chronic is not dangerous to operations",
       ],
       correctAnswer: 1,
       explanation:
@@ -1225,10 +1225,10 @@ export const aerospacePhysiologyQuestions = {
       question:
         "What are the potential negative effects of excessive caffeine consumption for aircrew?",
       options: [
-        "No negative effects; caffeine only helps performance",
+        "No negative effects; caffeine only helps performance during operations",
         "Fine motor tremors, increased anxiety, sleep disruption, tolerance requiring increased doses, withdrawal symptoms, and potential cardiac effects",
-        "Only stomach upset",
-        "Addiction only; no performance effects",
+        "Only stomach upset and gastrointestinal discomfort during flight",
+        "Addiction only; no performance effects on cognitive or physical function",
       ],
       correctAnswer: 1,
       explanation:
@@ -1247,10 +1247,10 @@ export const aerospacePhysiologyQuestions = {
       question:
         "How does thermal stress (heat/cold) affect aircrew performance and other physiological threats?",
       options: [
-        "No significant impact on performance",
+        "No significant impact on performance during operations",
         "Heat/cold stress impairs cognitive function, increases fatigue, decreases G-tolerance, and exacerbates hypoxia, dehydration, and DCS susceptibility",
-        "Only causes physical discomfort",
-        "Improves alertness through stress response",
+        "Only causes physical discomfort without performance degradation",
+        "Improves alertness through stress response mechanisms",
       ],
       correctAnswer: 1,
       explanation:
@@ -2441,10 +2441,10 @@ export const aerospacePhysiologyQuestions = {
       question:
         "What are the physical symptoms associated with exposure to positive Gz (head-to-foot) forces?",
       options: [
-        "Symptoms include improved vision and enhanced performance",
+        "Symptoms include improved vision and enhanced performance during maneuvers",
         "Symptoms include grayout, tunnel vision, blackout, and potential G-LOC as blood pools in lower body",
-        "No symptoms occur below +15 Gz",
-        "Only causes muscle soreness after flight",
+        "No symptoms occur below +15 Gz during normal operations",
+        "Only causes muscle soreness after flight without other effects",
       ],
       correctAnswer: 1,
       explanation:
@@ -2463,10 +2463,10 @@ export const aerospacePhysiologyQuestions = {
       question:
         "What are the four principle physiological effects of exposure to G forces?",
       options: [
-        "Happiness, sadness, anger, fear emotions during stress response",
+        "Happiness, sadness, anger, fear emotions during stress response to maneuvers",
         "Cardiovascular (blood pooling), pulmonary (breathing difficulty), musculoskeletal (increased weight), visual (reduced eye blood flow)",
-        "Only affects the heart with no other system impacts",
-        "Hunger, thirst, fatigue, cold sensations during G exposure",
+        "Only affects the heart with no other system impacts during exposure",
+        "Hunger, thirst, fatigue, cold sensations during G exposure and maneuvers",
       ],
       correctAnswer: 1,
       explanation:
@@ -2485,10 +2485,10 @@ export const aerospacePhysiologyQuestions = {
       question:
         "What causes blackout and how is it different from G-induced loss of consciousness (G-LOC)?",
       options: [
-        "They are the same thing with different names",
+        "They are the same thing with different names for identical condition",
         "Blackout is complete vision loss while remaining conscious due to retinal hypoxia; G-LOC is unconsciousness from cerebral hypoxia requiring higher G or longer duration",
-        "Blackout is permanent; G-LOC is temporary",
-        "Blackout only occurs in negative G; G-LOC only in positive G",
+        "Blackout is permanent vision damage; G-LOC is temporary consciousness loss",
+        "Blackout only occurs in negative G forces; G-LOC only in positive G",
       ],
       correctAnswer: 1,
       explanation:
@@ -2507,10 +2507,10 @@ export const aerospacePhysiologyQuestions = {
       question:
         "How does relative incapacitation impact the total time required to regain control of the aircraft after G-LOC?",
       options: [
-        "Relative incapacitation has no impact on recovery time",
+        "Relative incapacitation has no impact on recovery time after G-LOC",
         "Relative incapacitation adds 10-15 seconds of confusion and disorientation after regaining consciousness, significantly increasing total recovery time",
-        "Recovery is instant once consciousness returns",
-        "Relative incapacitation only affects physical movement, not mental function",
+        "Recovery is instant once consciousness returns to the pilot",
+        "Relative incapacitation only affects physical movement, not mental function during recovery",
       ],
       correctAnswer: 1,
       explanation:
@@ -2549,10 +2549,10 @@ export const aerospacePhysiologyQuestions = {
       question:
         "What are common errors when performing the Anti-G Straining Maneuver (AGSM)?",
       options: [
-        "There are no common errors - all pilots perform perfectly",
+        "There are no common errors - all pilots perform perfectly during maneuvers",
         "Holding breath too long (hypocapnia), inadequate muscle tensing, improper breathing cycle, skipping straining maneuver entirely",
-        "Tensing muscles excessively causing cramping and discomfort",
-        "Breathing too rapidly causing hyperventilation and dizziness",
+        "Tensing muscles excessively causing cramping and discomfort during G exposure",
+        "Breathing too rapidly causing hyperventilation and dizziness during maneuvers",
       ],
       correctAnswer: 1,
       explanation:
@@ -2570,10 +2570,10 @@ export const aerospacePhysiologyQuestions = {
       question:
         "Which mission characteristics are most likely to cause AGSM errors?",
       options: [
-        "Only occurs during training flights",
+        "Only occurs during training flights with student pilots",
         "High workload situations (BFM, close formation), task saturation, surprise G onset, fatigue, and repeated high-G exposures",
-        "AGSM errors never occur in actual flight",
-        "Only happens to inexperienced pilots",
+        "AGSM errors never occur in actual flight operations",
+        "Only happens to inexperienced pilots during initial training",
       ],
       correctAnswer: 1,
       explanation:
@@ -2590,10 +2590,10 @@ export const aerospacePhysiologyQuestions = {
       difficulty: "medium",
       question: "How do self-imposed stressors affect G-force tolerance?",
       options: [
-        "Self-imposed stressors have no effect on G tolerance",
+        "Self-imposed stressors have no effect on G tolerance levels",
         "Dehydration, fatigue, poor nutrition, alcohol, and illness all significantly decrease G tolerance and increase risk of G-LOC",
-        "Self-imposed stressors actually improve G tolerance",
-        "Only medication affects G tolerance",
+        "Self-imposed stressors actually improve G tolerance during maneuvers",
+        "Only medication affects G tolerance without other factors",
       ],
       correctAnswer: 1,
       explanation:
@@ -2616,10 +2616,10 @@ export const aerospacePhysiologyQuestions = {
       question:
         "Which types of over-the-counter (OTC) medications pose the greatest risk to aircrew performance?",
       options: [
-        "OTC medications are all completely safe for flight",
+        "OTC medications are all completely safe for flight operations",
         "Antihistamines (cause drowsiness), decongestants (affect blood pressure/heart rate), pain relievers, and sleep aids",
-        "Only prescription medications pose risks",
-        "Vitamins are the most dangerous OTC products",
+        "Only prescription medications pose risks to aircrew performance",
+        "Vitamins are the most dangerous OTC products for aircrew",
       ],
       correctAnswer: 1,
       explanation:
@@ -2638,10 +2638,10 @@ export const aerospacePhysiologyQuestions = {
       question:
         "What are the potential performance effects of nutritional supplements and OTC medications?",
       options: [
-        "All supplements and OTC meds improve performance",
+        "All supplements and OTC meds improve performance during operations",
         "Drowsiness, impaired judgment, altered heart rate/blood pressure, dizziness, delayed reaction time, and unpredictable interactions",
-        "No effects on performance whatsoever",
-        "Only affect ground-based activities, not flying",
+        "No effects on performance whatsoever during flight operations",
+        "Only affect ground-based activities, not flying or operations",
       ],
       correctAnswer: 1,
       explanation:
@@ -2660,10 +2660,10 @@ export const aerospacePhysiologyQuestions = {
       question:
         "What are both the immediate and residual effects of alcohol on the body?",
       options: [
-        "Alcohol has no effects after 8 hours",
+        "Alcohol has no effects after 8 hours of abstinence",
         "Immediate: impaired judgment, coordination, vision; Residual: dehydration, fatigue, hypoglycemia, reduced hypoxia tolerance for 24+ hours",
-        "Only causes headaches",
-        "Effects disappear completely after sleep",
+        "Only causes headaches without other performance impacts",
+        "Effects disappear completely after sleep and rest period",
       ],
       correctAnswer: 1,
       explanation:
@@ -2858,10 +2858,10 @@ export const aerospacePhysiologyQuestions = {
       question:
         "What are the five types of oxygen storage systems and their key characteristics?",
       options: [
-        "There is only one type of oxygen system used in aviation",
+        "There is only one type of oxygen system used in aviation operations",
         "Gaseous (high pressure cylinders), Liquid (LOX cryogenic), Chemical (candles), OBOGS (on-board generation), Molecular sieve (ambient concentration)",
-        "All systems are identical in function with no differences whatsoever",
-        "Only OBOGS exists in modern aircraft; others discontinued completely",
+        "All systems are identical in function with no differences whatsoever between types",
+        "Only OBOGS exists in modern aircraft; others discontinued completely from service",
       ],
       correctAnswer: 1,
       explanation:

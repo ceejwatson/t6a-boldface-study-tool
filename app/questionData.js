@@ -589,9 +589,9 @@ export const questionDatabase = {
       question:
         "You're at 12,000 ft MSL with 180 pounds total fuel (90 pounds per side). Can you perform aerobatics?",
       options: [
-        "Yes, total fuel is adequate",
+        "Yes, total fuel quantity is adequate for aerobatics",
         "No, need minimum 150 pounds per side (300 total)",
-        "Yes, as long as you stay above 10,000 ft",
+        "Yes, as long as you stay above 10,000 ft MSL",
         "No, need minimum 200 pounds per side (400 total)",
       ],
       correctAnswer: 1,
@@ -740,10 +740,10 @@ export const questionDatabase = {
       question:
         "Engine fails at 500 ft AGL after takeoff. You have 3,000 ft of runway remaining straight ahead. What is the FIRST BOLDFACE action?",
       options: [
-        "PCL - MID RANGE (attempt airstart)",
-        "PCL - IDLE",
-        "EJECT",
-        "Turn back to runway",
+        "PCL - MID RANGE (attempt airstart now)",
+        "PCL - IDLE (land straight ahead immediately)",
+        "EJECT (insufficient altitude to recover)",
+        "Turn back to runway (execute pattern)",
       ],
       correctAnswer: 1,
       explanation:
