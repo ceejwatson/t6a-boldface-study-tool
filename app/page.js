@@ -532,12 +532,17 @@ export default function T6AEnhancedStudyTool() {
 
       if (autoSubmitTypes.includes(currentQuestion.questionType)) {
         // Auto-submit for simple question types in both study and quiz mode
-        // Only show explanation if instant grade is enabled
+        // Only show explanation and grade if instant grade is enabled OR not in quiz mode
         if (instantGrade) {
           setShowExplanation(true);
         }
-        // Don't track performance in limitations mode
-        if (studyMode !== "limitations") {
+
+        // Only track performance immediately if instant grade is on OR not in quiz mode
+        // In quiz mode with instant grade off, we'll grade at the end
+        if (
+          studyMode !== "limitations" &&
+          (instantGrade || studyMode !== "quiz")
+        ) {
           const isCorrect = checkAnswer(currentQuestion, answer);
           updatePerformance(currentQuestion, isCorrect);
 
@@ -566,17 +571,22 @@ export default function T6AEnhancedStudyTool() {
           if (instantGrade) {
             setShowExplanation(true);
           }
-          const isCorrect = checkAnswer(currentQuestion, answer);
-          updatePerformance(currentQuestion, isCorrect);
 
-          // In review mode, track correct answers in session
-          if (studyMode === "study" && isCorrect) {
-            setReviewSessionCorrect((prev) => {
-              if (!prev.includes(currentQuestion.id)) {
-                return [...prev, currentQuestion.id];
-              }
-              return prev;
-            });
+          // Only track performance immediately if instant grade is on OR not in quiz mode
+          // In quiz mode with instant grade off, we'll grade at the end
+          if (instantGrade || studyMode !== "quiz") {
+            const isCorrect = checkAnswer(currentQuestion, answer);
+            updatePerformance(currentQuestion, isCorrect);
+
+            // In review mode, track correct answers in session
+            if (studyMode === "study" && isCorrect) {
+              setReviewSessionCorrect((prev) => {
+                if (!prev.includes(currentQuestion.id)) {
+                  return [...prev, currentQuestion.id];
+                }
+                return prev;
+              });
+            }
           }
         }
       }
