@@ -1626,24 +1626,17 @@ export default function T6AEnhancedStudyTool() {
                   <button
                     onClick={() => {
                       setSelectedTopics([]);
+                      setActiveTab("aerophysiology");
                     }}
-                    className={`p-4 rounded-xl text-left transition-all ${
-                      studyMode === "aerophysiology"
-                        ? darkMode
-                          ? "bg-cyan-500/30 border-2 border-cyan-500"
-                          : "bg-cyan-100 border-2 border-cyan-500"
-                        : darkMode
-                          ? "bg-slate-700/50 hover:bg-slate-700 border-2 border-transparent"
-                          : "bg-white hover:bg-slate-50 border-2 border-slate-200"
-                    }`}
+                    className={`p-4 rounded-xl text-left transition-all ${darkMode ? "bg-slate-700/50 hover:bg-slate-700 border-2 border-transparent" : "bg-white hover:bg-slate-50 border-2 border-slate-200"}`}
                   >
                     <div
-                      className={`font-semibold ${studyMode === "aerophysiology" ? "text-cyan-400" : darkMode ? "text-slate-300" : "text-slate-700"}`}
+                      className={`font-semibold ${darkMode ? "text-slate-300" : "text-slate-700"}`}
                     >
                       Aerospace Physiology
                     </div>
                     <div
-                      className={`text-xs mt-1 ${studyMode === "aerophysiology" ? "text-cyan-300" : darkMode ? "text-slate-400" : "text-slate-500"}`}
+                      className={`text-xs mt-1 ${darkMode ? "text-slate-400" : "text-slate-500"}`}
                     >
                       Hypoxia, Vision, G-Forces
                     </div>
