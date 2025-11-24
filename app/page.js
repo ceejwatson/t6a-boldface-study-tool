@@ -1625,8 +1625,11 @@ export default function T6AEnhancedStudyTool() {
 
                   <button
                     onClick={() => {
-                      setSelectedTopics([]);
-                      setActiveTab("aerophysiology");
+                      // Auto-select all aerospace physiology topics
+                      const aeroCategories = aerospacePhysiologyTopics.map(
+                        (t) => t.name,
+                      );
+                      setSelectedTopics(aeroCategories);
                     }}
                     className={`p-4 rounded-xl text-left transition-all ${darkMode ? "bg-slate-700/50 hover:bg-slate-700 border-2 border-transparent" : "bg-white hover:bg-slate-50 border-2 border-slate-200"}`}
                   >
