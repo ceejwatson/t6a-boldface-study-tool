@@ -64,7 +64,7 @@ export default function T6AEnhancedStudyTool() {
   const { triggerSync, isSyncing } = useSync();
 
   // UI State
-  const [darkMode, setDarkMode] = useState(true);
+  const [darkMode, setDarkMode] = useState(false);
   const [activeTab, setActiveTab] = useState("home");
   const [studyMode, setStudyMode] = useState("quiz"); // Always quiz mode
   const [questionSet, setQuestionSet] = useState("aircraft"); // 'aircraft' or 'aerophysiology'
@@ -1136,7 +1136,7 @@ export default function T6AEnhancedStudyTool() {
               <h1
                 className={`text-sm font-medium ${darkMode ? "text-white" : "text-slate-900"}`}
               >
-                Study Tool
+                T6 Study Tool
               </h1>
             </div>
 
@@ -1558,16 +1558,56 @@ export default function T6AEnhancedStudyTool() {
                   Practice by Topic
                 </h2>
                 <div className="grid grid-cols-3 gap-3">
-                  <button
-                    onClick={() => setActiveTab("learningpath")}
-                    className={`${darkMode ? "bg-slate-800/50 hover:bg-slate-700/50" : "bg-white hover:bg-slate-50"} rounded-xl p-4 transition-all border ${darkMode ? "border-slate-700" : "border-slate-200"} hover:scale-105 active:scale-95`}
-                  >
-                    <h3
-                      className={`text-base font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
-                    >
-                      📁 Aerospace Physiology
-                    </h3>
-                  </button>
+                  {(() => {
+                    const aeroQuestions = getAllAerospacePhysiologyQuestions();
+                    const masteredCount = aeroQuestions.filter((q) => {
+                      const mastery = questionMastery[q.id];
+                      return mastery && (mastery.correctCount || 0) >= 3;
+                    }).length;
+                    const totalCount = aeroQuestions.length;
+                    const masteryPercentage =
+                      totalCount > 0 ? (masteredCount / totalCount) * 100 : 0;
+
+                    // Color coding: red (0%) -> yellow (50%) -> green (100%)
+                    let masteryColor = "";
+                    if (masteryPercentage >= 80) {
+                      masteryColor = darkMode
+                        ? "text-green-400"
+                        : "text-green-600";
+                    } else if (masteryPercentage >= 60) {
+                      masteryColor = darkMode
+                        ? "text-lime-400"
+                        : "text-lime-600";
+                    } else if (masteryPercentage >= 40) {
+                      masteryColor = darkMode
+                        ? "text-yellow-400"
+                        : "text-yellow-600";
+                    } else if (masteryPercentage >= 20) {
+                      masteryColor = darkMode
+                        ? "text-orange-400"
+                        : "text-orange-600";
+                    } else {
+                      masteryColor = darkMode ? "text-red-400" : "text-red-600";
+                    }
+
+                    return (
+                      <button
+                        onClick={() => setActiveTab("learningpath")}
+                        className={`${darkMode ? "bg-slate-800/50 hover:bg-slate-700/50" : "bg-white hover:bg-slate-50"} rounded-xl p-4 transition-all border ${darkMode ? "border-slate-700" : "border-slate-200"} hover:scale-105 active:scale-95`}
+                      >
+                        <h3
+                          className={`text-base font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
+                        >
+                          📁 Aerospace Physiology
+                        </h3>
+                        <p
+                          className={`text-xs mt-1 font-medium ${masteryColor}`}
+                        >
+                          {masteredCount}/{totalCount} mastered
+                        </p>
+                      </button>
+                    );
+                  })()}
                 </div>
               </div>
 
@@ -2158,7 +2198,10 @@ export default function T6AEnhancedStudyTool() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {(() => {
-                  const allQuestions = getAllQuestions();
+                  // Get both aircraft and aerospace physiology questions
+                  const aircraftQuestions = getAllQuestions();
+                  const aeroQuestions = getAllAerospacePhysiologyQuestions();
+                  const allQuestions = [...aircraftQuestions, ...aeroQuestions];
                   let questionNumber = 1;
 
                   return allQuestions.map((q) => {
