@@ -1557,37 +1557,16 @@ export default function T6AEnhancedStudyTool() {
                 >
                   Practice by Topic
                 </h2>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-3 gap-3">
                   <button
                     onClick={() => setActiveTab("learningpath")}
-                    className={`${darkMode ? "bg-slate-800/50 hover:bg-slate-700/50" : "bg-white hover:bg-slate-50"} rounded-xl p-6 transition-all border ${darkMode ? "border-slate-700" : "border-slate-200"} hover:scale-105 active:scale-95`}
+                    className={`${darkMode ? "bg-slate-800/50 hover:bg-slate-700/50" : "bg-white hover:bg-slate-50"} rounded-xl p-4 transition-all border ${darkMode ? "border-slate-700" : "border-slate-200"} hover:scale-105 active:scale-95`}
                   >
                     <h3
-                      className={`text-lg font-semibold mb-1 ${darkMode ? "text-white" : "text-slate-900"}`}
+                      className={`text-base font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
                     >
-                      Categories
+                      📁 Aerospace Physiology
                     </h3>
-                    <p
-                      className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
-                    >
-                      Study by topic
-                    </p>
-                  </button>
-
-                  <button
-                    onClick={() => setActiveTab("progress")}
-                    className={`${darkMode ? "bg-slate-800/50 hover:bg-slate-700/50" : "bg-white hover:bg-slate-50"} rounded-xl p-6 transition-all border ${darkMode ? "border-slate-700" : "border-slate-200"} hover:scale-105 active:scale-95`}
-                  >
-                    <h3
-                      className={`text-lg font-semibold mb-1 ${darkMode ? "text-white" : "text-slate-900"}`}
-                    >
-                      Progress
-                    </h3>
-                    <p
-                      className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
-                    >
-                      View stats
-                    </p>
                   </button>
                 </div>
               </div>
@@ -1602,16 +1581,6 @@ export default function T6AEnhancedStudyTool() {
                   Study Materials
                 </h2>
                 <div className="space-y-3">
-                  <button
-                    onClick={() => setActiveTab("learningpath")}
-                    className={`w-full ${darkMode ? "bg-slate-700/50 hover:bg-slate-600/50" : "bg-slate-100 hover:bg-slate-200"} rounded-xl p-4 transition-all border ${darkMode ? "border-slate-600" : "border-slate-300"} hover:scale-102 active:scale-98`}
-                  >
-                    <h3
-                      className={`text-lg font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
-                    >
-                      📖 Aerospace Physiology
-                    </h3>
-                  </button>
                   <button
                     onClick={() => setActiveTab("allquestions")}
                     className={`w-full ${darkMode ? "bg-slate-700/50 hover:bg-slate-600/50" : "bg-slate-100 hover:bg-slate-200"} rounded-xl p-4 transition-all border ${darkMode ? "border-slate-600" : "border-slate-300"} hover:scale-102 active:scale-98`}
