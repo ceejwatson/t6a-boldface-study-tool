@@ -1864,12 +1864,15 @@ export default function T6AEnhancedStudyTool() {
                     let all = [];
 
                     if (questionSet === "aerophysiology") {
-                      // Get aerospace physiology questions
+                      // Get ALL aerospace physiology questions - no filtering
                       all = getAllAerospacePhysiologyQuestions();
                       console.log(
                         "Aerospace physiology questions loaded:",
                         all.length,
                       );
+
+                      // Ensure selectedQuestionTypes is set for aero
+                      setSelectedQuestionTypes(["multipleChoice"]);
                     } else {
                       // Get T-6A aircraft questions
                       const quizTypes = [
@@ -1886,39 +1889,23 @@ export default function T6AEnhancedStudyTool() {
                           all.push({ ...q, questionType: type });
                         });
                       });
+
+                      // Filter aircraft questions by selected topics if any
+                      if (selectedTopics.length > 0) {
+                        all = all.filter((q) =>
+                          selectedTopics.includes(q.category),
+                        );
+                      }
                     }
 
                     if (all.length === 0) {
-                      alert("No questions available. Please try again.");
+                      alert(
+                        "No questions available. Please select different options.",
+                      );
                       return;
                     }
 
-                    console.log("Questions before filter:", all.length);
-                    console.log("Selected topics:", selectedTopics);
-                    console.log("Question set:", questionSet);
-
-                    // Filter by selected topics
-                    // For aerophysiology: if topics are selected, filter by them. If not, use all aero questions.
-                    // For aircraft: always filter by selected topics
-                    if (
-                      questionSet === "aircraft" &&
-                      selectedTopics.length > 0
-                    ) {
-                      all = all.filter((q) =>
-                        selectedTopics.includes(q.category),
-                      );
-                    } else if (
-                      questionSet === "aerophysiology" &&
-                      selectedTopics.length > 0
-                    ) {
-                      // Only filter aero questions if user has specifically selected certain topics
-                      all = all.filter((q) =>
-                        selectedTopics.includes(q.category),
-                      );
-                    }
-                    // If aerophysiology with no topics, keep all aero questions (auto-selection case)
-
-                    console.log("Questions after topic filter:", all.length);
+                    console.log("Questions before mastery filter:", all.length);
 
                     // Filter out mastered questions if checkbox is enabled
                     if (hideMasteredQuestions) {
@@ -1931,8 +1918,9 @@ export default function T6AEnhancedStudyTool() {
                     console.log("Questions after mastery filter:", all.length);
 
                     if (all.length === 0) {
-                      // Don't show annoying alert - just don't start the quiz
-                      // User can adjust filters and try again
+                      alert(
+                        "No questions available after filtering. Try unchecking 'Hide mastered questions'.",
+                      );
                       return;
                     }
 
