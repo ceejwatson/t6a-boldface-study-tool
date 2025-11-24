@@ -2516,6 +2516,7 @@ export default function T6AEnhancedStudyTool() {
                   setCurrentQuestionIndex(0);
                   setUserAnswers({});
                   setShowExplanation(false);
+                  setStudyMode("quiz");
                   setActiveTab("study");
                 }}
                 className={`w-full py-4 rounded-xl font-semibold text-lg transition-all duration-200 ${
