@@ -1549,9 +1549,11 @@ export default function T6AEnhancedStudyTool() {
               </div>
 
               {/* Practice by Topic Section */}
-              <div className="max-w-2xl mx-auto">
+              <div
+                className={`max-w-2xl mx-auto mb-8 ${darkMode ? "bg-slate-800/50" : "bg-white"} rounded-2xl p-6 shadow-lg`}
+              >
                 <h2
-                  className={`text-xl font-semibold mb-4 ${darkMode ? "text-white" : "text-slate-900"}`}
+                  className={`text-xl font-semibold mb-4 text-center ${darkMode ? "text-white" : "text-slate-900"}`}
                 >
                   Practice by Topic
                 </h2>
@@ -1605,30 +1607,30 @@ export default function T6AEnhancedStudyTool() {
                     className={`w-full ${darkMode ? "bg-slate-700/50 hover:bg-slate-600/50" : "bg-slate-100 hover:bg-slate-200"} rounded-xl p-4 transition-all border ${darkMode ? "border-slate-600" : "border-slate-300"} hover:scale-102 active:scale-98`}
                   >
                     <h3
-                      className={`text-lg font-semibold mb-1 ${darkMode ? "text-white" : "text-slate-900"}`}
+                      className={`text-lg font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
                     >
-                      📖 BoldFace Procedures
+                      📖 Aerospace Physiology
                     </h3>
-                    <p
-                      className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
-                    >
-                      Study guide organized by topic and chapter
-                    </p>
                   </button>
                   <button
                     onClick={() => setActiveTab("allquestions")}
                     className={`w-full ${darkMode ? "bg-slate-700/50 hover:bg-slate-600/50" : "bg-slate-100 hover:bg-slate-200"} rounded-xl p-4 transition-all border ${darkMode ? "border-slate-600" : "border-slate-300"} hover:scale-102 active:scale-98`}
                   >
                     <h3
-                      className={`text-lg font-semibold mb-1 ${darkMode ? "text-white" : "text-slate-900"}`}
+                      className={`text-lg font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
                     >
                       📄 View All Questions
                     </h3>
-                    <p
-                      className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                  </button>
+                  <button
+                    onClick={() => window.open("/boldface.pdf", "_blank")}
+                    className={`w-full ${darkMode ? "bg-slate-700/50 hover:bg-slate-600/50" : "bg-slate-100 hover:bg-slate-200"} rounded-xl p-4 transition-all border ${darkMode ? "border-slate-600" : "border-slate-300"} hover:scale-102 active:scale-98`}
+                  >
+                    <h3
+                      className={`text-lg font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
                     >
-                      Print-friendly format with answers
-                    </p>
+                      📑 BoldFace PDF
+                    </h3>
                   </button>
                 </div>
               </div>
