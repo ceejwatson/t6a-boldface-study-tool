@@ -22,7 +22,7 @@ export const questionDatabase = {
       topic: "Engine",
       difficulty: "high",
       question: "What is the maximum ITT during engine start?",
-      options: ["750°C", "820°C", "871°C", "1000°C"],
+      options: ["750°C max", "820°C max", "871°C max", "871-1000°C"],
       correctAnswer: 3,
       explanation:
         "Maximum ITT during start is 871-1000°C for 5 seconds. Normal max ITT for takeoff is 820°C.",
@@ -83,10 +83,10 @@ export const questionDatabase = {
       question:
         "What immediate action do you take for OBOGS failure or physiological symptoms?",
       options: [
-        "Continue mission and monitor closely",
+        "Continue mission, monitor symptoms",
         "OBOGS off, BOS on, descend <10K",
-        "Pull OBOGS breaker and land ASAP",
-        "Switch to backup bottle and RTB",
+        "Pull OBOGS breaker, land ASAP now",
+        "Switch to backup bottle, RTB now",
       ],
       correctAnswer: 1,
       explanation:
@@ -99,7 +99,7 @@ export const questionDatabase = {
       topic: "Engine",
       difficulty: "medium",
       question: "What is the normal Np idle range?",
-      options: ["40-45%", "46-50%", "55-60%", "60-61%"],
+      options: ["40-45% Np", "46-50% Np", "55-60% Np", "60-61% Np"],
       correctAnswer: 1,
       explanation: "Np idle range is 46-50%. N1 idle range is 60-61%.",
       limitation: true,
@@ -135,10 +135,10 @@ export const questionDatabase = {
       difficulty: "critical",
       question: "What is the minimum altitude for intentional spin entry?",
       options: [
-        "10,000 ft MSL",
-        "12,000 ft MSL",
-        "13,500 ft MSL",
-        "15,000 ft MSL",
+        "10,000 ft MSL min",
+        "12,000 ft MSL min",
+        "13,500 ft MSL min",
+        "15,000 ft MSL min",
       ],
       correctAnswer: 2,
       explanation:
@@ -152,7 +152,7 @@ export const questionDatabase = {
       topic: "Engine",
       difficulty: "high",
       question: "What is the maximum starter limit time?",
-      options: ["10 seconds", "20 seconds", "30 seconds", "60 seconds"],
+      options: ["10 sec max", "20 sec max", "30 sec max", "60 sec max"],
       correctAnswer: 1,
       explanation:
         "Maximum torque starter limit is 20 seconds. Exceeding this can overheat and damage the starter motor. After each start/motoring attempt, wait 30 seconds before the next attempt, then 2 minutes, then 5 minutes, then 30 minutes. These cooling periods prevent starter burnout.",
@@ -164,7 +164,12 @@ export const questionDatabase = {
       topic: "Engine",
       difficulty: "critical",
       question: "What torque percentage indicates a system malfunction?",
-      options: ["Above 100%", "Above 105%", "Above 107%", "Above 110%"],
+      options: [
+        "Above 100% torque",
+        "Above 105% torque",
+        "Above 107% torque",
+        "Above 110% torque",
+      ],
       correctAnswer: 2,
       explanation:
         "Torque above 107% is indicative of a system malfunction. While transient torque from 101-107% is allowed for 5 seconds, anything above 107% suggests PMU failure or other critical issues. This requires immediate attention and likely engine shutdown.",
@@ -177,7 +182,7 @@ export const questionDatabase = {
       difficulty: "high",
       question:
         "What is the maximum ITT where you should NOT attempt a restart?",
-      options: ["750°C", "820°C", "870°C", "871°C"],
+      options: ["750°C limit", "820°C limit", "870°C limit", "871°C limit"],
       correctAnswer: 3,
       explanation:
         "Do not attempt restart if ITT exceeds 871°C. This temperature indicates severe engine damage from a hot start. Attempting to restart could cause catastrophic turbine failure. At 871-1000°C, you have only 5 seconds before permanent damage occurs.",
@@ -206,7 +211,7 @@ export const questionDatabase = {
       topic: "Engine",
       difficulty: "high",
       question: "What is the minimum N1 for ground pressurization?",
-      options: ["60%", "61%", "67%", "70%"],
+      options: ["60% N1", "61% N1", "67% N1", "70% N1"],
       correctAnswer: 2,
       explanation:
         "Minimum N1 for ground pressurization is 67%. Below this, the ECS (Environmental Control System) cannot provide adequate cabin pressurization or cooling. In flight, minimum N1 for pressurization is also 67%. This is a gas generator speed requirement for the bleed air system to function properly.",
@@ -235,7 +240,12 @@ export const questionDatabase = {
       topic: "Limitations",
       difficulty: "medium",
       question: "What is the minimum fuel per side for aerobatics?",
-      options: ["100 pounds", "150 pounds", "200 pounds", "250 pounds"],
+      options: [
+        "100 lbs per side",
+        "150 lbs per side",
+        "200 lbs per side",
+        "250 lbs per side",
+      ],
       correctAnswer: 1,
       explanation:
         "Minimum fuel for aerobatics is 150 pounds per side (300 pounds total). This ensures adequate fuel pressure during negative G maneuvers and prevents fuel starvation. Unporting (fuel pump losing suction) during aerobatics with low fuel can cause engine failure.",
@@ -247,7 +257,7 @@ export const questionDatabase = {
       topic: "Limitations",
       difficulty: "medium",
       question: "What is the minimum Landing Distance Available (LDA)?",
-      options: ["3,000 feet", "3,500 feet", "4,000 feet", "5,000 feet"],
+      options: ["3,000 ft min", "3,500 ft min", "4,000 ft min", "5,000 ft min"],
       correctAnswer: 2,
       explanation:
         "Minimum LDA is 4,000 feet, OR heavy weight flaps up landing ground roll plus 500 feet, whichever is greater. This ensures adequate stopping distance for all weight configurations and provides safety margin for approach errors or go-arounds.",
@@ -259,7 +269,7 @@ export const questionDatabase = {
       topic: "Limitations",
       difficulty: "medium",
       question: "What is the maximum crosswind for formation takeoff/landing?",
-      options: ["10 knots", "15 knots", "20 knots", "25 knots"],
+      options: ["10 kts max", "15 kts max", "20 kts max", "25 kts max"],
       correctAnswer: 1,
       explanation:
         "Maximum crosswind for formation takeoff/landing is 15 knots. Formation operations require tighter limits because you must maintain position while compensating for crosswind. The standard crosswind limit (25 knots dry) is reduced to 15 knots for formation work.",
@@ -271,7 +281,7 @@ export const questionDatabase = {
       topic: "Limitations",
       difficulty: "medium",
       question: "What is the maximum tailwind component for takeoff?",
-      options: ["5 knots", "10 knots", "15 knots", "20 knots"],
+      options: ["5 kts max", "10 kts max", "15 kts max", "20 kts max"],
       correctAnswer: 1,
       explanation:
         "Maximum tailwind for takeoff is 10 knots. Tailwinds increase takeoff distance and reduce climb performance. While landing with a tailwind is sometimes necessary, takeoff should be delayed or use another runway if tailwind exceeds 10 knots.",
@@ -283,7 +293,7 @@ export const questionDatabase = {
       topic: "Limitations",
       difficulty: "medium",
       question: "What is the maximum wind with canopy open on the ground?",
-      options: ["20 knots", "30 knots", "40 knots", "50 knots"],
+      options: ["20 kts max", "30 kts max", "40 kts max", "50 kts max"],
       correctAnswer: 2,
       explanation:
         "Maximum wind with canopy open is 40 knots. Higher winds can cause canopy damage, slam the canopy closed causing injury, or blow loose items around the cockpit. Always secure the canopy in high winds.",
@@ -296,10 +306,10 @@ export const questionDatabase = {
       difficulty: "critical",
       question: "What is the maximum altitude for intentional spins?",
       options: [
-        "18,000 feet PA",
-        "20,000 feet PA",
-        "22,000 feet PA",
-        "25,000 feet PA",
+        "18,000 ft PA max",
+        "20,000 ft PA max",
+        "22,000 ft PA max",
+        "25,000 ft PA max",
       ],
       correctAnswer: 2,
       explanation:
@@ -313,10 +323,10 @@ export const questionDatabase = {
       difficulty: "critical",
       question: "What is the minimum altitude for intentional spins?",
       options: [
-        "5,000 feet PA",
-        "8,000 feet PA",
-        "10,000 feet PA",
-        "13,500 feet PA",
+        "5,000 ft PA min",
+        "8,000 ft PA min",
+        "10,000 ft PA min",
+        "13,500 ft PA min",
       ],
       correctAnswer: 2,
       explanation:
