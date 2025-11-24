@@ -66,6 +66,7 @@ export default function T6AEnhancedStudyTool() {
   // UI State
   const [darkMode, setDarkMode] = useState(true);
   const [activeTab, setActiveTab] = useState("home");
+  const [studyMode, setStudyMode] = useState("quiz"); // Always quiz mode
   const [studySubMode, setStudySubMode] = useState("activeRecall"); // 'activeRecall', 'learnNew', 'review', 'readThrough'
   const [selectedCategory, setSelectedCategory] = useState("all"); // Category filter for study mode
 
