@@ -1570,6 +1570,22 @@ export default function T6AEnhancedStudyTool() {
                       View stats
                     </p>
                   </button>
+
+                  <button
+                    onClick={() => setActiveTab("allquestions")}
+                    className={`${darkMode ? "bg-slate-800/50 hover:bg-slate-700/50" : "bg-white hover:bg-slate-50"} rounded-xl p-6 transition-all border ${darkMode ? "border-slate-700" : "border-slate-200"} hover:scale-105 active:scale-95`}
+                  >
+                    <h3
+                      className={`text-lg font-semibold mb-1 ${darkMode ? "text-white" : "text-slate-900"}`}
+                    >
+                      All Questions
+                    </h3>
+                    <p
+                      className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                    >
+                      Print view
+                    </p>
+                  </button>
                 </div>
               </div>
             </div>
@@ -2092,6 +2108,137 @@ export default function T6AEnhancedStudyTool() {
                         </div>
                       );
                     });
+                })()}
+              </div>
+            </div>
+          ) : activeTab === "allquestions" ? (
+            <div className="max-w-7xl mx-auto px-4 py-8">
+              <div className="mb-6 flex justify-between items-center">
+                <h1
+                  className={`text-3xl font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
+                >
+                  All Quiz Questions
+                </h1>
+                <button
+                  onClick={() => setActiveTab("home")}
+                  className={`px-4 py-2 rounded-lg ${darkMode ? "bg-slate-700 hover:bg-slate-600 text-white" : "bg-slate-200 hover:bg-slate-300 text-slate-900"}`}
+                >
+                  ← Back to Home
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {(() => {
+                  const allQuestions = getAllQuestions();
+                  let questionNumber = 1;
+
+                  return allQuestions.map((q) => {
+                    const currentNumber = questionNumber++;
+
+                    return (
+                      <div
+                        key={q.id}
+                        className={`p-6 rounded-lg border ${darkMode ? "bg-slate-800/50 border-slate-700" : "bg-white border-slate-200"}`}
+                      >
+                        <div className="mb-3">
+                          <span className="font-bold text-lg">
+                            {currentNumber}. {q.question}
+                          </span>
+                        </div>
+
+                        {q.questionType === "multipleChoice" && q.options && (
+                          <div className="space-y-2">
+                            {q.options.map((option, idx) => (
+                              <div
+                                key={idx}
+                                className={
+                                  darkMode ? "text-slate-300" : "text-slate-700"
+                                }
+                              >
+                                <span
+                                  className={
+                                    q.correctAnswer === idx ? "font-bold" : ""
+                                  }
+                                >
+                                  {String.fromCharCode(97 + idx)}) {option}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+                        {q.questionType === "trueFalse" && (
+                          <div className="space-y-2">
+                            <div
+                              className={
+                                darkMode ? "text-slate-300" : "text-slate-700"
+                              }
+                            >
+                              <span
+                                className={
+                                  q.correctAnswer === true ? "font-bold" : ""
+                                }
+                              >
+                                a) True
+                              </span>
+                            </div>
+                            <div
+                              className={
+                                darkMode ? "text-slate-300" : "text-slate-700"
+                              }
+                            >
+                              <span
+                                className={
+                                  q.correctAnswer === false ? "font-bold" : ""
+                                }
+                              >
+                                b) False
+                              </span>
+                            </div>
+                          </div>
+                        )}
+
+                        {q.questionType === "reorderSequence" && q.sequence && (
+                          <div className="space-y-2">
+                            <div
+                              className={`text-sm font-bold mb-2 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                            >
+                              Correct Order:
+                            </div>
+                            {q.sequence.map((step, idx) => (
+                              <div
+                                key={idx}
+                                className={
+                                  darkMode ? "text-slate-300" : "text-slate-700"
+                                }
+                              >
+                                <span className="font-bold">
+                                  {idx + 1}. {step}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+                        {q.questionType === "matchItems" && q.pairs && (
+                          <div className="space-y-2">
+                            {q.pairs.map((pair, idx) => (
+                              <div
+                                key={idx}
+                                className={
+                                  darkMode ? "text-slate-300" : "text-slate-700"
+                                }
+                              >
+                                <span className="font-bold">
+                                  {pair.left} → {pair.right}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  });
                 })()}
               </div>
             </div>
