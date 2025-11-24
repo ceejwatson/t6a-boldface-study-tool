@@ -1564,7 +1564,12 @@ export default function T6AEnhancedStudyTool() {
                   {/* Incorrect - Review missed questions */}
                   <button
                     onClick={() => {
-                      const reviewQuestions = getAllQuestions().filter((q) => {
+                      // Get ALL questions (aircraft + aerospace physiology) for review
+                      const allAircraftQs = getAllAircraftQuestions();
+                      const allAeroQs = getAllAerospacePhysiologyQuestions();
+                      const allAvailableQs = [...allAircraftQs, ...allAeroQs];
+
+                      const reviewQuestions = allAvailableQs.filter((q) => {
                         const mastery = questionMastery[q.id];
                         return mastery && mastery.incorrectCount >= 1;
                       });
@@ -1576,7 +1581,12 @@ export default function T6AEnhancedStudyTool() {
                         return;
                       }
 
-                      setCurrentQuestions(reviewQuestions);
+                      // Shuffle options for multiple choice questions
+                      const shuffledReviewQs = reviewQuestions.map((q) =>
+                        shuffleQuestionOptions(q),
+                      );
+
+                      setCurrentQuestions(shuffledReviewQs);
                       setCurrentQuestionIndex(0);
                       setUserAnswers({});
                       setShowExplanation(false);
@@ -2071,9 +2081,12 @@ export default function T6AEnhancedStudyTool() {
                 ).length > 0 && (
                   <button
                     onClick={() => {
-                      // Get all questions that have been answered incorrectly at least once
-                      const allQs = getAllQuestions();
-                      const incorrectQs = allQs.filter((q) => {
+                      // Get ALL questions (aircraft + aerospace physiology) for review
+                      const allAircraftQs = getAllAircraftQuestions();
+                      const allAeroQs = getAllAerospacePhysiologyQuestions();
+                      const allAvailableQs = [...allAircraftQs, ...allAeroQs];
+
+                      const incorrectQs = allAvailableQs.filter((q) => {
                         const mastery = questionMastery[q.id];
                         return mastery && mastery.incorrectCount >= 1;
                       });
