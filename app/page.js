@@ -1747,12 +1747,12 @@ export default function T6AEnhancedStudyTool() {
                 <p
                   className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
                 >
-                  Choose quiz type and number of questions
+                  Select quiz type - {questionCount} questions
                 </p>
               </div>
 
               {/* Quiz Type Selection */}
-              <div className="mb-8">
+              <div className="mb-6">
                 <h3
                   className={`text-sm font-medium mb-3 ${darkMode ? "text-slate-300" : "text-slate-700"}`}
                 >
@@ -1761,6 +1761,7 @@ export default function T6AEnhancedStudyTool() {
                 <div className="grid grid-cols-2 gap-3">
                   <button
                     onClick={() => {
+                      console.log("Selecting T-6A Aircraft quiz");
                       setQuestionSet("aircraft");
                       setSelectedTopics([]);
                       // Reset to default aircraft question types
@@ -1795,6 +1796,7 @@ export default function T6AEnhancedStudyTool() {
 
                   <button
                     onClick={() => {
+                      console.log("Selecting Aerospace Physiology quiz");
                       setQuestionSet("aerophysiology");
                       // Auto-select all aerospace physiology topics - get unique categories from questions
                       const aeroQuestions =
@@ -1830,44 +1832,22 @@ export default function T6AEnhancedStudyTool() {
                 </div>
               </div>
 
-              {/* Question Count - Apple Style */}
-              <div className="mb-4">
-                <h3
-                  className={`text-sm font-medium mb-3 ${darkMode ? "text-slate-300" : "text-slate-700"}`}
-                >
-                  Number of Questions
-                </h3>
-              </div>
-              <div className="grid grid-cols-3 gap-4 mb-8">
-                {[10, 25, 50].map((count) => (
-                  <button
-                    key={count}
-                    onClick={() => setQuestionCount(count)}
-                    className={`p-6 rounded-2xl font-semibold text-2xl transition-all duration-200 ${
-                      questionCount === count
-                        ? darkMode
-                          ? "bg-slate-600 text-white border-2 border-slate-500 scale-105"
-                          : "bg-slate-100 text-slate-900 border-2 border-slate-400 scale-105"
-                        : darkMode
-                          ? "bg-slate-700/50 text-slate-300 hover:bg-slate-700 hover:scale-102 border-2 border-transparent"
-                          : "bg-white text-slate-700 hover:bg-slate-50 hover:scale-102 border-2 border-slate-200"
-                    }`}
-                  >
-                    {count}
-                  </button>
-                ))}
-              </div>
-
               <button
                 onClick={() => {
                   try {
+                    console.log("=== Starting Quiz ===");
+                    console.log("Question Set:", questionSet);
+                    console.log("Question Count:", questionCount);
+                    console.log("Selected Topics:", selectedTopics);
+                    console.log("Hide Mastered:", hideMasteredQuestions);
+
                     let all = [];
 
                     if (questionSet === "aerophysiology") {
                       // Get ALL aerospace physiology questions - no filtering
                       all = getAllAerospacePhysiologyQuestions();
                       console.log(
-                        "Aerospace physiology questions loaded:",
+                        "✓ Aerospace physiology questions loaded:",
                         all.length,
                       );
 
