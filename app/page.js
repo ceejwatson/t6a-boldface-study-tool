@@ -2770,14 +2770,31 @@ export default function T6AEnhancedStudyTool() {
                             currentQuestionIndex ===
                             currentQuestions.length - 1
                           ) {
-                            // Last question - grade unanswered questions as incorrect and go to results
+                            // Last question - grade all questions and go to results
                             if (studyMode === "quiz") {
-                              // Grade all unanswered questions as incorrect
-                              currentQuestions.forEach((question) => {
-                                if (userAnswers[question.id] === undefined) {
-                                  updatePerformance(question, false);
-                                }
-                              });
+                              // If instant grade is off, we need to grade all answered questions now
+                              if (!instantGrade) {
+                                currentQuestions.forEach((question) => {
+                                  const userAnswer = userAnswers[question.id];
+                                  if (userAnswer !== undefined) {
+                                    const isCorrect = checkAnswer(
+                                      question,
+                                      userAnswer,
+                                    );
+                                    updatePerformance(question, isCorrect);
+                                  } else {
+                                    // Grade unanswered questions as incorrect
+                                    updatePerformance(question, false);
+                                  }
+                                });
+                              } else {
+                                // If instant grade is on, just grade any remaining unanswered questions
+                                currentQuestions.forEach((question) => {
+                                  if (userAnswers[question.id] === undefined) {
+                                    updatePerformance(question, false);
+                                  }
+                                });
+                              }
                               setActiveTab("results");
                             } else {
                               setActiveTab("studycomplete");
