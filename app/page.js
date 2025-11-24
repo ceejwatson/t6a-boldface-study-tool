@@ -1387,12 +1387,16 @@ export default function T6AEnhancedStudyTool() {
               {/* T-6A Image */}
               <div className="text-center mb-6">
                 <div
-                  className={`inline-block p-6 rounded-2xl ${darkMode ? "" : "bg-gradient-to-br from-blue-50 to-slate-100 shadow-lg"}`}
+                  className={`inline-block rounded-2xl ${darkMode ? "" : "bg-gradient-to-br from-blue-50 to-slate-100 shadow-lg p-6"}`}
                 >
                   <img
-                    src="/t6atransparent.png"
+                    src={
+                      darkMode
+                        ? "/t6atransparent-dark.png"
+                        : "/t6atransparent.png"
+                    }
                     alt="T-6A Texan II"
-                    className="w-48 sm:w-64 md:w-72 h-auto mx-auto"
+                    className="w-56 sm:w-72 md:w-80 h-auto mx-auto"
                   />
                 </div>
               </div>
@@ -2270,26 +2274,22 @@ export default function T6AEnhancedStudyTool() {
               </div>
             </div>
           ) : activeTab === "results" ? (
-            <div className="max-w-4xl mx-auto">
+            <div className="max-w-3xl mx-auto px-4">
               {/* Quiz Results */}
-              <div
-                className={`${darkMode ? "bg-slate-800" : "bg-white"} rounded-xl p-6 mb-6`}
-              >
-                <div className="mb-6">
-                  <h2
-                    className={`text-2xl font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
-                  >
-                    Quiz Results
-                  </h2>
-                </div>
+              <div className="mb-8">
+                <h2
+                  className={`text-3xl font-bold text-center mb-8 ${darkMode ? "text-white" : "text-slate-900"}`}
+                >
+                  Quiz Results
+                </h2>
 
                 {/* Score Summary */}
-                <div className="grid grid-cols-3 gap-4 mb-6">
+                <div className="grid grid-cols-2 gap-4 mb-8">
                   <div
-                    className={`p-4 rounded-lg ${darkMode ? "bg-green-900/30 border-2 border-green-600" : "bg-green-100 border-2 border-green-400"}`}
+                    className={`p-6 rounded-xl text-center border ${darkMode ? "bg-slate-800/50 border-slate-700" : "bg-white border-slate-200"}`}
                   >
                     <div
-                      className={`text-3xl font-bold ${darkMode ? "text-green-400" : "text-green-700"}`}
+                      className={`text-3xl font-bold mb-2 ${darkMode ? "text-green-400" : "text-green-600"}`}
                     >
                       {
                         Object.keys(userAnswers).filter((id) => {
@@ -2301,114 +2301,110 @@ export default function T6AEnhancedStudyTool() {
                           );
                         }).length
                       }
+                      /{currentQuestions.length}
                     </div>
                     <div
-                      className={`text-sm ${darkMode ? "text-green-300" : "text-green-600"}`}
+                      className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
                     >
                       Correct
                     </div>
                   </div>
                   <div
-                    className={`p-4 rounded-lg ${darkMode ? "bg-red-900/30 border-2 border-red-600" : "bg-red-100 border-2 border-red-400"}`}
+                    className={`p-6 rounded-xl text-center border ${darkMode ? "bg-slate-800/50 border-slate-700" : "bg-white border-slate-200"}`}
                   >
                     <div
-                      className={`text-3xl font-bold ${darkMode ? "text-red-400" : "text-red-700"}`}
+                      className={`text-3xl font-bold mb-2 ${darkMode ? "text-slate-300" : "text-slate-700"}`}
                     >
-                      {
-                        Object.keys(userAnswers).filter((id) => {
+                      {Math.round(
+                        (Object.keys(userAnswers).filter((id) => {
                           const question = currentQuestions.find(
                             (q) => q.id === id,
                           );
                           return (
-                            question && !checkAnswer(question, userAnswers[id])
+                            question && checkAnswer(question, userAnswers[id])
                           );
-                        }).length
-                      }
+                        }).length /
+                          currentQuestions.length) *
+                          100,
+                      )}
+                      %
                     </div>
                     <div
-                      className={`text-sm ${darkMode ? "text-red-300" : "text-red-600"}`}
+                      className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
                     >
-                      Incorrect
-                    </div>
-                  </div>
-                  <div
-                    className={`p-4 rounded-lg ${darkMode ? "bg-blue-900/30 border-2 border-blue-600" : "bg-blue-100 border-2 border-blue-400"}`}
-                  >
-                    <div
-                      className={`text-3xl font-bold ${darkMode ? "text-blue-400" : "text-blue-700"}`}
-                    >
-                      {currentQuestions.length -
-                        Object.keys(userAnswers).length}
-                    </div>
-                    <div
-                      className={`text-sm ${darkMode ? "text-blue-300" : "text-blue-600"}`}
-                    >
-                      Unanswered
+                      Accuracy
                     </div>
                   </div>
                 </div>
 
-                {/* Question List */}
-                <div className="space-y-3">
-                  {currentQuestions.map((question, index) => {
-                    const userAnswer = userAnswers[question.id];
-                    const isAnswered = userAnswer !== undefined;
-                    const isCorrect = isAnswered
-                      ? checkAnswer(question, userAnswer)
-                      : null;
+                {/* Incorrect Questions */}
+                {(() => {
+                  const incorrectQuestions = currentQuestions.filter(
+                    (question) => {
+                      const userAnswer = userAnswers[question.id];
+                      return (
+                        userAnswer !== undefined &&
+                        !checkAnswer(question, userAnswer)
+                      );
+                    },
+                  );
 
-                    return (
-                      <div
-                        key={question.id}
-                        className={`p-4 rounded-lg border-2 cursor-pointer transition ${
-                          !isAnswered
-                            ? darkMode
-                              ? "bg-slate-700/30 border-slate-600"
-                              : "bg-slate-50 border-slate-300"
-                            : isCorrect
-                              ? darkMode
-                                ? "bg-green-900/20 border-green-600"
-                                : "bg-green-50 border-green-400"
-                              : darkMode
-                                ? "bg-red-900/20 border-red-600"
-                                : "bg-red-50 border-red-400"
-                        } ${darkMode ? "hover:bg-slate-700/50" : "hover:bg-slate-100"}`}
-                        onClick={() => {
-                          setCurrentQuestionIndex(index);
-                          setViewingSingleQuestion(true);
-                          setActiveTab("study");
-                        }}
+                  return incorrectQuestions.length > 0 ? (
+                    <div>
+                      <h3
+                        className={`text-lg font-semibold mb-4 ${darkMode ? "text-white" : "text-slate-900"}`}
                       >
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <span
-                              className={`font-medium ${darkMode ? "text-slate-300" : "text-slate-700"}`}
+                        Questions to Review ({incorrectQuestions.length})
+                      </h3>
+                      <div className="space-y-2 mb-8">
+                        {incorrectQuestions.map((question, index) => {
+                          const userAnswer = userAnswers[question.id];
+                          return (
+                            <div
+                              key={question.id}
+                              className={`p-4 rounded-lg border cursor-pointer transition ${
+                                darkMode
+                                  ? "bg-slate-800/50 border-slate-700 hover:bg-slate-700/50"
+                                  : "bg-slate-50 border-slate-200 hover:bg-slate-100"
+                              }`}
+                              onClick={() => {
+                                setCurrentQuestionIndex(
+                                  currentQuestions.indexOf(question),
+                                );
+                                setViewingSingleQuestion(true);
+                                setActiveTab("study");
+                              }}
                             >
-                              Question {index + 1}
-                            </span>
-                            {isAnswered && (
-                              <>
-                                {isCorrect ? (
-                                  <CheckCircle2 className="w-5 h-5 text-green-500" />
-                                ) : (
-                                  <XCircle className="w-5 h-5 text-red-500" />
-                                )}
-                              </>
-                            )}
-                          </div>
-                          <span
-                            className={`text-xs px-2 py-1 rounded ${darkMode ? "bg-slate-600 text-slate-300" : "bg-slate-200 text-slate-600"}`}
-                          >
-                            {question.category}
-                          </span>
-                        </div>
+                              <div className="flex items-start justify-between">
+                                <div className="flex-1">
+                                  <div
+                                    className={`font-medium ${darkMode ? "text-slate-300" : "text-slate-700"}`}
+                                  >
+                                    {question.question}
+                                  </div>
+                                  <div
+                                    className={`text-xs mt-2 ${darkMode ? "text-slate-500" : "text-slate-500"}`}
+                                  >
+                                    Your answer:{" "}
+                                    {typeof userAnswer === "string"
+                                      ? userAnswer
+                                      : Array.isArray(userAnswer)
+                                        ? userAnswer.join(", ")
+                                        : JSON.stringify(userAnswer)}
+                                  </div>
+                                </div>
+                                <XCircle className="w-5 h-5 text-red-500 flex-shrink-0 ml-2" />
+                              </div>
+                            </div>
+                          );
+                        })}
                       </div>
-                    );
-                  })}
-                </div>
+                    </div>
+                  ) : null;
+                })()}
 
                 {/* Action Buttons */}
-                <div className="flex gap-3 mt-6">
+                <div className="flex gap-3">
                   <button
                     onClick={() => {
                       setActiveTab("home");
@@ -2423,7 +2419,7 @@ export default function T6AEnhancedStudyTool() {
                         : "bg-slate-300 hover:bg-slate-400 text-slate-900"
                     }`}
                   >
-                    Return Home
+                    Home
                   </button>
                   <button
                     onClick={() => {
@@ -2434,7 +2430,7 @@ export default function T6AEnhancedStudyTool() {
                     }}
                     className="flex-1 px-6 py-3 rounded-lg font-medium transition bg-blue-600 hover:bg-blue-700 text-white"
                   >
-                    Review Quiz
+                    Review
                   </button>
                 </div>
               </div>
