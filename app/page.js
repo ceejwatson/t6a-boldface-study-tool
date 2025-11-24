@@ -2738,15 +2738,17 @@ export default function T6AEnhancedStudyTool() {
                                 setShowExplanation(true);
                               }
                               const answer = userAnswers[currentQuestion.id];
-                              if (answer) {
-                                const isCorrect = checkAnswer(
-                                  currentQuestion,
-                                  answer,
-                                );
-                                updatePerformance(currentQuestion, isCorrect);
-                              } else {
-                                // If no answer saved yet, mark as incorrect in quiz mode
-                                if (studyMode === "quiz") {
+
+                              // Only track performance immediately if instant grade is on OR not in quiz mode
+                              if (instantGrade || studyMode !== "quiz") {
+                                if (answer) {
+                                  const isCorrect = checkAnswer(
+                                    currentQuestion,
+                                    answer,
+                                  );
+                                  updatePerformance(currentQuestion, isCorrect);
+                                } else {
+                                  // If no answer saved yet, mark as incorrect
                                   updatePerformance(currentQuestion, false);
                                 }
                               }
