@@ -1321,6 +1321,35 @@ export default function T6AEnhancedStudyTool() {
                   )}
                 </div>
               </div>
+
+              {/* Submit Quiz Button */}
+              <div className="mt-8 flex justify-center">
+                <button
+                  onClick={() => {
+                    // If instant grade is OFF, grade all questions now
+                    if (!instantGrade) {
+                      currentQuestions.forEach((question) => {
+                        const userAnswer = userAnswers[question.id];
+                        if (userAnswer !== undefined) {
+                          const isCorrect = checkAnswer(question, userAnswer);
+                          updatePerformance(question, isCorrect);
+                        } else {
+                          updatePerformance(question, false);
+                        }
+                      });
+                    }
+                    // Go to results (already graded if instant grade was ON)
+                    setActiveTab("results");
+                  }}
+                  className={`px-8 py-4 rounded-xl font-bold text-lg transition-all ${
+                    darkMode
+                      ? "bg-green-600 hover:bg-green-700 text-white"
+                      : "bg-green-500 hover:bg-green-600 text-white"
+                  } shadow-lg hover:scale-105 active:scale-95`}
+                >
+                  {instantGrade ? "View Results" : "Submit Quiz"}
+                </button>
+              </div>
             </div>
           )}
 
@@ -2779,6 +2808,7 @@ export default function T6AEnhancedStudyTool() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {currentQuestions.map((q, index) => {
                   const questionNumber = index + 1;
+                  const userAnswer = userAnswers[q.id];
 
                   return (
                     <div
@@ -2794,81 +2824,203 @@ export default function T6AEnhancedStudyTool() {
                       </div>
 
                       {q.questionType === "multipleChoice" && q.options && (
-                        <div className="space-y-1.5">
-                          {q.options.map((option, idx) => (
-                            <div
-                              key={idx}
-                              className={`text-sm ${darkMode ? "text-slate-300" : "text-slate-700"}`}
-                            >
-                              <span
-                                className={
-                                  q.correctAnswer === idx ? "font-bold" : ""
-                                }
+                        <div className="space-y-2">
+                          {q.options.map((option, idx) => {
+                            const isSelected = userAnswer === idx;
+                            const isCorrect = q.correctAnswer === idx;
+                            const showFeedback =
+                              instantGrade && userAnswer !== undefined;
+
+                            return (
+                              <button
+                                key={idx}
+                                onClick={() => {
+                                  const newAnswers = {
+                                    ...userAnswers,
+                                    [q.id]: idx,
+                                  };
+                                  setUserAnswers(newAnswers);
+                                  // If instant grade is on, grade immediately
+                                  if (instantGrade) {
+                                    const correct = checkAnswer(q, idx);
+                                    updatePerformance(q, correct);
+                                  }
+                                }}
+                                className={`w-full text-left p-3 rounded-lg transition-all ${
+                                  isSelected && showFeedback
+                                    ? isCorrect
+                                      ? darkMode
+                                        ? "bg-green-600 text-white"
+                                        : "bg-green-500 text-white"
+                                      : darkMode
+                                        ? "bg-red-600 text-white"
+                                        : "bg-red-500 text-white"
+                                    : isSelected
+                                      ? darkMode
+                                        ? "bg-blue-600 text-white"
+                                        : "bg-blue-500 text-white"
+                                      : darkMode
+                                        ? "bg-slate-700/50 hover:bg-slate-600/50 text-slate-300"
+                                        : "bg-slate-50 hover:bg-slate-100 text-slate-700"
+                                }`}
                               >
-                                {String.fromCharCode(97 + idx)}) {option}
-                              </span>
+                                <span
+                                  className={`text-sm ${isSelected ? "font-bold" : ""}`}
+                                >
+                                  {String.fromCharCode(97 + idx)}) {option}
+                                </span>
+                              </button>
+                            );
+                          })}
+                          {instantGrade && userAnswer !== undefined && (
+                            <div
+                              className={`text-xs mt-2 p-2 rounded ${
+                                userAnswer === q.correctAnswer
+                                  ? darkMode
+                                    ? "bg-green-900/30 text-green-400"
+                                    : "bg-green-100 text-green-700"
+                                  : darkMode
+                                    ? "bg-red-900/30 text-red-400"
+                                    : "bg-red-100 text-red-700"
+                              }`}
+                            >
+                              {userAnswer === q.correctAnswer
+                                ? "✓ Correct!"
+                                : `✗ Correct answer: ${String.fromCharCode(97 + q.correctAnswer)}) ${q.options[q.correctAnswer]}`}
                             </div>
-                          ))}
+                          )}
                         </div>
                       )}
 
                       {q.questionType === "trueFalse" && (
-                        <div className="space-y-1.5">
-                          <div
-                            className={`text-sm ${darkMode ? "text-slate-300" : "text-slate-700"}`}
-                          >
-                            <span
-                              className={
-                                q.correctAnswer === true ? "font-bold" : ""
-                              }
-                            >
-                              a) True
-                            </span>
-                          </div>
-                          <div
-                            className={`text-sm ${darkMode ? "text-slate-300" : "text-slate-700"}`}
-                          >
-                            <span
-                              className={
-                                q.correctAnswer === false ? "font-bold" : ""
-                              }
-                            >
-                              b) False
-                            </span>
-                          </div>
+                        <div className="space-y-2">
+                          {(() => {
+                            const isCorrect = userAnswer === q.correctAnswer;
+                            const showFeedback =
+                              instantGrade && userAnswer !== undefined;
+
+                            return (
+                              <>
+                                <button
+                                  onClick={() => {
+                                    const newAnswers = {
+                                      ...userAnswers,
+                                      [q.id]: true,
+                                    };
+                                    setUserAnswers(newAnswers);
+                                    // If instant grade is on, grade immediately
+                                    if (instantGrade) {
+                                      const correct = checkAnswer(q, true);
+                                      updatePerformance(q, correct);
+                                    }
+                                  }}
+                                  className={`w-full text-left p-3 rounded-lg transition-all ${
+                                    userAnswer === true && showFeedback
+                                      ? isCorrect
+                                        ? "bg-green-600 text-white"
+                                        : "bg-red-600 text-white"
+                                      : userAnswer === true
+                                        ? darkMode
+                                          ? "bg-blue-600 text-white"
+                                          : "bg-blue-500 text-white"
+                                        : darkMode
+                                          ? "bg-slate-700/50 hover:bg-slate-600/50 text-slate-300"
+                                          : "bg-slate-50 hover:bg-slate-100 text-slate-700"
+                                  }`}
+                                >
+                                  <span
+                                    className={`text-sm ${userAnswer === true ? "font-bold" : ""}`}
+                                  >
+                                    a) True
+                                  </span>
+                                </button>
+                                <button
+                                  onClick={() => {
+                                    const newAnswers = {
+                                      ...userAnswers,
+                                      [q.id]: false,
+                                    };
+                                    setUserAnswers(newAnswers);
+                                    // If instant grade is on, grade immediately
+                                    if (instantGrade) {
+                                      const correct = checkAnswer(q, false);
+                                      updatePerformance(q, correct);
+                                    }
+                                  }}
+                                  className={`w-full text-left p-3 rounded-lg transition-all ${
+                                    userAnswer === false && showFeedback
+                                      ? isCorrect
+                                        ? "bg-green-600 text-white"
+                                        : "bg-red-600 text-white"
+                                      : userAnswer === false
+                                        ? darkMode
+                                          ? "bg-blue-600 text-white"
+                                          : "bg-blue-500 text-white"
+                                        : darkMode
+                                          ? "bg-slate-700/50 hover:bg-slate-600/50 text-slate-300"
+                                          : "bg-slate-50 hover:bg-slate-100 text-slate-700"
+                                  }`}
+                                >
+                                  <span
+                                    className={`text-sm ${userAnswer === false ? "font-bold" : ""}`}
+                                  >
+                                    b) False
+                                  </span>
+                                </button>
+                                {showFeedback && (
+                                  <div
+                                    className={`text-xs mt-2 p-2 rounded ${
+                                      isCorrect
+                                        ? darkMode
+                                          ? "bg-green-900/30 text-green-400"
+                                          : "bg-green-100 text-green-700"
+                                        : darkMode
+                                          ? "bg-red-900/30 text-red-400"
+                                          : "bg-red-100 text-red-700"
+                                    }`}
+                                  >
+                                    {isCorrect
+                                      ? "✓ Correct!"
+                                      : `✗ Correct answer: ${q.correctAnswer ? "a) True" : "b) False"}`}
+                                  </div>
+                                )}
+                              </>
+                            );
+                          })()}
                         </div>
                       )}
 
                       {q.questionType === "reorderSequence" && q.sequence && (
-                        <div className="space-y-1.5">
+                        <div className="space-y-2">
                           <div
-                            className={`text-xs font-semibold mb-2 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                            className={`text-xs mb-2 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
                           >
-                            Correct Order:
+                            (Reorder question - use original quiz for this type)
                           </div>
                           {q.sequence.map((step, idx) => (
                             <div
                               key={idx}
-                              className={`text-sm ${darkMode ? "text-slate-300" : "text-slate-700"}`}
+                              className={`text-sm p-2 rounded ${darkMode ? "bg-slate-700/50 text-slate-300" : "bg-slate-50 text-slate-700"}`}
                             >
-                              <span className="font-bold">
-                                {idx + 1}. {step}
-                              </span>
+                              {step}
                             </div>
                           ))}
                         </div>
                       )}
 
                       {q.questionType === "matchItems" && q.pairs && (
-                        <div className="space-y-1.5">
+                        <div className="space-y-2">
+                          <div
+                            className={`text-xs mb-2 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                          >
+                            (Match question - use original quiz for this type)
+                          </div>
                           {q.pairs.map((pair, idx) => (
                             <div
                               key={idx}
-                              className={`text-sm ${darkMode ? "text-slate-300" : "text-slate-700"}`}
+                              className={`text-sm p-2 rounded ${darkMode ? "bg-slate-700/50 text-slate-300" : "bg-slate-50 text-slate-700"}`}
                             >
-                              <span className="font-bold">
-                                {pair.left} → {pair.right}
-                              </span>
+                              {pair.left} / {pair.right}
                             </div>
                           ))}
                         </div>
