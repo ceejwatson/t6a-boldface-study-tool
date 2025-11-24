@@ -2530,7 +2530,7 @@ export default function T6AEnhancedStudyTool() {
                                           }`}
                                         >
                                           <div className="flex items-start gap-2">
-                                            <span className="font-semibold">
+                                            <span className="font-bold">
                                               {String.fromCharCode(97 + idx)})
                                             </span>
                                             <span className="flex-1">
@@ -2573,7 +2573,7 @@ export default function T6AEnhancedStudyTool() {
                                     }`}
                                   >
                                     <div className="flex items-start gap-2">
-                                      <span className="font-semibold">a)</span>
+                                      <span className="font-bold">a)</span>
                                       <span className="flex-1">True</span>
                                       {question.correctAnswer === true && (
                                         <span className="text-xs font-bold">
@@ -2604,7 +2604,7 @@ export default function T6AEnhancedStudyTool() {
                                     }`}
                                   >
                                     <div className="flex items-start gap-2">
-                                      <span className="font-semibold">b)</span>
+                                      <span className="font-bold">b)</span>
                                       <span className="flex-1">False</span>
                                       {question.correctAnswer === false && (
                                         <span className="text-xs font-bold">
@@ -2982,10 +2982,11 @@ export default function T6AEnhancedStudyTool() {
                                         : "bg-slate-50 hover:bg-slate-100 text-slate-700"
                                 }`}
                               >
-                                <span
-                                  className={`text-sm ${isSelected ? "font-bold" : ""}`}
-                                >
-                                  {String.fromCharCode(97 + idx)}) {option}
+                                <span className="text-sm">
+                                  <span className="font-bold">
+                                    {String.fromCharCode(97 + idx)})
+                                  </span>{" "}
+                                  {option}
                                 </span>
                               </button>
                             );
@@ -3046,10 +3047,8 @@ export default function T6AEnhancedStudyTool() {
                                           : "bg-slate-50 hover:bg-slate-100 text-slate-700"
                                   }`}
                                 >
-                                  <span
-                                    className={`text-sm ${userAnswer === true ? "font-bold" : ""}`}
-                                  >
-                                    a) True
+                                  <span className="text-sm">
+                                    <span className="font-bold">a)</span> True
                                   </span>
                                 </button>
                                 <button
@@ -3079,10 +3078,8 @@ export default function T6AEnhancedStudyTool() {
                                           : "bg-slate-50 hover:bg-slate-100 text-slate-700"
                                   }`}
                                 >
-                                  <span
-                                    className={`text-sm ${userAnswer === false ? "font-bold" : ""}`}
-                                  >
-                                    b) False
+                                  <span className="text-sm">
+                                    <span className="font-bold">b)</span> False
                                   </span>
                                 </button>
                                 {showFeedback && (
