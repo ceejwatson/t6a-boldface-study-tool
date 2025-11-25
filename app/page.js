@@ -103,6 +103,7 @@ export default function T6AEnhancedStudyTool() {
   // Boldface Procedures State
   const [boldfaceAnswers, setBoldfaceAnswers] = useState({});
   const [boldfaceSubmitted, setBoldfaceSubmitted] = useState(false);
+  const [hardcoreMode, setHardcoreMode] = useState(false); // Hide all text in boldface procedures
 
   // Performance Tracking
   const [performanceStats, setPerformanceStats] = useState({
@@ -3299,6 +3300,34 @@ export default function T6AEnhancedStudyTool() {
                     </button>
                   </div>
 
+                  {/* Hardcore Mode Toggle */}
+                  <div className="mb-4 flex justify-center">
+                    <label
+                      className={`flex items-center gap-2 cursor-pointer px-4 py-2 rounded-lg ${darkMode ? "bg-slate-800 border border-slate-600" : "bg-slate-100 border border-slate-300"}`}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={hardcoreMode}
+                        onChange={(e) => {
+                          setHardcoreMode(e.target.checked);
+                          setBoldfaceAnswers({});
+                          setBoldfaceSubmitted(false);
+                        }}
+                        className="w-5 h-5 rounded"
+                      />
+                      <span
+                        className={`font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
+                      >
+                        Hardcore Mode
+                      </span>
+                      <span
+                        className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                      >
+                        (Hide all text)
+                      </span>
+                    </label>
+                  </div>
+
                   <div
                     className={`${darkMode ? "bg-slate-800 border-slate-700" : "bg-white border-slate-200"} border-2 rounded-lg p-6 space-y-6`}
                   >
@@ -3318,70 +3347,79 @@ export default function T6AEnhancedStudyTool() {
                               key={stepIndex}
                               className="flex flex-col sm:flex-row sm:items-center gap-2"
                             >
-                              <span
-                                className={`font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
-                              >
-                                {step.text}
-                              </span>
-                              {step.type !== "none" && (
-                                <div className="flex items-center gap-2">
-                                  <input
-                                    type="text"
-                                    value={
-                                      boldfaceAnswers[
-                                        `${proc.id}-${stepIndex}`
-                                      ] || ""
-                                    }
-                                    onChange={(e) =>
-                                      handleBoldfaceInput(
+                              {!hardcoreMode && step.type === "none" ? (
+                                <span
+                                  className={`font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
+                                >
+                                  {step.text}
+                                </span>
+                              ) : !hardcoreMode ? (
+                                <span
+                                  className={`font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
+                                >
+                                  {step.text}
+                                </span>
+                              ) : null}
+                              {(step.type !== "none" || hardcoreMode) &&
+                                step.type !== "none" && (
+                                  <div className="flex items-center gap-2">
+                                    <input
+                                      type="text"
+                                      value={
+                                        boldfaceAnswers[
+                                          `${proc.id}-${stepIndex}`
+                                        ] || ""
+                                      }
+                                      onChange={(e) =>
+                                        handleBoldfaceInput(
+                                          proc.id,
+                                          stepIndex,
+                                          e.target.value,
+                                        )
+                                      }
+                                      disabled={boldfaceSubmitted}
+                                      placeholder=""
+                                      className={`flex-1 min-w-[250px] px-3 py-1 rounded border-2 font-mono text-sm ${
+                                        boldfaceSubmitted
+                                          ? checkBoldfaceAnswer(
+                                              proc.id,
+                                              stepIndex,
+                                              proc,
+                                            )
+                                            ? darkMode
+                                              ? "bg-green-900/40 border-green-600 text-green-300"
+                                              : "bg-green-100 border-green-500 text-green-800"
+                                            : darkMode
+                                              ? "bg-red-900/40 border-red-600 text-red-300"
+                                              : "bg-red-100 border-red-500 text-red-800"
+                                          : darkMode
+                                            ? "bg-slate-700 border-slate-600 text-white"
+                                            : "bg-white border-slate-300 text-slate-900"
+                                      } ${boldfaceSubmitted ? "cursor-not-allowed" : ""}`}
+                                    />
+                                    {boldfaceSubmitted &&
+                                      (checkBoldfaceAnswer(
                                         proc.id,
                                         stepIndex,
-                                        e.target.value,
-                                      )
-                                    }
-                                    disabled={boldfaceSubmitted}
-                                    placeholder=""
-                                    className={`flex-1 min-w-[250px] px-3 py-1 rounded border-2 font-mono text-sm ${
-                                      boldfaceSubmitted
-                                        ? checkBoldfaceAnswer(
-                                            proc.id,
-                                            stepIndex,
-                                            proc,
-                                          )
-                                          ? darkMode
-                                            ? "bg-green-900/40 border-green-600 text-green-300"
-                                            : "bg-green-100 border-green-500 text-green-800"
-                                          : darkMode
-                                            ? "bg-red-900/40 border-red-600 text-red-300"
-                                            : "bg-red-100 border-red-500 text-red-800"
-                                        : darkMode
-                                          ? "bg-slate-700 border-slate-600 text-white"
-                                          : "bg-white border-slate-300 text-slate-900"
-                                    } ${boldfaceSubmitted ? "cursor-not-allowed" : ""}`}
-                                  />
-                                  {boldfaceSubmitted &&
-                                    (checkBoldfaceAnswer(
-                                      proc.id,
-                                      stepIndex,
-                                      proc,
-                                    ) ? (
-                                      <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0" />
-                                    ) : (
-                                      <div className="flex items-center gap-2">
-                                        <XCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
-                                        <span
-                                          className={`font-bold text-lg px-3 py-1 rounded ${
-                                            darkMode
-                                              ? "bg-green-900/60 text-green-300 border-2 border-green-500"
-                                              : "bg-green-100 text-green-800 border-2 border-green-600"
-                                          }`}
-                                        >
-                                          {step.blank}
-                                        </span>
-                                      </div>
-                                    ))}
-                                </div>
-                              )}
+                                        proc,
+                                      ) ? (
+                                        <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0" />
+                                      ) : (
+                                        <div className="flex items-center gap-2">
+                                          <XCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
+                                          <span
+                                            className={`font-bold text-lg px-3 py-1 rounded ${
+                                              darkMode
+                                                ? "bg-green-900/60 text-green-300 border-2 border-green-500"
+                                                : "bg-green-100 text-green-800 border-2 border-green-600"
+                                            }`}
+                                          >
+                                            {step.blank}
+                                          </span>
+                                        </div>
+                                      ))}
+                                  </div>
+                                )}
                             </div>
                           ))}
                         </div>
