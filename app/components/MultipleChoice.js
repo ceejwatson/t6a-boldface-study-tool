@@ -35,13 +35,15 @@ export default function MultipleChoice({
   }, [question.id, question.options]);
 
   const handleSelect = (originalIndex) => {
-    // Simple check: if already answered or disabled, do nothing
-    if (userAnswer !== undefined || disabled || showExplanation) {
-      console.log("🚫 Blocked - already answered");
-      return;
+    // ABSOLUTE BLOCK: if already answered, do nothing
+    if (userAnswer !== undefined) {
+      return; // Silent block - don't even call onAnswer
     }
 
-    console.log("✅ Answer submitted:", originalIndex);
+    if (disabled || showExplanation) {
+      return; // Also block if disabled or showing explanation
+    }
+
     onAnswer(originalIndex);
   };
 
@@ -115,44 +117,21 @@ export default function MultipleChoice({
         {question.question}
       </h3>
 
-      <div
-        className={compact ? "space-y-1" : "space-y-2"}
-        style={{ position: "relative" }}
-      >
-        {/* Blocking overlay when answered - prevents ANY clicks */}
-        {isAnswered && (
-          <div
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              zIndex: 10,
-              cursor: "not-allowed",
-              backgroundColor: "transparent",
-            }}
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              console.log("🚫 OVERLAY BLOCK - Question already answered!");
-            }}
-          />
-        )}
+      <div className={compact ? "space-y-1" : "space-y-2"}>
         {shuffledOptions.map(({ option, originalIndex }, displayIndex) => {
-          const isDisabled = isAnswered || disabled || showExplanation;
+          // Button is disabled if question is answered
+          const isDisabled = isAnswered;
+
           return (
             <button
               key={displayIndex}
-              onClick={
-                isDisabled
-                  ? (e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      console.log("🚫 Button disabled - no action");
-                    }
-                  : () => handleSelect(originalIndex)
-              }
+              onClick={() => {
+                // Double check before calling handler
+                if (userAnswer !== undefined) {
+                  return; // Already answered - do nothing
+                }
+                handleSelect(originalIndex);
+              }}
               disabled={isDisabled}
               className={`w-full p-4 rounded-lg border-2 transition-all duration-200 text-left flex items-center justify-between touch-manipulation ${getOptionStyle(originalIndex)} ${
                 isDisabled

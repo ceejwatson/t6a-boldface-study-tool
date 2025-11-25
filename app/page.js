@@ -960,7 +960,9 @@ export default function T6AEnhancedStudyTool() {
         const nextQuestion = currentQuestions[currentQuestionIndex + 1];
         const hasAnswer =
           nextQuestion && userAnswers[nextQuestion.id] !== undefined;
-        setShowExplanation(hasAnswer); // Show explanation if question was already answered
+        // In instant grade mode, ONLY show explanation if the next question was already answered
+        // Otherwise hide it so user can answer the new question
+        setShowExplanation(hasAnswer && instantGrade); // Show explanation ONLY if answered AND instant grade is on
       } else {
         setShowExplanation(false); // Reset in study mode
       }
@@ -988,7 +990,8 @@ export default function T6AEnhancedStudyTool() {
           const prevQuestion = currentQuestions[currentQuestionIndex - 1];
           const hasAnswer =
             prevQuestion && userAnswers[prevQuestion.id] !== undefined;
-          setShowExplanation(hasAnswer); // Show explanation if question was already answered
+          // In instant grade mode, ONLY show explanation if the previous question was already answered
+          setShowExplanation(hasAnswer && instantGrade); // Show explanation ONLY if answered AND instant grade is on
         } else {
           setShowExplanation(false); // Reset in study mode
         }
