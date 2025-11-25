@@ -3460,9 +3460,9 @@ export default function T6AEnhancedStudyTool() {
                                     } ${boldfaceSubmitted ? "cursor-not-allowed" : ""}`}
                                   />
 
-                                  {/* Feedback - show after submission */}
+                                  {/* Feedback - compact */}
                                   {boldfaceSubmitted && (
-                                    <div className="flex items-center gap-2 mt-2 sm:mt-0">
+                                    <>
                                       {checkBoldfaceAnswer(
                                         proc.id,
                                         stepIndex,
@@ -3475,46 +3475,23 @@ export default function T6AEnhancedStudyTool() {
                                         "action",
                                         proc,
                                       ) ? (
-                                        <div className="flex items-center gap-2">
-                                          <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0" />
-                                          <span
-                                            className={`text-sm font-semibold ${darkMode ? "text-green-400" : "text-green-700"}`}
-                                          >
-                                            Correct!
-                                          </span>
-                                        </div>
+                                        <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0" />
                                       ) : (
-                                        <div className="flex flex-col gap-1">
-                                          <div className="flex items-center gap-2">
-                                            <XCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
-                                            <span
-                                              className={`text-sm font-semibold ${darkMode ? "text-red-400" : "text-red-700"}`}
-                                            >
-                                              Incorrect
-                                            </span>
-                                          </div>
+                                        <>
+                                          <XCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
                                           <div
-                                            className={`px-3 py-2 rounded-lg ${
+                                            className={`font-bold text-sm px-2 py-1 rounded ${
                                               darkMode
-                                                ? "bg-green-900/40 border border-green-600"
-                                                : "bg-green-50 border border-green-500"
+                                                ? "bg-green-900/60 text-green-300 border border-green-500"
+                                                : "bg-green-100 text-green-800 border border-green-600"
                                             }`}
                                           >
-                                            <div
-                                              className={`text-xs font-semibold mb-1 ${darkMode ? "text-green-400" : "text-green-700"}`}
-                                            >
-                                              Correct Answer:
-                                            </div>
-                                            <div
-                                              className={`font-bold text-sm ${darkMode ? "text-green-300" : "text-green-800"}`}
-                                            >
-                                              {step.blankItem} -{" "}
-                                              {step.blankAction}
-                                            </div>
+                                            {step.blankItem} -{" "}
+                                            {step.blankAction}
                                           </div>
-                                        </div>
+                                        </>
                                       )}
-                                    </div>
+                                    </>
                                   )}
                                 </div>
                               </div>
