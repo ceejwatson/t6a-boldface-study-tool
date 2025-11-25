@@ -1,7 +1,7 @@
 "use client";
 
 import { CheckCircle2, XCircle, BookOpen } from "lucide-react";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 
 export default function MultipleChoice({
   question,
@@ -15,11 +15,13 @@ export default function MultipleChoice({
   compact = false,
   onRate,
 }) {
-  // LOCAL state to immediately lock this component after first click
+  // Use REF for IMMEDIATE locking (persists across renders, no state delay)
+  const isLockedRef = useRef(false);
   const [hasAnswered, setHasAnswered] = useState(false);
 
   // Reset local lock when question changes
   useEffect(() => {
+    isLockedRef.current = false;
     setHasAnswered(false);
   }, [question.id]);
 
@@ -43,7 +45,15 @@ export default function MultipleChoice({
   }, [question.id, question.options]);
 
   const handleSelect = (e, originalIndex) => {
-    // IMMEDIATE lock check - prevents ANY second click
+    // CRITICAL: Check ref FIRST - it updates synchronously, no render delay
+    if (isLockedRef.current) {
+      e.preventDefault();
+      e.stopPropagation();
+      console.log("🔒 BLOCKED by ref lock");
+      return;
+    }
+
+    // Additional checks
     if (
       hasAnswered ||
       disabled ||
@@ -52,9 +62,15 @@ export default function MultipleChoice({
     ) {
       e.preventDefault();
       e.stopPropagation();
-      return; // Silently block - no alert needed
+      console.log("🔒 BLOCKED by other checks");
+      return;
     }
-    setHasAnswered(true); // Lock immediately
+
+    // Lock IMMEDIATELY with ref (synchronous, no render needed)
+    isLockedRef.current = true;
+    console.log("🔒 LOCKED - answer selected");
+
+    setHasAnswered(true); // Also set state for UI
     onAnswer(originalIndex);
   };
 
@@ -128,6 +144,7 @@ export default function MultipleChoice({
       <div className={compact ? "space-y-1" : "space-y-2"}>
         {shuffledOptions.map(({ option, originalIndex }, displayIndex) => {
           const isDisabled =
+            isLockedRef.current ||
             hasAnswered ||
             disabled ||
             userAnswer !== undefined ||
