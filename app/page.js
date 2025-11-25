@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   BookOpen,
   Brain,
@@ -75,6 +75,7 @@ export default function T6AEnhancedStudyTool() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [currentQuestions, setCurrentQuestions] = useState([]);
   const [userAnswers, setUserAnswers] = useState({});
+  const lockedQuestions = useRef(new Set()); // Track locked questions immediately without waiting for state updates
   const [showExplanation, setShowExplanation] = useState(false);
   const [instantGrade, setInstantGrade] = useState(false); // Checkbox preference for instant grading
   const [hideMasteredQuestions, setHideMasteredQuestions] = useState(false);
@@ -320,6 +321,7 @@ export default function T6AEnhancedStudyTool() {
     setCurrentQuestions(questions);
     setCurrentQuestionIndex(0);
     setUserAnswers({});
+    lockedQuestions.current.clear(); // Clear locked questions when starting new session
     setShowExplanation(false);
   };
 
@@ -560,23 +562,13 @@ export default function T6AEnhancedStudyTool() {
         return;
       }
 
-      // Don't allow changing answer if one already exists (prevents switching answers)
-      if (userAnswers[currentQuestion.id] !== undefined) {
-        console.log(
-          "❌ BLOCKED in handleAnswer - Answer already locked for question:",
-          currentQuestion.id,
-          "existing answer:",
-          userAnswers[currentQuestion.id],
-        );
-        return;
+      // CRITICAL: Use ref to immediately lock the question - prevents state update race condition
+      if (lockedQuestions.current.has(currentQuestion.id)) {
+        return; // Question already answered - don't allow changes
       }
 
-      console.log(
-        "✅ Allowing answer to be set for question:",
-        currentQuestion.id,
-        "new answer:",
-        answer,
-      );
+      // Lock this question immediately (before state updates)
+      lockedQuestions.current.add(currentQuestion.id);
 
       const newAnswers = { ...userAnswers, [currentQuestion.id]: answer };
       setUserAnswers(newAnswers);
@@ -977,6 +969,7 @@ export default function T6AEnhancedStudyTool() {
     setCurrentQuestions(sectionQuestions);
     setCurrentQuestionIndex(0);
     setUserAnswers({});
+    lockedQuestions.current.clear(); // Clear locked questions when starting new session
     setShowExplanation(false);
     setActiveTab("study");
   };
@@ -1108,20 +1101,12 @@ export default function T6AEnhancedStudyTool() {
 
     // Regular question rendering for quiz mode, readThrough study mode, and learningpath
     try {
-      const isAnswered = userAnswers[currentQuestion.id] !== undefined;
-      console.log(
-        "Question render - isAnswered:",
-        isAnswered,
-        "userAnswer:",
-        userAnswers[currentQuestion.id],
-      );
-
       const props = {
         question: currentQuestion,
         onAnswer: handleAnswer,
         showExplanation: showExplanation,
         userAnswer: userAnswers[currentQuestion.id],
-        disabled: isAnswered, // Disable after first answer selection - lock it in
+        disabled: lockedQuestions.current.has(currentQuestion.id), // Use ref for immediate locking - prevents race conditions
         darkMode: darkMode,
         showCorrectness: studyMode !== "study", // Show green/red in quiz, but not in review mode
         fontSize: fontSize,
@@ -1628,6 +1613,7 @@ export default function T6AEnhancedStudyTool() {
                       setCurrentQuestions(shuffledReviewQs);
                       setCurrentQuestionIndex(0);
                       setUserAnswers({});
+                      lockedQuestions.current.clear(); // Clear locked questions when starting new session
                       setShowExplanation(false);
                       setReviewIncorrectOnly(true);
                       setReviewSessionCorrect([]);
@@ -2027,6 +2013,7 @@ export default function T6AEnhancedStudyTool() {
                     setCurrentQuestions(shuffledQuestions);
                     setCurrentQuestionIndex(0);
                     setUserAnswers({});
+                    lockedQuestions.current.clear(); // Clear locked questions when starting new session
                     setShowExplanation(false);
                     setActiveTab("study");
                     setShowQuizSetup(false);
@@ -2197,6 +2184,7 @@ export default function T6AEnhancedStudyTool() {
                       setCurrentQuestions(shuffledIncorrectQs);
                       setCurrentQuestionIndex(0);
                       setUserAnswers({});
+                      lockedQuestions.current.clear(); // Clear locked questions when starting new session
                       setShowExplanation(false);
                       setReviewIncorrectOnly(true);
                       setActiveTab("study");
@@ -2584,6 +2572,7 @@ export default function T6AEnhancedStudyTool() {
                         studyMode === "learningpath" ? "learningpath" : "home",
                       );
                       setUserAnswers({});
+                      lockedQuestions.current.clear(); // Clear locked questions when starting new session
                       setCurrentQuestionIndex(0);
                       setShowExplanation(false);
                     }}
@@ -2602,6 +2591,7 @@ export default function T6AEnhancedStudyTool() {
                       setCurrentQuestionIndex(0);
                       setShowExplanation(false);
                       setUserAnswers({});
+                      lockedQuestions.current.clear(); // Clear locked questions when starting new session
                       setActiveTab("study");
                     }}
                     className="flex-1 px-6 py-3 rounded-lg font-medium transition bg-green-600 hover:bg-green-700 text-white"
@@ -2866,6 +2856,7 @@ export default function T6AEnhancedStudyTool() {
                     onClick={() => {
                       setActiveTab("home");
                       setUserAnswers({});
+                      lockedQuestions.current.clear(); // Clear locked questions when starting new session
                       setCurrentQuestionIndex(0);
                       setShowExplanation(false);
                     }}
@@ -2882,6 +2873,7 @@ export default function T6AEnhancedStudyTool() {
                       setCurrentQuestionIndex(0);
                       setShowExplanation(false);
                       setUserAnswers({});
+                      lockedQuestions.current.clear(); // Clear locked questions when starting new session
                       setActiveTab("study");
                     }}
                     className="flex-1 px-6 py-3 rounded-lg font-medium transition bg-blue-600 hover:bg-blue-700 text-white"
@@ -2993,6 +2985,7 @@ export default function T6AEnhancedStudyTool() {
                   setCurrentQuestions(shuffledQuestions);
                   setCurrentQuestionIndex(0);
                   setUserAnswers({});
+                  lockedQuestions.current.clear(); // Clear locked questions when starting new session
                   setShowExplanation(false);
                   setActiveTab("study");
                 }}
@@ -3083,6 +3076,7 @@ export default function T6AEnhancedStudyTool() {
                             setCurrentQuestions(shuffledFiltered);
                             setCurrentQuestionIndex(0);
                             setUserAnswers({});
+                            lockedQuestions.current.clear(); // Clear locked questions when starting new session
                             setActiveTab("study");
                           }}
                           className={`${darkMode ? "bg-slate-800/50 hover:bg-slate-700/50 border-slate-700" : "bg-white hover:bg-slate-50 border-slate-200"} border rounded-xl p-4 transition-all hover:scale-105 active:scale-95 text-left`}
@@ -3165,6 +3159,7 @@ export default function T6AEnhancedStudyTool() {
                             setCurrentQuestions(shuffledFiltered);
                             setCurrentQuestionIndex(0);
                             setUserAnswers({});
+                            lockedQuestions.current.clear(); // Clear locked questions when starting new session
                             setActiveTab("study");
                           }}
                           className={`${darkMode ? "bg-slate-800/50 hover:bg-slate-700/50 border-slate-700" : "bg-white hover:bg-slate-50 border-slate-200"} border rounded-xl p-4 transition-all hover:scale-105 active:scale-95 text-left`}
@@ -3239,6 +3234,7 @@ export default function T6AEnhancedStudyTool() {
                   onClick={() => {
                     setActiveTab("home");
                     setUserAnswers({});
+                    lockedQuestions.current.clear(); // Clear locked questions when starting new session
                     setCurrentQuestionIndex(0);
                   }}
                   className={`px-4 py-2 rounded-lg ${darkMode ? "bg-slate-700 hover:bg-slate-600 text-white" : "bg-slate-200 hover:bg-slate-300 text-slate-900"}`}

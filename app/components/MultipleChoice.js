@@ -35,15 +35,8 @@ export default function MultipleChoice({
   }, [question.id, question.options]);
 
   const handleSelect = (originalIndex) => {
-    console.log(
-      "handleSelect called - disabled:",
-      disabled,
-      "originalIndex:",
-      originalIndex,
-    );
     if (disabled) {
-      console.log("BLOCKED - answer is disabled/locked");
-      return;
+      return; // Answer already locked - no changes allowed
     }
     onAnswer(originalIndex);
   };
@@ -122,9 +115,14 @@ export default function MultipleChoice({
             onClick={() => handleSelect(originalIndex)}
             disabled={disabled}
             className={`w-full p-4 rounded-lg border-2 transition-all duration-200 text-left flex items-center justify-between touch-manipulation ${getOptionStyle(originalIndex)} ${
-              disabled ? "cursor-not-allowed" : "cursor-pointer active:scale-95"
+              disabled
+                ? "cursor-not-allowed opacity-90 pointer-events-none"
+                : "cursor-pointer active:scale-95"
             }`}
-            style={{ minHeight: "auto" }}
+            style={{
+              minHeight: "auto",
+              pointerEvents: disabled ? "none" : "auto",
+            }}
           >
             <span className={`flex-1 leading-relaxed ${getFontSizeClass()}`}>
               {option}
