@@ -99,6 +99,10 @@ export default function T6AEnhancedStudyTool() {
   const [voiceRecallMode, setVoiceRecallMode] = useState(false); // Voice mode for answering questions
   const [reviewSessionCorrect, setReviewSessionCorrect] = useState([]); // Track questions answered correctly in current review session
 
+  // Boldface Procedures State
+  const [boldfaceAnswers, setBoldfaceAnswers] = useState({});
+  const [boldfaceSubmitted, setBoldfaceSubmitted] = useState(false);
+
   // Performance Tracking
   const [performanceStats, setPerformanceStats] = useState({
     byCategory: {},
@@ -3234,9 +3238,6 @@ export default function T6AEnhancedStudyTool() {
             </div>
           ) : activeTab === "boldface-procedures" ? (
             (() => {
-              const [boldfaceAnswers, setBoldfaceAnswers] = React.useState({});
-              const [boldfaceSubmitted, setBoldfaceSubmitted] =
-                React.useState(false);
               const procedures = getAllBoldfaceProcedures();
 
               const handleBoldfaceInput = (procId, stepIndex, value) => {
