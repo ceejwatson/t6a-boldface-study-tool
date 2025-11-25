@@ -1458,11 +1458,10 @@ export default function T6AEnhancedStudyTool() {
                   className={`text-center mb-4 font-semibold ${darkMode ? "text-slate-300" : "text-slate-700"}`}
                 >
                   {(() => {
-                    // Get total count across ALL questions (aircraft + aerospace physiology + T6 Ops Limits)
+                    // Get total count across T6 Ops Limits + Aerospace Physiology only
                     const totalQuestions =
-                      getAllAircraftQuestions().length +
-                      getAllAerospacePhysiologyQuestions().length +
-                      getLimitationQuestions().length;
+                      getLimitationQuestions().length +
+                      getAllAerospacePhysiologyQuestions().length;
                     const masteredCount = Object.values(questionMastery).filter(
                       (m) => (m?.correctCount || 0) >= 3,
                     ).length;
@@ -1625,10 +1624,10 @@ export default function T6AEnhancedStudyTool() {
                   {/* Incorrect - Review missed questions */}
                   <button
                     onClick={() => {
-                      // Get ALL questions (aircraft + aerospace physiology) for review
-                      const allAircraftQs = getAllAircraftQuestions();
+                      // Get ALL questions (T6 Ops Limits + aerospace physiology) for review
+                      const opsLimitsQs = getLimitationQuestions();
                       const allAeroQs = getAllAerospacePhysiologyQuestions();
-                      const allAvailableQs = [...allAircraftQs, ...allAeroQs];
+                      const allAvailableQs = [...opsLimitsQs, ...allAeroQs];
 
                       const reviewQuestions = allAvailableQs.filter((q) => {
                         const mastery = questionMastery[q.id];
@@ -2197,10 +2196,10 @@ export default function T6AEnhancedStudyTool() {
                 ).length > 0 && (
                   <button
                     onClick={() => {
-                      // Get ALL questions (aircraft + aerospace physiology) for review
-                      const allAircraftQs = getAllAircraftQuestions();
+                      // Get ALL questions (T6 Ops Limits + aerospace physiology) for review
+                      const opsLimitsQs = getLimitationQuestions();
                       const allAeroQs = getAllAerospacePhysiologyQuestions();
-                      const allAvailableQs = [...allAircraftQs, ...allAeroQs];
+                      const allAvailableQs = [...opsLimitsQs, ...allAeroQs];
 
                       const incorrectQs = allAvailableQs.filter((q) => {
                         const mastery = questionMastery[q.id];
@@ -2397,11 +2396,11 @@ export default function T6AEnhancedStudyTool() {
                     className={`text-sm mt-1 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
                   >
                     {(() => {
-                      const aircraftCount = getAllQuestions().length;
+                      const opsLimitsCount = getLimitationQuestions().length;
                       const aeroCount =
                         getAllAerospacePhysiologyQuestions().length;
-                      const total = aircraftCount + aeroCount;
-                      return `${total} Total Questions (${aircraftCount} Aircraft + ${aeroCount} Aerospace Physiology)`;
+                      const total = opsLimitsCount + aeroCount;
+                      return `${total} Total Questions (${opsLimitsCount} T6 Ops Limits + ${aeroCount} Aerospace Physiology)`;
                     })()}
                   </p>
                 </div>
@@ -2415,10 +2414,13 @@ export default function T6AEnhancedStudyTool() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {(() => {
-                  // Get both aircraft and aerospace physiology questions
-                  const aircraftQuestions = getAllQuestions();
+                  // Get T6 Ops Limits and aerospace physiology questions only
+                  const opsLimitsQuestions = getLimitationQuestions();
                   const aeroQuestions = getAllAerospacePhysiologyQuestions();
-                  const allQuestions = [...aircraftQuestions, ...aeroQuestions];
+                  const allQuestions = [
+                    ...opsLimitsQuestions,
+                    ...aeroQuestions,
+                  ];
                   let questionNumber = 1;
 
                   return allQuestions.map((q) => {
