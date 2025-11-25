@@ -1458,10 +1458,11 @@ export default function T6AEnhancedStudyTool() {
                   className={`text-center mb-4 font-semibold ${darkMode ? "text-slate-300" : "text-slate-700"}`}
                 >
                   {(() => {
-                    // Get total count across ALL questions (aircraft + aerospace physiology)
+                    // Get total count across ALL questions (aircraft + aerospace physiology + T6 Ops Limits)
                     const totalQuestions =
                       getAllAircraftQuestions().length +
-                      getAllAerospacePhysiologyQuestions().length;
+                      getAllAerospacePhysiologyQuestions().length +
+                      getLimitationQuestions().length;
                     const masteredCount = Object.values(questionMastery).filter(
                       (m) => (m?.correctCount || 0) >= 3,
                     ).length;
