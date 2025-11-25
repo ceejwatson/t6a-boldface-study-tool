@@ -3666,6 +3666,14 @@ export default function T6AEnhancedStudyTool() {
                               <button
                                 key={idx}
                                 onClick={() => {
+                                  // INSTANT GRADE MODE: Block if already answered
+                                  if (
+                                    instantGrade &&
+                                    userAnswers[q.id] !== undefined
+                                  ) {
+                                    return; // Already answered - locked!
+                                  }
+
                                   const newAnswers = {
                                     ...userAnswers,
                                     [q.id]: idx,
@@ -3677,7 +3685,20 @@ export default function T6AEnhancedStudyTool() {
                                     updatePerformance(q, correct);
                                   }
                                 }}
+                                disabled={
+                                  instantGrade && userAnswer !== undefined
+                                }
+                                style={{
+                                  pointerEvents:
+                                    instantGrade && userAnswer !== undefined
+                                      ? "none"
+                                      : "auto",
+                                }}
                                 className={`w-full text-left p-3 rounded-lg transition-all ${
+                                  instantGrade && userAnswer !== undefined
+                                    ? "cursor-not-allowed"
+                                    : ""
+                                } ${
                                   isSelected && showFeedback
                                     ? isCorrect
                                       ? darkMode
