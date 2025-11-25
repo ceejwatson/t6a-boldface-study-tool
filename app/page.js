@@ -3368,43 +3368,51 @@ export default function T6AEnhancedStudyTool() {
                                 className="flex flex-col sm:flex-row sm:items-center gap-2"
                               >
                                 <div className="flex items-center gap-2 flex-wrap">
-                                  {/* First blank - Item */}
-                                  <input
-                                    type="text"
-                                    value={
-                                      boldfaceAnswers[
-                                        `${proc.id}-${stepIndex}-item`
-                                      ] || ""
-                                    }
-                                    onChange={(e) =>
-                                      handleBoldfaceInput(
-                                        proc.id,
-                                        stepIndex,
-                                        "item",
-                                        e.target.value,
-                                      )
-                                    }
-                                    disabled={boldfaceSubmitted}
-                                    placeholder=""
-                                    className={`min-w-[150px] px-3 py-1 rounded border-2 font-mono text-sm ${
-                                      boldfaceSubmitted
-                                        ? checkBoldfaceAnswer(
-                                            proc.id,
-                                            stepIndex,
-                                            "item",
-                                            proc,
-                                          )
-                                          ? darkMode
-                                            ? "bg-green-900/40 border-green-600 text-green-300"
-                                            : "bg-green-100 border-green-500 text-green-800"
+                                  {/* First blank - Item (show as text or input based on hardcore mode) */}
+                                  {!hardcoreMode ? (
+                                    <span
+                                      className={`font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
+                                    >
+                                      {step.blankItem}
+                                    </span>
+                                  ) : (
+                                    <input
+                                      type="text"
+                                      value={
+                                        boldfaceAnswers[
+                                          `${proc.id}-${stepIndex}-item`
+                                        ] || ""
+                                      }
+                                      onChange={(e) =>
+                                        handleBoldfaceInput(
+                                          proc.id,
+                                          stepIndex,
+                                          "item",
+                                          e.target.value,
+                                        )
+                                      }
+                                      disabled={boldfaceSubmitted}
+                                      placeholder=""
+                                      className={`min-w-[150px] px-3 py-1 rounded border-2 font-mono text-sm ${
+                                        boldfaceSubmitted
+                                          ? checkBoldfaceAnswer(
+                                              proc.id,
+                                              stepIndex,
+                                              "item",
+                                              proc,
+                                            )
+                                            ? darkMode
+                                              ? "bg-green-900/40 border-green-600 text-green-300"
+                                              : "bg-green-100 border-green-500 text-green-800"
+                                            : darkMode
+                                              ? "bg-red-900/40 border-red-600 text-red-300"
+                                              : "bg-red-100 border-red-500 text-red-800"
                                           : darkMode
-                                            ? "bg-red-900/40 border-red-600 text-red-300"
-                                            : "bg-red-100 border-red-500 text-red-800"
-                                        : darkMode
-                                          ? "bg-slate-700 border-slate-600 text-white"
-                                          : "bg-white border-slate-300 text-slate-900"
-                                    } ${boldfaceSubmitted ? "cursor-not-allowed" : ""}`}
-                                  />
+                                            ? "bg-slate-700 border-slate-600 text-white"
+                                            : "bg-white border-slate-300 text-slate-900"
+                                      } ${boldfaceSubmitted ? "cursor-not-allowed" : ""}`}
+                                    />
+                                  )}
 
                                   {/* Dash separator */}
                                   <span
