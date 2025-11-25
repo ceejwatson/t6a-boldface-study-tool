@@ -1787,7 +1787,7 @@ export default function T6AEnhancedStudyTool() {
                   <button
                     onClick={() =>
                       window.open(
-                        "https://docs.google.com/document/d/1CKjgBAJ3gNM0pxTU3HVSFQp68B94BG_fvGSeHPGrqY4/edit?tab=t.0",
+                        "https://www.sheppard.af.mil/Portals/65/808%20TRS%20Aerospace%20Physiology%20Study%20Guide.pdf",
                         "_blank",
                       )
                     }
@@ -1796,7 +1796,7 @@ export default function T6AEnhancedStudyTool() {
                     <h3
                       className={`text-sm sm:text-base font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
                     >
-                      Aerospace Physiology Notes
+                      Aerospace Physiology Study Guide
                     </h3>
                   </button>
                   <button
