@@ -1681,7 +1681,7 @@ export default function T6AEnhancedStudyTool() {
                         className={`${darkMode ? "bg-slate-700 hover:bg-slate-600 border-slate-600" : "bg-slate-100 hover:bg-slate-200 border-slate-300"} rounded-lg sm:rounded-xl p-3 sm:p-4 transition-all border active:scale-95`}
                       >
                         <div className="flex flex-col items-center">
-                          <span className="text-2xl mb-1">🎯</span>
+                          <span className="text-2xl mb-1">📂</span>
                           <h3
                             className={`text-sm sm:text-base font-semibold text-center ${darkMode ? "text-white" : "text-slate-900"}`}
                           >
