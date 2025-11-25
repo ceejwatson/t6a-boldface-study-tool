@@ -3460,9 +3460,9 @@ export default function T6AEnhancedStudyTool() {
                                     } ${boldfaceSubmitted ? "cursor-not-allowed" : ""}`}
                                   />
 
-                                  {/* Feedback icons and correct answers */}
+                                  {/* Feedback - show after submission */}
                                   {boldfaceSubmitted && (
-                                    <div className="flex items-center gap-2">
+                                    <div className="flex items-center gap-2 mt-2 sm:mt-0">
                                       {checkBoldfaceAnswer(
                                         proc.id,
                                         stepIndex,
@@ -3475,21 +3475,44 @@ export default function T6AEnhancedStudyTool() {
                                         "action",
                                         proc,
                                       ) ? (
-                                        <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0" />
-                                      ) : (
-                                        <>
-                                          <XCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
+                                        <div className="flex items-center gap-2">
+                                          <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0" />
                                           <span
-                                            className={`font-bold text-sm px-3 py-1 rounded ${
+                                            className={`text-sm font-semibold ${darkMode ? "text-green-400" : "text-green-700"}`}
+                                          >
+                                            Correct!
+                                          </span>
+                                        </div>
+                                      ) : (
+                                        <div className="flex flex-col gap-1">
+                                          <div className="flex items-center gap-2">
+                                            <XCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
+                                            <span
+                                              className={`text-sm font-semibold ${darkMode ? "text-red-400" : "text-red-700"}`}
+                                            >
+                                              Incorrect
+                                            </span>
+                                          </div>
+                                          <div
+                                            className={`px-3 py-2 rounded-lg ${
                                               darkMode
-                                                ? "bg-green-900/60 text-green-300 border-2 border-green-500"
-                                                : "bg-green-100 text-green-800 border-2 border-green-600"
+                                                ? "bg-green-900/40 border border-green-600"
+                                                : "bg-green-50 border border-green-500"
                                             }`}
                                           >
-                                            {step.blankItem} -{" "}
-                                            {step.blankAction}
-                                          </span>
-                                        </>
+                                            <div
+                                              className={`text-xs font-semibold mb-1 ${darkMode ? "text-green-400" : "text-green-700"}`}
+                                            >
+                                              Correct Answer:
+                                            </div>
+                                            <div
+                                              className={`font-bold text-sm ${darkMode ? "text-green-300" : "text-green-800"}`}
+                                            >
+                                              {step.blankItem} -{" "}
+                                              {step.blankAction}
+                                            </div>
+                                          </div>
+                                        </div>
                                       )}
                                     </div>
                                   )}
