@@ -25,7 +25,7 @@ import {
   Gauge,
 } from "lucide-react";
 
-import { useSync } from "./components/AuthWrapper";
+// Removed AuthWrapper and sync functionality - using local-only storage
 
 import MultipleChoice from "./components/MultipleChoice";
 import TrueFalse from "./components/TrueFalse";
@@ -61,7 +61,7 @@ import {
 
 export default function T6AEnhancedStudyTool() {
   // Get sync function from context
-  const { triggerSync, isSyncing } = useSync();
+  // Removed sync functionality - all data saved locally only
 
   // UI State
   const [darkMode, setDarkMode] = useState(false);
@@ -154,25 +154,7 @@ export default function T6AEnhancedStudyTool() {
     setSelectedTopics(allCategories);
   }, []);
 
-  // Listen for Supabase sync completion and reload data
-  useEffect(() => {
-    const handleSyncComplete = (event) => {
-      console.log("🎯 [APP] Received sync-complete event:", event.detail);
-      console.log(
-        "🔄 [APP] Reloading all data from localStorage into React state...",
-      );
-      loadDataFromLocalStorage();
-      console.log("✅ [APP] State reloaded successfully");
-    };
-
-    console.log("👂 [APP] Setting up sync-complete event listener");
-    window.addEventListener("supabase-sync-complete", handleSyncComplete);
-
-    return () => {
-      console.log("🔌 [APP] Cleaning up sync-complete event listener");
-      window.removeEventListener("supabase-sync-complete", handleSyncComplete);
-    };
-  }, []);
+  // Removed Supabase sync event listener - using local-only storage
 
   // Save performance
   useEffect(() => {
@@ -774,9 +756,7 @@ export default function T6AEnhancedStudyTool() {
       // Update SRS data using SM-2 algorithm
       updateSRS(question, isCorrect);
 
-      // Trigger immediate sync after answering question
-      console.log("💫 [APP] Triggering sync after question answered");
-      triggerSync();
+      // Local-only mode - all data automatically saved to localStorage via useEffect hooks
     } catch (error) {
       console.error("Error in updatePerformance:", error, {
         question,
@@ -1018,9 +998,7 @@ export default function T6AEnhancedStudyTool() {
       setFlaggedQuestions((prev) => [...prev, currentQuestion.id]);
     }
 
-    // Trigger immediate sync after flagging
-    console.log("💫 [APP] Triggering sync after flag toggle");
-    triggerSync();
+    // Local-only mode - flag changes automatically saved to localStorage via useEffect
   };
 
   // Helper function for font size classes
@@ -1810,7 +1788,7 @@ export default function T6AEnhancedStudyTool() {
                     <h3
                       className={`text-sm sm:text-base font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
                     >
-                      Aerophysiology Notes
+                      Aerospace Physiology Notes
                     </h3>
                   </button>
                   <button
