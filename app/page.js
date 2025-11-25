@@ -80,6 +80,7 @@ export default function T6AEnhancedStudyTool() {
   const [currentQuestions, setCurrentQuestions] = useState([]);
   const [userAnswers, setUserAnswers] = useState({});
   const lockedQuestions = useRef(new Set()); // Track locked questions immediately without waiting for state updates
+  const [lockedQuestionsState, setLockedQuestionsState] = useState(new Set()); // State version for triggering re-renders
   const [showExplanation, setShowExplanation] = useState(false);
   const [instantGrade, setInstantGrade] = useState(false); // Checkbox preference for instant grading
   const [hideMasteredQuestions, setHideMasteredQuestions] = useState(false);
@@ -568,12 +569,19 @@ export default function T6AEnhancedStudyTool() {
 
       // CRITICAL: Use ref to immediately lock the question - prevents state update race condition
       if (lockedQuestions.current.has(currentQuestion.id)) {
-        alert("BLOCKED in handleAnswer: Question already locked!");
+        console.log(
+          "🚫 BLOCKED: Question",
+          currentQuestion.id,
+          "already locked!",
+        );
         return; // Question already answered - don't allow changes
       }
 
       // Lock this question immediately (before state updates)
+      console.log("🔒 LOCKING question:", currentQuestion.id);
       lockedQuestions.current.add(currentQuestion.id);
+      // ALSO update state to trigger re-render and disable buttons
+      setLockedQuestionsState(new Set(lockedQuestions.current));
 
       const newAnswers = { ...userAnswers, [currentQuestion.id]: answer };
       setUserAnswers(newAnswers);
