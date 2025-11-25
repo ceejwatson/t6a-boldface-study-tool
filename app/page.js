@@ -557,27 +557,14 @@ export default function T6AEnhancedStudyTool() {
         return;
       }
 
-      console.log(
-        "🟢 handleAnswer called - questionId:",
-        currentQuestion.id,
-        "answer:",
-        answer,
-      );
-      console.log("🟢 Current userAnswers:", userAnswers);
-      console.log(
-        "🟢 Is locked in ref?",
-        lockedQuestions.current.has(currentQuestion.id),
-      );
-
       // CRITICAL: Use ref to immediately lock the question - prevents state update race condition
       if (lockedQuestions.current.has(currentQuestion.id)) {
-        console.log("🚫 BLOCKED in handleAnswer - already locked");
+        alert("BLOCKED in handleAnswer: Question already locked!");
         return; // Question already answered - don't allow changes
       }
 
       // Lock this question immediately (before state updates)
       lockedQuestions.current.add(currentQuestion.id);
-      console.log("🔒 Question LOCKED in ref");
 
       const newAnswers = { ...userAnswers, [currentQuestion.id]: answer };
       setUserAnswers(newAnswers);
