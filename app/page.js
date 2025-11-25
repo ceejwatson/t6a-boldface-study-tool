@@ -1827,7 +1827,7 @@ export default function T6AEnhancedStudyTool() {
                   <button
                     onClick={() =>
                       window.open(
-                        "https://www.sheppard.af.mil/Portals/65/808%20TRS%20Aerospace%20Physiology%20Study%20Guide.pdf",
+                        "https://www.sheppard.af.mil/Portals/65/808%20TRS%20Aerospace%20Physiology%20Study%20Guide.pdf?ver=2018-01-08-101108-187",
                         "_blank",
                       )
                     }
@@ -3251,11 +3251,11 @@ export default function T6AEnhancedStudyTool() {
             (() => {
               const procedures = getAllBoldfaceProcedures();
 
-              const handleBoldfaceInput = (procId, stepIndex, value) => {
+              const handleBoldfaceInput = (procId, stepIndex, field, value) => {
                 if (boldfaceSubmitted) return;
                 setBoldfaceAnswers({
                   ...boldfaceAnswers,
-                  [`${procId}-${stepIndex}`]: value,
+                  [`${procId}-${stepIndex}-${field}`]: value,
                 });
               };
 
@@ -3263,13 +3263,18 @@ export default function T6AEnhancedStudyTool() {
                 setBoldfaceSubmitted(true);
               };
 
-              const checkBoldfaceAnswer = (procId, stepIndex, proc) => {
+              const checkBoldfaceAnswer = (procId, stepIndex, field, proc) => {
                 const step = proc.steps[stepIndex];
-                if (!step || step.type === "none") return null;
+                if (!step) return null;
+                if (step.type === "none" || step.type === "textonly")
+                  return null;
 
                 const userAnswer =
-                  boldfaceAnswers[`${procId}-${stepIndex}`] || "";
-                const correctAnswer = step.blank.toLowerCase().trim();
+                  boldfaceAnswers[`${procId}-${stepIndex}-${field}`] || "";
+                const correctAnswer =
+                  field === "item"
+                    ? step.blankItem.toLowerCase().trim()
+                    : step.blankAction.toLowerCase().trim();
                 const userAnswerNormalized = userAnswer.toLowerCase().trim();
 
                 return userAnswerNormalized === correctAnswer;
@@ -3342,86 +3347,147 @@ export default function T6AEnhancedStudyTool() {
                           {proc.procedure}
                         </h3>
                         <div className="space-y-2">
-                          {proc.steps.map((step, stepIndex) => (
-                            <div
-                              key={stepIndex}
-                              className="flex flex-col sm:flex-row sm:items-center gap-2"
-                            >
-                              {!hardcoreMode && step.type === "none" ? (
-                                <span
-                                  className={`font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
-                                >
-                                  {step.text}
-                                </span>
-                              ) : !hardcoreMode ? (
-                                <span
-                                  className={`font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
-                                >
-                                  {step.text}
-                                </span>
-                              ) : null}
-                              {(step.type !== "none" || hardcoreMode) &&
-                                step.type !== "none" && (
-                                  <div className="flex items-center gap-2">
-                                    <input
-                                      type="text"
-                                      value={
-                                        boldfaceAnswers[
-                                          `${proc.id}-${stepIndex}`
-                                        ] || ""
-                                      }
-                                      onChange={(e) =>
-                                        handleBoldfaceInput(
-                                          proc.id,
-                                          stepIndex,
-                                          e.target.value,
-                                        )
-                                      }
-                                      disabled={boldfaceSubmitted}
-                                      placeholder=""
-                                      className={`flex-1 min-w-[250px] px-3 py-1 rounded border-2 font-mono text-sm ${
-                                        boldfaceSubmitted
-                                          ? checkBoldfaceAnswer(
-                                              proc.id,
-                                              stepIndex,
-                                              proc,
-                                            )
-                                            ? darkMode
-                                              ? "bg-green-900/40 border-green-600 text-green-300"
-                                              : "bg-green-100 border-green-500 text-green-800"
-                                            : darkMode
-                                              ? "bg-red-900/40 border-red-600 text-red-300"
-                                              : "bg-red-100 border-red-500 text-red-800"
-                                          : darkMode
-                                            ? "bg-slate-700 border-slate-600 text-white"
-                                            : "bg-white border-slate-300 text-slate-900"
-                                      } ${boldfaceSubmitted ? "cursor-not-allowed" : ""}`}
-                                    />
-                                    {boldfaceSubmitted &&
-                                      (checkBoldfaceAnswer(
+                          {proc.steps.map((step, stepIndex) => {
+                            // Handle textonly steps (just display text)
+                            if (step.type === "textonly") {
+                              return (
+                                <div key={stepIndex}>
+                                  <span
+                                    className={`font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
+                                  >
+                                    {step.text}
+                                  </span>
+                                </div>
+                              );
+                            }
+
+                            // Handle normal two-blank steps
+                            return (
+                              <div
+                                key={stepIndex}
+                                className="flex flex-col sm:flex-row sm:items-center gap-2"
+                              >
+                                <div className="flex items-center gap-2 flex-wrap">
+                                  {/* First blank - Item */}
+                                  <input
+                                    type="text"
+                                    value={
+                                      boldfaceAnswers[
+                                        `${proc.id}-${stepIndex}-item`
+                                      ] || ""
+                                    }
+                                    onChange={(e) =>
+                                      handleBoldfaceInput(
                                         proc.id,
                                         stepIndex,
+                                        "item",
+                                        e.target.value,
+                                      )
+                                    }
+                                    disabled={boldfaceSubmitted}
+                                    placeholder=""
+                                    className={`min-w-[150px] px-3 py-1 rounded border-2 font-mono text-sm ${
+                                      boldfaceSubmitted
+                                        ? checkBoldfaceAnswer(
+                                            proc.id,
+                                            stepIndex,
+                                            "item",
+                                            proc,
+                                          )
+                                          ? darkMode
+                                            ? "bg-green-900/40 border-green-600 text-green-300"
+                                            : "bg-green-100 border-green-500 text-green-800"
+                                          : darkMode
+                                            ? "bg-red-900/40 border-red-600 text-red-300"
+                                            : "bg-red-100 border-red-500 text-red-800"
+                                        : darkMode
+                                          ? "bg-slate-700 border-slate-600 text-white"
+                                          : "bg-white border-slate-300 text-slate-900"
+                                    } ${boldfaceSubmitted ? "cursor-not-allowed" : ""}`}
+                                  />
+
+                                  {/* Dash separator */}
+                                  <span
+                                    className={`font-bold text-lg ${darkMode ? "text-white" : "text-slate-900"}`}
+                                  >
+                                    -
+                                  </span>
+
+                                  {/* Second blank - Action */}
+                                  <input
+                                    type="text"
+                                    value={
+                                      boldfaceAnswers[
+                                        `${proc.id}-${stepIndex}-action`
+                                      ] || ""
+                                    }
+                                    onChange={(e) =>
+                                      handleBoldfaceInput(
+                                        proc.id,
+                                        stepIndex,
+                                        "action",
+                                        e.target.value,
+                                      )
+                                    }
+                                    disabled={boldfaceSubmitted}
+                                    placeholder=""
+                                    className={`min-w-[200px] px-3 py-1 rounded border-2 font-mono text-sm ${
+                                      boldfaceSubmitted
+                                        ? checkBoldfaceAnswer(
+                                            proc.id,
+                                            stepIndex,
+                                            "action",
+                                            proc,
+                                          )
+                                          ? darkMode
+                                            ? "bg-green-900/40 border-green-600 text-green-300"
+                                            : "bg-green-100 border-green-500 text-green-800"
+                                          : darkMode
+                                            ? "bg-red-900/40 border-red-600 text-red-300"
+                                            : "bg-red-100 border-red-500 text-red-800"
+                                        : darkMode
+                                          ? "bg-slate-700 border-slate-600 text-white"
+                                          : "bg-white border-slate-300 text-slate-900"
+                                    } ${boldfaceSubmitted ? "cursor-not-allowed" : ""}`}
+                                  />
+
+                                  {/* Feedback icons and correct answers */}
+                                  {boldfaceSubmitted && (
+                                    <div className="flex items-center gap-2">
+                                      {checkBoldfaceAnswer(
+                                        proc.id,
+                                        stepIndex,
+                                        "item",
+                                        proc,
+                                      ) &&
+                                      checkBoldfaceAnswer(
+                                        proc.id,
+                                        stepIndex,
+                                        "action",
                                         proc,
                                       ) ? (
                                         <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0" />
                                       ) : (
-                                        <div className="flex items-center gap-2">
+                                        <>
                                           <XCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
                                           <span
-                                            className={`font-bold text-lg px-3 py-1 rounded ${
+                                            className={`font-bold text-sm px-3 py-1 rounded ${
                                               darkMode
                                                 ? "bg-green-900/60 text-green-300 border-2 border-green-500"
                                                 : "bg-green-100 text-green-800 border-2 border-green-600"
                                             }`}
                                           >
-                                            {step.blank}
+                                            {step.blankItem} -{" "}
+                                            {step.blankAction}
                                           </span>
-                                        </div>
-                                      ))}
-                                  </div>
-                                )}
-                            </div>
-                          ))}
+                                        </>
+                                      )}
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            );
+                          })}
                         </div>
                       </div>
                     ))}

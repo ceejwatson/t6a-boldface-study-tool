@@ -1,5 +1,6 @@
 // T-6A Boldface Emergency Procedures
 // Fill-in-the-blank questions based on official boldface procedures
+// Each step has: blankItem (the control/item) and blankAction (what to do with it)
 
 export const boldfaceProcedures = [
   {
@@ -7,8 +8,12 @@ export const boldfaceProcedures = [
     category: "Emergency Engine Shutdown",
     procedure: "Emergency Engine Shutdown on the Ground",
     steps: [
-      { text: "PCL - ", blank: "OFF", type: "text" },
-      { text: "FIREWALL SHUTOFF HANDLE - ", blank: "PULL", type: "text" },
+      { blankItem: "PCL", blankAction: "OFF", type: "text" },
+      {
+        blankItem: "FIREWALL SHUTOFF HANDLE",
+        blankAction: "PULL",
+        type: "text",
+      },
     ],
   },
   {
@@ -16,18 +21,27 @@ export const boldfaceProcedures = [
     category: "Abort",
     procedure: "Abort",
     steps: [
-      { text: "PCL - ", blank: "IDLE", type: "text" },
-      { text: "BRAKES - ", blank: "AS REQUIRED", type: "text" },
+      { blankItem: "PCL", blankAction: "IDLE", type: "text" },
+      { blankItem: "BRAKES", blankAction: "AS REQUIRED", type: "text" },
     ],
   },
   {
     id: "bf-003",
     category: "Engine Failure",
-    procedure: "Engine Failure Immediately After Takeoff (Sufficient Runway Remaining Straight Ahead)",
+    procedure:
+      "Engine Failure Immediately After Takeoff (Sufficient Runway Remaining Straight Ahead)",
     steps: [
-      { text: "AIRSPEED - ", blank: "110 KNOTS (MINIMUM)", type: "text" },
-      { text: "PCL - ", blank: "AS REQUIRED", type: "text" },
-      { text: "EMER LDG GR HANDLE - ", blank: "PULL (AS REQUIRED)", type: "text" },
+      {
+        blankItem: "AIRSPEED",
+        blankAction: "110 KNOTS (MINIMUM)",
+        type: "text",
+      },
+      { blankItem: "PCL", blankAction: "AS REQUIRED", type: "text" },
+      {
+        blankItem: "EMER LDG GR HANDLE",
+        blankAction: "PULL (AS REQUIRED)",
+        type: "text",
+      },
     ],
   },
   {
@@ -35,9 +49,13 @@ export const boldfaceProcedures = [
     category: "Engine Failure",
     procedure: "Engine Failure During Flight",
     steps: [
-      { text: "ZOOM/GLIDE - ", blank: "125 KNOTS (MINIMUM)", type: "text" },
-      { text: "PCL - ", blank: "OFF", type: "text" },
-      { text: "INTERCEPT ", blank: "ELP", type: "text" },
+      {
+        blankItem: "ZOOM/GLIDE",
+        blankAction: "125 KNOTS (MINIMUM)",
+        type: "text",
+      },
+      { blankItem: "PCL", blankAction: "OFF", type: "text" },
+      { blankItem: "INTERCEPT", blankAction: "ELP", type: "text" },
     ],
   },
   {
@@ -45,19 +63,24 @@ export const boldfaceProcedures = [
     category: "Airstart",
     procedure: "Immediate Airstart (PMU NORM)",
     steps: [
-      { text: "PCL - ", blank: "OFF", type: "text" },
-      { text: "STARTER SWITCH - ", blank: "AUTO/RESET", type: "text" },
-      { text: "PCL - ", blank: "IDLE, ABOVE 13% N1", type: "text" },
+      { blankItem: "PCL", blankAction: "OFF", type: "text" },
+      { blankItem: "STARTER SWITCH", blankAction: "AUTO/RESET", type: "text" },
+      { blankItem: "PCL", blankAction: "IDLE, ABOVE 13% N1", type: "text" },
     ],
   },
   {
     id: "bf-006",
     category: "Power Issues",
-    procedure: "Uncommanded Power Changes / Loss of Power / Uncommanded Propeller Feather",
+    procedure:
+      "Uncommanded Power Changes / Loss of Power / Uncommanded Propeller Feather",
     steps: [
-      { text: "PCL - ", blank: "MID RANGE", type: "text" },
-      { text: "PMU SWITCH - ", blank: "OFF", type: "text" },
-      { text: "PROP SYS CIRCUIT BREAKER (left front console) - ", blank: "PULL, IF Np STABLE BELOW 40%", type: "text" },
+      { blankItem: "PCL", blankAction: "MID RANGE", type: "text" },
+      { blankItem: "PMU SWITCH", blankAction: "OFF", type: "text" },
+      {
+        blankItem: "PROP SYS CIRCUIT BREAKER (left front console)",
+        blankAction: "PULL, IF Np STABLE BELOW 40%",
+        type: "text",
+      },
     ],
   },
   {
@@ -65,9 +88,9 @@ export const boldfaceProcedures = [
     category: "Departure",
     procedure: "Inadvertent Departure From Controlled Flight",
     steps: [
-      { text: "PCL - ", blank: "IDLE", type: "text" },
-      { text: "CONTROLS - ", blank: "NEUTRAL", type: "text" },
-      { text: "ALTITUDE - ", blank: "CHECK", type: "text" },
+      { blankItem: "PCL", blankAction: "IDLE", type: "text" },
+      { blankItem: "CONTROLS", blankAction: "NEUTRAL", type: "text" },
+      { blankItem: "ALTITUDE", blankAction: "CHECK", type: "text" },
     ],
   },
   {
@@ -75,8 +98,12 @@ export const boldfaceProcedures = [
     category: "Fire",
     procedure: "Fire In Flight, If Fire is Confirmed:",
     steps: [
-      { text: "PCL - ", blank: "OFF", type: "text" },
-      { text: "FIREWALL SHUTOFF HANDLE - ", blank: "PULL", type: "text" },
+      { blankItem: "PCL", blankAction: "OFF", type: "text" },
+      {
+        blankItem: "FIREWALL SHUTOFF HANDLE",
+        blankAction: "PULL",
+        type: "text",
+      },
     ],
   },
   {
@@ -84,18 +111,31 @@ export const boldfaceProcedures = [
     category: "Physiological",
     procedure: "<32>PHYSIOLOGICAL SYMPTOMS",
     steps: [
-      { text: "BOS PUSH MAN - ", blank: "PRESS ON", type: "text" },
+      { blankItem: "BOS PUSH MAN", blankAction: "PRESS ON", type: "text" },
     ],
   },
   {
     id: "bf-010",
     category: "OBOGS",
-    procedure: "<30>OBOGS Failure / Overtemp / Physiological Symptoms/<32>OXY CRIT Annunciator",
+    procedure:
+      "<30>OBOGS Failure / Overtemp / Physiological Symptoms/<32>OXY CRIT Annunciator",
     steps: [
-      { text: "GREEN RING - ", blank: "PULL (AS REQUIRED)", type: "text" },
-      { text: "DESCENT BELOW ", blank: "10,000 FEET MSL", type: "text" },
-      { text: " - INITIATE", blank: "", type: "none" },
-      { text: "OBOGS SUPPLY LEVER - ", blank: "OFF (BOTH)", type: "text" },
+      {
+        blankItem: "GREEN RING",
+        blankAction: "PULL (AS REQUIRED)",
+        type: "text",
+      },
+      {
+        blankItem: "DESCENT BELOW",
+        blankAction: "10,000 FEET MSL",
+        type: "none",
+      },
+      { text: " - INITIATE", type: "textonly" },
+      {
+        blankItem: "OBOGS SUPPLY LEVER",
+        blankAction: "OFF (BOTH)",
+        type: "text",
+      },
     ],
   },
   {
@@ -103,14 +143,14 @@ export const boldfaceProcedures = [
     category: "Ejection",
     procedure: "Eject",
     steps: [
-      { text: "EJECTION HANDLE - ", blank: "PULL", type: "text" },
+      { blankItem: "EJECTION HANDLE", blankAction: "PULL", type: "text" },
     ],
   },
 ];
 
 export function getAllBoldfaceProcedures() {
-  return boldfaceProcedures.map(proc => ({
+  return boldfaceProcedures.map((proc) => ({
     ...proc,
-    questionType: "fillInBlank"
+    questionType: "fillInBlank",
   }));
 }
