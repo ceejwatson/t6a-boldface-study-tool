@@ -52,7 +52,8 @@ import {
   getNextRecommendedSection,
 } from "./learningPath";
 
-import { questionDatabase, getLimitationQuestions } from "./questionData";
+import { questionDatabase } from "./questionData";
+import { getLimitationQuestions } from "./opsLimitsData";
 import {
   aerospacePhysiologyTopics,
   getAllAerospacePhysiologyQuestions,
@@ -1646,12 +1647,10 @@ export default function T6AEnhancedStudyTool() {
                   Practice by Topic
                 </h2>
                 <div className="grid grid-cols-2 gap-2 sm:gap-3">
-                  {/* BoldFace Button */}
+                  {/* T6 Ops Limits Button */}
                   {(() => {
-                    // Count mastery for BoldFace questions (questions with limitation: true)
-                    const boldFaceQuestions = Object.values(questionDatabase)
-                      .flat()
-                      .filter((q) => q.limitation === true);
+                    // Count mastery for T6 Ops Limits questions
+                    const boldFaceQuestions = getLimitationQuestions();
 
                     const masteredCount = boldFaceQuestions.filter((q) => {
                       const mastery = questionMastery[q.id];
@@ -1693,7 +1692,7 @@ export default function T6AEnhancedStudyTool() {
                           <h3
                             className={`text-sm sm:text-base font-semibold text-center ${darkMode ? "text-white" : "text-slate-900"}`}
                           >
-                            BoldFace
+                            T6 Ops Limits
                           </h3>
                           <p
                             className={`text-xs mt-0.5 sm:mt-1 font-medium ${masteryColor}`}
@@ -1811,7 +1810,7 @@ export default function T6AEnhancedStudyTool() {
                     <h3
                       className={`text-sm sm:text-base font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
                     >
-                      BoldFace PDF
+                      T6 Ops Limits PDF
                     </h3>
                   </button>
                 </div>
@@ -2348,11 +2347,24 @@ export default function T6AEnhancedStudyTool() {
           ) : activeTab === "allquestions" ? (
             <div className="max-w-7xl mx-auto px-4 py-8">
               <div className="mb-6 flex justify-between items-center">
-                <h1
-                  className={`text-3xl font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
-                >
-                  All Quiz Questions
-                </h1>
+                <div>
+                  <h1
+                    className={`text-3xl font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
+                  >
+                    All Quiz Questions
+                  </h1>
+                  <p
+                    className={`text-sm mt-1 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                  >
+                    {(() => {
+                      const aircraftCount = getAllQuestions().length;
+                      const aeroCount =
+                        getAllAerospacePhysiologyQuestions().length;
+                      const total = aircraftCount + aeroCount;
+                      return `${total} Total Questions (${aircraftCount} Aircraft + ${aeroCount} Aerospace Physiology)`;
+                    })()}
+                  </p>
+                </div>
                 <button
                   onClick={() => setActiveTab("home")}
                   className={`px-4 py-2 rounded-lg ${darkMode ? "bg-slate-700 hover:bg-slate-600 text-white" : "bg-slate-200 hover:bg-slate-300 text-slate-900"}`}
@@ -3099,22 +3111,20 @@ export default function T6AEnhancedStudyTool() {
               <h2
                 className={`text-2xl font-bold mb-6 text-center ${darkMode ? "text-white" : "text-slate-900"}`}
               >
-                BoldFace Practice
+                T6 Ops Limits Practice
               </h2>
 
-              {/* BoldFace Topics by Category */}
+              {/* T6 Ops Limits Topics by Category */}
               <div className="mb-8">
                 <h3
                   className={`text-xl font-bold mb-4 ${darkMode ? "text-red-400" : "text-red-600"}`}
                 >
-                  Critical Limitations & Procedures
+                  T6 Operating Limitations
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {(() => {
-                    // Get all BoldFace questions (limitation: true)
-                    const boldFaceQuestions = Object.values(questionDatabase)
-                      .flat()
-                      .filter((q) => q.limitation === true);
+                    // Get all T6 Ops Limits questions
+                    const boldFaceQuestions = getLimitationQuestions();
 
                     const boldFaceCategories = [
                       ...new Set(boldFaceQuestions.map((q) => q.category)),
