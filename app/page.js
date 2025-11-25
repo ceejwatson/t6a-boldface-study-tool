@@ -3255,7 +3255,7 @@ export default function T6AEnhancedStudyTool() {
                 if (boldfaceSubmitted) return;
                 setBoldfaceAnswers({
                   ...boldfaceAnswers,
-                  [`${procId}-${stepIndex}-${field}`]: value,
+                  [`${procId}-${stepIndex}-${field}`]: value.toUpperCase(),
                 });
               };
 
