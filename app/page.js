@@ -3348,8 +3348,9 @@ export default function T6AEnhancedStudyTool() {
                         </h3>
                         <div className="space-y-2">
                           {proc.steps.map((step, stepIndex) => {
-                            // Handle textonly steps (just display text)
+                            // Handle textonly steps (just display text, hide in hardcore mode)
                             if (step.type === "textonly") {
+                              if (hardcoreMode) return null; // Hide in hardcore mode
                               return (
                                 <div key={stepIndex}>
                                   <span
