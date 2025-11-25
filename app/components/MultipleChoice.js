@@ -15,6 +15,14 @@ export default function MultipleChoice({
   compact = false,
   onRate,
 }) {
+  // LOCAL state to immediately lock this component after first click
+  const [hasAnswered, setHasAnswered] = useState(false);
+
+  // Reset local lock when question changes
+  useEffect(() => {
+    setHasAnswered(false);
+  }, [question.id]);
+
   // Randomize answer order - memoized so it doesn't change during component lifecycle
   const shuffledOptions = useMemo(() => {
     const optionsWithIndex = question.options.map((option, index) => ({
@@ -35,9 +43,21 @@ export default function MultipleChoice({
   }, [question.id, question.options]);
 
   const handleSelect = (originalIndex) => {
-    if (disabled) {
-      return; // Answer already locked - no changes allowed
+    console.log(
+      "🔴 handleSelect - hasAnswered:",
+      hasAnswered,
+      "userAnswer:",
+      userAnswer,
+      "disabled:",
+      disabled,
+    );
+    // IMMEDIATE lock check - prevents ANY second click
+    if (hasAnswered || disabled || userAnswer !== undefined) {
+      console.log("🚫 BLOCKED - already answered");
+      return;
     }
+    console.log("✅ Calling onAnswer and locking");
+    setHasAnswered(true); // Lock immediately
     onAnswer(originalIndex);
   };
 
