@@ -44,7 +44,12 @@ export default function MultipleChoice({
 
   const handleSelect = (e, originalIndex) => {
     // IMMEDIATE lock check - prevents ANY second click
-    if (hasAnswered || disabled || userAnswer !== undefined) {
+    if (
+      hasAnswered ||
+      disabled ||
+      userAnswer !== undefined ||
+      showExplanation
+    ) {
       e.preventDefault();
       e.stopPropagation();
       return; // Silently block - no alert needed
@@ -123,7 +128,10 @@ export default function MultipleChoice({
       <div className={compact ? "space-y-1" : "space-y-2"}>
         {shuffledOptions.map(({ option, originalIndex }, displayIndex) => {
           const isDisabled =
-            hasAnswered || disabled || userAnswer !== undefined;
+            hasAnswered ||
+            disabled ||
+            userAnswer !== undefined ||
+            showExplanation;
           return (
             <button
               key={displayIndex}
