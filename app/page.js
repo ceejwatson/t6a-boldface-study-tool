@@ -3661,17 +3661,27 @@ export default function T6AEnhancedStudyTool() {
                             const isCorrect = q.correctAnswer === idx;
                             const showFeedback =
                               instantGrade && userAnswer !== undefined;
+                            const isLocked =
+                              instantGrade &&
+                              (lockedQuestions.current.has(q.id) ||
+                                userAnswer !== undefined);
 
                             return (
                               <button
                                 key={idx}
                                 onClick={() => {
-                                  // INSTANT GRADE MODE: Block if already answered
+                                  // INSTANT GRADE MODE: Check BOTH ref and state
                                   if (
                                     instantGrade &&
-                                    userAnswers[q.id] !== undefined
+                                    (lockedQuestions.current.has(q.id) ||
+                                      userAnswers[q.id] !== undefined)
                                   ) {
-                                    return; // Already answered - locked!
+                                    return; // Already answered - LOCKED!
+                                  }
+
+                                  // Lock immediately with ref (synchronous)
+                                  if (instantGrade) {
+                                    lockedQuestions.current.add(q.id);
                                   }
 
                                   const newAnswers = {
@@ -3685,19 +3695,12 @@ export default function T6AEnhancedStudyTool() {
                                     updatePerformance(q, correct);
                                   }
                                 }}
-                                disabled={
-                                  instantGrade && userAnswer !== undefined
-                                }
+                                disabled={isLocked}
                                 style={{
-                                  pointerEvents:
-                                    instantGrade && userAnswer !== undefined
-                                      ? "none"
-                                      : "auto",
+                                  pointerEvents: isLocked ? "none" : "auto",
                                 }}
                                 className={`w-full text-left p-3 rounded-lg transition-all ${
-                                  instantGrade && userAnswer !== undefined
-                                    ? "cursor-not-allowed"
-                                    : ""
+                                  isLocked ? "cursor-not-allowed" : ""
                                 } ${
                                   isSelected && showFeedback
                                     ? isCorrect
