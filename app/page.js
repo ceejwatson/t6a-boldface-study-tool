@@ -3366,7 +3366,7 @@ export default function T6AEnhancedStudyTool() {
                             return (
                               <div
                                 key={stepIndex}
-                                className="flex flex-col sm:flex-row sm:items-center gap-2"
+                                className={`flex flex-col gap-2 ${boldfaceSubmitted ? "mb-4" : ""}`}
                               >
                                 <div className="flex items-center gap-2 flex-wrap">
                                   {/* First blank - Item (show as text or input based on hardcore mode) */}
@@ -3460,7 +3460,7 @@ export default function T6AEnhancedStudyTool() {
                                     } ${boldfaceSubmitted ? "cursor-not-allowed" : ""}`}
                                   />
 
-                                  {/* Feedback - compact */}
+                                  {/* Icon feedback on same line */}
                                   {boldfaceSubmitted && (
                                     <>
                                       {checkBoldfaceAnswer(
@@ -3477,23 +3477,38 @@ export default function T6AEnhancedStudyTool() {
                                       ) ? (
                                         <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0" />
                                       ) : (
-                                        <>
-                                          <XCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
-                                          <div
-                                            className={`font-bold text-sm px-2 py-1 rounded ${
-                                              darkMode
-                                                ? "bg-green-900/60 text-green-300 border border-green-500"
-                                                : "bg-green-100 text-green-800 border border-green-600"
-                                            }`}
-                                          >
-                                            {step.blankItem} -{" "}
-                                            {step.blankAction}
-                                          </div>
-                                        </>
+                                        <XCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
                                       )}
                                     </>
                                   )}
                                 </div>
+
+                                {/* Correct answer below if wrong */}
+                                {boldfaceSubmitted &&
+                                  !(
+                                    checkBoldfaceAnswer(
+                                      proc.id,
+                                      stepIndex,
+                                      "item",
+                                      proc,
+                                    ) &&
+                                    checkBoldfaceAnswer(
+                                      proc.id,
+                                      stepIndex,
+                                      "action",
+                                      proc,
+                                    )
+                                  ) && (
+                                    <div
+                                      className={`ml-0 sm:ml-4 font-bold text-sm px-3 py-1 rounded w-fit ${
+                                        darkMode
+                                          ? "bg-green-900/60 text-green-300 border border-green-500"
+                                          : "bg-green-100 text-green-800 border border-green-600"
+                                      }`}
+                                    >
+                                      ✓ {step.blankItem} - {step.blankAction}
+                                    </div>
+                                  )}
                               </div>
                             );
                           })}
