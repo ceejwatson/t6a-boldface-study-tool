@@ -1917,11 +1917,6 @@ export default function T6AEnhancedStudyTool() {
                         >
                           T6 Ops Limits
                         </div>
-                        <div
-                          className={`text-xs mt-1 ${selectedQuizSets.includes("opslimits") ? (darkMode ? "text-slate-300" : "text-slate-600") : darkMode ? "text-slate-400" : "text-slate-500"}`}
-                        >
-                          76 questions
-                        </div>
                       </div>
                     </div>
                   </label>
@@ -1963,11 +1958,6 @@ export default function T6AEnhancedStudyTool() {
                           className={`font-semibold ${selectedQuizSets.includes("aerophysiology") ? (darkMode ? "text-white" : "text-slate-900") : darkMode ? "text-slate-300" : "text-slate-700"}`}
                         >
                           Aerospace Physiology
-                        </div>
-                        <div
-                          className={`text-xs mt-1 ${selectedQuizSets.includes("aerophysiology") ? (darkMode ? "text-slate-300" : "text-slate-600") : darkMode ? "text-slate-400" : "text-slate-500"}`}
-                        >
-                          70 questions - Hypoxia, Vision, G-Forces
                         </div>
                       </div>
                     </div>
