@@ -21,7 +21,12 @@ export const opsLimitsQuestions = {
       topic: "Torque",
       difficulty: "high",
       question: "What is the transient torque limit and duration?",
-      options: ["101% to 105% (3 sec)", "101% to 107% (5 sec)", "101% to 110% (10 sec)", "105% to 107% (5 sec)"],
+      options: [
+        "101% to 105% (3 sec)",
+        "101% to 107% (5 sec)",
+        "101% to 110% (10 sec)",
+        "105% to 107% (5 sec)",
+      ],
       correctAnswer: 1,
       explanation: "Transient torque limit is 101% to 107% for 5 seconds.",
       limitation: true,
@@ -31,7 +36,8 @@ export const opsLimitsQuestions = {
       category: "Engine Limits",
       topic: "Torque",
       difficulty: "critical",
-      question: "Torque above what percentage is indicative of a system malfunction?",
+      question:
+        "Torque above what percentage is indicative of a system malfunction?",
       options: ["100%", "105%", "107%", "110%"],
       correctAnswer: 2,
       explanation: "Torque above 107% is indicative of a system malfunction.",
@@ -67,7 +73,12 @@ export const opsLimitsQuestions = {
       topic: "ITT",
       difficulty: "high",
       question: "What is the transient ITT limit and duration?",
-      options: ["750-820°C (10 sec)", "821-870°C (20 sec)", "871-1000°C (5 sec)", "820-870°C (30 sec)"],
+      options: [
+        "750-820°C (10 sec)",
+        "821-870°C (20 sec)",
+        "871-1000°C (5 sec)",
+        "820-870°C (30 sec)",
+      ],
       correctAnswer: 1,
       explanation: "Transient ITT limit is 821 to 870°C for 20 seconds.",
       limitation: true,
@@ -82,7 +93,8 @@ export const opsLimitsQuestions = {
       question: "What is the N1 idle range on the ground?",
       options: ["55-60%", "60-61%", "62-67%", "67-70%"],
       correctAnswer: 1,
-      explanation: "N1 idle is 60 to 61% on the ground. Minimum N1 in flight is 67%.",
+      explanation:
+        "N1 idle is 60 to 61% on the ground. Minimum N1 in flight is 67%.",
       limitation: true,
     },
     {
@@ -117,7 +129,8 @@ export const opsLimitsQuestions = {
       question: "What is the Np for takeoff/max power?",
       options: ["98%", "100%", "102%", "105%"],
       correctAnswer: 1,
-      explanation: "Np for takeoff/max power is 100% (100% +/- 2% with PMU off).",
+      explanation:
+        "Np for takeoff/max power is 100% (100% +/- 2% with PMU off).",
       limitation: true,
     },
     {
@@ -125,10 +138,12 @@ export const opsLimitsQuestions = {
       category: "Engine Limits",
       topic: "Np",
       difficulty: "high",
-      question: "What Np range should be avoided during stabilized ground operations?",
+      question:
+        "What Np range should be avoided during stabilized ground operations?",
       options: ["50-60%", "62-80%", "80-90%", "90-100%"],
       correctAnswer: 1,
-      explanation: "Avoid stabilized ground operations from 62 to 80% Np due to resonance.",
+      explanation:
+        "Avoid stabilized ground operations from 62 to 80% Np due to resonance.",
       limitation: true,
     },
 
@@ -163,7 +178,8 @@ export const opsLimitsQuestions = {
       question: "What is the oil pressure range for aerobatics/spins at idle?",
       options: ["10-30 PSI", "15-40 PSI (5 sec)", "40-60 PSI", "60-90 PSI"],
       correctAnswer: 1,
-      explanation: "Oil pressure for aerobatics/spins at idle is 15 to 40 PSI for 5 seconds.",
+      explanation:
+        "Oil pressure for aerobatics/spins at idle is 15 to 40 PSI for 5 seconds.",
       limitation: true,
     },
 
@@ -185,7 +201,12 @@ export const opsLimitsQuestions = {
       topic: "Oil Temperature",
       difficulty: "high",
       question: "What is the transient oil temperature limit and duration?",
-      options: ["105-110°C (5 min)", "106-110°C (10 min)", "110-115°C (5 min)", "110-120°C (10 min)"],
+      options: [
+        "105-110°C (5 min)",
+        "106-110°C (10 min)",
+        "110-115°C (5 min)",
+        "110-120°C (10 min)",
+      ],
       correctAnswer: 1,
       explanation: "Transient oil temperature is 106 to 110°C for 10 minutes.",
       limitation: true,
@@ -211,7 +232,12 @@ export const opsLimitsQuestions = {
       topic: "Spins",
       difficulty: "critical",
       question: "Which type of stalls are prohibited?",
-      options: ["Accelerated stalls", "Power-on stalls", "Inverted stalls", "Approach stalls"],
+      options: [
+        "Accelerated stalls",
+        "Power-on stalls",
+        "Inverted stalls",
+        "Approach stalls",
+      ],
       correctAnswer: 2,
       explanation: "Inverted stalls are prohibited.",
       limitation: true,
@@ -244,7 +270,12 @@ export const opsLimitsQuestions = {
       topic: "Spins",
       difficulty: "critical",
       question: "What is prohibited regarding PCL position during spins?",
-      options: ["PCL at idle", "PCL at mid-range", "PCL above idle", "PCL at cutoff"],
+      options: [
+        "PCL at idle",
+        "PCL at mid-range",
+        "PCL above idle",
+        "PCL at cutoff",
+      ],
       correctAnswer: 2,
       explanation: "Spins with the PCL above idle are prohibited.",
       limitation: true,
@@ -255,9 +286,15 @@ export const opsLimitsQuestions = {
       topic: "Configuration",
       difficulty: "critical",
       question: "Spins with which of the following extended are prohibited?",
-      options: ["Landing gear only", "Flaps only", "Landing gear, flaps, or speed brake", "Speed brake only"],
+      options: [
+        "Landing gear only",
+        "Flaps only",
+        "Landing gear, flaps, or speed brake",
+        "Speed brake only",
+      ],
       correctAnswer: 2,
-      explanation: "Spins with the landing gear, flaps, or speed brake extended are prohibited.",
+      explanation:
+        "Spins with the landing gear, flaps, or speed brake extended are prohibited.",
       limitation: true,
     },
     {
@@ -299,7 +336,12 @@ export const opsLimitsQuestions = {
       topic: "Maneuvers",
       difficulty: "critical",
       question: "What type of maneuvering is prohibited?",
-      options: ["Barrel rolls", "Loops", "Abrupt cross-controlled (snap) maneuvers", "Aileron rolls"],
+      options: [
+        "Barrel rolls",
+        "Loops",
+        "Abrupt cross-controlled (snap) maneuvers",
+        "Aileron rolls",
+      ],
       correctAnswer: 2,
       explanation: "Abrupt cross-controlled (snap) maneuvers are prohibited.",
       limitation: true,
@@ -309,10 +351,12 @@ export const opsLimitsQuestions = {
       category: "Prohibited Maneuvers",
       topic: "Fuel",
       difficulty: "high",
-      question: "Aerobatic maneuvers with greater than how many pounds fuel imbalance are prohibited?",
+      question:
+        "Aerobatic maneuvers with greater than how many pounds fuel imbalance are prohibited?",
       options: ["25 lbs", "50 lbs", "75 lbs", "100 lbs"],
       correctAnswer: 1,
-      explanation: "Aerobatic maneuvers, spins, or stalls with greater than 50 pounds fuel imbalance are prohibited.",
+      explanation:
+        "Aerobatic maneuvers, spins, or stalls with greater than 50 pounds fuel imbalance are prohibited.",
       limitation: true,
     },
     {
@@ -336,7 +380,8 @@ export const opsLimitsQuestions = {
       question: "What is the maximum airspeed with gear and/or flaps extended?",
       options: ["120 KIAS", "130 KIAS", "150 KIAS", "175 KIAS"],
       correctAnswer: 2,
-      explanation: "Maximum airspeed with gear and/or flaps extended is 150 KIAS.",
+      explanation:
+        "Maximum airspeed with gear and/or flaps extended is 150 KIAS.",
       limitation: true,
     },
     {
@@ -345,9 +390,15 @@ export const opsLimitsQuestions = {
       topic: "Operating Speed",
       difficulty: "medium",
       question: "What is the maximum operating speed?",
-      options: ["300 KIAS or 0.65 Mach", "316 KIAS or 0.67 Mach", "320 KIAS or 0.70 Mach", "350 KIAS or 0.75 Mach"],
+      options: [
+        "300 KIAS or 0.65 Mach",
+        "316 KIAS or 0.67 Mach",
+        "320 KIAS or 0.70 Mach",
+        "350 KIAS or 0.75 Mach",
+      ],
       correctAnswer: 1,
-      explanation: "Maximum operating speed is 316 KIAS or 0.67 Mach, whichever is lower.",
+      explanation:
+        "Maximum operating speed is 316 KIAS or 0.67 Mach, whichever is lower.",
       limitation: true,
     },
     {
@@ -355,10 +406,12 @@ export const opsLimitsQuestions = {
       category: "Airspeed Limits",
       topic: "Rudder",
       difficulty: "high",
-      question: "Full rudder deflection above what airspeed will exceed rudder control system limits?",
+      question:
+        "Full rudder deflection above what airspeed will exceed rudder control system limits?",
       options: ["120 KIAS", "135 KIAS", "150 KIAS", "175 KIAS"],
       correctAnswer: 2,
-      explanation: "Full rudder deflection above 150 KIAS will exceed the limits of the rudder control system.",
+      explanation:
+        "Full rudder deflection above 150 KIAS will exceed the limits of the rudder control system.",
       limitation: true,
     },
 
@@ -380,9 +433,15 @@ export const opsLimitsQuestions = {
       topic: "Wait Times",
       difficulty: "high",
       question: "How long must you wait after each start/motoring attempt?",
-      options: ["15 sec, 1 min, 3 min, 15 min", "30 sec, 2 min, 5 min, 30 min", "45 sec, 3 min, 10 min, 45 min", "60 sec, 5 min, 15 min, 60 min"],
+      options: [
+        "15 sec, 1 min, 3 min, 15 min",
+        "30 sec, 2 min, 5 min, 30 min",
+        "45 sec, 3 min, 10 min, 45 min",
+        "60 sec, 5 min, 15 min, 60 min",
+      ],
       correctAnswer: 1,
-      explanation: "Wait 30 seconds, 2 minutes, 5 minutes, then 30 minutes after each start/motoring attempt.",
+      explanation:
+        "Wait 30 seconds, 2 minutes, 5 minutes, then 30 minutes after each start/motoring attempt.",
       limitation: true,
     },
     {
@@ -390,10 +449,12 @@ export const opsLimitsQuestions = {
       category: "Starting Limits",
       topic: "ITT",
       difficulty: "critical",
-      question: "What is the maximum ITT during restart (do not attempt restart if exceeded)?",
+      question:
+        "What is the maximum ITT during restart (do not attempt restart if exceeded)?",
       options: ["820°C", "850°C", "871 to 1,000°C for 5 sec", "1,000°C"],
       correctAnswer: 2,
-      explanation: "Maximum ITT for restart is 871 to 1,000°C for 5 seconds. Do not attempt restart if this is exceeded.",
+      explanation:
+        "Maximum ITT for restart is 871 to 1,000°C for 5 seconds. Do not attempt restart if this is exceeded.",
       limitation: true,
     },
     {
@@ -437,9 +498,15 @@ export const opsLimitsQuestions = {
       topic: "Normal",
       difficulty: "medium",
       question: "What is the normal cabin pressurization above 18,000 ft MSL?",
-      options: ["3.0 +/- 0.2 PSI", "3.6 +/- 0.2 PSI", "4.0 +/- 0.2 PSI", "5.0 +/- 0.2 PSI"],
+      options: [
+        "3.0 +/- 0.2 PSI",
+        "3.6 +/- 0.2 PSI",
+        "4.0 +/- 0.2 PSI",
+        "5.0 +/- 0.2 PSI",
+      ],
       correctAnswer: 1,
-      explanation: "Normal pressurization above 18,000 ft MSL is 3.6 +/- 0.2 PSI.",
+      explanation:
+        "Normal pressurization above 18,000 ft MSL is 3.6 +/- 0.2 PSI.",
       limitation: true,
     },
     {
@@ -447,7 +514,8 @@ export const opsLimitsQuestions = {
       category: "Pressurization",
       topic: "Safety Valve",
       difficulty: "medium",
-      question: "At what pressure does the overpressurization safety valve open?",
+      question:
+        "At what pressure does the overpressurization safety valve open?",
       options: ["3.6 PSI", "3.8 PSI", "4.0 PSI", "4.5 PSI"],
       correctAnswer: 2,
       explanation: "The overpressurization safety valve opens at 4.0 PSI.",
@@ -509,7 +577,8 @@ export const opsLimitsQuestions = {
       question: "What is the minimum Landing Distance Available (LDA)?",
       options: ["3,000 ft", "3,500 ft", "4,000 ft", "5,000 ft"],
       correctAnswer: 2,
-      explanation: "Minimum LDA is 4,000 feet, or heavy weight flaps up landing distance plus 500 feet, whichever is greater.",
+      explanation:
+        "Minimum LDA is 4,000 feet, or heavy weight flaps up landing distance plus 500 feet, whichever is greater.",
       limitation: true,
     },
     {
@@ -577,7 +646,8 @@ export const opsLimitsQuestions = {
       question: "What is the maximum crosswind for formation takeoff/landing?",
       options: ["10 kts", "15 kts", "20 kts", "25 kts"],
       correctAnswer: 1,
-      explanation: "Maximum crosswind for formation takeoff/landing is 15 knots.",
+      explanation:
+        "Maximum crosswind for formation takeoff/landing is 15 knots.",
       limitation: true,
     },
     {
@@ -610,9 +680,15 @@ export const opsLimitsQuestions = {
       topic: "Symmetric Clean",
       difficulty: "high",
       question: "What are the symmetric G limits in clean configuration?",
-      options: ["-2.0 to +5.0 Gs", "-3.0 to +6.0 Gs", "-3.5 to +7.0 Gs", "-4.0 to +8.0 Gs"],
+      options: [
+        "-2.0 to +5.0 Gs",
+        "-3.0 to +6.0 Gs",
+        "-3.5 to +7.0 Gs",
+        "-4.0 to +8.0 Gs",
+      ],
       correctAnswer: 2,
-      explanation: "Symmetric clean configuration G limits are -3.5 to +7.0 Gs.",
+      explanation:
+        "Symmetric clean configuration G limits are -3.5 to +7.0 Gs.",
       limitation: true,
     },
     {
@@ -621,7 +697,12 @@ export const opsLimitsQuestions = {
       topic: "Symmetric Gear/Flaps",
       difficulty: "high",
       question: "What are the symmetric G limits with gear/flaps extended?",
-      options: ["-1.0 to +2.0 Gs", "0 to +2.5 Gs", "0 to +3.0 Gs", "-0.5 to +3.5 Gs"],
+      options: [
+        "-1.0 to +2.0 Gs",
+        "0 to +2.5 Gs",
+        "0 to +3.0 Gs",
+        "-0.5 to +3.5 Gs",
+      ],
       correctAnswer: 1,
       explanation: "Symmetric gear/flaps G limits are 0 to +2.5 Gs.",
       limitation: true,
@@ -632,9 +713,15 @@ export const opsLimitsQuestions = {
       topic: "Asymmetric Clean",
       difficulty: "high",
       question: "What are the asymmetric G limits in clean configuration?",
-      options: ["-1.0 to +4.0 Gs", "-1.0 to +4.7 Gs", "-2.0 to +5.0 Gs", "-2.0 to +5.7 Gs"],
+      options: [
+        "-1.0 to +4.0 Gs",
+        "-1.0 to +4.7 Gs",
+        "-2.0 to +5.0 Gs",
+        "-2.0 to +5.7 Gs",
+      ],
       correctAnswer: 1,
-      explanation: "Asymmetric clean configuration G limits are -1.0 to +4.7 Gs.",
+      explanation:
+        "Asymmetric clean configuration G limits are -1.0 to +4.7 Gs.",
       limitation: true,
     },
     {
@@ -643,7 +730,12 @@ export const opsLimitsQuestions = {
       topic: "Asymmetric Gear/Flaps",
       difficulty: "high",
       question: "What are the asymmetric G limits with gear/flaps extended?",
-      options: ["0 to +1.5 Gs", "0 to +2.0 Gs", "0 to +2.5 Gs", "-0.5 to +2.5 Gs"],
+      options: [
+        "0 to +1.5 Gs",
+        "0 to +2.0 Gs",
+        "0 to +2.5 Gs",
+        "-0.5 to +2.5 Gs",
+      ],
       correctAnswer: 1,
       explanation: "Asymmetric gear/flaps G limits are 0 to +2.0 Gs.",
       limitation: true,
@@ -656,9 +748,15 @@ export const opsLimitsQuestions = {
       topic: "Entry Altitude",
       difficulty: "critical",
       question: "What is the minimum altitude for intentional spin entry?",
-      options: ["10,000 ft MSL", "12,000 ft MSL", "13,500 ft MSL", "15,000 ft MSL"],
+      options: [
+        "10,000 ft MSL",
+        "12,000 ft MSL",
+        "13,500 ft MSL",
+        "15,000 ft MSL",
+      ],
       correctAnswer: 2,
-      explanation: "Minimum altitude for intentional spin entry is 13,500 feet MSL.",
+      explanation:
+        "Minimum altitude for intentional spin entry is 13,500 feet MSL.",
       limitation: true,
     },
     {
@@ -669,7 +767,8 @@ export const opsLimitsQuestions = {
       question: "What is the minimum cloud clearance for spins?",
       options: ["1,000 ft", "3,000 ft", "5,000 ft", "7,000 ft"],
       correctAnswer: 3,
-      explanation: "Minimum cloud clearance for spins is 7,000 feet above clouds.",
+      explanation:
+        "Minimum cloud clearance for spins is 7,000 feet above clouds.",
       limitation: true,
     },
 
@@ -703,10 +802,12 @@ export const opsLimitsQuestions = {
       category: "Temperature Limits",
       topic: "Ground Operations",
       difficulty: "medium",
-      question: "What are the ambient temperature limits for ground operations?",
+      question:
+        "What are the ambient temperature limits for ground operations?",
       options: ["-30 to +50°C", "-23 to +43°C", "-20 to +40°C", "-15 to +45°C"],
       correctAnswer: 1,
-      explanation: "Ground operation is limited to ambient temperatures of -23 to +43°C.",
+      explanation:
+        "Ground operation is limited to ambient temperatures of -23 to +43°C.",
       limitation: true,
     },
   ],
@@ -757,9 +858,11 @@ export const opsLimitsQuestions = {
       category: "Prohibited Maneuvers",
       topic: "Configuration",
       difficulty: "critical",
-      question: "Spins with landing gear, flaps, or speed brake extended are prohibited.",
+      question:
+        "Spins with landing gear, flaps, or speed brake extended are prohibited.",
       correctAnswer: true,
-      explanation: "TRUE. Spins with landing gear, flaps, or speed brake extended are prohibited.",
+      explanation:
+        "TRUE. Spins with landing gear, flaps, or speed brake extended are prohibited.",
       limitation: true,
     },
     {
@@ -779,7 +882,8 @@ export const opsLimitsQuestions = {
       difficulty: "critical",
       question: "Abrupt cross-controlled (snap) maneuvers are prohibited.",
       correctAnswer: true,
-      explanation: "TRUE. Abrupt cross-controlled (snap) maneuvers are prohibited.",
+      explanation:
+        "TRUE. Abrupt cross-controlled (snap) maneuvers are prohibited.",
       limitation: true,
     },
     {
@@ -797,9 +901,11 @@ export const opsLimitsQuestions = {
       category: "Prohibited Maneuvers",
       topic: "Fuel",
       difficulty: "high",
-      question: "Aerobatic maneuvers with greater than 50 pounds fuel imbalance are prohibited.",
+      question:
+        "Aerobatic maneuvers with greater than 50 pounds fuel imbalance are prohibited.",
       correctAnswer: true,
-      explanation: "TRUE. Aerobatic maneuvers, spins, or stalls with greater than 50 pounds fuel imbalance are prohibited.",
+      explanation:
+        "TRUE. Aerobatic maneuvers, spins, or stalls with greater than 50 pounds fuel imbalance are prohibited.",
       limitation: true,
     },
     {
@@ -807,9 +913,11 @@ export const opsLimitsQuestions = {
       category: "Airspeed Limits",
       topic: "Rudder",
       difficulty: "high",
-      question: "Full rudder deflection above 150 KIAS will exceed rudder control system limits.",
+      question:
+        "Full rudder deflection above 150 KIAS will exceed rudder control system limits.",
       correctAnswer: true,
-      explanation: "TRUE. Full rudder deflection above 150 KIAS will exceed the limits of the rudder control system.",
+      explanation:
+        "TRUE. Full rudder deflection above 150 KIAS will exceed the limits of the rudder control system.",
       limitation: true,
     },
     {
@@ -817,9 +925,11 @@ export const opsLimitsQuestions = {
       category: "Engine Limits",
       topic: "Np",
       difficulty: "high",
-      question: "Stabilized ground operations from 62 to 80% Np should be avoided.",
+      question:
+        "Stabilized ground operations from 62 to 80% Np should be avoided.",
       correctAnswer: true,
-      explanation: "TRUE. Avoid stabilized ground operations from 62 to 80% Np.",
+      explanation:
+        "TRUE. Avoid stabilized ground operations from 62 to 80% Np.",
       limitation: true,
     },
     {
@@ -829,7 +939,8 @@ export const opsLimitsQuestions = {
       difficulty: "critical",
       question: "Spins below 10,000 feet pressure altitude are prohibited.",
       correctAnswer: true,
-      explanation: "TRUE. Spins below 10,000 feet pressure altitude are prohibited.",
+      explanation:
+        "TRUE. Spins below 10,000 feet pressure altitude are prohibited.",
       limitation: true,
     },
     {
@@ -839,7 +950,8 @@ export const opsLimitsQuestions = {
       difficulty: "critical",
       question: "Spins above 22,000 feet pressure altitude are prohibited.",
       correctAnswer: true,
-      explanation: "TRUE. Spins above 22,000 feet pressure altitude are prohibited.",
+      explanation:
+        "TRUE. Spins above 22,000 feet pressure altitude are prohibited.",
       limitation: true,
     },
     {
@@ -847,9 +959,11 @@ export const opsLimitsQuestions = {
       category: "Temperature Limits",
       topic: "Ground Ops",
       difficulty: "medium",
-      question: "Ground operations are limited to -23 to +43°C ambient temperature.",
+      question:
+        "Ground operations are limited to -23 to +43°C ambient temperature.",
       correctAnswer: true,
-      explanation: "TRUE. Ground operation is limited to ambient temperatures of -23 to +43°C.",
+      explanation:
+        "TRUE. Ground operation is limited to ambient temperatures of -23 to +43°C.",
       limitation: true,
     },
     {
@@ -867,7 +981,13 @@ export const opsLimitsQuestions = {
 
 export function getLimitationQuestions() {
   return [
-    ...opsLimitsQuestions.multipleChoice,
-    ...opsLimitsQuestions.trueFalse,
+    ...opsLimitsQuestions.multipleChoice.map((q) => ({
+      ...q,
+      questionType: "multipleChoice",
+    })),
+    ...opsLimitsQuestions.trueFalse.map((q) => ({
+      ...q,
+      questionType: "trueFalse",
+    })),
   ];
 }
