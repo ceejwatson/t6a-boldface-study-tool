@@ -1598,6 +1598,25 @@ export default function T6AEnhancedStudyTool() {
                     </p>
                   </button>
 
+                  {/* Boldface Procedures */}
+                  <button
+                    onClick={() => {
+                      setActiveTab("boldface-procedures");
+                    }}
+                    className={`${darkMode ? "bg-red-900/30 hover:bg-red-800/40 border-red-700" : "bg-red-100 hover:bg-red-200 border-red-300"} rounded-lg sm:rounded-xl p-3 sm:p-4 transition-all border active:scale-95`}
+                  >
+                    <h3
+                      className={`text-sm sm:text-base font-semibold ${darkMode ? "text-red-400" : "text-red-700"}`}
+                    >
+                      Boldface Procedures
+                    </h3>
+                    <p
+                      className={`text-xs mt-0.5 sm:mt-1 ${darkMode ? "text-red-300" : "text-red-600"}`}
+                    >
+                      Emergency procedures
+                    </p>
+                  </button>
+
                   {/* Incorrect - Review missed questions */}
                   <button
                     onClick={() => {
@@ -1709,63 +1728,6 @@ export default function T6AEnhancedStudyTool() {
                             className={`text-sm sm:text-base font-semibold text-center ${darkMode ? "text-white" : "text-slate-900"}`}
                           >
                             T6 Ops Limits
-                          </h3>
-                          <p
-                            className={`text-xs mt-0.5 sm:mt-1 font-medium ${masteryColor}`}
-                          >
-                            {masteredCount}/{totalCount} mastered
-                          </p>
-                        </div>
-                      </button>
-                    );
-                  })()}
-
-                  {/* Boldface Procedures Button */}
-                  {(() => {
-                    // Count mastery for Boldface Procedures
-                    const boldfaceQuestions = getAllBoldfaceProcedures();
-
-                    const masteredCount = boldfaceQuestions.filter((q) => {
-                      const mastery = questionMastery[q.id];
-                      return mastery && (mastery.correctCount || 0) >= 3;
-                    }).length;
-                    const totalCount = boldfaceQuestions.length;
-                    const masteryPercentage =
-                      totalCount > 0 ? (masteredCount / totalCount) * 100 : 0;
-
-                    // Color coding
-                    let masteryColor = "";
-                    if (masteryPercentage >= 80) {
-                      masteryColor = darkMode
-                        ? "text-green-400"
-                        : "text-green-600";
-                    } else if (masteryPercentage >= 60) {
-                      masteryColor = darkMode
-                        ? "text-lime-400"
-                        : "text-lime-600";
-                    } else if (masteryPercentage >= 40) {
-                      masteryColor = darkMode
-                        ? "text-yellow-400"
-                        : "text-yellow-600";
-                    } else if (masteryPercentage >= 20) {
-                      masteryColor = darkMode
-                        ? "text-orange-400"
-                        : "text-orange-600";
-                    } else {
-                      masteryColor = darkMode ? "text-red-400" : "text-red-600";
-                    }
-
-                    return (
-                      <button
-                        onClick={() => setActiveTab("boldface-procedures")}
-                        className={`${darkMode ? "bg-slate-700 hover:bg-slate-600 border-slate-600" : "bg-slate-100 hover:bg-slate-200 border-slate-300"} rounded-lg sm:rounded-xl p-3 sm:p-4 transition-all border active:scale-95`}
-                      >
-                        <div className="flex flex-col items-center">
-                          <span className="text-2xl mb-1">📁</span>
-                          <h3
-                            className={`text-sm sm:text-base font-semibold text-center ${darkMode ? "text-white" : "text-slate-900"}`}
-                          >
-                            Boldface Procedures
                           </h3>
                           <p
                             className={`text-xs mt-0.5 sm:mt-1 font-medium ${masteryColor}`}
@@ -3271,80 +3233,54 @@ export default function T6AEnhancedStudyTool() {
               </div>
             </div>
           ) : activeTab === "boldface-procedures" ? (
-            <div className="max-w-4xl mx-auto px-4">
-              <h2
-                className={`text-2xl font-bold mb-6 text-center ${darkMode ? "text-white" : "text-slate-900"}`}
-              >
-                Boldface Emergency Procedures
-              </h2>
-
-              {/* Boldface Procedures by Category */}
-              <div className="mb-8">
-                <h3
-                  className={`text-xl font-bold mb-4 ${darkMode ? "text-red-400" : "text-red-600"}`}
+            <div className="max-w-5xl mx-auto px-4 py-8">
+              <div className="mb-6 flex justify-between items-center">
+                <h1
+                  className={`text-2xl sm:text-3xl font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
                 >
-                  Emergency Procedures (Fill in the Blank)
-                </h3>
-                <div className="grid grid-cols-1 gap-3">
-                  {(() => {
-                    // Get all Boldface procedures
-                    const boldfaceProcedures = getAllBoldfaceProcedures();
-
-                    const categories = [
-                      ...new Set(boldfaceProcedures.map((q) => q.category)),
-                    ].sort();
-
-                    return categories.map((category) => {
-                      const categoryProcs = boldfaceProcedures.filter(
-                        (q) => q.category === category,
-                      );
-
-                      const masteredCount = categoryProcs.filter((q) => {
-                        const mastery = questionMastery[q.id];
-                        return mastery && (mastery.correctCount || 0) >= 3;
-                      }).length;
-
-                      return (
-                        <button
-                          key={category}
-                          onClick={() => {
-                            const shuffledProcs = categoryProcs.sort(
-                              () => Math.random() - 0.5,
-                            );
-
-                            setCurrentQuestions(shuffledProcs);
-                            setCurrentQuestionIndex(0);
-                            setUserAnswers({});
-                            lockedQuestions.current.clear();
-                            setActiveTab("study");
-                          }}
-                          className={`${darkMode ? "bg-slate-800/50 hover:bg-slate-700/50 border-slate-700" : "bg-white hover:bg-slate-50 border-slate-200"} border rounded-xl p-4 transition-all hover:scale-105 active:scale-95 text-left`}
-                        >
-                          <h3
-                            className={`font-semibold text-base mb-1 ${darkMode ? "text-white" : "text-slate-900"}`}
-                          >
-                            {category}
-                          </h3>
-                          <p
-                            className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-600"}`}
-                          >
-                            {masteredCount}/{categoryProcs.length} mastered
-                          </p>
-                        </button>
-                      );
-                    });
-                  })()}
-                </div>
-              </div>
-
-              {/* Back button */}
-              <div className="mt-8">
+                  T-6A BOLDFACE Emergency Procedures
+                </h1>
                 <button
                   onClick={() => setActiveTab("home")}
-                  className={`${darkMode ? "bg-slate-700 hover:bg-slate-600 text-white" : "bg-slate-200 hover:bg-slate-300 text-slate-900"} px-6 py-3 rounded-lg font-medium transition-all active:scale-95`}
+                  className={`px-4 py-2 rounded-lg ${darkMode ? "bg-slate-700 hover:bg-slate-600 text-white" : "bg-slate-200 hover:bg-slate-300 text-slate-900"}`}
                 >
-                  ← Back to Home
+                  ← Back
                 </button>
+              </div>
+
+              <div
+                className={`${darkMode ? "bg-slate-800 border-slate-700" : "bg-white border-slate-200"} border-2 rounded-lg p-6 space-y-6`}
+              >
+                {getAllBoldfaceProcedures().map((proc) => (
+                  <div
+                    key={proc.id}
+                    className={`${darkMode ? "border-slate-600" : "border-slate-300"} border-b pb-4 last:border-b-0`}
+                  >
+                    <h3
+                      className={`text-lg font-bold mb-3 ${darkMode ? "text-red-400" : "text-red-600"}`}
+                    >
+                      {proc.procedure}
+                    </h3>
+                    <div className="space-y-2">
+                      {proc.steps.map((step, index) => (
+                        <div key={index} className="flex items-baseline">
+                          <span
+                            className={`font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
+                          >
+                            {step.text}
+                          </span>
+                          {step.type !== "none" && (
+                            <span
+                              className={`ml-1 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                            >
+                              ____________
+                            </span>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           ) : currentQuestions.length === 0 ? (
