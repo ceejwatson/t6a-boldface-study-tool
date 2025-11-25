@@ -1810,7 +1810,7 @@ export default function T6AEnhancedStudyTool() {
                     <h3
                       className={`text-sm sm:text-base font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
                     >
-                      BoldFace Guide
+                      Aerophysiology Notes
                     </h3>
                   </button>
                   <button
