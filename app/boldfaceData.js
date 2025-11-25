@@ -126,8 +126,9 @@ export const boldfaceProcedures = [
         type: "text",
       },
       {
-        text: "DESCENT BELOW 10,000 FEET MSL - INITIATE",
-        type: "textonly",
+        blankItem: "DESCENT BELOW 10,000 FEET MSL",
+        blankAction: "INITIATE",
+        type: "text",
       },
       {
         blankItem: "OBOGS SUPPLY LEVER",
