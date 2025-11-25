@@ -1827,7 +1827,7 @@ export default function T6AEnhancedStudyTool() {
                   <button
                     onClick={() =>
                       window.open(
-                        "https://www.sheppard.af.mil/Portals/65/808%20TRS%20Aerospace%20Physiology%20Study%20Guide.pdf?ver=2018-01-08-101108-187",
+                        "/808_TRS_Aerospace_Physiology_Study_Guide.pdf",
                         "_blank",
                       )
                     }
