@@ -3357,7 +3357,18 @@ export default function T6AEnhancedStudyTool() {
                                     ) ? (
                                       <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0" />
                                     ) : (
-                                      <XCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
+                                      <div className="flex items-center gap-2">
+                                        <XCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
+                                        <span
+                                          className={`font-bold text-lg px-3 py-1 rounded ${
+                                            darkMode
+                                              ? "bg-green-900/60 text-green-300 border-2 border-green-500"
+                                              : "bg-green-100 text-green-800 border-2 border-green-600"
+                                          }`}
+                                        >
+                                          {step.blank}
+                                        </span>
+                                      </div>
                                     ))}
                                 </div>
                               )}
@@ -3386,69 +3397,6 @@ export default function T6AEnhancedStudyTool() {
                       >
                         Submit Answers
                       </button>
-                    </div>
-                  )}
-
-                  {/* Show correct answers after submission */}
-                  {boldfaceSubmitted && (
-                    <div
-                      className={`mt-6 p-4 rounded-lg ${
-                        darkMode
-                          ? "bg-slate-800 border-2 border-slate-600"
-                          : "bg-slate-100 border-2 border-slate-300"
-                      }`}
-                    >
-                      <h4
-                        className={`font-bold text-lg mb-3 ${
-                          darkMode ? "text-green-400" : "text-green-700"
-                        }`}
-                      >
-                        Correct Answers:
-                      </h4>
-                      <div className="space-y-4">
-                        {procedures.map((proc) => (
-                          <div key={proc.id}>
-                            <h5
-                              className={`font-bold mb-2 ${darkMode ? "text-red-400" : "text-red-600"}`}
-                            >
-                              {proc.procedure}
-                            </h5>
-                            {proc.steps.map((step, stepIndex) => {
-                              if (step.type === "none") return null;
-                              const isCorrect = checkBoldfaceAnswer(
-                                proc.id,
-                                stepIndex,
-                                proc,
-                              );
-                              return (
-                                <div
-                                  key={stepIndex}
-                                  className={`text-sm mb-1 ${
-                                    darkMode
-                                      ? "text-slate-300"
-                                      : "text-slate-700"
-                                  }`}
-                                >
-                                  <span className="font-bold">{step.text}</span>
-                                  <span
-                                    className={`font-bold ${
-                                      isCorrect
-                                        ? darkMode
-                                          ? "text-green-400"
-                                          : "text-green-700"
-                                        : darkMode
-                                          ? "text-red-400"
-                                          : "text-red-700"
-                                    }`}
-                                  >
-                                    {step.blank}
-                                  </span>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        ))}
-                      </div>
                     </div>
                   )}
                 </div>
