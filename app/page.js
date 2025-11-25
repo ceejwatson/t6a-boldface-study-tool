@@ -560,6 +560,12 @@ export default function T6AEnhancedStudyTool() {
         return;
       }
 
+      // Don't allow changing answer if one already exists (prevents switching answers)
+      if (userAnswers[currentQuestion.id] !== undefined) {
+        console.log("Answer already locked, cannot change");
+        return;
+      }
+
       const newAnswers = { ...userAnswers, [currentQuestion.id]: answer };
       setUserAnswers(newAnswers);
 
