@@ -1095,7 +1095,7 @@ export default function T6AEnhancedStudyTool() {
         onAnswer: handleAnswer,
         showExplanation: showExplanation,
         userAnswer: userAnswers[currentQuestion.id],
-        disabled: showExplanation, // Disable after answer is shown in both modes
+        disabled: false, // Never disable - allow changing answers anytime before moving to next question
         darkMode: darkMode,
         showCorrectness: studyMode !== "study", // Show green/red in quiz, but not in review mode
         fontSize: fontSize,
