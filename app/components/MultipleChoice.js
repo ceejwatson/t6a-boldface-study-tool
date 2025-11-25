@@ -42,9 +42,11 @@ export default function MultipleChoice({
     return optionsWithIndex;
   }, [question.id, question.options]);
 
-  const handleSelect = (originalIndex) => {
+  const handleSelect = (e, originalIndex) => {
     // IMMEDIATE lock check - prevents ANY second click
     if (hasAnswered || disabled || userAnswer !== undefined) {
+      e.preventDefault();
+      e.stopPropagation();
       alert("BLOCKED: You already answered this question!");
       return;
     }
@@ -126,7 +128,7 @@ export default function MultipleChoice({
           return (
             <button
               key={displayIndex}
-              onClick={() => handleSelect(originalIndex)}
+              onClick={(e) => handleSelect(e, originalIndex)}
               disabled={isDisabled}
               className={`w-full p-4 rounded-lg border-2 transition-all duration-200 text-left flex items-center justify-between touch-manipulation ${getOptionStyle(originalIndex)} ${
                 isDisabled

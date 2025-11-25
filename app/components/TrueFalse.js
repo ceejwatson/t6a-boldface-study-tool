@@ -1,7 +1,7 @@
 "use client";
 
 import { CheckCircle2, XCircle, BookOpen } from "lucide-react";
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 
 export default function TrueFalse({
   question,
@@ -15,13 +15,28 @@ export default function TrueFalse({
   compact = false,
   onRate,
 }) {
+  // LOCAL state to immediately lock this component after first click
+  const [hasAnswered, setHasAnswered] = useState(false);
+
+  // Reset local lock when question changes
+  useEffect(() => {
+    setHasAnswered(false);
+  }, [question.id]);
+
   // Randomize True/False order - memoized so it doesn't change during component lifecycle
   const buttonOrder = useMemo(() => {
     return Math.random() < 0.5 ? [true, false] : [false, true];
   }, [question.id]);
 
-  const handleSelect = (value) => {
-    if (disabled) return;
+  const handleSelect = (e, value) => {
+    // IMMEDIATE lock check - prevents ANY second click
+    if (hasAnswered || disabled || userAnswer !== undefined) {
+      e.preventDefault();
+      e.stopPropagation();
+      alert("BLOCKED: You already answered this question!");
+      return;
+    }
+    setHasAnswered(true); // Lock immediately
     onAnswer(value);
   };
 
@@ -108,21 +123,30 @@ export default function TrueFalse({
       <div
         className={`grid grid-cols-1 sm:grid-cols-2 ${compact ? "gap-2" : "gap-3"}`}
       >
-        {buttonOrder.map((value, index) => (
-          <button
-            key={index}
-            onClick={() => handleSelect(value)}
-            disabled={disabled}
-            className={`p-4 min-h-[80px] rounded-xl border-3 transition-all duration-200 flex flex-col items-center justify-center gap-2 touch-manipulation ${getButtonStyle(value)} ${
-              disabled ? "cursor-not-allowed" : "cursor-pointer active:scale-95"
-            }`}
-          >
-            {getIcon(value)}
-            <span className={`${getButtonFontSize()} font-bold`}>
-              {value ? "TRUE" : "FALSE"}
-            </span>
-          </button>
-        ))}
+        {buttonOrder.map((value, index) => {
+          const isDisabled =
+            hasAnswered || disabled || userAnswer !== undefined;
+          return (
+            <button
+              key={index}
+              onClick={(e) => handleSelect(e, value)}
+              disabled={isDisabled}
+              className={`p-4 min-h-[80px] rounded-xl border-3 transition-all duration-200 flex flex-col items-center justify-center gap-2 touch-manipulation ${getButtonStyle(value)} ${
+                isDisabled
+                  ? "cursor-not-allowed pointer-events-none"
+                  : "cursor-pointer active:scale-95"
+              }`}
+              style={{
+                pointerEvents: isDisabled ? "none" : "auto",
+              }}
+            >
+              {getIcon(value)}
+              <span className={`${getButtonFontSize()} font-bold`}>
+                {value ? "TRUE" : "FALSE"}
+              </span>
+            </button>
+          );
+        })}
       </div>
 
       {showExplanation && showCorrectness && (
