@@ -3235,7 +3235,8 @@ export default function T6AEnhancedStudyTool() {
           ) : activeTab === "boldface-procedures" ? (
             (() => {
               const [boldfaceAnswers, setBoldfaceAnswers] = React.useState({});
-              const [boldfaceSubmitted, setBoldfaceSubmitted] = React.useState(false);
+              const [boldfaceSubmitted, setBoldfaceSubmitted] =
+                React.useState(false);
               const procedures = getAllBoldfaceProcedures();
 
               const handleBoldfaceInput = (procId, stepIndex, value) => {
@@ -3254,7 +3255,8 @@ export default function T6AEnhancedStudyTool() {
                 const step = proc.steps[stepIndex];
                 if (!step || step.type === "none") return null;
 
-                const userAnswer = boldfaceAnswers[`${procId}-${stepIndex}`] || "";
+                const userAnswer =
+                  boldfaceAnswers[`${procId}-${stepIndex}`] || "";
                 const correctAnswer = step.blank.toLowerCase().trim();
                 const userAnswerNormalized = userAnswer.toLowerCase().trim();
 
@@ -3265,7 +3267,7 @@ export default function T6AEnhancedStudyTool() {
                 proc.steps.every((step, index) => {
                   if (step.type === "none") return true;
                   return boldfaceAnswers[`${proc.id}-${index}`]?.trim();
-                })
+                }),
               );
 
               return (
@@ -3303,7 +3305,10 @@ export default function T6AEnhancedStudyTool() {
                         </h3>
                         <div className="space-y-2">
                           {proc.steps.map((step, stepIndex) => (
-                            <div key={stepIndex} className="flex flex-col sm:flex-row sm:items-center gap-2">
+                            <div
+                              key={stepIndex}
+                              className="flex flex-col sm:flex-row sm:items-center gap-2"
+                            >
                               <span
                                 className={`font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
                               >
@@ -3313,13 +3318,27 @@ export default function T6AEnhancedStudyTool() {
                                 <div className="flex items-center gap-2">
                                   <input
                                     type="text"
-                                    value={boldfaceAnswers[`${proc.id}-${stepIndex}`] || ""}
-                                    onChange={(e) => handleBoldfaceInput(proc.id, stepIndex, e.target.value)}
+                                    value={
+                                      boldfaceAnswers[
+                                        `${proc.id}-${stepIndex}`
+                                      ] || ""
+                                    }
+                                    onChange={(e) =>
+                                      handleBoldfaceInput(
+                                        proc.id,
+                                        stepIndex,
+                                        e.target.value,
+                                      )
+                                    }
                                     disabled={boldfaceSubmitted}
                                     placeholder="____________"
                                     className={`flex-1 min-w-[250px] px-3 py-1 rounded border-2 font-mono text-sm ${
                                       boldfaceSubmitted
-                                        ? checkBoldfaceAnswer(proc.id, stepIndex, proc)
+                                        ? checkBoldfaceAnswer(
+                                            proc.id,
+                                            stepIndex,
+                                            proc,
+                                          )
                                           ? darkMode
                                             ? "bg-green-900/40 border-green-600 text-green-300"
                                             : "bg-green-100 border-green-500 text-green-800"
@@ -3331,13 +3350,16 @@ export default function T6AEnhancedStudyTool() {
                                           : "bg-white border-slate-300 text-slate-900"
                                     } ${boldfaceSubmitted ? "cursor-not-allowed" : ""}`}
                                   />
-                                  {boldfaceSubmitted && (
-                                    checkBoldfaceAnswer(proc.id, stepIndex, proc) ? (
+                                  {boldfaceSubmitted &&
+                                    (checkBoldfaceAnswer(
+                                      proc.id,
+                                      stepIndex,
+                                      proc,
+                                    ) ? (
                                       <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0" />
                                     ) : (
                                       <XCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
-                                    )
-                                  )}
+                                    ))}
                                 </div>
                               )}
                             </div>
@@ -3387,17 +3409,25 @@ export default function T6AEnhancedStudyTool() {
                       <div className="space-y-4">
                         {procedures.map((proc) => (
                           <div key={proc.id}>
-                            <h5 className={`font-bold mb-2 ${darkMode ? "text-red-400" : "text-red-600"}`}>
+                            <h5
+                              className={`font-bold mb-2 ${darkMode ? "text-red-400" : "text-red-600"}`}
+                            >
                               {proc.procedure}
                             </h5>
                             {proc.steps.map((step, stepIndex) => {
                               if (step.type === "none") return null;
-                              const isCorrect = checkBoldfaceAnswer(proc.id, stepIndex, proc);
+                              const isCorrect = checkBoldfaceAnswer(
+                                proc.id,
+                                stepIndex,
+                                proc,
+                              );
                               return (
                                 <div
                                   key={stepIndex}
                                   className={`text-sm mb-1 ${
-                                    darkMode ? "text-slate-300" : "text-slate-700"
+                                    darkMode
+                                      ? "text-slate-300"
+                                      : "text-slate-700"
                                   }`}
                                 >
                                   <span className="font-bold">{step.text}</span>
@@ -3425,7 +3455,6 @@ export default function T6AEnhancedStudyTool() {
                 </div>
               );
             })()
-          )
           ) : currentQuestions.length === 0 ? (
             <div className="max-w-4xl mx-auto">
               <div
