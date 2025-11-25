@@ -549,11 +549,6 @@ export default function T6AEnhancedStudyTool() {
 
   const handleAnswer = (answer) => {
     try {
-      // In quiz mode, prevent re-answering once explanation is shown
-      if (studyMode === "quiz" && showExplanation) {
-        return;
-      }
-
       if (!currentQuestion || !currentQuestion.id) {
         console.error(
           "Invalid currentQuestion in handleAnswer:",
