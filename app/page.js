@@ -71,6 +71,7 @@ export default function T6AEnhancedStudyTool() {
   const [activeTab, setActiveTab] = useState("home");
   const [studyMode, setStudyMode] = useState("quiz"); // Always quiz mode
   const [questionSet, setQuestionSet] = useState("aircraft"); // 'aircraft' or 'aerophysiology'
+  const [selectedQuizSets, setSelectedQuizSets] = useState(["opslimits"]); // Multi-select: 'opslimits', 'aerophysiology'
   const [studySubMode, setStudySubMode] = useState("activeRecall"); // 'activeRecall', 'learnNew', 'review', 'readThrough'
   const [selectedCategory, setSelectedCategory] = useState("all"); // Category filter for study mode
 
@@ -1872,29 +1873,18 @@ export default function T6AEnhancedStudyTool() {
                 </p>
               </div>
 
-              {/* Quiz Type Selection */}
+              {/* Quiz Type Selection - Multi-Select */}
               <div className="mb-6">
                 <h3
                   className={`text-sm font-medium mb-3 ${darkMode ? "text-slate-300" : "text-slate-700"}`}
                 >
-                  Select Quiz Type
+                  Select Quiz Topics (Choose One or More)
                 </h3>
-                <div className="grid grid-cols-2 gap-3">
-                  <button
-                    onClick={() => {
-                      console.log("Selecting T-6A Aircraft quiz");
-                      setQuestionSet("aircraft");
-                      setSelectedTopics([]);
-                      // Reset to default aircraft question types
-                      setSelectedQuestionTypes([
-                        "multipleChoice",
-                        "trueFalse",
-                        "reorderSequence",
-                        "matchItems",
-                      ]);
-                    }}
-                    className={`p-4 rounded-xl text-left transition-all ${
-                      questionSet === "aircraft"
+                <div className="grid grid-cols-1 gap-3">
+                  {/* T6 Ops Limits Checkbox */}
+                  <label
+                    className={`p-4 rounded-xl text-left transition-all cursor-pointer ${
+                      selectedQuizSets.includes("opslimits")
                         ? darkMode
                           ? "bg-slate-600 border-2 border-slate-500"
                           : "bg-slate-100 border-2 border-slate-400"
@@ -1903,34 +1893,43 @@ export default function T6AEnhancedStudyTool() {
                           : "bg-white hover:bg-slate-50 border-2 border-slate-200"
                     }`}
                   >
-                    <div
-                      className={`font-semibold ${questionSet === "aircraft" ? (darkMode ? "text-white" : "text-slate-900") : darkMode ? "text-slate-300" : "text-slate-700"}`}
-                    >
-                      T-6A Aircraft
+                    <div className="flex items-center gap-3">
+                      <input
+                        type="checkbox"
+                        checked={selectedQuizSets.includes("opslimits")}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedQuizSets([
+                              ...selectedQuizSets,
+                              "opslimits",
+                            ]);
+                          } else {
+                            setSelectedQuizSets(
+                              selectedQuizSets.filter((s) => s !== "opslimits"),
+                            );
+                          }
+                        }}
+                        className="w-5 h-5 rounded"
+                      />
+                      <div className="flex-1">
+                        <div
+                          className={`font-semibold ${selectedQuizSets.includes("opslimits") ? (darkMode ? "text-white" : "text-slate-900") : darkMode ? "text-slate-300" : "text-slate-700"}`}
+                        >
+                          T6 Ops Limits
+                        </div>
+                        <div
+                          className={`text-xs mt-1 ${selectedQuizSets.includes("opslimits") ? (darkMode ? "text-slate-300" : "text-slate-600") : darkMode ? "text-slate-400" : "text-slate-500"}`}
+                        >
+                          76 questions
+                        </div>
+                      </div>
                     </div>
-                    <div
-                      className={`text-xs mt-1 ${questionSet === "aircraft" ? (darkMode ? "text-slate-300" : "text-slate-600") : darkMode ? "text-slate-400" : "text-slate-500"}`}
-                    >
-                      Boldface & Systems
-                    </div>
-                  </button>
+                  </label>
 
-                  <button
-                    onClick={() => {
-                      console.log("Selecting Aerospace Physiology quiz");
-                      setQuestionSet("aerophysiology");
-                      // Auto-select all aerospace physiology topics - get unique categories from questions
-                      const aeroQuestions =
-                        getAllAerospacePhysiologyQuestions();
-                      const aeroCategories = [
-                        ...new Set(aeroQuestions.map((q) => q.category)),
-                      ];
-                      setSelectedTopics(aeroCategories);
-                      // Also update selectedQuestionTypes for aero (only uses multiple choice)
-                      setSelectedQuestionTypes(["multipleChoice"]);
-                    }}
-                    className={`p-4 rounded-xl text-left transition-all ${
-                      questionSet === "aerophysiology"
+                  {/* Aerospace Physiology Checkbox */}
+                  <label
+                    className={`p-4 rounded-xl text-left transition-all cursor-pointer ${
+                      selectedQuizSets.includes("aerophysiology")
                         ? darkMode
                           ? "bg-slate-600 border-2 border-slate-500"
                           : "bg-slate-100 border-2 border-slate-400"
@@ -1939,17 +1938,40 @@ export default function T6AEnhancedStudyTool() {
                           : "bg-white hover:bg-slate-50 border-2 border-slate-200"
                     }`}
                   >
-                    <div
-                      className={`font-semibold ${questionSet === "aerophysiology" ? (darkMode ? "text-white" : "text-slate-900") : darkMode ? "text-slate-300" : "text-slate-700"}`}
-                    >
-                      Aerospace Physiology
+                    <div className="flex items-center gap-3">
+                      <input
+                        type="checkbox"
+                        checked={selectedQuizSets.includes("aerophysiology")}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedQuizSets([
+                              ...selectedQuizSets,
+                              "aerophysiology",
+                            ]);
+                          } else {
+                            setSelectedQuizSets(
+                              selectedQuizSets.filter(
+                                (s) => s !== "aerophysiology",
+                              ),
+                            );
+                          }
+                        }}
+                        className="w-5 h-5 rounded"
+                      />
+                      <div className="flex-1">
+                        <div
+                          className={`font-semibold ${selectedQuizSets.includes("aerophysiology") ? (darkMode ? "text-white" : "text-slate-900") : darkMode ? "text-slate-300" : "text-slate-700"}`}
+                        >
+                          Aerospace Physiology
+                        </div>
+                        <div
+                          className={`text-xs mt-1 ${selectedQuizSets.includes("aerophysiology") ? (darkMode ? "text-slate-300" : "text-slate-600") : darkMode ? "text-slate-400" : "text-slate-500"}`}
+                        >
+                          70 questions - Hypoxia, Vision, G-Forces
+                        </div>
+                      </div>
                     </div>
-                    <div
-                      className={`text-xs mt-1 ${questionSet === "aerophysiology" ? (darkMode ? "text-slate-300" : "text-slate-600") : darkMode ? "text-slate-400" : "text-slate-500"}`}
-                    >
-                      Hypoxia, Vision, G-Forces
-                    </div>
-                  </button>
+                  </label>
                 </div>
               </div>
 
@@ -1957,47 +1979,42 @@ export default function T6AEnhancedStudyTool() {
                 onClick={() => {
                   try {
                     console.log("=== Starting Quiz ===");
-                    console.log("Question Set:", questionSet);
+                    console.log("Selected Quiz Sets:", selectedQuizSets);
                     console.log("Question Count:", questionCount);
-                    console.log("Selected Topics:", selectedTopics);
                     console.log("Hide Mastered:", hideMasteredQuestions);
 
                     let all = [];
 
-                    if (questionSet === "aerophysiology") {
-                      // Get ALL aerospace physiology questions - no filtering
-                      all = getAllAerospacePhysiologyQuestions();
-                      console.log(
-                        "✓ Aerospace physiology questions loaded:",
-                        all.length,
-                      );
-
-                      // Ensure selectedQuestionTypes is set for aero
-                      setSelectedQuestionTypes(["multipleChoice"]);
-                    } else {
-                      // Get T-6A aircraft questions
-                      const quizTypes = [
-                        "multipleChoice",
-                        "trueFalse",
-                        "reorderSequence",
-                        "matchItems",
-                      ];
-                      setSelectedQuestionTypes(quizTypes);
-
-                      quizTypes.forEach((type) => {
-                        const questions = questionDatabase[type] || [];
-                        questions.forEach((q) => {
-                          all.push({ ...q, questionType: type });
-                        });
-                      });
-
-                      // Filter aircraft questions by selected topics if any
-                      if (selectedTopics.length > 0) {
-                        all = all.filter((q) =>
-                          selectedTopics.includes(q.category),
-                        );
-                      }
+                    // Check if at least one quiz set is selected
+                    if (selectedQuizSets.length === 0) {
+                      alert("Please select at least one quiz topic!");
+                      return;
                     }
+
+                    // Mix questions from all selected quiz sets
+                    if (selectedQuizSets.includes("opslimits")) {
+                      const opsQuestions = getLimitationQuestions();
+                      all.push(...opsQuestions);
+                      console.log(
+                        "✓ T6 Ops Limits questions loaded:",
+                        opsQuestions.length,
+                      );
+                    }
+
+                    if (selectedQuizSets.includes("aerophysiology")) {
+                      const aeroQuestions =
+                        getAllAerospacePhysiologyQuestions();
+                      all.push(...aeroQuestions);
+                      console.log(
+                        "✓ Aerospace Physiology questions loaded:",
+                        aeroQuestions.length,
+                      );
+                    }
+
+                    console.log(
+                      "✓ Total questions from selected sets:",
+                      all.length,
+                    );
 
                     if (all.length === 0) {
                       alert(

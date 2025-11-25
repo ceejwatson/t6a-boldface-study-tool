@@ -47,8 +47,7 @@ export default function MultipleChoice({
     if (hasAnswered || disabled || userAnswer !== undefined) {
       e.preventDefault();
       e.stopPropagation();
-      alert("BLOCKED: You already answered this question!");
-      return;
+      return; // Silently block - no alert needed
     }
     setHasAnswered(true); // Lock immediately
     onAnswer(originalIndex);
