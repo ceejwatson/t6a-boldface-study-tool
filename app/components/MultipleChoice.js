@@ -162,11 +162,27 @@ export default function MultipleChoice({
             </span>
           </div>
           {userAnswer !== question.correctAnswer && (
-            <p
-              className={`mt-2 ${getFontSizeClass()} ${darkMode ? "text-white" : "text-slate-900"}`}
-            >
-              {question.explanation}
-            </p>
+            <>
+              <div
+                className={`mt-2 mb-2 p-3 rounded-lg ${darkMode ? "bg-green-900/40 border border-green-600" : "bg-green-100 border border-green-500"}`}
+              >
+                <p
+                  className={`text-xs font-semibold mb-1 ${darkMode ? "text-green-400" : "text-green-700"}`}
+                >
+                  Correct Answer:
+                </p>
+                <p
+                  className={`font-bold ${getFontSizeClass()} ${darkMode ? "text-green-300" : "text-green-800"}`}
+                >
+                  {question.options[question.correctAnswer]}
+                </p>
+              </div>
+              <p
+                className={`mt-2 ${getFontSizeClass()} ${darkMode ? "text-white" : "text-slate-900"}`}
+              >
+                {question.explanation}
+              </p>
+            </>
           )}
         </div>
       )}

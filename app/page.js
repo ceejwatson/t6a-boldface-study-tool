@@ -1659,7 +1659,67 @@ export default function T6AEnhancedStudyTool() {
                 >
                   Practice by Topic
                 </h2>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
+                <div className="grid grid-cols-2 gap-2 sm:gap-3">
+                  {/* BoldFace Button */}
+                  {(() => {
+                    // Count mastery for BoldFace questions (questions with limitation: true)
+                    const boldFaceQuestions = Object.values(questionDatabase)
+                      .flat()
+                      .filter((q) => q.limitation === true);
+
+                    const masteredCount = boldFaceQuestions.filter((q) => {
+                      const mastery = questionMastery[q.id];
+                      return mastery && (mastery.correctCount || 0) >= 3;
+                    }).length;
+                    const totalCount = boldFaceQuestions.length;
+                    const masteryPercentage =
+                      totalCount > 0 ? (masteredCount / totalCount) * 100 : 0;
+
+                    // Color coding: red (0%) -> yellow (50%) -> green (100%)
+                    let masteryColor = "";
+                    if (masteryPercentage >= 80) {
+                      masteryColor = darkMode
+                        ? "text-green-400"
+                        : "text-green-600";
+                    } else if (masteryPercentage >= 60) {
+                      masteryColor = darkMode
+                        ? "text-lime-400"
+                        : "text-lime-600";
+                    } else if (masteryPercentage >= 40) {
+                      masteryColor = darkMode
+                        ? "text-yellow-400"
+                        : "text-yellow-600";
+                    } else if (masteryPercentage >= 20) {
+                      masteryColor = darkMode
+                        ? "text-orange-400"
+                        : "text-orange-600";
+                    } else {
+                      masteryColor = darkMode ? "text-red-400" : "text-red-600";
+                    }
+
+                    return (
+                      <button
+                        onClick={() => setActiveTab("boldface")}
+                        className={`${darkMode ? "bg-slate-700 hover:bg-slate-600 border-slate-600" : "bg-slate-100 hover:bg-slate-200 border-slate-300"} rounded-lg sm:rounded-xl p-3 sm:p-4 transition-all border active:scale-95`}
+                      >
+                        <div className="flex flex-col items-center">
+                          <span className="text-2xl mb-1">🎯</span>
+                          <h3
+                            className={`text-sm sm:text-base font-semibold text-center ${darkMode ? "text-white" : "text-slate-900"}`}
+                          >
+                            BoldFace
+                          </h3>
+                          <p
+                            className={`text-xs mt-0.5 sm:mt-1 font-medium ${masteryColor}`}
+                          >
+                            {masteredCount}/{totalCount} mastered
+                          </p>
+                        </div>
+                      </button>
+                    );
+                  })()}
+
+                  {/* Aerospace Physiology Button */}
                   {(() => {
                     // Count mastery for ONLY Aerospace Physiology questions
                     const aeroQuestions = getAllAerospacePhysiologyQuestions();
@@ -1736,6 +1796,21 @@ export default function T6AEnhancedStudyTool() {
                       className={`text-sm sm:text-base font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
                     >
                       View All Questions
+                    </h3>
+                  </button>
+                  <button
+                    onClick={() =>
+                      window.open(
+                        "https://docs.google.com/document/d/1CKjgBAJ3gNM0pxTU3HVSFQp68B94BG_fvGSeHPGrqY4/edit?tab=t.0",
+                        "_blank",
+                      )
+                    }
+                    className={`${darkMode ? "bg-slate-700 hover:bg-slate-600 border-slate-600" : "bg-slate-100 hover:bg-slate-200 border-slate-300"} rounded-lg sm:rounded-xl p-3 sm:p-4 transition-all border active:scale-95`}
+                  >
+                    <h3
+                      className={`text-sm sm:text-base font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
+                    >
+                      BoldFace Guide
                     </h3>
                   </button>
                   <button
@@ -3023,6 +3098,98 @@ export default function T6AEnhancedStudyTool() {
                     });
                   })()}
                 </div>
+              </div>
+            </div>
+          ) : activeTab === "boldface" ? (
+            <div className="max-w-4xl mx-auto px-4">
+              <h2
+                className={`text-2xl font-bold mb-6 text-center ${darkMode ? "text-white" : "text-slate-900"}`}
+              >
+                BoldFace Practice
+              </h2>
+
+              {/* BoldFace Topics by Category */}
+              <div className="mb-8">
+                <h3
+                  className={`text-xl font-bold mb-4 ${darkMode ? "text-red-400" : "text-red-600"}`}
+                >
+                  Critical Limitations & Procedures
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {(() => {
+                    // Get all BoldFace questions (limitation: true)
+                    const boldFaceQuestions = Object.values(questionDatabase)
+                      .flat()
+                      .filter((q) => q.limitation === true);
+
+                    const boldFaceCategories = [
+                      ...new Set(boldFaceQuestions.map((q) => q.category)),
+                    ].sort();
+
+                    return boldFaceCategories.map((category) => {
+                      const categoryQuestions = boldFaceQuestions.filter(
+                        (q) => q.category === category,
+                      );
+                      const masteredCount = categoryQuestions.filter((q) => {
+                        const mastery = questionMastery[q.id];
+                        return mastery && (mastery.correctCount || 0) >= 3;
+                      }).length;
+
+                      return (
+                        <button
+                          key={category}
+                          onClick={() => {
+                            setSelectedCategory(category);
+                            const filtered = boldFaceQuestions.filter(
+                              (q) => q.category === category,
+                            );
+
+                            // Shuffle question order
+                            for (let i = filtered.length - 1; i > 0; i--) {
+                              const j = Math.floor(Math.random() * (i + 1));
+                              [filtered[i], filtered[j]] = [
+                                filtered[j],
+                                filtered[i],
+                              ];
+                            }
+
+                            // Shuffle options for multiple choice questions
+                            const shuffledFiltered = filtered.map((q) =>
+                              shuffleQuestionOptions(q),
+                            );
+
+                            setCurrentQuestions(shuffledFiltered);
+                            setCurrentQuestionIndex(0);
+                            setUserAnswers({});
+                            setActiveTab("study");
+                          }}
+                          className={`${darkMode ? "bg-slate-800/50 hover:bg-slate-700/50 border-slate-700" : "bg-white hover:bg-slate-50 border-slate-200"} border rounded-xl p-4 transition-all hover:scale-105 active:scale-95 text-left`}
+                        >
+                          <h3
+                            className={`font-semibold text-sm mb-1 ${darkMode ? "text-white" : "text-slate-900"}`}
+                          >
+                            {category}
+                          </h3>
+                          <p
+                            className={`text-xs ${darkMode ? "text-slate-400" : "text-slate-600"}`}
+                          >
+                            {masteredCount}/{categoryQuestions.length} mastered
+                          </p>
+                        </button>
+                      );
+                    });
+                  })()}
+                </div>
+              </div>
+
+              {/* Back button */}
+              <div className="mt-8">
+                <button
+                  onClick={() => setActiveTab("home")}
+                  className={`${darkMode ? "bg-slate-700 hover:bg-slate-600 text-white" : "bg-slate-200 hover:bg-slate-300 text-slate-900"} px-6 py-3 rounded-lg font-medium transition-all active:scale-95`}
+                >
+                  ← Back to Home
+                </button>
               </div>
             </div>
           ) : currentQuestions.length === 0 ? (
