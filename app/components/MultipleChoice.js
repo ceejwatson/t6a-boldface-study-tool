@@ -1,7 +1,7 @@
 "use client";
 
 import { CheckCircle2, XCircle, BookOpen } from "lucide-react";
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useMemo } from "react";
 
 export default function MultipleChoice({
   question,
@@ -15,28 +15,6 @@ export default function MultipleChoice({
   compact = false,
   onRate,
 }) {
-  // Use REF for IMMEDIATE locking (persists across renders, no state delay)
-  const isLockedRef = useRef(false);
-  const [hasAnswered, setHasAnswered] = useState(false);
-
-  // Reset local lock when question changes
-  // BUT: If userAnswer already exists, lock immediately (for navigation between questions)
-  useEffect(() => {
-    if (userAnswer !== undefined) {
-      // This question already has an answer - lock it immediately
-      isLockedRef.current = true;
-      setHasAnswered(true);
-      console.log(
-        "🔒 Question already answered on mount/update - locking immediately",
-      );
-    } else {
-      // New question - unlock
-      isLockedRef.current = false;
-      setHasAnswered(false);
-      console.log("🔓 New question - unlocked");
-    }
-  }, [question.id, userAnswer]);
-
   // Randomize answer order - memoized so it doesn't change during component lifecycle
   const shuffledOptions = useMemo(() => {
     const optionsWithIndex = question.options.map((option, index) => ({
@@ -56,42 +34,15 @@ export default function MultipleChoice({
     return optionsWithIndex;
   }, [question.id, question.options]);
 
-  const handleSelect = (e, originalIndex) => {
-    // STOP EVERYTHING FIRST - prevent any event bubbling or default behavior
-    e.preventDefault();
-    e.stopPropagation();
-    e.nativeEvent.stopImmediatePropagation();
-
-    // CRITICAL: Check ref FIRST - it updates synchronously, no render delay
-    if (isLockedRef.current) {
-      console.log("🔒 BLOCKED by ref lock - already answered");
-      return false;
+  const handleSelect = (originalIndex) => {
+    // Simple check: if already answered or disabled, do nothing
+    if (userAnswer !== undefined || disabled || showExplanation) {
+      console.log("🚫 Blocked - already answered");
+      return;
     }
 
-    // Additional checks
-    if (
-      hasAnswered ||
-      disabled ||
-      userAnswer !== undefined ||
-      showExplanation
-    ) {
-      console.log("🔒 BLOCKED by other checks:", {
-        hasAnswered,
-        disabled,
-        userAnswer,
-        showExplanation,
-      });
-      return false;
-    }
-
-    // Lock IMMEDIATELY with ref (synchronous, no render needed)
-    isLockedRef.current = true;
-    console.log("✅ LOCKED - answer selected for question:", originalIndex);
-
-    setHasAnswered(true); // Also set state for UI
+    console.log("✅ Answer submitted:", originalIndex);
     onAnswer(originalIndex);
-
-    return false;
   };
 
   const getOptionStyle = (originalIndex) => {
@@ -153,6 +104,9 @@ export default function MultipleChoice({
     }
   };
 
+  // Check if this question is answered
+  const isAnswered = userAnswer !== undefined;
+
   return (
     <div className={compact ? "space-y-0.5" : "space-y-2"}>
       <h3
@@ -163,47 +117,17 @@ export default function MultipleChoice({
 
       <div className={compact ? "space-y-1" : "space-y-2"}>
         {shuffledOptions.map(({ option, originalIndex }, displayIndex) => {
-          const isDisabled =
-            isLockedRef.current ||
-            hasAnswered ||
-            disabled ||
-            userAnswer !== undefined ||
-            showExplanation;
+          const isDisabled = isAnswered || disabled || showExplanation;
           return (
             <button
               key={displayIndex}
-              onClick={
-                isDisabled ? undefined : (e) => handleSelect(e, originalIndex)
-              }
-              onMouseDown={
-                isDisabled
-                  ? (e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                    }
-                  : undefined
-              }
-              onTouchStart={
-                isDisabled
-                  ? (e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                    }
-                  : undefined
-              }
+              onClick={() => handleSelect(originalIndex)}
               disabled={isDisabled}
               className={`w-full p-4 rounded-lg border-2 transition-all duration-200 text-left flex items-center justify-between touch-manipulation ${getOptionStyle(originalIndex)} ${
                 isDisabled
-                  ? "cursor-not-allowed opacity-90 pointer-events-none"
+                  ? "cursor-not-allowed opacity-90"
                   : "cursor-pointer active:scale-95"
               }`}
-              style={{
-                minHeight: "auto",
-                pointerEvents: isDisabled ? "none" : "auto",
-                userSelect: "none",
-                WebkitUserSelect: "none",
-                WebkitTouchCallout: "none",
-              }}
             >
               <span className={`flex-1 leading-relaxed ${getFontSizeClass()}`}>
                 {option}

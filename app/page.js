@@ -567,29 +567,37 @@ export default function T6AEnhancedStudyTool() {
         return;
       }
 
-      // INSTANT GRADE MODE: If question already has an answer, BLOCK immediately
-      if (instantGrade && userAnswers[currentQuestion.id] !== undefined) {
+      // CRITICAL: If question already has an answer, BLOCK immediately (for both instant and normal mode)
+      if (userAnswers[currentQuestion.id] !== undefined) {
         console.log(
-          "🚫 INSTANT GRADE BLOCK: Answer already exists for question",
+          "🚫 BLOCKED: Answer already exists for question",
           currentQuestion.id,
+          "- Current:",
+          userAnswers[currentQuestion.id],
+          "- Attempted:",
+          answer,
         );
         return;
       }
 
-      // CRITICAL: Use ref to immediately lock the question - prevents state update race condition
+      // Double-check with locked questions ref
       if (lockedQuestions.current.has(currentQuestion.id)) {
         console.log(
           "🚫 BLOCKED: Question",
           currentQuestion.id,
           "already locked!",
         );
-        return; // Question already answered - don't allow changes
+        return;
       }
 
       // Lock this question immediately (before state updates)
-      console.log("🔒 LOCKING question:", currentQuestion.id);
+      console.log(
+        "✅ ACCEPTING answer for question:",
+        currentQuestion.id,
+        "- Answer:",
+        answer,
+      );
       lockedQuestions.current.add(currentQuestion.id);
-      // ALSO update state to trigger re-render and disable buttons
       setLockedQuestionsState(new Set(lockedQuestions.current));
 
       const newAnswers = { ...userAnswers, [currentQuestion.id]: answer };
