@@ -1618,7 +1618,7 @@ export default function T6AEnhancedStudyTool() {
                     <p
                       className={`text-xs mt-0.5 sm:mt-1 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
                     >
-                      Emergency procedures
+                      Fill in the blank
                     </p>
                   </button>
 
