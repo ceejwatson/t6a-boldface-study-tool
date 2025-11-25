@@ -12,12 +12,12 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "T-6A Texan II BoldFace Study Tool",
+  title: "T6 Study Tool",
   description:
-    "Master T-6A Texan II emergency procedures, limits, and critical boldface items with interactive flashcards and smart review features.",
+    "Master T-6A Ops Limits, Boldface Procedures, and Aerospace Physiology with interactive quizzes, fill-in-the-blank exercises, and instant grade feedback.",
   keywords:
-    "T-6A, Texan II, BoldFace, aviation, flight training, flashcards, study tool, emergency procedures",
-  authors: [{ name: "T-6A Study Tool" }],
+    "T-6A, Texan II, Ops Limits, BoldFace, Aerospace Physiology, aviation, flight training, study tool, emergency procedures, quiz",
+  authors: [{ name: "T6 Study Tool" }],
   manifest: "/manifest.json",
 };
 
