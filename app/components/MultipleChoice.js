@@ -115,19 +115,53 @@ export default function MultipleChoice({
         {question.question}
       </h3>
 
-      <div className={compact ? "space-y-1" : "space-y-2"}>
+      <div
+        className={compact ? "space-y-1" : "space-y-2"}
+        style={{ position: "relative" }}
+      >
+        {/* Blocking overlay when answered - prevents ANY clicks */}
+        {isAnswered && (
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 10,
+              cursor: "not-allowed",
+              backgroundColor: "transparent",
+            }}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              console.log("🚫 OVERLAY BLOCK - Question already answered!");
+            }}
+          />
+        )}
         {shuffledOptions.map(({ option, originalIndex }, displayIndex) => {
           const isDisabled = isAnswered || disabled || showExplanation;
           return (
             <button
               key={displayIndex}
-              onClick={() => handleSelect(originalIndex)}
+              onClick={
+                isDisabled
+                  ? (e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      console.log("🚫 Button disabled - no action");
+                    }
+                  : () => handleSelect(originalIndex)
+              }
               disabled={isDisabled}
               className={`w-full p-4 rounded-lg border-2 transition-all duration-200 text-left flex items-center justify-between touch-manipulation ${getOptionStyle(originalIndex)} ${
                 isDisabled
                   ? "cursor-not-allowed opacity-90"
                   : "cursor-pointer active:scale-95"
               }`}
+              style={{
+                pointerEvents: isDisabled ? "none" : "auto",
+              }}
             >
               <span className={`flex-1 leading-relaxed ${getFontSizeClass()}`}>
                 {option}
