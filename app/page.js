@@ -3264,11 +3264,9 @@ export default function T6AEnhancedStudyTool() {
                 return userAnswerNormalized === correctAnswer;
               };
 
-              const allAnswered = procedures.every((proc) =>
-                proc.steps.every((step, index) => {
-                  if (step.type === "none") return true;
-                  return boldfaceAnswers[`${proc.id}-${index}`]?.trim();
-                }),
+              // Allow submitting even if not all answers are filled
+              const hasAnyAnswer = Object.keys(boldfaceAnswers).some((key) =>
+                boldfaceAnswers[key]?.trim(),
               );
 
               return (
@@ -3332,7 +3330,7 @@ export default function T6AEnhancedStudyTool() {
                                       )
                                     }
                                     disabled={boldfaceSubmitted}
-                                    placeholder="____________"
+                                    placeholder=""
                                     className={`flex-1 min-w-[250px] px-3 py-1 rounded border-2 font-mono text-sm ${
                                       boldfaceSubmitted
                                         ? checkBoldfaceAnswer(
@@ -3375,9 +3373,9 @@ export default function T6AEnhancedStudyTool() {
                     <div className="mt-6">
                       <button
                         onClick={handleBoldfaceSubmit}
-                        disabled={!allAnswered}
+                        disabled={!hasAnyAnswer}
                         className={`w-full py-4 rounded-lg font-semibold text-lg transition-all ${
-                          allAnswered
+                          hasAnyAnswer
                             ? darkMode
                               ? "bg-blue-600 hover:bg-blue-700 text-white"
                               : "bg-blue-500 hover:bg-blue-600 text-white"
@@ -3386,7 +3384,7 @@ export default function T6AEnhancedStudyTool() {
                               : "bg-slate-200 text-slate-400 cursor-not-allowed"
                         }`}
                       >
-                        Submit All Answers
+                        Submit Answers
                       </button>
                     </div>
                   )}
