@@ -1297,5 +1297,8 @@ export const aerospacePhysiologyQuestions = {
 };
 
 export function getAllAerospacePhysiologyQuestions() {
-  return [...aerospacePhysiologyQuestions.multipleChoice];
+  return aerospacePhysiologyQuestions.multipleChoice.map((q) => ({
+    ...q,
+    questionType: "multipleChoice",
+  }));
 }
