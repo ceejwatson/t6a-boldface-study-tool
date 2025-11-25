@@ -1603,15 +1603,15 @@ export default function T6AEnhancedStudyTool() {
                     onClick={() => {
                       setActiveTab("boldface-procedures");
                     }}
-                    className={`${darkMode ? "bg-red-900/30 hover:bg-red-800/40 border-red-700" : "bg-red-100 hover:bg-red-200 border-red-300"} rounded-lg sm:rounded-xl p-3 sm:p-4 transition-all border active:scale-95`}
+                    className={`${darkMode ? "bg-slate-700 hover:bg-slate-600 border-slate-600" : "bg-slate-100 hover:bg-slate-200 border-slate-300"} rounded-lg sm:rounded-xl p-3 sm:p-4 transition-all border active:scale-95`}
                   >
                     <h3
-                      className={`text-sm sm:text-base font-semibold ${darkMode ? "text-red-400" : "text-red-700"}`}
+                      className={`text-sm sm:text-base font-semibold ${darkMode ? "text-white" : "text-slate-900"}`}
                     >
                       Boldface Procedures
                     </h3>
                     <p
-                      className={`text-xs mt-0.5 sm:mt-1 ${darkMode ? "text-red-300" : "text-red-600"}`}
+                      className={`text-xs mt-0.5 sm:mt-1 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
                     >
                       Emergency procedures
                     </p>
@@ -3233,56 +3233,199 @@ export default function T6AEnhancedStudyTool() {
               </div>
             </div>
           ) : activeTab === "boldface-procedures" ? (
-            <div className="max-w-5xl mx-auto px-4 py-8">
-              <div className="mb-6 flex justify-between items-center">
-                <h1
-                  className={`text-2xl sm:text-3xl font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
-                >
-                  T-6A BOLDFACE Emergency Procedures
-                </h1>
-                <button
-                  onClick={() => setActiveTab("home")}
-                  className={`px-4 py-2 rounded-lg ${darkMode ? "bg-slate-700 hover:bg-slate-600 text-white" : "bg-slate-200 hover:bg-slate-300 text-slate-900"}`}
-                >
-                  ← Back
-                </button>
-              </div>
+            (() => {
+              const [boldfaceAnswers, setBoldfaceAnswers] = React.useState({});
+              const [boldfaceSubmitted, setBoldfaceSubmitted] = React.useState(false);
+              const procedures = getAllBoldfaceProcedures();
 
-              <div
-                className={`${darkMode ? "bg-slate-800 border-slate-700" : "bg-white border-slate-200"} border-2 rounded-lg p-6 space-y-6`}
-              >
-                {getAllBoldfaceProcedures().map((proc) => (
-                  <div
-                    key={proc.id}
-                    className={`${darkMode ? "border-slate-600" : "border-slate-300"} border-b pb-4 last:border-b-0`}
-                  >
-                    <h3
-                      className={`text-lg font-bold mb-3 ${darkMode ? "text-red-400" : "text-red-600"}`}
+              const handleBoldfaceInput = (procId, stepIndex, value) => {
+                if (boldfaceSubmitted) return;
+                setBoldfaceAnswers({
+                  ...boldfaceAnswers,
+                  [`${procId}-${stepIndex}`]: value,
+                });
+              };
+
+              const handleBoldfaceSubmit = () => {
+                setBoldfaceSubmitted(true);
+              };
+
+              const checkBoldfaceAnswer = (procId, stepIndex, proc) => {
+                const step = proc.steps[stepIndex];
+                if (!step || step.type === "none") return null;
+
+                const userAnswer = boldfaceAnswers[`${procId}-${stepIndex}`] || "";
+                const correctAnswer = step.blank.toLowerCase().trim();
+                const userAnswerNormalized = userAnswer.toLowerCase().trim();
+
+                return userAnswerNormalized === correctAnswer;
+              };
+
+              const allAnswered = procedures.every((proc) =>
+                proc.steps.every((step, index) => {
+                  if (step.type === "none") return true;
+                  return boldfaceAnswers[`${proc.id}-${index}`]?.trim();
+                })
+              );
+
+              return (
+                <div className="max-w-5xl mx-auto px-4 py-8">
+                  <div className="mb-6 flex justify-between items-center">
+                    <h1
+                      className={`text-2xl sm:text-3xl font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
                     >
-                      {proc.procedure}
-                    </h3>
-                    <div className="space-y-2">
-                      {proc.steps.map((step, index) => (
-                        <div key={index} className="flex items-baseline">
-                          <span
-                            className={`font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
-                          >
-                            {step.text}
-                          </span>
-                          {step.type !== "none" && (
-                            <span
-                              className={`ml-1 ${darkMode ? "text-slate-400" : "text-slate-600"}`}
-                            >
-                              ____________
-                            </span>
-                          )}
-                        </div>
-                      ))}
-                    </div>
+                      T-6A BOLDFACE Emergency Procedures
+                    </h1>
+                    <button
+                      onClick={() => {
+                        setActiveTab("home");
+                        setBoldfaceAnswers({});
+                        setBoldfaceSubmitted(false);
+                      }}
+                      className={`px-4 py-2 rounded-lg ${darkMode ? "bg-slate-700 hover:bg-slate-600 text-white" : "bg-slate-200 hover:bg-slate-300 text-slate-900"}`}
+                    >
+                      ← Back
+                    </button>
                   </div>
-                ))}
-              </div>
-            </div>
+
+                  <div
+                    className={`${darkMode ? "bg-slate-800 border-slate-700" : "bg-white border-slate-200"} border-2 rounded-lg p-6 space-y-6`}
+                  >
+                    {procedures.map((proc) => (
+                      <div
+                        key={proc.id}
+                        className={`${darkMode ? "border-slate-600" : "border-slate-300"} border-b pb-4 last:border-b-0`}
+                      >
+                        <h3
+                          className={`text-lg font-bold mb-3 ${darkMode ? "text-red-400" : "text-red-600"}`}
+                        >
+                          {proc.procedure}
+                        </h3>
+                        <div className="space-y-2">
+                          {proc.steps.map((step, stepIndex) => (
+                            <div key={stepIndex} className="flex flex-col sm:flex-row sm:items-center gap-2">
+                              <span
+                                className={`font-bold ${darkMode ? "text-white" : "text-slate-900"}`}
+                              >
+                                {step.text}
+                              </span>
+                              {step.type !== "none" && (
+                                <div className="flex items-center gap-2">
+                                  <input
+                                    type="text"
+                                    value={boldfaceAnswers[`${proc.id}-${stepIndex}`] || ""}
+                                    onChange={(e) => handleBoldfaceInput(proc.id, stepIndex, e.target.value)}
+                                    disabled={boldfaceSubmitted}
+                                    placeholder="____________"
+                                    className={`flex-1 min-w-[250px] px-3 py-1 rounded border-2 font-mono text-sm ${
+                                      boldfaceSubmitted
+                                        ? checkBoldfaceAnswer(proc.id, stepIndex, proc)
+                                          ? darkMode
+                                            ? "bg-green-900/40 border-green-600 text-green-300"
+                                            : "bg-green-100 border-green-500 text-green-800"
+                                          : darkMode
+                                            ? "bg-red-900/40 border-red-600 text-red-300"
+                                            : "bg-red-100 border-red-500 text-red-800"
+                                        : darkMode
+                                          ? "bg-slate-700 border-slate-600 text-white"
+                                          : "bg-white border-slate-300 text-slate-900"
+                                    } ${boldfaceSubmitted ? "cursor-not-allowed" : ""}`}
+                                  />
+                                  {boldfaceSubmitted && (
+                                    checkBoldfaceAnswer(proc.id, stepIndex, proc) ? (
+                                      <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0" />
+                                    ) : (
+                                      <XCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
+                                    )
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Submit Button */}
+                  {!boldfaceSubmitted && (
+                    <div className="mt-6">
+                      <button
+                        onClick={handleBoldfaceSubmit}
+                        disabled={!allAnswered}
+                        className={`w-full py-4 rounded-lg font-semibold text-lg transition-all ${
+                          allAnswered
+                            ? darkMode
+                              ? "bg-blue-600 hover:bg-blue-700 text-white"
+                              : "bg-blue-500 hover:bg-blue-600 text-white"
+                            : darkMode
+                              ? "bg-slate-700 text-slate-500 cursor-not-allowed"
+                              : "bg-slate-200 text-slate-400 cursor-not-allowed"
+                        }`}
+                      >
+                        Submit All Answers
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Show correct answers after submission */}
+                  {boldfaceSubmitted && (
+                    <div
+                      className={`mt-6 p-4 rounded-lg ${
+                        darkMode
+                          ? "bg-slate-800 border-2 border-slate-600"
+                          : "bg-slate-100 border-2 border-slate-300"
+                      }`}
+                    >
+                      <h4
+                        className={`font-bold text-lg mb-3 ${
+                          darkMode ? "text-green-400" : "text-green-700"
+                        }`}
+                      >
+                        Correct Answers:
+                      </h4>
+                      <div className="space-y-4">
+                        {procedures.map((proc) => (
+                          <div key={proc.id}>
+                            <h5 className={`font-bold mb-2 ${darkMode ? "text-red-400" : "text-red-600"}`}>
+                              {proc.procedure}
+                            </h5>
+                            {proc.steps.map((step, stepIndex) => {
+                              if (step.type === "none") return null;
+                              const isCorrect = checkBoldfaceAnswer(proc.id, stepIndex, proc);
+                              return (
+                                <div
+                                  key={stepIndex}
+                                  className={`text-sm mb-1 ${
+                                    darkMode ? "text-slate-300" : "text-slate-700"
+                                  }`}
+                                >
+                                  <span className="font-bold">{step.text}</span>
+                                  <span
+                                    className={`font-bold ${
+                                      isCorrect
+                                        ? darkMode
+                                          ? "text-green-400"
+                                          : "text-green-700"
+                                        : darkMode
+                                          ? "text-red-400"
+                                          : "text-red-700"
+                                    }`}
+                                  >
+                                    {step.blank}
+                                  </span>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })()
+          )
           ) : currentQuestions.length === 0 ? (
             <div className="max-w-4xl mx-auto">
               <div
