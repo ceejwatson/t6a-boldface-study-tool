@@ -562,9 +562,21 @@ export default function T6AEnhancedStudyTool() {
 
       // Don't allow changing answer if one already exists (prevents switching answers)
       if (userAnswers[currentQuestion.id] !== undefined) {
-        console.log("Answer already locked, cannot change");
+        console.log(
+          "❌ BLOCKED in handleAnswer - Answer already locked for question:",
+          currentQuestion.id,
+          "existing answer:",
+          userAnswers[currentQuestion.id],
+        );
         return;
       }
+
+      console.log(
+        "✅ Allowing answer to be set for question:",
+        currentQuestion.id,
+        "new answer:",
+        answer,
+      );
 
       const newAnswers = { ...userAnswers, [currentQuestion.id]: answer };
       setUserAnswers(newAnswers);
@@ -1096,12 +1108,20 @@ export default function T6AEnhancedStudyTool() {
 
     // Regular question rendering for quiz mode, readThrough study mode, and learningpath
     try {
+      const isAnswered = userAnswers[currentQuestion.id] !== undefined;
+      console.log(
+        "Question render - isAnswered:",
+        isAnswered,
+        "userAnswer:",
+        userAnswers[currentQuestion.id],
+      );
+
       const props = {
         question: currentQuestion,
         onAnswer: handleAnswer,
         showExplanation: showExplanation,
         userAnswer: userAnswers[currentQuestion.id],
-        disabled: userAnswers[currentQuestion.id] !== undefined, // Disable after first answer selection - lock it in
+        disabled: isAnswered, // Disable after first answer selection - lock it in
         darkMode: darkMode,
         showCorrectness: studyMode !== "study", // Show green/red in quiz, but not in review mode
         fontSize: fontSize,

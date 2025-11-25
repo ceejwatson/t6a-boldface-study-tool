@@ -35,7 +35,16 @@ export default function MultipleChoice({
   }, [question.id, question.options]);
 
   const handleSelect = (originalIndex) => {
-    if (disabled) return;
+    console.log(
+      "handleSelect called - disabled:",
+      disabled,
+      "originalIndex:",
+      originalIndex,
+    );
+    if (disabled) {
+      console.log("BLOCKED - answer is disabled/locked");
+      return;
+    }
     onAnswer(originalIndex);
   };
 
