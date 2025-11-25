@@ -20,10 +20,22 @@ export default function MultipleChoice({
   const [hasAnswered, setHasAnswered] = useState(false);
 
   // Reset local lock when question changes
+  // BUT: If userAnswer already exists, lock immediately (for navigation between questions)
   useEffect(() => {
-    isLockedRef.current = false;
-    setHasAnswered(false);
-  }, [question.id]);
+    if (userAnswer !== undefined) {
+      // This question already has an answer - lock it immediately
+      isLockedRef.current = true;
+      setHasAnswered(true);
+      console.log(
+        "🔒 Question already answered on mount/update - locking immediately",
+      );
+    } else {
+      // New question - unlock
+      isLockedRef.current = false;
+      setHasAnswered(false);
+      console.log("🔓 New question - unlocked");
+    }
+  }, [question.id, userAnswer]);
 
   // Randomize answer order - memoized so it doesn't change during component lifecycle
   const shuffledOptions = useMemo(() => {
@@ -45,12 +57,15 @@ export default function MultipleChoice({
   }, [question.id, question.options]);
 
   const handleSelect = (e, originalIndex) => {
+    // STOP EVERYTHING FIRST - prevent any event bubbling or default behavior
+    e.preventDefault();
+    e.stopPropagation();
+    e.nativeEvent.stopImmediatePropagation();
+
     // CRITICAL: Check ref FIRST - it updates synchronously, no render delay
     if (isLockedRef.current) {
-      e.preventDefault();
-      e.stopPropagation();
-      console.log("🔒 BLOCKED by ref lock");
-      return;
+      console.log("🔒 BLOCKED by ref lock - already answered");
+      return false;
     }
 
     // Additional checks
@@ -60,18 +75,23 @@ export default function MultipleChoice({
       userAnswer !== undefined ||
       showExplanation
     ) {
-      e.preventDefault();
-      e.stopPropagation();
-      console.log("🔒 BLOCKED by other checks");
-      return;
+      console.log("🔒 BLOCKED by other checks:", {
+        hasAnswered,
+        disabled,
+        userAnswer,
+        showExplanation,
+      });
+      return false;
     }
 
     // Lock IMMEDIATELY with ref (synchronous, no render needed)
     isLockedRef.current = true;
-    console.log("🔒 LOCKED - answer selected");
+    console.log("✅ LOCKED - answer selected for question:", originalIndex);
 
     setHasAnswered(true); // Also set state for UI
     onAnswer(originalIndex);
+
+    return false;
   };
 
   const getOptionStyle = (originalIndex) => {
@@ -152,7 +172,25 @@ export default function MultipleChoice({
           return (
             <button
               key={displayIndex}
-              onClick={(e) => handleSelect(e, originalIndex)}
+              onClick={
+                isDisabled ? undefined : (e) => handleSelect(e, originalIndex)
+              }
+              onMouseDown={
+                isDisabled
+                  ? (e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                    }
+                  : undefined
+              }
+              onTouchStart={
+                isDisabled
+                  ? (e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                    }
+                  : undefined
+              }
               disabled={isDisabled}
               className={`w-full p-4 rounded-lg border-2 transition-all duration-200 text-left flex items-center justify-between touch-manipulation ${getOptionStyle(originalIndex)} ${
                 isDisabled
@@ -162,6 +200,9 @@ export default function MultipleChoice({
               style={{
                 minHeight: "auto",
                 pointerEvents: isDisabled ? "none" : "auto",
+                userSelect: "none",
+                WebkitUserSelect: "none",
+                WebkitTouchCallout: "none",
               }}
             >
               <span className={`flex-1 leading-relaxed ${getFontSizeClass()}`}>

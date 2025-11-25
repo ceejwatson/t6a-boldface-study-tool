@@ -567,6 +567,15 @@ export default function T6AEnhancedStudyTool() {
         return;
       }
 
+      // INSTANT GRADE MODE: If question already has an answer, BLOCK immediately
+      if (instantGrade && userAnswers[currentQuestion.id] !== undefined) {
+        console.log(
+          "🚫 INSTANT GRADE BLOCK: Answer already exists for question",
+          currentQuestion.id,
+        );
+        return;
+      }
+
       // CRITICAL: Use ref to immediately lock the question - prevents state update race condition
       if (lockedQuestions.current.has(currentQuestion.id)) {
         console.log(
@@ -1126,18 +1135,33 @@ export default function T6AEnhancedStudyTool() {
 
     // Regular question rendering for quiz mode, readThrough study mode, and learningpath
     try {
+      const isQuestionLocked =
+        lockedQuestions.current.has(currentQuestion.id) ||
+        lockedQuestionsState.has(currentQuestion.id);
       const props = {
         question: currentQuestion,
         onAnswer: handleAnswer,
         showExplanation: showExplanation,
         userAnswer: userAnswers[currentQuestion.id],
-        disabled: lockedQuestions.current.has(currentQuestion.id), // Use ref for immediate locking - prevents race conditions
+        disabled: isQuestionLocked, // Use both ref and state for immediate locking + re-renders
         darkMode: darkMode,
         showCorrectness: studyMode !== "study", // Show green/red in quiz, but not in review mode
         fontSize: fontSize,
         compact: studyMode === "study", // Compact layout for review mode
         onRate: studyMode === "study" ? handleReviewRate : undefined, // Rating system for review mode
       };
+
+      // Log for debugging
+      if (currentQuestion.id && userAnswers[currentQuestion.id] !== undefined) {
+        console.log(
+          "Question",
+          currentQuestion.id,
+          "- Locked:",
+          isQuestionLocked,
+          "Answer:",
+          userAnswers[currentQuestion.id],
+        );
+      }
 
       switch (currentQuestion.questionType) {
         case "multipleChoice":
