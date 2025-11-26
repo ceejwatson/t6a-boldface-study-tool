@@ -442,14 +442,14 @@ export const aerospacePhysiologyQuestions = {
       question:
         "What is the difference between Isobaric and Isobaric Differential pressurization?",
       options: [
-        "Isobaric maintains constant 8,000 ft cabin altitude; Isobaric Differential maintains pressure difference from ambient",
-        "Isobaric varies cabin pressure with altitude; Isobaric Differential keeps constant sea level pressure throughout",
-        "Isobaric used in fighters only; Isobaric Differential used exclusively in commercial transport aircraft",
-        "Isobaric regulates oxygen concentration; Isobaric Differential controls temperature and humidity levels",
+        "Isobaric (heavies/commercial) maintains constant cabin altitude; Isobaric Differential (fighters/trainers like T-6) maintains pressure differential from ambient",
+        "Isobaric (fighters) varies cabin pressure with altitude; Isobaric Differential (heavies) keeps constant sea level pressure",
+        "Isobaric (trainers) regulates oxygen concentration; Isobaric Differential (commercial) controls temperature and humidity",
+        "Isobaric (commercial) uses manual pressure control; Isobaric Differential (fighters) uses automatic pressure regulation",
       ],
       correctAnswer: 0,
       explanation:
-        "Isobaric systems (heavies/commercial) maintain constant 8,000 feet cabin altitude. Isobaric Differential systems (aircraft above 10,000 ft like T-6) use control valve regulator to maintain pressure within certain differential from outside pressure. T-6 is 3.6 ± 0.2 psi.",
+        "Isobaric systems (used in heavies/commercial aircraft) maintain a constant cabin altitude of 8,000 feet regardless of outside altitude. Isobaric Differential systems (used in fighters and trainers like the T-6) maintain a specific pressure differential from outside ambient pressure using a control valve regulator. The T-6 maintains 3.6 ± 0.2 psi differential.",
       limitation: false,
     },
     {
