@@ -1256,35 +1256,46 @@ export default function T6AEnhancedStudyTool() {
           }}
         >
           <div
-            className={`${darkMode ? "bg-gradient-to-r from-yellow-500 to-amber-500" : "bg-gradient-to-r from-yellow-400 to-amber-400"} rounded-3xl shadow-2xl p-8 max-w-md mx-4`}
+            className={`${darkMode ? "bg-slate-800/95 border-2 border-yellow-500/50" : "bg-white/95 border-2 border-yellow-400/50"} backdrop-blur-sm rounded-2xl shadow-2xl p-8 max-w-md mx-4`}
             style={{
               animation: "scaleInOut 3s ease-in-out",
             }}
           >
             <div className="text-center">
-              {/* Star Animation */}
-              <div className="mb-4 relative">
-                <Award
-                  className="w-24 h-24 mx-auto text-white drop-shadow-lg"
+              {/* Star Icon */}
+              <div className="mb-4 relative flex items-center justify-center">
+                <div
+                  className="absolute w-24 h-24 bg-yellow-400/30 rounded-full blur-2xl"
                   style={{
-                    animation: "spin 3s ease-in-out",
+                    animation: "pulse 1.5s ease-in-out infinite",
                   }}
                 />
-                <div
-                  className="absolute inset-0 flex items-center justify-center"
+                <svg
+                  viewBox="0 0 24 24"
+                  className="w-20 h-20 relative z-10"
                   style={{
-                    animation: "pulse 1s ease-in-out infinite",
+                    animation: "starSpin 3s ease-in-out",
+                    filter: "drop-shadow(0 0 8px rgba(250, 204, 21, 0.4))",
                   }}
                 >
-                  <div className="w-32 h-32 bg-white/20 rounded-full blur-xl"></div>
-                </div>
+                  <path
+                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                    fill="#fbbf24"
+                    stroke="#f59e0b"
+                    strokeWidth="0.5"
+                  />
+                </svg>
               </div>
 
               {/* Text */}
-              <h2 className="text-3xl font-bold text-white mb-2 drop-shadow-md">
-                🎉 Question Mastered! 🎉
+              <h2
+                className={`text-2xl font-bold mb-2 ${darkMode ? "text-yellow-400" : "text-yellow-600"}`}
+              >
+                Question Mastered!
               </h2>
-              <p className="text-white/90 text-sm font-medium px-4">
+              <p
+                className={`text-sm font-medium px-4 ${darkMode ? "text-slate-300" : "text-slate-600"}`}
+              >
                 &quot;{masteredQuestionText.substring(0, 80)}
                 {masteredQuestionText.length > 80 ? "..." : ""}&quot;
               </p>
@@ -1312,10 +1323,10 @@ export default function T6AEnhancedStudyTool() {
 
         @keyframes scaleInOut {
           0% {
-            transform: scale(0.5);
+            transform: scale(0.8);
           }
           10% {
-            transform: scale(1.1);
+            transform: scale(1.05);
           }
           15% {
             transform: scale(1);
@@ -1324,26 +1335,23 @@ export default function T6AEnhancedStudyTool() {
             transform: scale(1);
           }
           100% {
-            transform: scale(0.8);
+            transform: scale(0.9);
             opacity: 0;
           }
         }
 
-        @keyframes spin {
+        @keyframes starSpin {
           0% {
+            transform: rotate(-20deg) scale(0.8);
+          }
+          15% {
+            transform: rotate(5deg) scale(1.1);
+          }
+          30% {
             transform: rotate(0deg) scale(1);
           }
-          25% {
-            transform: rotate(180deg) scale(1.2);
-          }
-          50% {
-            transform: rotate(360deg) scale(1);
-          }
-          75% {
-            transform: rotate(540deg) scale(1.2);
-          }
           100% {
-            transform: rotate(720deg) scale(1);
+            transform: rotate(0deg) scale(1);
           }
         }
 
@@ -1351,11 +1359,11 @@ export default function T6AEnhancedStudyTool() {
           0%,
           100% {
             transform: scale(1);
-            opacity: 0.5;
+            opacity: 0.3;
           }
           50% {
-            transform: scale(1.2);
-            opacity: 0.8;
+            transform: scale(1.3);
+            opacity: 0.6;
           }
         }
       `}</style>
