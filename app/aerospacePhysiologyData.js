@@ -1296,14 +1296,14 @@ export const aerospacePhysiologyQuestions = {
       difficulty: "hard",
       question: "What are the four types of hypoxia and their primary causes?",
       options: [
-        "Hypoxic (low PO₂), Hypemic (reduced O₂ carrying capacity), Stagnant (poor circulation), Histotoxic (cells can't use O₂)",
-        "Acute (sudden onset), Chronic (gradual onset), Mild (minor symptoms), Severe (life threatening)",
-        "Altitude (high elevation), Carbon monoxide (toxic gas), Anemia (low blood), Cyanide (poisoning)",
-        "Primary (oxygen lack), Secondary (circulation issue), Tertiary (tissue damage), Quaternary (cellular failure)",
+        "Hypoxic from low PO₂, Hypemic from reduced O₂ carrying capacity, Stagnant from poor circulation, Histotoxic from cells unable to use O₂",
+        "Acute from sudden onset, Chronic from gradual onset, Mild from minor symptoms, Severe from life threatening conditions",
+        "Altitude from high elevation, Carbon monoxide from toxic gas, Anemia from low blood count, Cyanide from poisoning",
+        "Primary from oxygen lack, Secondary from circulation issue, Tertiary from tissue damage, Quaternary from cellular failure",
       ],
       correctAnswer: 0,
       explanation:
-        "The four types of hypoxia are: (1) Hypoxic - insufficient oxygen in inspired air (low PO₂ at altitude), (2) Hypemic - reduced oxygen carrying capacity of blood (CO poisoning, anemia), (3) Stagnant - inadequate blood circulation (G-forces, heart failure), (4) Histotoxic - cells cannot utilize available oxygen (alcohol, cyanide).",
+        "The four types of hypoxia are: (1) Hypoxic - insufficient oxygen in inspired air from low PO₂ at altitude, (2) Hypemic - reduced oxygen carrying capacity of blood from CO poisoning or anemia, (3) Stagnant - inadequate blood circulation from G-forces or heart failure, (4) Histotoxic - cells cannot utilize available oxygen from alcohol or cyanide.",
       limitation: false,
     },
     {
