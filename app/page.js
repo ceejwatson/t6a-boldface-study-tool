@@ -1285,8 +1285,8 @@ export default function T6AEnhancedStudyTool() {
                 🎉 Question Mastered! 🎉
               </h2>
               <p className="text-white/90 text-sm font-medium px-4">
-                "{masteredQuestionText.substring(0, 80)}
-                {masteredQuestionText.length > 80 ? "..." : ""}"
+                &quot;{masteredQuestionText.substring(0, 80)}
+                {masteredQuestionText.length > 80 ? "..." : ""}&quot;
               </p>
             </div>
           </div>
