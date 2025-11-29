@@ -741,23 +741,22 @@ export default function T6AEnhancedStudyTool() {
           lastAnswered: null,
         };
 
-        // Calculate new incorrectCount
+        // For mastery tracking: 2 correct answers IN A ROW
+        let newCorrectCount;
         let newIncorrectCount;
+
         if (isCorrect) {
-          // Reset to 0 when answered correctly
+          // Correct answer: increment correctCount, reset incorrectCount
+          newCorrectCount = existing.correctCount + 1;
           newIncorrectCount = 0;
         } else {
-          // Only set to 1 if currently 0 (first miss in regular quiz)
-          // This prevents accumulating multiple incorrect counts
+          // Incorrect answer: RESET correctCount to 0 (breaks the streak), set incorrectCount
+          newCorrectCount = 0;
           newIncorrectCount =
             existing.incorrectCount === 0 ? 1 : existing.incorrectCount;
         }
 
-        const newCorrectCount = isCorrect
-          ? existing.correctCount + 1
-          : existing.correctCount;
-
-        // Check if question just became mastered (reached 2 correct)
+        // Check if question just became mastered (reached 2 correct IN A ROW)
         if (isCorrect && newCorrectCount === 2 && existing.correctCount === 1) {
           setMasteredQuestionText(question.question || "Question");
           setShowMasteryNotification(true);
@@ -1643,7 +1642,7 @@ export default function T6AEnhancedStudyTool() {
                       getLimitationQuestions().length +
                       getAllAerospacePhysiologyQuestions().length;
                     const masteredCount = Object.values(questionMastery).filter(
-                      (m) => (m?.correctCount || 0) >= 3,
+                      (m) => (m?.correctCount || 0) >= 2,
                     ).length;
                     const percentage =
                       totalQuestions > 0
@@ -1873,7 +1872,7 @@ export default function T6AEnhancedStudyTool() {
 
                     const masteredCount = boldFaceQuestions.filter((q) => {
                       const mastery = questionMastery[q.id];
-                      return mastery && (mastery.correctCount || 0) >= 3;
+                      return mastery && (mastery.correctCount || 0) >= 2;
                     }).length;
                     const totalCount = boldFaceQuestions.length;
                     const masteryPercentage =
@@ -1930,7 +1929,7 @@ export default function T6AEnhancedStudyTool() {
 
                     const masteredCount = aeroQuestions.filter((q) => {
                       const mastery = questionMastery[q.id];
-                      return mastery && (mastery.correctCount || 0) >= 3;
+                      return mastery && (mastery.correctCount || 0) >= 2;
                     }).length;
                     const totalCount = aeroQuestions.length;
                     const masteryPercentage =
@@ -2468,7 +2467,7 @@ export default function T6AEnhancedStudyTool() {
                   <div className="text-3xl font-bold text-green-500">
                     {
                       Object.values(questionMastery).filter(
-                        (q) => (q?.correctCount || 0) >= 3,
+                        (q) => (q?.correctCount || 0) >= 2,
                       ).length
                     }
                   </div>
@@ -2526,7 +2525,7 @@ export default function T6AEnhancedStudyTool() {
                     }
                     categoriesData[q.category].total++;
                     const mastery = questionMastery[q.id];
-                    if (mastery && (mastery.correctCount || 0) >= 3) {
+                    if (mastery && (mastery.correctCount || 0) >= 2) {
                       categoriesData[q.category].mastered++;
                     }
                   });
@@ -3283,7 +3282,7 @@ export default function T6AEnhancedStudyTool() {
                       );
                       const masteredCount = categoryQuestions.filter((q) => {
                         const mastery = questionMastery[q.id];
-                        return mastery && (mastery.correctCount || 0) >= 3;
+                        return mastery && (mastery.correctCount || 0) >= 2;
                       }).length;
 
                       return (
@@ -3364,7 +3363,7 @@ export default function T6AEnhancedStudyTool() {
                       );
                       const masteredCount = categoryQuestions.filter((q) => {
                         const mastery = questionMastery[q.id];
-                        return mastery && (mastery.correctCount || 0) >= 3;
+                        return mastery && (mastery.correctCount || 0) >= 2;
                       }).length;
 
                       return (
