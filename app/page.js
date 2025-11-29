@@ -84,6 +84,8 @@ export default function T6AEnhancedStudyTool() {
   const [showExplanation, setShowExplanation] = useState(false);
   const [instantGrade, setInstantGrade] = useState(false); // Checkbox preference for instant grading
   const [hideMasteredQuestions, setHideMasteredQuestions] = useState(false);
+  const [showMasteryNotification, setShowMasteryNotification] = useState(false);
+  const [masteredQuestionText, setMasteredQuestionText] = useState("");
   const [selectedTopics, setSelectedTopics] = useState([]);
   const [selectedQuestionTypes, setSelectedQuestionTypes] = useState([
     "multipleChoice",
@@ -751,12 +753,24 @@ export default function T6AEnhancedStudyTool() {
             existing.incorrectCount === 0 ? 1 : existing.incorrectCount;
         }
 
+        const newCorrectCount = isCorrect
+          ? existing.correctCount + 1
+          : existing.correctCount;
+
+        // Check if question just became mastered (reached 2 correct)
+        if (isCorrect && newCorrectCount === 2 && existing.correctCount === 1) {
+          setMasteredQuestionText(question.question || "Question");
+          setShowMasteryNotification(true);
+          // Auto-hide after 3 seconds
+          setTimeout(() => {
+            setShowMasteryNotification(false);
+          }, 3000);
+        }
+
         return {
           ...prev,
           [question.id]: {
-            correctCount: isCorrect
-              ? existing.correctCount + 1
-              : existing.correctCount,
+            correctCount: newCorrectCount,
             incorrectCount: newIncorrectCount,
             lastAnswered: Date.now(),
           },
@@ -1233,6 +1247,119 @@ export default function T6AEnhancedStudyTool() {
     <div
       className={`min-h-screen flex flex-col ${darkMode ? "bg-slate-800" : "bg-gray-200"}`}
     >
+      {/* Mastery Notification - Centered Popup with Star Animation */}
+      {showMasteryNotification && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none"
+          style={{
+            animation: "fadeInOut 3s ease-in-out",
+          }}
+        >
+          <div
+            className={`${darkMode ? "bg-gradient-to-r from-yellow-500 to-amber-500" : "bg-gradient-to-r from-yellow-400 to-amber-400"} rounded-3xl shadow-2xl p-8 max-w-md mx-4`}
+            style={{
+              animation: "scaleInOut 3s ease-in-out",
+            }}
+          >
+            <div className="text-center">
+              {/* Star Animation */}
+              <div className="mb-4 relative">
+                <Award
+                  className="w-24 h-24 mx-auto text-white drop-shadow-lg"
+                  style={{
+                    animation: "spin 3s ease-in-out",
+                  }}
+                />
+                <div
+                  className="absolute inset-0 flex items-center justify-center"
+                  style={{
+                    animation: "pulse 1s ease-in-out infinite",
+                  }}
+                >
+                  <div className="w-32 h-32 bg-white/20 rounded-full blur-xl"></div>
+                </div>
+              </div>
+
+              {/* Text */}
+              <h2 className="text-3xl font-bold text-white mb-2 drop-shadow-md">
+                🎉 Question Mastered! 🎉
+              </h2>
+              <p className="text-white/90 text-sm font-medium px-4">
+                "{masteredQuestionText.substring(0, 80)}
+                {masteredQuestionText.length > 80 ? "..." : ""}"
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Add CSS animations */}
+      <style jsx>{`
+        @keyframes fadeInOut {
+          0% {
+            opacity: 0;
+          }
+          10% {
+            opacity: 1;
+          }
+          90% {
+            opacity: 1;
+          }
+          100% {
+            opacity: 0;
+          }
+        }
+
+        @keyframes scaleInOut {
+          0% {
+            transform: scale(0.5);
+          }
+          10% {
+            transform: scale(1.1);
+          }
+          15% {
+            transform: scale(1);
+          }
+          85% {
+            transform: scale(1);
+          }
+          100% {
+            transform: scale(0.8);
+            opacity: 0;
+          }
+        }
+
+        @keyframes spin {
+          0% {
+            transform: rotate(0deg) scale(1);
+          }
+          25% {
+            transform: rotate(180deg) scale(1.2);
+          }
+          50% {
+            transform: rotate(360deg) scale(1);
+          }
+          75% {
+            transform: rotate(540deg) scale(1.2);
+          }
+          100% {
+            transform: rotate(720deg) scale(1);
+          }
+        }
+
+        @keyframes pulse {
+          0%,
+          100% {
+            transform: scale(1);
+            opacity: 0.5;
+          }
+          50% {
+            transform: scale(1.2);
+            opacity: 0.8;
+          }
+        }
+      `}</style>
+
       {/* Header - Simplified */}
       <header
         className={`${darkMode ? "bg-slate-900/80" : "bg-white/80"} backdrop-blur border-b ${darkMode ? "border-slate-800" : "border-slate-200"} z-20 flex-shrink-0`}
