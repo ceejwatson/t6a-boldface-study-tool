@@ -1462,6 +1462,182 @@ export const aerospacePhysiologyQuestions = {
         "G-forces and altitude have cumulative/multiplicative effects: (1) Altitude reduces PO₂ causing hypoxic hypoxia, (2) G-forces reduce blood circulation causing stagnant hypoxia, (3) Combined effects dramatically increase hypoxia risk. A pilot experiencing 5G at 25,000 ft has physiological equivalent of ~35,000+ ft. Critical consideration for high-altitude maneuvering.",
       limitation: false,
     },
+    {
+      id: "ap-mc-081",
+      category: "AP 108 - Spatial Disorientation",
+      topic: "Somatogyral Illusions",
+      difficulty: "hard",
+      question: "What are somatogyral illusions and what causes them?",
+      options: [
+        "False sensations of rotation caused by semicircular canals adapting to constant rate turns",
+        "False sensations of linear acceleration caused by otolith organs detecting G-forces",
+        "Visual illusions from inadequate cockpit lighting causing misperception of instrument readings",
+        "Tactile illusions from pressure suit inflation creating false sense of body position",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "Somatogyral illusions are false sensations of rotation caused by the semicircular canals (angular acceleration detectors). Occur when pilot maintains constant rate turn - after ~20 seconds canals adapt and pilot feels like rotation stopped. Includes: The Leans (most common), Graveyard Spiral, Coriolis Illusion.",
+      limitation: false,
+    },
+    {
+      id: "ap-mc-082",
+      category: "AP 108 - Spatial Disorientation",
+      topic: "The Leans",
+      difficulty: "medium",
+      question:
+        "What is 'The Leans' and why is it the most common spatial disorientation illusion?",
+      options: [
+        "Pilot corrects unnoticed bank too quickly, semicircular canals signal opposite bank, pilot 'leans' to feel upright",
+        "Pilot leans forward during acceleration creating false sensation of climbing attitude requiring nose-down input",
+        "Pilot experiences continuous rolling sensation requiring constant aileron input to maintain wings level",
+        "Pilot feels aircraft banking during straight flight causing incorrect application of control inputs",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "The Leans is the most common somatogyral illusion. Occurs when pilot enters gradual unnoticed bank, then corrects too quickly. Semicircular canals signal a bank in opposite direction. Pilot physically leans to counteract false sensation while maintaining correct attitude. Resolved by trusting instruments despite uncomfortable sensation.",
+      limitation: false,
+    },
+    {
+      id: "ap-mc-083",
+      category: "AP 108 - Spatial Disorientation",
+      topic: "Coriolis Illusion",
+      difficulty: "critical",
+      question: "What causes the Coriolis Illusion and why is it dangerous?",
+      options: [
+        "Moving head during constant rate turn stimulates multiple semicircular canals simultaneously, causing severe tumbling sensation",
+        "Rapid acceleration during takeoff causes false pitch-up sensation leading to dangerous nose-low correction",
+        "Gradual deceleration creates sensation of nose-down pitch causing pilot to pull back excessively",
+        "Banking during climb produces false sensation of level flight causing continued climb into stall",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "Coriolis Illusion occurs when pilot moves head (looking at checklist, changing radio) during prolonged constant rate turn. Multiple semicircular canals stimulated simultaneously creating overwhelming tumbling/rolling sensation in multiple axes. Extremely disorienting and dangerous. Prevention: minimize head movements during turns in IMC.",
+      limitation: false,
+    },
+    {
+      id: "ap-mc-084",
+      category: "AP 108 - Spatial Disorientation",
+      topic: "Graveyard Spiral",
+      difficulty: "critical",
+      question:
+        "What is the Graveyard Spiral illusion and how does it lead to fatal crashes?",
+      options: [
+        "Prolonged constant rate turn causes canal adaptation; pilot thinks spin stopped, adds back pressure increasing descent rate",
+        "Rapid spin entry causes immediate disorientation and loss of control requiring emergency recovery procedures",
+        "Gradual altitude loss during turn creates false sensation of climbing requiring nose-down correction",
+        "Banking maneuver during descent produces sensation of wings level flight causing continued bank angle",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "Graveyard Spiral: Prolonged coordinated turn (especially in IMC) causes semicircular canals to adapt after ~20 seconds. Pilot feels like rotation stopped. Sees altitude/airspeed loss, pulls back, tightening spiral. Without instrument cross-check, continues until structural failure or ground impact. Fatal if not recognized. Prevent: trust instruments, maintain scan.",
+      limitation: false,
+    },
+    {
+      id: "ap-mc-085",
+      category: "AP 108 - Spatial Disorientation",
+      topic: "Somatogravic Illusions",
+      difficulty: "hard",
+      question: "What are somatogravic illusions and what organs detect them?",
+      options: [
+        "False sensations of pitch attitude caused by otolith organs detecting linear acceleration as gravity",
+        "False sensations of rotation caused by semicircular canals adapting to constant angular velocity",
+        "Visual illusions from sloping terrain or cloud formations appearing as natural horizon",
+        "Auditory illusions from engine noise variations creating false sense of airspeed changes",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "Somatogravic illusions are false pitch sensations caused by otolith organs (utricle and saccule) detecting linear acceleration and interpreting it as change in gravity/pitch. Forward acceleration feels like pitch-up; deceleration feels like pitch-down. Common during takeoff, catapult launch, go-around.",
+      limitation: false,
+    },
+    {
+      id: "ap-mc-086",
+      category: "AP 108 - Spatial Disorientation",
+      topic: "Somatogravic - Takeoff",
+      difficulty: "critical",
+      question:
+        "How does somatogravic illusion affect pilots during takeoff acceleration?",
+      options: [
+        "Forward acceleration feels like excessive pitch-up causing pilot to push nose down dangerously low",
+        "Rapid acceleration creates sensation of wings level requiring bank correction into the ground",
+        "Takeoff thrust causes feeling of descent requiring aggressive climb input leading to stall",
+        "Acceleration produces tumbling sensation requiring immediate transfer of controls to copilot",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "During takeoff, forward acceleration causes otolith organs to detect increased horizontal G-force. Brain interprets this as pitch-up (climbing too steeply). Pilot feels compelled to push nose down. In low visibility, this can cause controlled flight into terrain. Critical during night/IMC takeoffs. Prevention: trust instruments, maintain pitch attitude.",
+      limitation: false,
+    },
+    {
+      id: "ap-mc-087",
+      category: "AP 108 - Spatial Disorientation",
+      topic: "Somatogravic - Landing",
+      difficulty: "critical",
+      question:
+        "What somatogravic illusion occurs during rapid deceleration on final approach?",
+      options: [
+        "Deceleration feels like nose-down pitch causing pilot to pull back excessively and risk stall",
+        "Slowing airspeed creates sensation of banking left requiring right aileron into ground",
+        "Reduced thrust produces feeling of climbing requiring nose-down input and terrain impact",
+        "Speed reduction causes tumbling sensation requiring immediate go-around procedure",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "During deceleration (reducing power/speed on approach), otolith organs detect decreased forward acceleration. Brain interprets as pitch-down (diving). Pilot feels strong urge to pull back. Can lead to stall/spin on final approach. Common during go-around abort or rapid power reduction. Prevention: trust instruments, maintain proper approach speed and pitch.",
+      limitation: false,
+    },
+    {
+      id: "ap-mc-088",
+      category: "AP 108 - Spatial Disorientation",
+      topic: "Somatogravic vs Somatogyral",
+      difficulty: "hard",
+      question:
+        "What is the primary difference between somatogravic and somatogyral illusions?",
+      options: [
+        "Somatogravic involves linear acceleration (pitch illusions from otoliths); Somatogyral involves angular acceleration (rotation illusions from semicircular canals)",
+        "Somatogravic occurs only during takeoff/landing; Somatogyral occurs only during aerobatic maneuvers",
+        "Somatogravic affects instrument pilots only; Somatogyral affects VFR pilots exclusively",
+        "Somatogravic is easily overcome with training; Somatogyral cannot be prevented regardless of experience",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "Key difference: Somatogravic illusions involve LINEAR acceleration detected by otolith organs (utricle/saccule) causing false PITCH sensations. Somatogyral illusions involve ANGULAR acceleration detected by semicircular canals causing false ROTATION sensations. Both overcome by trusting instruments over vestibular system.",
+      limitation: false,
+    },
+    {
+      id: "ap-mc-089",
+      category: "AP 105 - Vision",
+      topic: "Rods vs Cones",
+      difficulty: "medium",
+      question:
+        "What are the primary differences between rods and cones in the human eye?",
+      options: [
+        "Rods provide night vision and peripheral vision (no color); Cones provide day vision, color vision, and sharp detail",
+        "Rods provide color vision and central vision; Cones provide black/white vision and peripheral vision",
+        "Rods are located in the fovea for detail; Cones are in periphery for motion detection",
+        "Rods function only in bright light; Cones function only in complete darkness",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "Rods: 120 million per eye, located in periphery, provide night vision (scotopic), detect motion/shapes, NO color perception, sensitive to low light. Cones: 6-7 million per eye, concentrated in fovea (central), provide day vision (photopic), COLOR vision, sharp detail/acuity, require bright light. Rods adapt slowly (30+ min), cones adapt quickly.",
+      limitation: false,
+    },
+    {
+      id: "ap-mc-090",
+      category: "AP 106 - Night Vision",
+      topic: "Rod Function",
+      difficulty: "medium",
+      question: "Why should pilots use off-center viewing technique at night?",
+      options: [
+        "Fovea (central vision) has only cones with no rods, creating night blind spot; peripheral vision uses rods for night vision",
+        "Central vision has too many rods causing light overload; peripheral cones provide better night clarity",
+        "Looking directly at objects activates wrong part of brain; peripheral viewing uses correct neural pathways",
+        "Central vision muscles fatigue quickly at night; peripheral muscles designed for sustained use",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "At night, looking directly at an object uses the fovea, which contains ONLY cones (no rods). Cones don't function in low light, creating a night blind spot. Off-center (peripheral) viewing uses rods which are highly sensitive to low light. Look 5-10 degrees off-center to see dim objects at night. This is why stars disappear when you look directly at them.",
+      limitation: false,
+    },
   ],
   // No other question types needed per user request
   trueFalse: [],
