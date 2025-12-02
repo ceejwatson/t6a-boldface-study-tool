@@ -1638,6 +1638,223 @@ export const aerospacePhysiologyQuestions = {
         "At night, looking directly at an object uses the fovea, which contains ONLY cones (no rods). Cones don't function in low light, creating a night blind spot. Off-center (peripheral) viewing uses rods which are highly sensitive to low light. Look 5-10 degrees off-center to see dim objects at night. This is why stars disappear when you look directly at them.",
       limitation: false,
     },
+
+    // Additional questions from study guide gaps (ap-mc-091 to 102)
+    {
+      id: "ap-mc-091",
+      category: "AP 101 - Introduction and Atmosphere",
+      topic: "SHELL Model",
+      difficulty: "hard",
+      question:
+        "What does the SHELL model acronym represent in Human Factors analysis?",
+      options: [
+        "Software, Hardware, Environment, Liveware (person), Liveware (others) - framework for identifying HF challenges",
+        "Safety, Health, Equipment, Leadership, Logistics - comprehensive approach to accident prevention",
+        "Systems, Humans, Engineering, Laws, Limitations - regulatory compliance model for aviation",
+        "Standards, Hazards, Errors, Lessons, Learning - continuous improvement framework for operations",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "SHELL model: Software (procedures, checklists, manuals), Hardware (aircraft, equipment), Environment (physical and organizational), Liveware-central (the person), Liveware-peripheral (other people like crew, ATC, maintenance). Used to identify mismatches between components that lead to human factors accidents. The person (Liveware-central) interacts with all other components.",
+      limitation: false,
+    },
+    {
+      id: "ap-mc-092",
+      category: "AP 101 - Introduction and Atmosphere",
+      topic: "Gas Laws Application",
+      difficulty: "hard",
+      question:
+        "A sealed plastic water bottle is full at sea level (760 mmHg). At 18,000 ft (380 mmHg), what happens to the bottle according to Boyle's Law?",
+      options: [
+        "The bottle expands to approximately twice its original volume as pressure halves",
+        "The bottle shrinks to half its size as the external pressure decreases significantly",
+        "The bottle remains unchanged as plastic is rigid and resists pressure changes",
+        "The bottle collapses completely as all air escapes through microscopic pores",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "Boyle's Law: P₁V₁ = P₂V₂ (pressure and volume are inversely proportional at constant temperature). At sea level: 760 mmHg × V₁. At 18,000 ft: 380 mmHg × V₂. Solving: V₂ = (760/380) × V₁ = 2V₁. The gas inside expands to twice the volume, causing the bottle to swell/expand. Same principle causes ear blocks, gas expansion in intestines, and decompression sickness.",
+      limitation: false,
+    },
+    {
+      id: "ap-mc-093",
+      category: "AP 103 - Altitude Threats",
+      topic: "Time of Useful Consciousness",
+      difficulty: "critical",
+      question:
+        "What is Time of Useful Consciousness (TUC) at 25,000 feet without supplemental oxygen?",
+      options: [
+        "Approximately 3-5 minutes - the time you can perform useful tasks before hypoxia incapacitation",
+        "Approximately 15-20 minutes - adequate time to recognize symptoms and descend safely",
+        "Approximately 30 seconds - immediate loss of consciousness requiring instant action",
+        "Approximately 30-60 minutes - slow gradual onset allowing plenty of reaction time",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "Time of Useful Consciousness (TUC) is the time from oxygen deprivation until you cannot perform useful functions. At 25,000 ft: 3-5 min. At 30,000 ft: 1-3 min. At 35,000 ft: 30-60 sec. At 40,000 ft: 15-20 sec. At 50,000+ ft: 9-12 sec. Critical for emergency procedures - must act IMMEDIATELY when hypoxia suspected. TUC decreases with physical activity and rapid decompression.",
+      limitation: false,
+    },
+    {
+      id: "ap-mc-094",
+      category: "AP 103 - Altitude Threats",
+      topic: "Trapped Gas Disorders",
+      difficulty: "hard",
+      question:
+        "What is ear block and how does it differ from normal ear discomfort during descent?",
+      options: [
+        "Ear block occurs when pressure differential exceeds 80 mmHg and Eustachian tube collapses, preventing equalization",
+        "Ear block is mild discomfort during descent easily relieved by swallowing or yawning",
+        "Ear block only occurs during rapid ascent when expanding gas cannot escape middle ear",
+        "Ear block is permanent hearing damage from exceeding maximum altitude limits in unpressurized aircraft",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "Ear block (barotitis media) occurs when pressure differential between middle ear and ambient exceeds ~80 mmHg during descent. Eustachian tube acts as one-way valve - collapses shut preventing equalization. Results in severe pain, possible eardrum rupture, hearing loss, vertigo. Prevention: equalize early/often with Valsalva, avoid flying with congestion. Treatment: descend slowly, continue Valsalva, seek medical attention if persists.",
+      limitation: false,
+    },
+    {
+      id: "ap-mc-095",
+      category: "AP 103 - Altitude Threats",
+      topic: "Trapped Gas Disorders",
+      difficulty: "medium",
+      question:
+        "What causes gastrointestinal (GI) expansion during flight and how can it be prevented?",
+      options: [
+        "Gas in intestines expands per Boyle's Law during ascent; prevent by avoiding gas-producing foods before flight",
+        "Increased cabin pressure compresses stomach; prevent by fasting 12 hours before all flights",
+        "Reduced oxygen causes digestive system to produce excess gas; prevent with supplemental oxygen",
+        "G-forces push stomach contents upward; prevent by wearing tight anti-G suit around abdomen",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "GI expansion: Gas in intestines/stomach expands during ascent (Boyle's Law). At 18,000 ft gas doubles in volume. Causes abdominal distension, discomfort, pain, flatulence, belching. Can be severe enough to impair breathing and cause incapacitation. Prevention: avoid gas-producing foods (beans, cabbage, carbonated drinks) 24 hrs before flight. Treatment: descend, pass gas if possible.",
+      limitation: false,
+    },
+    {
+      id: "ap-mc-096",
+      category: "AP 103 - Altitude Threats",
+      topic: "Trapped Gas Disorders",
+      difficulty: "medium",
+      question: "What is tooth squeeze (barodontalgia) and when does it occur?",
+      options: [
+        "Pain from air trapped in cavity/recent dental work expanding or contracting with altitude changes",
+        "Grinding teeth unconsciously during high-G maneuvers causing jaw pain and headaches",
+        "Nitrogen bubbles forming in tooth enamel during rapid decompression causing fractures",
+        "Pressure from oxygen mask causing temporomandibular joint dysfunction and facial pain",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "Tooth squeeze (barodontalgia) occurs when trapped air in dental cavity, recent filling, root canal, or abscess expands/contracts with pressure changes. More common during descent. Causes severe tooth pain, can radiate to jaw/head. May indicate underlying dental problem. Prevention: maintain good dental hygiene, inform dentist you're a pilot, wait 24-48 hrs after dental work before flying. Treatment: descend, dental evaluation.",
+      limitation: false,
+    },
+    {
+      id: "ap-mc-097",
+      category: "AP 104 - Cabin Pressurization",
+      topic: "Decompression Types",
+      difficulty: "hard",
+      question:
+        "What distinguishes explosive decompression from rapid decompression?",
+      options: [
+        "Explosive is less than 0.5 seconds; Rapid is 0.5-15 seconds - both require immediate action",
+        "Explosive causes structural failure; Rapid is controlled and allows time for checklist completion",
+        "Explosive only occurs above 50,000 ft; Rapid can happen at any altitude with pressurization",
+        "Explosive is fatal in all cases; Rapid allows survival if oxygen donned within 5 minutes",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "Decompression types: (1) Explosive - less than 0.5 sec, violent, no time to react, (2) Rapid - 0.5 to 15 sec, most dangerous as gives false sense of time, (3) Slow - greater than 15 sec, gradual, may go unnoticed. All require immediate 100% oxygen, check pressurization, emergency descent below 10,000 ft. Explosive/rapid cause lung damage if breath held - never hold breath during decompression.",
+      limitation: false,
+    },
+    {
+      id: "ap-mc-098",
+      category: "AP 103 - Altitude Threats",
+      topic: "Hypocapnia Treatment",
+      difficulty: "medium",
+      question:
+        "What is the correct treatment for hypocapnia (hyperventilation) in flight?",
+      options: [
+        "Reduce breathing rate to normal, breathe into bag or cupped hands to re-breathe CO₂, relax, descend if needed",
+        "Increase breathing rate and depth to maximize oxygen intake and restore blood gas balance",
+        "Remove oxygen mask immediately, switch to 100% emergency oxygen, perform pressure breathing",
+        "Execute immediate emergency descent, declare emergency, transfer aircraft control to instructor",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "Hypocapnia treatment: (1) Recognize symptoms - rapid breathing, muscle tightness, tingling, dizziness, (2) Consciously reduce breathing rate to normal, (3) Re-breathe exhaled air (bag or cupped hands) to restore CO₂ levels, (4) Relax and calm anxiety/stress, (5) Descend if symptoms persist. Do NOT remove oxygen or hyperventilate further. Symptoms similar to hypoxia - treat as hypoxia if uncertain.",
+      limitation: false,
+    },
+    {
+      id: "ap-mc-099",
+      category: "AP 105 - Vision",
+      topic: "Visual Scanning Patterns",
+      difficulty: "medium",
+      question:
+        "What are the recommended visual scanning patterns for daytime and nighttime flight?",
+      options: [
+        "Daytime: Z-pattern systematic scan in sectors; Nighttime: Diamond-pattern using off-center viewing",
+        "Daytime: continuous smooth sweep; Nighttime: focus on instrument panel with minimal outside scan",
+        "Daytime: random scan based on traffic pattern; Nighttime: stare at single reference point",
+        "Daytime: focus straight ahead only; Nighttime: close one eye and scan with peripheral vision",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "Daytime scanning: Z-pattern - systematically scan sky in 10-15° sectors, pause 1-2 sec each to allow focal vision to detect objects. Covers entire visual field methodically. Nighttime scanning: Diamond-pattern using off-center viewing 5-10° off target to use rod-rich peripheral vision. Both patterns prevent empty-field myopia and ensure thorough coverage for collision avoidance.",
+      limitation: false,
+    },
+    {
+      id: "ap-mc-100",
+      category: "AP 108 - Spatial Disorientation",
+      topic: "Vestibular System Anatomy",
+      difficulty: "hard",
+      question:
+        "What are the two main components of the vestibular system and their functions?",
+      options: [
+        "Semicircular canals detect angular acceleration (rotation); Otolith organs detect linear acceleration and gravity",
+        "Cochlea detects sound vibrations; Eustachian tube equalizes pressure between ears and throat",
+        "Fovea provides central vision detail; Peripheral retina detects motion and low-light objects",
+        "Auditory nerve transmits sound; Optic nerve transmits visual information to brain for processing",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "Vestibular system components: (1) Semicircular canals (3 per ear - pitch, roll, yaw planes) detect ANGULAR acceleration/rotation, cause somatogyral illusions (Leans, Coriolis, Graveyard Spiral), (2) Otolith organs (utricle and saccule) detect LINEAR acceleration and gravity, cause somatogravic illusions (false pitch on takeoff/landing). Both reliable on ground, fooled in flight - trust instruments.",
+      limitation: false,
+    },
+    {
+      id: "ap-mc-101",
+      category: "AP 111 - Acceleration",
+      topic: "AGSM Errors",
+      difficulty: "critical",
+      question:
+        "What are common errors when performing the Anti-G Straining Maneuver (AGSM)?",
+      options: [
+        "Insufficient muscle tension, improper breathing timing, shallow breaths, incomplete glottis closure, upper body only",
+        "Excessive muscle tension causing cramping, breathing too slowly, holding breath too long",
+        "Tensing upper body instead of lower, breathing through nose only, closing eyes during strain",
+        "Performing maneuver too early before G-onset, using diaphragm breathing, relaxing too quickly",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "Common AGSM errors: (1) Insufficient muscle tension in legs/glutes/abdomen - must be MAXIMAL, (2) Improper timing - 3 sec strain, quick inhale, repeat, (3) Shallow rapid breaths instead of forceful exhalation, (4) Incomplete glottis closure reducing thoracic pressure, (5) Tensing upper body/shoulders (ineffective) instead of lower body. Proper L-1 AGSM adds 3-4G tolerance when combined with G-suit.",
+      limitation: false,
+    },
+    {
+      id: "ap-mc-102",
+      category: "AP 103 - Altitude Threats",
+      topic: "Sinus Block",
+      difficulty: "medium",
+      question:
+        "What causes sinus block (barosinusitis) and why is it dangerous for pilots?",
+      options: [
+        "Blocked sinus opening prevents pressure equalization causing severe pain and possible incapacitation during descent",
+        "Nitrogen bubbles forming in sinus cavities during rapid ascent causing permanent tissue damage",
+        "Excessive mucus production at altitude blocking nasal passages and preventing normal breathing",
+        "Pressure on sinus nerves during high-G maneuvers causing temporary blindness and vertigo",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "Sinus block occurs when sinus opening (ostium) is blocked by congestion/infection/polyp preventing pressure equalization. During descent, external pressure increases but sinus pressure cannot equalize, creating vacuum effect. Causes severe facial pain (forehead, cheeks), headache, possible nosebleed, tooth pain, incapacitation. Prevention: don't fly with head cold/sinus infection, avoid decongestants causing rebound. Treatment: slow descent, Valsalva, medical evaluation.",
+      limitation: false,
+    },
   ],
   // No other question types needed per user request
   trueFalse: [],
